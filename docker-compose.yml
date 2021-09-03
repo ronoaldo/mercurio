@@ -1,0 +1,20 @@
+version: "3.3"
+services:
+  db:
+    image: postgres
+    volumes:
+      - ./.minetest/db:/var/lib/postgresql/data
+    env_file:
+      - .env
+
+  game:
+    image: ronoaldo/mercurio:latest
+    depends_on:
+      - db
+    ports:
+      - "30000:30000/udp"
+      - "30000:30000/tcp"
+    volumes:
+      - ./.minetest/world:/var/lib/mercurio
+    env_file:
+      - .env
