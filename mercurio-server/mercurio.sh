@@ -8,9 +8,7 @@ __configure() {
         sed -e "s/\$($e)/${!e}/g" -i "$1"
     done
 }
-echo "[mercurio debug begin]"
-env
-echo "[mercurio debug end]"
+
 # Always use configuration from the image, replacing credentials
 # from environment
 cp -v /etc/minetest/world.mt /var/lib/mercurio/world.mt
