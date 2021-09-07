@@ -11,6 +11,7 @@ run: build
 
 build-mt:
 	docker build --tag $(MT_SERVER) ./minetest-server
+	docker tag $(MT_SERVER) $(MT_IMAGE):latest
 
 deploy-mt:
 	docker push $(MT_SERVER)
