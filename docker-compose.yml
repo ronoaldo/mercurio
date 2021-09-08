@@ -6,6 +6,11 @@ services:
       - ./.minetest/db:/var/lib/postgresql/data
     env_file:
       - .env
+    logging:
+      driver: gcplogs
+      options:
+        gcp-project: minetest-hosting
+        gcp-meta-name: mercuriovps
 
   game:
     image: ronoaldo/mercurio:latest
@@ -18,3 +23,8 @@ services:
       - ./.minetest/world:/var/lib/mercurio
     env_file:
       - .env
+    logging:
+      driver: gcplogs
+      options:
+        gcp-project: minetest-hosting
+        gcp-meta-name: mercuriovps
