@@ -18,10 +18,10 @@ deploy-mt:
 	docker push $(MT_SERVER)
 	docker push $(MT_IMAGE):latest
 
-build: build-mt
+build:
 	docker build --tag $(MERCURIO_SERVER) ./mercurio-server
 	docker tag $(MERCURIO_SERVER) $(MERCURIO_IMAGE):latest
 
-deploy: deploy-mt
+deploy:
 	docker push $(MERCURIO_SERVER)
 	docker push $(MERCURIO_IMAGE):latest
