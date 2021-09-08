@@ -98,7 +98,7 @@ RUN apt update && apt install git -yq &&\
 # TODO(ronoaldo): limit to selected skins to avoid abuse
 RUN apt install python3 python3-requests -yq &&\
     cd /usr/share/minetest/mods/skinsdb/updater &&\
-    python3 update_skins.py with_preview
+    python3 update_skins.py
 # Add configuration files to image
 ADD world.mt      /etc/minetest/world.mt
 ADD minetest.conf /etc/minetest/minetest.conf
