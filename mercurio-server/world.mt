@@ -128,7 +128,6 @@ load_mod_mob_horse = true
 load_mod_mobkit = true
 load_mod_mobs = true
 load_mod_mobs_animal = true
-load_mod_mobs_horse = true
 load_mod_mobs_monster = true
 load_mod_mobs_npc = true
 load_mod_modlib = true

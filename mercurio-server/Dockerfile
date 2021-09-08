@@ -63,7 +63,6 @@ RUN mkdir -p /usr/share/minetest/mods &&\
         TenPlus1/mob_horse \
         TenPlus1/mobs \
         TenPlus1/mobs_animal \
-        TenPlus1/mob_horse \
         TenPlus1/mobs_monster \
         TenPlus1/mobs_npc \
         TenPlus1/protector \
