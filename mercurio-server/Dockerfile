@@ -86,7 +86,7 @@ RUN mkdir -p /usr/share/minetest/mods &&\
         Wuzzy/tsm_surprise \
         x2048/cinematic
 # Install mods from git when not available elsewhere
-RUN apt update && apt install git -yq &&\
+RUN apt-get update && apt-get install git -yq && apt-get clean &&\
     cd /usr/share/minetest/mods &&\
     git clone https://github.com/APercy/airutils &&\
     git clone https://github.com/APercy/helicopter &&\
@@ -96,7 +96,7 @@ RUN apt update && apt install git -yq &&\
     git clone https://github.com/ronoaldo/patron
 # Fetch all skins from database
 # TODO(ronoaldo): limit to selected skins to avoid abuse
-RUN apt install python3 python3-requests -yq &&\
+RUN apt-get install python3 python3-requests -yq && apt-get clean &&\
     cd /usr/share/minetest/mods/skinsdb/updater &&\
     python3 update_skins.py
 # Add configuration files to image
