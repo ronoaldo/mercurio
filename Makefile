@@ -7,6 +7,7 @@ MERCURIO_IMAGE=ronoaldo/mercurio
 MERCURIO_SERVER=$(MERCURIO_IMAGE):$(MERCURIO_VERSION)
 
 run: build
+	sudo chown -R 30000:30000 .minetest/world
 	docker-compose up
 
 build-mt:

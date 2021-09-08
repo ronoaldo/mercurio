@@ -31,7 +31,6 @@ load_mod_calendar = true
 load_mod_carpets = true
 load_mod_character_anim = true
 load_mod_cinematic = true
-load_mod_computer = true
 load_mod_computers = true
 load_mod_crops = true
 load_mod_currency = true 

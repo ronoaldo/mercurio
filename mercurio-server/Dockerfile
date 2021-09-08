@@ -63,6 +63,7 @@ RUN mkdir -p /usr/share/minetest/mods &&\
         TenPlus1/mob_horse \
         TenPlus1/mobs \
         TenPlus1/mobs_animal \
+        TenPlus1/mob_horse \
         TenPlus1/mobs_monster \
         TenPlus1/mobs_npc \
         TenPlus1/protector \
@@ -89,6 +90,7 @@ RUN mkdir -p /usr/share/minetest/mods &&\
 RUN apt update && apt install git -yq &&\
     cd /usr/share/minetest/mods &&\
     git clone https://github.com/APercy/airutils &&\
+    git clone https://github.com/APercy/helicopter &&\
     git clone https://github.com/berengma/aviator &&\
     git clone https://github.com/cx384/filler &&\
     git clone https://github.com/ronoaldo/minenews &&\
