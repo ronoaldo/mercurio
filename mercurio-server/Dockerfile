@@ -53,7 +53,6 @@ RUN mkdir -p /usr/share/minetest/mods &&\
         sofar/emote \
         Sokomine/markers \
         Sokomine/replacer \
-        sorcerykid/extra_doors \
         stu/3d_armor \
         TenPlus1/bonemeal \
         TenPlus1/dmobs \
@@ -93,7 +92,8 @@ RUN apt-get update && apt-get install git -yq && apt-get clean &&\
     git clone https://github.com/berengma/aviator &&\
     git clone https://github.com/cx384/filler &&\
     git clone https://github.com/ronoaldo/minenews &&\
-    git clone https://github.com/ronoaldo/patron
+    git clone https://github.com/ronoaldo/patron &&\
+    git clone https://github.com/ronoaldo/extra_doors
 # Fetch all skins from database
 # TODO(ronoaldo): limit to selected skins to avoid abuse
 RUN apt-get install python3 python3-requests -yq && apt-get clean &&\

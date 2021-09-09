@@ -176,3 +176,8 @@ load_mod_water_life = true
 load_mod_wieldview = true
 load_mod_x_bows = true
 load_mod_xdecor = true
+
+load_mod_trm_default_example = true
+load_mod_tsm_chests_example = false
+load_mod_tsm_gift_example = false
+load_mod_basic_machines = false
