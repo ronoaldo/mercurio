@@ -2,8 +2,11 @@ version: "3.3"
 services:
   db:
     image: postgres:13
+    command: -s shared_buffers=512MB
     volumes:
       - ./.minetest/db:/var/lib/postgresql/data
+    ports:
+      - "5432:5432/tcp"
     env_file:
       - .env
     logging:
