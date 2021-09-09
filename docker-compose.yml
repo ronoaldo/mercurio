@@ -2,7 +2,8 @@ version: "3.3"
 services:
   db:
     image: postgres:13
-    command: -s shared_buffers=512MB
+    command: -c shared_buffers=512MB
+    restart: always
     volumes:
       - ./.minetest/db:/var/lib/postgresql/data
     ports:
@@ -17,6 +18,7 @@ services:
 
   game:
     image: ronoaldo/mercurio:latest
+    restart: always
     depends_on:
       - db
     ports:
