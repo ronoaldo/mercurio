@@ -67,6 +67,7 @@ RUN mkdir -p /usr/share/minetest/mods &&\
         TenPlus1/protector \
         Termos/mobkit \
         Traxie21/tpr \
+        texmex/hbsprint \
         VanessaE/basic_materials \
         VanessaE/basic_signs \
         VanessaE/currency \
