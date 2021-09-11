@@ -17,7 +17,7 @@ services:
         gcp-meta-name: mercuriovps
 
   game:
-    image: ronoaldo/mercurio:latest
+    image: ghcr.io/ronoaldo/mercurio:main
     restart: always
     depends_on:
       - db
