@@ -1,4 +1,4 @@
-FROM ronoaldo/minetestserver:5.4.1
+FROM ghcr.io/ronoaldo/minetestserver:stable-5
 
 # Setup system-wide settings
 USER root
@@ -42,7 +42,6 @@ RUN mkdir -p /usr/share/minetest/mods &&\
         neko259/telegram \
         Piezo_/illumination \
         PilzAdam/nether \
-        rael5/nether_mobs \
         RealBadAngel/unified_inventory \
         rnd/basic_machines \
         rubenwardy/awards \
@@ -94,7 +93,8 @@ RUN apt-get update && apt-get install git -yq && apt-get clean &&\
     git clone https://github.com/cx384/filler &&\
     git clone https://github.com/ronoaldo/minenews &&\
     git clone https://github.com/ronoaldo/patron &&\
-    git clone https://github.com/ronoaldo/extra_doors
+    git clone https://github.com/ronoaldo/extra_doors &&\
+    git clone https://github.com/ronoaldo/minetest-nether-monsters 
 # Fetch all skins from database
 # TODO(ronoaldo): limit to selected skins to avoid abuse
 RUN apt-get install python3 python3-requests -yq && apt-get clean &&\
