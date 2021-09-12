@@ -100,6 +100,8 @@ RUN apt-get update && apt-get install git -yq && apt-get clean &&\
 RUN apt-get install python3 python3-requests -yq && apt-get clean &&\
     cd /usr/share/minetest/mods/skinsdb/updater &&\
     python3 update_skins.py
+# Add server mod
+ADD ./mercurio /usr/share/minetest/mods/mercurio
 # Add configuration files to image
 ADD world.mt      /etc/minetest/world.mt
 ADD minetest.conf /etc/minetest/minetest.conf

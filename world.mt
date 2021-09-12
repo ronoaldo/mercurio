@@ -92,6 +92,7 @@ load_mod_lavalamp = true
 load_mod_loot_crates = true
 load_mod_lumberjack = true
 load_mod_markers = true
+load_mod_mercurio = true
 load_mod_mesecons = true
 load_mod_mesecons_alias = true
 load_mod_mesecons_blinkyplant = true
