@@ -87,14 +87,15 @@ RUN mkdir -p /usr/share/minetest/mods &&\
 # Install mods from git when not available elsewhere
 RUN apt-get update && apt-get install git -yq && apt-get clean &&\
     cd /usr/share/minetest/mods &&\
-    git clone https://github.com/APercy/airutils &&\
-    git clone https://github.com/APercy/helicopter &&\
-    git clone https://github.com/berengma/aviator &&\
-    git clone https://github.com/cx384/filler &&\
-    git clone https://github.com/ronoaldo/minenews &&\
-    git clone https://github.com/ronoaldo/patron &&\
-    git clone https://github.com/ronoaldo/extra_doors &&\
-    git clone https://github.com/ronoaldo/minetest-nether-monsters 
+    git clone --depth=1 https://github.com/APercy/airutils &&\
+    git clone --depth=1 https://github.com/APercy/helicopter &&\
+    git clone --depth=1 https://github.com/berengma/aviator &&\
+    git clone --depth=1 https://github.com/cx384/filler &&\
+    git clone --depth=1 https://github.com/ronoaldo/minenews &&\
+    git clone --depth=1 https://github.com/ronoaldo/patron &&\
+    git clone --depth=1 https://github.com/ronoaldo/extra_doors &&\
+    git clone --depth=1 https://github.com/ronoaldo/minetest-nether-monsters &&\
+    git clone --depth=1 https://github.com/minetest-mapserver/mapserver_mod 
 # Fetch all skins from database
 # TODO(ronoaldo): limit to selected skins to avoid abuse
 RUN apt-get install python3 python3-requests -yq && apt-get clean &&\

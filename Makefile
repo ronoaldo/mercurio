@@ -1,9 +1,9 @@
-MERCURIO_VERSION=2.0.3mt5.4.1
+MERCURIO_VERSION=beta
 MERCURIO_IMAGE=ghcr.io/ronoaldo/mercurio
 MERCURIO_SERVER=$(MERCURIO_IMAGE):$(MERCURIO_VERSION)
 
 run: build
-	#sudo chown -R 30000:$(id -g) .minetest/world
+	sudo chown -R 30000:$(id -g) .minetest/world
 	docker-compose up
 
 build:
