@@ -13,3 +13,7 @@ build:
 deploy:
 	docker push $(MERCURIO_SERVER)
 	docker push $(MERCURIO_IMAGE):latest
+
+fix-perms:
+	sudo chown -R 30000:$$(id -g) .minetest/world
+	sudo chmod -R g+w .minetest/world

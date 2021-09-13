@@ -106,6 +106,7 @@ ADD ./mercurio /usr/share/minetest/mods/mercurio
 ADD world.mt      /etc/minetest/world.mt
 ADD minetest.conf /etc/minetest/minetest.conf
 ADD mercurio.sh   /usr/bin
+ADD backup.sh     /usr/bin
 # Restore user to minetest and redefine launch script
 USER minetest
 CMD ["/usr/bin/mercurio.sh"]
