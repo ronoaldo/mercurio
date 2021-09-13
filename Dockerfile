@@ -89,6 +89,7 @@ RUN apt-get update && apt-get install git -yq && apt-get clean &&\
     cd /usr/share/minetest/mods &&\
     git clone https://github.com/APercy/airutils &&\
     git clone https://github.com/APercy/helicopter &&\
+    git clone https://github.com/APercy/demoiselle &&\
     git clone https://github.com/berengma/aviator &&\
     git clone https://github.com/cx384/filler &&\
     git clone https://github.com/ronoaldo/minenews &&\
