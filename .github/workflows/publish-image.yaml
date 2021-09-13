@@ -34,6 +34,7 @@ jobs:
           tags: |
             type=ref,event=branch
             type=ref,event=tag
+            type=raw,value=r{{date 'YYYYMMDD'}}
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v2
