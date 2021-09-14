@@ -1,32 +1,14 @@
 #!/bin/bash
+set -e
+set -x
 
-if [ -z $MINETEST_WORLD_DIR ]; then
-    echo "MINETEST_WORLD_DIR not provided as environment variable."
-    exit 1
-fi
+BASEDIR=`readlink -f $(dirname $0)`
+BASENAME=`basename $BASEDIR`
+BACKUP_DIR=$HOME/backups/$(date +'%Y%m')
+BACKUP_FILE=$BACKUP_DIR/$BASENAME-$(date +'%Y%m%d-%H%M%S').tar.gz
 
-# Globals
-TIMESTAMP=$(date +%Y%m%d-%H%M%S)
-YEAR_MONTH=$(date +%Y-%m)
-BACKUP_DIR=${MINETEST_WORLD_DIR}/backups/${YEAR_MONTH}
-WORLD_BACKUP=${BACKUP_DIR}/minetest_${TIMESTAMP}.tar.gz
-
-# Copy original world file to restore later...
-cd $MINETEST_WORLD_DIR
-cp world.mt /tmp/world.mt
-
-# Migrate from postgresql -> sqlite3 to create backup files
-minetestserver --world $MINETEST_WORLD_DIR --migrate sqlite3
-minetestserver --world $MINETEST_WORLD_DIR --migrate-players sqlite3
-minetestserver --world $MINETEST_WORLD_DIR --migrate-auth sqlite3
-
-# Strip auth information from world.mt
-grep -v '^pgsql_' <world.mt >new.mt && mv new.mt world.mt
-
-# Create compressed backup archive (with sqlite files)
+cd $BASEDIR
 mkdir -p $BACKUP_DIR
-tar -cvzf $WORLD_BACKUP --exclude=mapserver.tiles --exclude=/backups/ ./
-
-# Restores world.mt after backup, and cleanup sqlite files
-cp /tmp/world.mt world.mt
-rm -rvf {map,players,auth}.sqlite
+docker-compose exec -T db pg_dump -c -U mercurio > .minetest/db.sql
+tar --exclude=mapserver.tiles -cvzf $BACKUP_FILE .minetest/db.sql .minetest/world
+rm -f .minetest/db.sql

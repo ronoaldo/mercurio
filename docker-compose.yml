@@ -6,8 +6,6 @@ services:
     restart: always
     volumes:
       - ./.minetest/db:/var/lib/postgresql/data
-    ports:
-      - "5432:5432/tcp"
     env_file:
       - .env
     logging:
@@ -18,12 +16,10 @@ services:
 
   game:
     image: ghcr.io/ronoaldo/mercurio:main
+    build: .
     restart: always
     depends_on:
       - db
-    ports:
-      - "30000:30000/udp"
-      - "30000:30000/tcp"
     volumes:
       - ./.minetest/world:/var/lib/mercurio
     env_file:
