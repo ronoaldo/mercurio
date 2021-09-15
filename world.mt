@@ -183,3 +183,4 @@ load_mod_water_life = true
 load_mod_wieldview = true
 load_mod_x_bows = true
 load_mod_xdecor = true
+load_mod_mapserver = true

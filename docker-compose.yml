@@ -2,7 +2,7 @@ version: "3.3"
 services:
   db:
     image: postgres:13
-    command: -c shared_buffers=512MB
+    command: -c shared_buffers=1024MB
     restart: always
     volumes:
       - ./.minetest/db:/var/lib/postgresql/data
@@ -29,3 +29,11 @@ services:
       options:
         gcp-project: minetest-hosting
         gcp-meta-name: mercuriovps
+
+  mapserver:
+    image: minetestmapserver/mapserver:4.3.2
+    depends_on:
+      - db
+    volumes:
+      - "./.minetest/world:/minetest"
+    working_dir: "/minetest"
