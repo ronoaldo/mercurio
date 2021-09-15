@@ -28,6 +28,7 @@ load_mod_basic_signs = true
 load_mod_biofuel = true
 load_mod_bonemeal = true
 load_mod_building_blocks = true
+load_mod_demoiselle = true
 load_mod_calendar = true
 load_mod_carpets = true
 load_mod_character_anim = true

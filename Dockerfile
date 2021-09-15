@@ -89,6 +89,7 @@ RUN apt-get update && apt-get install git -yq && apt-get clean &&\
     cd /usr/share/minetest/mods &&\
     git clone --depth=1 https://github.com/APercy/airutils &&\
     git clone --depth=1 https://github.com/APercy/helicopter &&\
+    git clone --depth=1 https://github.com/APercy/demoiselle &&\
     git clone --depth=1 https://github.com/berengma/aviator &&\
     git clone --depth=1 https://github.com/cx384/filler &&\
     git clone --depth=1 https://github.com/ronoaldo/minenews &&\
@@ -107,6 +108,7 @@ ADD ./mercurio /usr/share/minetest/mods/mercurio
 ADD world.mt      /etc/minetest/world.mt
 ADD minetest.conf /etc/minetest/minetest.conf
 ADD mercurio.sh   /usr/bin
+ADD backup.sh     /usr/bin
 # Restore user to minetest and redefine launch script
 USER minetest
 CMD ["/usr/bin/mercurio.sh"]
