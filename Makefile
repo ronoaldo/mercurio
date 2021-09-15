@@ -7,6 +7,10 @@ backup:
 shell:
 	docker-compose exec game bash
 
+update:
+	docker-compose pull
+	docker-compose up -d
+
 fix-perms:
 	sudo chown -R 30000:$$(id -g) .minetest/world
 	sudo chmod -R g+w .minetest/world
