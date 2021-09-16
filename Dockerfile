@@ -45,7 +45,6 @@ RUN mkdir -p /usr/share/minetest/mods &&\
         RealBadAngel/unified_inventory \
         rnd/basic_machines \
         rubenwardy/awards \
-        SaKeL/x_bows \
         ShadowNinja/areas \
         Shara/abriglass \
         sofar/crops \
@@ -96,7 +95,8 @@ RUN apt-get update && apt-get install git -yq && apt-get clean &&\
     git clone --depth=1 https://github.com/ronoaldo/patron &&\
     git clone --depth=1 https://github.com/ronoaldo/extra_doors &&\
     git clone --depth=1 https://github.com/ronoaldo/minetest-nether-monsters &&\
-    git clone --depth=1 https://github.com/minetest-mapserver/mapserver_mod 
+    git clone --depth=1 https://github.com/minetest-mapserver/mapserver_mod &&\
+    git clone --depth=1 https://github.com/ronoaldo/x_bows
 # Fetch all skins from database
 # TODO(ronoaldo): limit to selected skins to avoid abuse
 RUN apt-get install python3 python3-requests -yq && apt-get clean &&\
