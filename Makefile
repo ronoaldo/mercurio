@@ -1,6 +1,9 @@
 run: 
 	docker-compose down && docker-compose up --build --detach
 
+run-interactive: 
+	docker-compose down && docker-compose up --build
+
 backup:
 	./backup.sh
 

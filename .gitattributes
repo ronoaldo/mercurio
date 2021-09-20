@@ -1,0 +1,2 @@
+# Avoid treating world config files are programming language
+*.mt -linguist-detectable

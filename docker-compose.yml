@@ -32,6 +32,7 @@ services:
 
   mapserver:
     image: minetestmapserver/mapserver:4.3.2
+    restart: always
     depends_on:
       - db
     volumes:
