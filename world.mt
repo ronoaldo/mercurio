@@ -156,6 +156,7 @@ load_mod_patron = true
 load_mod_people = true
 load_mod_plasmascreen = true
 load_mod_protector = true
+load_mod_regrowing_fruits = true
 load_mod_replacer = true
 load_mod_respawn = true
 load_mod_shields = true
