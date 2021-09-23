@@ -16,6 +16,7 @@ RUN mkdir -p /usr/share/minetest/mods &&\
         AiTechEye/smartshop \
         bell07/carpets \
         bell07/skinsdb \
+        Calinou/moreblocks \
         Calinou/moreores \
         cronvel/respawn \
         Dragonop/tools_obsidian \
