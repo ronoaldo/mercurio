@@ -17,5 +17,5 @@ rm -f .minetest/db.sql
 
 if [ x$MINETEST_BACKUP_STORAGE = x"true" ] ; then
     echo "Moving backup to Cloud Storage ... "
-    gsutil -m mv $BACKUP_FILE gs://minetest-hosting/servers/mercurio/backups/
+    gsutil -m mv $BACKUP_FILE gs://minetest-hosting/servers/mercurio/backups/${BASENAME}.current.tar.gz
 fi
