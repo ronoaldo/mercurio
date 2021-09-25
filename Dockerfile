@@ -39,6 +39,7 @@ RUN mkdir -p /usr/share/minetest/mods &&\
         MeseCraft/void_chest \
         mt-mods/travelnet \
         neko259/telegram \
+        philipmi/regrowing_fruits \
         Piezo_/illumination \
         PilzAdam/nether \
         RealBadAngel/unified_inventory \
