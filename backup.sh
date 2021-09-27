@@ -20,7 +20,7 @@ cd $BASEDIR
 . .env
 mkdir -p $BACKUP_DIR
 docker-compose exec -T db pg_dump -c -U mercurio > .minetest/db.sql
-tar --exclude=mapserver.tiles -cvzf $BACKUP_FILE .minetest/db.sql .minetest/world
+tar --exclude=mapserver.tiles --exclude=mapserver.sqlite -cvzf $BACKUP_FILE .minetest/db.sql .minetest/world
 rm -vf .minetest/db.sql
 
 if [ x$MINETEST_BACKUP_GCS = x"true" ] ; then
