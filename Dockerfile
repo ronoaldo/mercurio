@@ -26,6 +26,7 @@ RUN mkdir -p /usr/share/minetest/mods &&\
         FaceDeer/anvil \
         FaceDeer/hopper \
         Gundul/water_life \
+        "Hybrid Dog/we_undo" \
         JAstudios/moreswords \
         Jeija/digilines \
         Jeija/mesecons \
@@ -47,6 +48,7 @@ RUN mkdir -p /usr/share/minetest/mods &&\
         rubenwardy/awards \
         ShadowNinja/areas \
         Shara/abriglass \
+        sfan5/worldedit \
         sofar/crops \
         sofar/emote \
         Sokomine/markers \
