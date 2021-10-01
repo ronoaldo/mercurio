@@ -98,9 +98,8 @@ RUN apt-get update && apt-get install git -yq && apt-get clean &&\
     git clone --depth=1 https://github.com/ronoaldo/hbsprint
 # Fetch all skins from database
 # TODO(ronoaldo): limit to selected skins to avoid abuse
-RUN apt-get install python3 python3-requests -yq && apt-get clean &&\
-    cd /usr/share/minetest/mods/skinsdb/updater &&\
-    python3 update_skins.py
+ADD fetch-skins.sh /usr/local/bin
+RUN apt-get install jq curl -yq && apt-get clean && cd /usr/share/minetest/mods/skinsdb && fetch-skins.sh
 # Add server mod
 ADD ./mercurio /usr/share/minetest/mods/mercurio
 # Add configuration files to image
