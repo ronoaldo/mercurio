@@ -8,7 +8,7 @@ RUN mkdir -p /var/lib/mercurio &&\
 # Install mods system-wide (ro)
 RUN mkdir -p /usr/share/minetest/mods &&\
     cd /usr/share/minetest &&\
-    contentdb install \
+    contentdb --debug install \
         apercy/trike \
         apercy/hidroplane \
         apercy/motorboat \
