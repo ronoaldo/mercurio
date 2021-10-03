@@ -1,4 +1,4 @@
-FROM ghcr.io/ronoaldo/minetestserver@sha256:c09be17432c13b70ff45726eaaac5768705e5b2fb0673828f18e04b9871f6c03
+FROM ghcr.io/ronoaldo/minetestserver@sha256:b716ea668ab2549a042875f513a4ec054d7dabc5d7d528bfa24152f3eed91213
 
 # Setup system-wide settings
 USER root
