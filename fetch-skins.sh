@@ -4,12 +4,12 @@ set -e
 URL="http://minetest.fensta.bplaced.net/api/v2/get.json.php?getlist"
 PAGE="1"
 PAGES="20"
-PER_PAGE="100"
+PER_PAGE="150"
 BUFF=/tmp/page.json
 
 mkdir -p {meta,textures}
 while true ; do
-	echo "Fetching $PAGE from $PAGES ..."
+	echo "Fetching batch $PAGE/$PAGES ($PER_PAGE)..."
 
 	export retry=0
 	while true ; do
@@ -25,9 +25,9 @@ while true ; do
 
 	jq -c '.skins[]' < /tmp/page.json | while read skin ; do
 		id="`echo "$skin" | jq -r '.id'`"
-		echo "$skin" | jq -r '[.name, .author, .license] | join("\n")' > meta/character_$id.txt
-		echo "$skin" | jq -r '.img' | base64 -d > textures/character_$id.png
-		echo "$skin" | jq -r '"Skin: ",.id, .name, .author, .license'
+		echo -n "$skin" | jq -r '[.name, .author, .license] | join("\n")' > meta/character_$id.txt
+		echo -n "$skin" | jq -r '.img' | base64 -d > textures/character_$id.png
+		echo "$skin" | jq -r '["Skin: ",.id, .name, .author, .license] | join(" ")'
 	done
 
 	export PAGES=$(jq -r '.pages' < $BUFF)

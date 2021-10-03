@@ -1,4 +1,4 @@
-FROM ghcr.io/ronoaldo/minetestserver:stable-5
+FROM ghcr.io/ronoaldo/minetestserver@sha256:c09be17432c13b70ff45726eaaac5768705e5b2fb0673828f18e04b9871f6c03
 
 # Setup system-wide settings
 USER root
@@ -8,12 +8,13 @@ RUN mkdir -p /var/lib/mercurio &&\
 # Install mods system-wide (ro)
 RUN mkdir -p /usr/share/minetest/mods &&\
     cd /usr/share/minetest &&\
-    contentdb --debug install \
+    contentdb install --debug --url=https://contentdb.ronoaldo.net \
         apercy/trike \
         apercy/hidroplane \
         apercy/motorboat \
         apercy/demoiselle \
         AiTechEye/smartshop \
+        BuckarooBanzay/mapserver \
         bell07/carpets \
         bell07/skinsdb \
         Calinou/moreblocks \
@@ -96,7 +97,6 @@ RUN apt-get update && apt-get install git -yq && apt-get clean &&\
     git clone --depth=1 https://github.com/ronoaldo/patron &&\
     git clone --depth=1 https://github.com/ronoaldo/extra_doors &&\
     git clone --depth=1 https://github.com/ronoaldo/minetest-nether-monsters nether_mobs &&\
-    git clone --depth=1 https://github.com/minetest-mapserver/mapserver_mod &&\
     git clone --depth=1 https://github.com/ronoaldo/x_bows &&\
     git clone --depth=1 https://github.com/ronoaldo/hbsprint
 # Fetch all skins from database
