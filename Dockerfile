@@ -56,6 +56,7 @@ RUN mkdir -p /usr/share/minetest/mods &&\
         Sokomine/markers \
         Sokomine/replacer \
         stu/3d_armor \
+        TenPlus1/bakedclay \
         TenPlus1/bonemeal \
         TenPlus1/dmobs \
         TenPlus1/ethereal \

@@ -22,6 +22,7 @@ load_mod_anvil = true
 load_mod_areas = true
 load_mod_aviator = true
 load_mod_awards = true
+load_mod_bakedclay = true
 load_mod_basic_machines = false
 load_mod_basic_materials = true
 load_mod_basic_signs = true
