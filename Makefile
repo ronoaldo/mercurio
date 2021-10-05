@@ -8,7 +8,7 @@ backup:
 	./backup.sh
 
 shell:
-	docker-compose exec game bash
+	docker-compose exec --user 0 game bash
 
 update:
 	git pull

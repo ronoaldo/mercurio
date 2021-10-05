@@ -1,3 +1,6 @@
+minetest.log("action", "[MOD]mercurio: Initializing...")
+
+-- PvP area
 minetest.register_on_punchplayer(function(player, hitter, time_from_last_punch, tool_capabilities, dir, damage)
     if not hitter:is_player() or not player:is_player() then
         return
@@ -12,10 +15,24 @@ minetest.register_on_punchplayer(function(player, hitter, time_from_last_punch, 
     local bound_z = pos.z <= (pvp_center.z-pvp_size) or pos.z >= (pvp_center.z+pvp_size)
 
     if bound_x or bound_y or bound_z then
-        minetest.chat_send_player(hitter:get_player_name(), "Fora da area PVP!")
         return true
     end
     return
 end)
 
-minetest.log("info", "[mercurio-mod] Loaded")
+-- Fix remaining unknown nodes after adding moreblocks
+local function fix_nodes(from, to)
+    minetest.log("action", "[MOD]mercurio: F´ixing node using alias from "..from..", to "..to)
+    minetest.register_alias(from, to)
+end
+fix_nodes("ethereal:redwood_wood_micropanel", "ethereal:panel_redwood_wood_1")
+fix_nodes("ethereal:redwood_wood_microslab", "ethereal:slab_redwood_wood_1")
+fix_nodes("stairs:stair_red",    "bakedclay:stair_baked_clay_red")
+fix_nodes("stairs:stair_orange", "bakedclay:stair_baked_clay_orange")
+fix_nodes("stairs:stair_grey",   "bakedclay:stair_baked_clay_grey")
+fix_nodes("bakedclay:grey_microslab",  "bakedclay:slab_baked_clay_grey_1")
+fix_nodes("bakedclay:red_microslab",   "bakedclay:slab_baked_clay_red_1")
+fix_nodes("bakedclay:orange_microslab","bakedclay:slab_baked_clay_orange_1")
+fix_nodes("stairs:stair_Adobe", "building_blocks:stair_Adobe")
+
+minetest.log("action", "[MOD]mercurio: Loaded!")
