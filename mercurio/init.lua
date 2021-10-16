@@ -22,7 +22,7 @@ end)
 
 -- Fix remaining unknown nodes after adding moreblocks
 local function fix_nodes(from, to)
-    minetest.log("action", "[MOD]mercurio: F´ixing node using alias from "..from..", to "..to)
+    minetest.log("action", "[MOD]mercurio: Fixing node using alias from "..from..", to "..to)
     minetest.register_alias(from, to)
 end
 fix_nodes("ethereal:redwood_wood_micropanel", "ethereal:panel_redwood_wood_1")
@@ -50,5 +50,6 @@ fix_nodes("stairs:slab_grey", "bakedclay:slab_baked_clay_grey")
 fix_nodes("bakedclay:grey_microslab",  "bakedclay:slab_baked_clay_grey_1")
 
 fix_nodes("stairs:stair_Adobe", "building_blocks:stair_Adobe")
+fix_nodes("tsm_surprise:question", "air")
 
 minetest.log("action", "[MOD]mercurio: Loaded!")

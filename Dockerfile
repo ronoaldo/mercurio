@@ -1,4 +1,4 @@
-FROM ghcr.io/ronoaldo/minetestserver@sha256:b716ea668ab2549a042875f513a4ec054d7dabc5d7d528bfa24152f3eed91213
+FROM ghcr.io/ronoaldo/minetestserver@sha256:6d01e021a6138ebca8b8e8c27a084cca4c8f8f3d4154f4fa956adb1d627c362a
 
 # Setup system-wide settings
 USER root
@@ -83,9 +83,7 @@ RUN mkdir -p /usr/share/minetest/mods &&\
         Wuzzy/hudbars \
         Wuzzy/inventory_icon \
         Wuzzy/show_wielded_item \
-        Wuzzy/treasurer \
         Wuzzy/tsm_pyramids \
-        Wuzzy/tsm_surprise \
         x2048/cinematic
 # Install mods from git when not available elsewhere
 RUN apt-get update && apt-get install git -yq && apt-get clean &&\
