@@ -24,7 +24,6 @@ RUN mkdir -p /usr/share/minetest/mods &&\
         Don/mydoors \
         ElCeejo/draconis \
         ElCeejo/mob_core \
-        ElCeejo/loot_crates \
         FaceDeer/anvil \
         FaceDeer/hopper \
         Gundul/water_life \
