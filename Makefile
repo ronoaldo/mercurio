@@ -15,6 +15,9 @@ update:
 	docker-compose pull
 	docker-compose up -d
 
+check-mod-updates:
+	docker-compose exec --user 0 game bash -c 'cd /usr/share/minetest && contentdb update --dry-run' | tee /tmp/updates.log
+
 fix-perms:
 	sudo chown -R 30000:$$(id -g) .minetest/world
 	sudo chmod -R g+w .minetest/world
