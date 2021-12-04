@@ -96,6 +96,8 @@ RUN apt-get update && apt-get install git -yq && apt-get clean &&\
     git clone --depth=1 https://github.com/ronoaldo/extra_doors &&\
     git clone --depth=1 https://github.com/ronoaldo/x_bows &&\
     git clone --depth=1 https://github.com/ronoaldo/hbsprint &&\
+    git clone --depth=1 https://github.com/APercy/supercub &&\
+    git clone --depth=1 https://github.com/APercy/ju52 &&\
     git clone --depth=1 --branch=before https://github.com/APercy/helicopter
 # Fetch all skins from database
 # TODO(ronoaldo): limit to selected skins to avoid abuse
