@@ -9,10 +9,10 @@ RUN mkdir -p /var/lib/mercurio &&\
 RUN mkdir -p /usr/share/minetest/mods &&\
     cd /usr/share/minetest &&\
     contentdb install --debug --url=https://contentdb.ronoaldo.net \
-        apercy/trike@9174 \
-        apercy/hidroplane@9505 \
+        apercy/trike@9794 \
+        apercy/hidroplane@9880 \
         apercy/motorboat@8453 \
-        apercy/demoiselle@9542 \
+        apercy/demoiselle@9812 \
         AiTechEye/smartshop@903 \
         BuckarooBanzay/mapserver@7753 \
         bell07/carpets@3671 \
@@ -26,11 +26,11 @@ RUN mkdir -p /usr/share/minetest/mods &&\
         ElCeejo/mob_core@8939 \
         FaceDeer/anvil@5696 \
         FaceDeer/hopper@6074 \
-        Gundul/water_life@8632 \
+        Gundul/water_life@9651 \
         "Hybrid Dog/we_undo@9288" \
-        JAstudios/moreswords@4890 \
+        JAstudios/moreswords@9585 \
         Jeija/digilines@8574 \
-        Jeija/mesecons@9054 \
+        Jeija/mesecons@9802 \
         joe7575/lumberjack@7252 \
         jp/xdecor@8625 \
         Liil/nativevillages@7404 \
@@ -44,28 +44,28 @@ RUN mkdir -p /usr/share/minetest/mods &&\
         philipmi/regrowing_fruits@5746 \
         Piezo_/illumination@1091 \
         PilzAdam/nether@8686 \
-        RealBadAngel/unified_inventory@9494 \
+        RealBadAngel/unified_inventory@9734 \
         rnd/basic_machines@58 \
         rubenwardy/awards@6092 \
         ShadowNinja/areas@5030 \
         Shara/abriglass@32 \
-        sfan5/worldedit@6305 \
+        sfan5/worldedit@9572 \
         sofar/crops@176 \
         sofar/emote@1317 \
         Sokomine/markers@306 \
         Sokomine/replacer@76 \
-        stu/3d_armor@8731 \
+        stu/3d_armor@9664 \
         TenPlus1/bakedclay@9438 \
         TenPlus1/bonemeal@9389 \
         TenPlus1/dmobs@9170 \
-        TenPlus1/ethereal@9419 \
-        TenPlus1/farming@9420 \
+        TenPlus1/ethereal@9788 \
+        TenPlus1/farming@9879 \
         TenPlus1/itemframes@7148 \
-        TenPlus1/mob_horse@9514 \
-        TenPlus1/mobs@9324 \
-        TenPlus1/mobs_animal@8611 \
-        TenPlus1/mobs_monster@9202 \
-        TenPlus1/mobs_npc@8610 \
+        TenPlus1/mob_horse@9669 \
+        TenPlus1/mobs@9680 \
+        TenPlus1/mobs_animal@9670 \
+        TenPlus1/mobs_monster@9671 \
+        TenPlus1/mobs_npc@9672 \
         TenPlus1/protector@9538 \
         Termos/mobkit@6391 \
         Traxie21/tpr@8314 \
@@ -88,7 +88,6 @@ RUN mkdir -p /usr/share/minetest/mods &&\
 RUN apt-get update && apt-get install git -yq && apt-get clean &&\
     cd /usr/share/minetest/mods &&\
     git clone --depth=1 https://github.com/APercy/airutils &&\
-    git clone --depth=1 https://github.com/APercy/helicopter &&\
     git clone --depth=1 https://github.com/berengma/aviator &&\
     git clone --depth=1 https://github.com/cx384/filler &&\
     git clone --depth=1 https://github.com/ronoaldo/minenews &&\
@@ -96,7 +95,8 @@ RUN apt-get update && apt-get install git -yq && apt-get clean &&\
     git clone --depth=1 https://github.com/ronoaldo/extra_doors &&\
     git clone --depth=1 https://github.com/ronoaldo/minetest-nether-monsters nether_mobs &&\
     git clone --depth=1 https://github.com/ronoaldo/x_bows &&\
-    git clone --depth=1 https://github.com/ronoaldo/hbsprint
+    git clone --depth=1 https://github.com/ronoaldo/hbsprint &&\
+    git clone --depth=1 --branch=before https://github.com/APercy/helicopter
 # Fetch all skins from database
 # TODO(ronoaldo): limit to selected skins to avoid abuse
 ADD fetch-skins.sh /usr/local/bin
