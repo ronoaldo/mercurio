@@ -10,6 +10,17 @@ local function fmt_pos(pos)
     return minetest.pos_to_string(pos, 0)
 end
 
+local function to_json(val)
+    if val == nil then
+        return "null"
+    end
+    local str = minetest.write_json(val)
+    if str == nil then
+        return "null"
+    end
+    return str
+end
+
 log_action("Initializing server overrides ...")
 
 -- PvP area as defined by the server settings.
@@ -75,5 +86,35 @@ remove_entity(":dmobs:nyan")
 remove_entity(":loot_crates:common")
 remove_entity(":loot_crates:uncommon")
 remove_entity(":loot_crates:rare")
+
+-- Spawn overrides
+local _orig_spawn_check = mobs.spawn_abm_check
+local function mercurio_spawn_abm_check(self, pos, node, name)
+    if name == "nether_mobs:netherman" then
+        if pos.y >= -3000 then
+            return true
+        end
+    end
+    return _orig_spawn_check(pos, node, name)
+end
+mobs.spawn_abm_check = mercurio_spawn_abm_check
+-- Debug spawning mobs from mobs_redo:
+log_action("mobs.spawning_mobs = " .. minetest.write_json(mobs.spawning_mobs))
+
+-- ABM to fix Nether unknown blocks already created
+minetest.register_abm({
+    label = "Fix unknown nodes bellow Nether",
+    nodenames = {"nether:native_mapgen"},
+    interval = 1.0,
+    chance = 1,
+    catch_up = true,
+    action = function(pos, node, active_object_count, active_object_count_wider)
+        if pos.y >= -11000 then
+            return
+        end
+        log_action("Fixing Nether node node at pos "..to_json(pos))
+        minetest.set_node(pos, {name="default:stone"})
+    end,
+})
 
 log_action("Server overrides loaded!")

@@ -45,6 +45,7 @@ RUN mkdir -p /usr/share/minetest/mods &&\
         Piezo_/illumination@1091 \
         PilzAdam/nether@8686 \
         RealBadAngel/unified_inventory@9734 \
+        rael5/nether_mobs@6364 \
         rnd/basic_machines@58 \
         rubenwardy/awards@6092 \
         ShadowNinja/areas@5030 \
@@ -93,7 +94,6 @@ RUN apt-get update && apt-get install git -yq && apt-get clean &&\
     git clone --depth=1 https://github.com/ronoaldo/minenews &&\
     git clone --depth=1 https://github.com/ronoaldo/patron &&\
     git clone --depth=1 https://github.com/ronoaldo/extra_doors &&\
-    git clone --depth=1 https://github.com/ronoaldo/minetest-nether-monsters nether_mobs &&\
     git clone --depth=1 https://github.com/ronoaldo/x_bows &&\
     git clone --depth=1 https://github.com/ronoaldo/hbsprint &&\
     git clone --depth=1 --branch=before https://github.com/APercy/helicopter
