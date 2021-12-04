@@ -99,15 +99,15 @@ RUN apt-get update && apt-get install git -yq && apt-get clean &&\
     git clone --depth=1 https://github.com/ronoaldo/hbsprint
 # Fetch all skins from database
 # TODO(ronoaldo): limit to selected skins to avoid abuse
-ADD fetch-skins.sh /usr/local/bin
+COPY fetch-skins.sh /usr/local/bin
 RUN apt-get install jq curl -yq && apt-get clean && cd /usr/share/minetest/mods/skinsdb && fetch-skins.sh
 # Add server mod
-ADD ./mercurio /usr/share/minetest/mods/mercurio
+COPY ./mercurio /usr/share/minetest/mods/mercurio
 # Add configuration files to image
-ADD world.mt      /etc/minetest/world.mt
-ADD minetest.conf /etc/minetest/minetest.conf
-ADD mercurio.sh   /usr/bin
-ADD backup.sh     /usr/bin
+COPY world.mt      /etc/minetest/world.mt
+COPY minetest.conf /etc/minetest/minetest.conf
+COPY mercurio.sh   /usr/bin
+COPY backup.sh     /usr/bin
 # Restore user to minetest and redefine launch script
 USER minetest
 CMD ["/usr/bin/mercurio.sh"]
