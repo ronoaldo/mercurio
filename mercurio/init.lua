@@ -89,7 +89,7 @@ remove_entity(":loot_crates:rare")
 
 -- Spawn overrides
 local _orig_spawn_check = mobs.spawn_abm_check
-local function spawn_abm_check(self, pos, node, name)
+local function mercurio_spawn_abm_check(self, pos, node, name)
     if name == "nether_mobs:netherman" then
         if pos.y >= -3000 then
             return true
@@ -97,17 +97,18 @@ local function spawn_abm_check(self, pos, node, name)
     end
     return _orig_spawn_check(pos, node, name)
 end
-mobs.spawn_abm_check = spawn_abm_check
+mobs.spawn_abm_check = mercurio_spawn_abm_check
 -- Debug spawning mobs from mobs_redo:
-log_action("Spawning mobs: " .. minetest.write_json(mobs.spawning_mobs))
+log_action("mobs.spawning_mobs = " .. minetest.write_json(mobs.spawning_mobs))
 
--- LBM to fix Nether unknown blocks already created
-minetest.register_lbm({
+-- ABM to fix Nether unknown blocks already created
+minetest.register_abm({
     label = "Fix unknown nodes bellow Nether",
-    name = "mercurio:bellow_nether_fix",
     nodenames = {"nether:native_mapgen"},
-    runt_at_every_load = true,
-    action = function(pos, node)
+    interval = 1.0,
+    chance = 1,
+    catch_up = true,
+    action = function(pos, node, active_object_count, active_object_count_wider)
         if pos.y >= -11000 then
             return
         end
