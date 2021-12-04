@@ -1,0 +1,18 @@
+# Use this file in order to run a local/dev copy of the server.
+# Rename it to docker-compose.override.yml
+version: "3.3"
+services:
+  db:
+    restart: "no"
+    logging:
+      driver: "json-file"
+  game:
+    restart: "no"
+    logging:
+      driver: "json-file"
+    image: ghcr.io/ronoaldo/mercurio:beta
+    ports:
+      - "30000:30000/udp"
+      - "30000:30000/tcp"
+  mapserver:
+    restart: "no"
