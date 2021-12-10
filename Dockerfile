@@ -88,17 +88,17 @@ RUN mkdir -p /usr/share/minetest/mods &&\
 # Install mods from git when not available elsewhere
 RUN apt-get update && apt-get install git -yq && apt-get clean &&\
     cd /usr/share/minetest/mods &&\
-    git clone --depth=1 https://github.com/APercy/airutils &&\
-    git clone --depth=1 https://github.com/berengma/aviator &&\
-    git clone --depth=1 https://github.com/cx384/filler &&\
-    git clone --depth=1 https://github.com/ronoaldo/minenews &&\
-    git clone --depth=1 https://github.com/ronoaldo/patron &&\
-    git clone --depth=1 https://github.com/ronoaldo/extra_doors &&\
-    git clone --depth=1 https://github.com/ronoaldo/x_bows &&\
-    git clone --depth=1 https://github.com/ronoaldo/hbsprint &&\
-    git clone --depth=1 https://github.com/APercy/supercub &&\
-    git clone --depth=1 https://github.com/APercy/ju52 &&\
-    git clone --depth=1 --branch=before https://github.com/APercy/helicopter
+    git clone --depth=1 https://github.com/ronoaldo/airutils --branch="git20211129" &&\
+    git clone --depth=1 https://github.com/ronoaldo/aviator --branch="V1.6" &&\
+    git clone --depth=1 https://github.com/ronoaldo/filler --branch="git20180215" &&\
+    git clone --depth=1 https://github.com/ronoaldo/minenews --branch="v1.0.0" &&\
+    git clone --depth=1 https://github.com/ronoaldo/patron --branch="v1.0.0" &&\
+    git clone --depth=1 https://github.com/ronoaldo/extra_doors --branch="v1.0.0-mercurio" &&\
+    git clone --depth=1 https://github.com/ronoaldo/x_bows --branch="v1.0.5" &&\
+    git clone --depth=1 https://github.com/ronoaldo/hbsprint --branch="v1.0.0-mercurio" &&\
+    git clone --depth=1 https://github.com/ronoaldo/supercub --branch="git20211207" &&\
+    git clone --depth=1 https://github.com/ronoaldo/ju52 --branch="git20211207" &&\
+    git clone --depth=1 https://github.com/ronoaldo/helicopter --branch="before"
 # Fetch all skins from database
 # TODO(ronoaldo): limit to selected skins to avoid abuse
 COPY fetch-skins.sh /usr/local/bin
