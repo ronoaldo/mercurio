@@ -90,6 +90,7 @@ load_mod_inbox = true
 load_mod_inventory_icon = true
 load_mod_itemframes = true
 load_mod_ju52 = true
+load_mod_kartcar = true
 load_mod_lavalamp = true
 load_mod_lumberjack = true
 load_mod_markers = true

@@ -9,6 +9,7 @@ RUN mkdir -p /var/lib/mercurio &&\
 RUN mkdir -p /usr/share/minetest/mods &&\
     cd /usr/share/minetest &&\
     contentdb install --debug --url=https://contentdb.ronoaldo.net \
+        apercy/kartcar@ \
         apercy/trike@9794 \
         apercy/hidroplane@9880 \
         apercy/motorboat@8453 \
