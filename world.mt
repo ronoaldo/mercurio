@@ -45,6 +45,7 @@ load_mod_extra_doors = true
 load_mod_fake_fire = true
 load_mod_farming = true
 load_mod_filler = true
+load_mod_hangglider = true
 load_mod_hbarmor = true
 load_mod_hbhunger = true
 load_mod_hbsprint = true
