@@ -3,6 +3,8 @@ name: Test docker image builds for pull-requests
 on:
   push:
     branches-ignore: ['main']
+  pull_request:
+    branches: ['main']
 
 env:
   REGISTRY: ghcr.io
