@@ -170,6 +170,7 @@ load_mod_skinsdb = true
 load_mod_smartshop = true
 load_mod_supercub = true
 load_mod_telegram = true
+load_mod_tubelib2 = true
 load_mod_tools_obsidian = true
 load_mod_tpr = true
 load_mod_travelnet = true

@@ -33,6 +33,7 @@ RUN mkdir -p /usr/share/minetest/mods &&\
         Jeija/digilines@8574 \
         Jeija/mesecons@9802 \
         joe7575/lumberjack@7252 \
+        joe7575/tubelib2@ \
         jp/xdecor@8625 \
         Liil/nativevillages@7404 \
         Liil/people@6771 \
