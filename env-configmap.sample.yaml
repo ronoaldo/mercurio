@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: env
+data:
+  MERCURIO_MAPSERVER_KEY: ""
+  MERCURIO_PGSQL_CONNECTION: host=db port=5432 user=mercurio dbname=mercurio password=
+  MERCURIO_SERVER_ANNOUNCE: "false"
+  MERCURIO_TELEGRAM_CHATID: ""
+  MERCURIO_TELEGRAM_TOKEN: ""
+  POSTGRES_DB: "mercurio"
+  POSTGRES_PASSWORD: ""
+  POSTGRES_USER: mercurio
