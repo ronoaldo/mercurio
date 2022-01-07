@@ -47,6 +47,16 @@ in order to check if all things are right. There is a make target for that as we
 
 This will open a shell with `root` privileges so you can debug the game server.
 
+### Running with Podman (Experimental)
+
+Podman can be used for development instead of Docker, but this is currently
+experimental. To get started, make sure you have a recent version of Podman and
+use the files env-configmap.dev.yaml and mercurio.yaml to launch the server.
+
+A make target is also available:
+
+    make run-with-podman
+
 ### Troubheshooting
 
 Sometimes you may run into permission issues. I'm not sure why/how to fix

@@ -1,6 +1,5 @@
 #!/bin/bash
-
-echo "[mercurio] Starting"
+echo "[mercurio] Starting as user $(id -u):$(id -g)"
 
 # Apply all MERCURIO_* variables as substitutions to the configuration
 # file from the environment passed to the container.

@@ -4,6 +4,17 @@ run:
 run-interactive: 
 	docker-compose down && docker-compose up --build
 
+run-with-podman: podman-purge
+	podman build --tag ghcr.io/ronoaldo/mercurio:main .
+	mkdir -p .minetest/db .minetest/world
+	if [ ! -f env-configmap.yaml ]; then cp -v env-configmap.dev.yaml env-configmap.yaml ; fi
+	podman play kube --configmap env-configmap.yaml mercurio.yaml
+	podman logs -f mercurio-game
+
+podman-purge:
+	if podman pod exists mercurio ; then \
+		podman pod stop mercurio || true ; podman pod rm mercurio ; fi
+
 backup:
 	./backup.sh
 

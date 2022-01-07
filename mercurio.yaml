@@ -1,183 +1,60 @@
-# Database Deployment
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  labels:
-    io.kompose.service: db
-  name: db
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      io.kompose.service: db
-  strategy:
-    type: Recreate
-  template:
-    metadata:
-      labels:
-        io.kompose.service: db
-    spec:
-      containers:
-        - args:
-            - -c
-            - shared_buffers=1024MB
-          env:
-            - name: POSTGRES_DB
-              valueFrom:
-                configMapKeyRef:
-                  key: POSTGRES_DB
-                  name: env
-            - name: POSTGRES_PASSWORD
-              valueFrom:
-                configMapKeyRef:
-                  key: POSTGRES_PASSWORD
-                  name: env
-            - name: POSTGRES_USER
-              valueFrom:
-                configMapKeyRef:
-                  key: POSTGRES_USER
-                  name: env
-          image: postgres:13
-          name: db
-          resources: {}
-          volumeMounts:
-            - mountPath: /var/lib/postgresql/data
-              name: db-claim0
-      restartPolicy: Always
-      volumes:
-        - name: db-claim0
-          persistentVolumeClaim:
-            claimName: db-claim0
----
 apiVersion: v1
-kind: PersistentVolumeClaim
+kind: Pod
 metadata:
   labels:
-    io.kompose.service: db-claim0
-  name: db-claim0
-spec:
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 20Gi
----
+    app: mercurio
+  name: mercurio
 
-# Game deployment
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  labels:
-    io.kompose.service: game
-  name: game
 spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      io.kompose.service: game
-  strategy:
-    type: Recreate
-  template:
-    metadata:
-      labels:
-        io.kompose.service: game
-    spec:
-      containers:
-        - env:
-            - name: MERCURIO_MAPSERVER_KEY
-              valueFrom:
-                configMapKeyRef:
-                  key: MERCURIO_MAPSERVER_KEY
-                  name: env
-            - name: MERCURIO_PGSQL_CONNECTION
-              valueFrom:
-                configMapKeyRef:
-                  key: MERCURIO_PGSQL_CONNECTION
-                  name: env
-            - name: MERCURIO_SERVER_ANNOUNCE
-              valueFrom:
-                configMapKeyRef:
-                  key: MERCURIO_SERVER_ANNOUNCE
-                  name: env
-            - name: MERCURIO_TELEGRAM_CHATID
-              valueFrom:
-                configMapKeyRef:
-                  key: MERCURIO_TELEGRAM_CHATID
-                  name: env
-            - name: MERCURIO_TELEGRAM_TOKEN
-              valueFrom:
-                configMapKeyRef:
-                  key: MERCURIO_TELEGRAM_TOKEN
-                  name: env
-          image: ghcr.io/ronoaldo/mercurio:main
-          name: game
-          resources: {}
-          volumeMounts:
-            - mountPath: /var/lib/mercurio
-              name: game-claim0
-      restartPolicy: Always
-      volumes:
-        - name: game-claim0
-          persistentVolumeClaim:
-            claimName: game-claim0
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  labels:
-    io.kompose.service: game-claim0
-  name: game-claim0
-spec:
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 5G
----
+  containers:
+  - name: db
+    image: postgres:13
+    volumeMounts:
+      - mountPath: /var/lib/postgresql/data
+        name: db-data
+    args:
+      - "-c"
+      - "shared_buffers=1024MB"
+    envFrom:
+      - configMapRef:
+          name: env
 
-# Mapserver deployment
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  labels:
-    io.kompose.service: mapserver
-  name: mapserver
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      io.kompose.service: mapserver
-  strategy:
-    type: Recreate
-  template:
-    metadata:
-      labels:
-        io.kompose.service: mapserver
-    spec:
-      containers:
-        - image: minetestmapserver/mapserver:4.3.2
-          name: mapserver
-          resources: {}
-          volumeMounts:
-            - mountPath: /minetest
-              name: mapserver-claim0
-          workingDir: /minetest
-      restartPolicy: Always
-      volumes:
-        - name: mapserver-claim0
-          persistentVolumeClaim:
-            claimName: mapserver-claim0
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  labels:
-    io.kompose.service: mapserver-claim0
-  name: mapserver-claim0
-spec:
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 5G
+  - name: game
+    image: ghcr.io/ronoaldo/mercurio:main
+    imagePullPolicy: IfNotPresent
+    envFrom:
+      - configMapRef:
+          name: env
+    volumeMounts:
+      - mountPath: /var/lib/mercurio
+        name: mercurio-world
+    ports:
+      - containerPort: 30000
+        hostPort: 30000
+        protocol: UDP
+      - containerPort: 30000
+        hostPort: 30000
+        protocol: UDP
+    securityContext:
+      runAsUser: 30000
+      runAsGroup: 30000
+      fsGroup: 30000
 
+#  TODO(ronoaldo): re-enable this once the file permission issues are fixed.
+#  - name: mapserver
+#    image: minetestmapserver/mapserver:4.3.2
+#    volumeMounts:
+#      - mountPath: /minetest
+#        name: mercurio-world
+  
+  volumes:
+    - name: db-data
+      hostPath:
+        path: ./.minetest/db
+        type: Directory
+    - name: mercurio-world
+      hostPath:
+        path: ./.minetest/world
+        type: Directory
+        securityContext:
+          fsGroup: 30000

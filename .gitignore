@@ -1,4 +1,6 @@
 .minetest
+.minetest.bkp
+.podman
 .env
 docker-compose.override.yml
 env-configmap.yaml
