@@ -9,11 +9,13 @@ RUN mkdir -p /var/lib/mercurio &&\
 RUN mkdir -p /usr/share/minetest/mods &&\
     cd /usr/share/minetest &&\
     contentdb install --debug --url=https://contentdb.ronoaldo.net \
+        apercy/airutils@11252 \
         apercy/kartcar@10587 \
         apercy/trike@11084 \
         apercy/hidroplane@11294 \
         apercy/motorboat@10996 \
         apercy/demoiselle@11065 \
+        apercy/supercub@11259 \
         AiTechEye/smartshop@903 \
         BuckarooBanzay/mapserver@10938 \
         bell07/carpets@3671 \
@@ -90,7 +92,6 @@ RUN mkdir -p /usr/share/minetest/mods &&\
 # Install mods from git when not available elsewhere
 RUN apt-get update && apt-get install git -yq && apt-get clean &&\
     cd /usr/share/minetest/mods &&\
-    git clone --depth=1 https://github.com/ronoaldo/airutils --branch="git20211129" &&\
     git clone --depth=1 https://github.com/ronoaldo/aviator --branch="V1.6" &&\
     git clone --depth=1 https://github.com/ronoaldo/filler --branch="git20180215" &&\
     git clone --depth=1 https://github.com/ronoaldo/minenews --branch="v1.0.0" &&\
@@ -98,7 +99,6 @@ RUN apt-get update && apt-get install git -yq && apt-get clean &&\
     git clone --depth=1 https://github.com/ronoaldo/extra_doors --branch="v1.0.0-mercurio" &&\
     git clone --depth=1 https://github.com/ronoaldo/x_bows --branch="v1.0.5" &&\
     git clone --depth=1 https://github.com/ronoaldo/hbsprint --branch="v1.0.0-mercurio" &&\
-    git clone --depth=1 https://github.com/ronoaldo/supercub --branch="git20211207" &&\
     git clone --depth=1 https://github.com/ronoaldo/ju52 --branch="git20211207" &&\
     git clone --depth=1 https://github.com/ronoaldo/helicopter --branch="before"
 # Fetch all skins from database
