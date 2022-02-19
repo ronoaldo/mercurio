@@ -25,7 +25,7 @@ RUN mkdir -p /usr/share/minetest/mods &&\
         cronvel/respawn@2406 \
         Dragonop/tools_obsidian@6102 \
         Don/mydoors@222 \
-        ElCeejo/draconis@11235 \
+        ElCeejo/draconis@9352 \
         ElCeejo/mob_core@8939 \
         FaceDeer/anvil@5696 \
         FaceDeer/hopper@6074 \
