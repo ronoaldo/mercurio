@@ -15,7 +15,7 @@ RUN mkdir -p /usr/share/minetest/mods &&\
         apercy/hidroplane@11294 \
         apercy/motorboat@10996 \
         apercy/demoiselle@11065 \
-        apercy/supercub@11259 \
+        apercy/supercub@11295 \
         AiTechEye/smartshop@903 \
         BuckarooBanzay/mapserver@10938 \
         bell07/carpets@3671 \
