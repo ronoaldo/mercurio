@@ -1,4 +1,5 @@
-FROM ghcr.io/ronoaldo/minetestserver@sha256:6d01e021a6138ebca8b8e8c27a084cca4c8f8f3d4154f4fa956adb1d627c362a
+# Pinned ghcr.io/ronoaldo/minetestserver:stable-5 release
+FROM ghcr.io/ronoaldo/minetestserver@sha256:4444eb7016fdf537006c6a00b1415e62af04f3bd7a76eb1557bcc531614ad910
 
 # Setup system-wide settings
 USER root
