@@ -31,7 +31,7 @@ services:
         gcp-meta-name: mercuriovps
 
   mapserver:
-    image: minetestmapserver/mapserver:4.3.2
+    image: minetestmapserver/mapserver:4.5.0
     restart: always
     depends_on:
       - db
