@@ -1,5 +1,5 @@
 # Pinned ghcr.io/ronoaldo/minetestserver:stable-5 release
-FROM ghcr.io/ronoaldo/minetestserver@sha256:497b5bd641a6ae1cc4a2267c3624f1d7229d3aeef0cf4f8888558f87aa09b90c
+FROM ghcr.io/ronoaldo/minetestserver@sha256:f1ef7e9f136895b1ed412233abe086d759eb4c02f459af9cf6739081258f6391
 
 # Setup system-wide settings
 USER root
@@ -102,10 +102,9 @@ RUN apt-get update && apt-get install git -yq && apt-get clean &&\
     git clone --depth=1 https://github.com/ronoaldo/hbsprint --branch="v1.0.0-mercurio" &&\
     git clone --depth=1 https://github.com/ronoaldo/ju52 --branch="git20211207" &&\
     git clone --depth=1 https://github.com/ronoaldo/helicopter --branch="before"
-# Fetch all skins from database
-# TODO(ronoaldo): limit to selected skins to avoid abuse
-COPY fetch-skins.sh /usr/local/bin
-RUN apt-get install jq curl -yq && apt-get clean && cd /usr/share/minetest/mods/skinsdb && fetch-skins.sh
+# Add server skins to database
+COPY skins/meta     /usr/share/minetest/mods/skinsdb/meta
+COPY skins/textures /usr/share/minetest/mods/skinsdb/textures
 # Add server mod
 COPY ./mercurio /usr/share/minetest/mods/mercurio
 # Add configuration files to image
