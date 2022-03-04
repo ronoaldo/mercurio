@@ -40,7 +40,7 @@ log "Exporting compressed SQL ..."
 docker-compose exec -T db pg_dump -c -U mercurio | gzip --fast -c > .minetest/db.sql.gz
 
 log "Creating backup archive $BACKUP_FILE ..."
-tar --exclude=mapserver.tiles --exclude=mapserver.sqlite -cvzf $BACKUP_FILE .minetest/db.sql.gz .minetest/world
+tar --exclude=mapserver.tiles --exclude=mapserver.sqlite -cvf $BACKUP_FILE .minetest/world .minetest/db.sql.gz
 
 log "Removing backup file .minetest/db.sql.gz"
 rm -vf .minetest/db.sql.gz
