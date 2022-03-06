@@ -21,13 +21,10 @@ local function to_json(val)
     return str
 end
 
-log_action("Initializing server overrides ...")
 
 -- PvP area as defined by the server settings.
 local pvp_center = minetest.setting_get_pos("pvp_area_center")
 local pvp_size   = minetest.settings:get("pvp_area_size")
-log_action("PvP area with center at " .. fmt_pos(pvp_center) ..
-    ", and " .. pvp_size .. " blocks.")
 minetest.register_on_punchplayer(function(player, hitter, time_from_last_punch, tool_capabilities, dir, damage)
     if not hitter:is_player() or not player:is_player() then
         return
@@ -43,12 +40,28 @@ minetest.register_on_punchplayer(function(player, hitter, time_from_last_punch, 
     end
     return
 end)
+log_action("PvP area with center at " .. fmt_pos(pvp_center) .. ", and " .. pvp_size .. " blocks.")
+
+-- Remove unknown entities
+local function remove_entity(name)
+    log_action("Registering entities with name=" .. name .. " for removal.")
+    minetest.register_entity(name, {
+        on_activate = function(self, dtime, staticdata)
+            local o = self.object
+            local pos = fmt_pos(o:get_pos())
+            log_action("Removing entity " .. self.name .. " at " .. pos)
+            o:remove()
+        end
+    })
+end
 
 -- Fix remaining unknown nodes after adding moreblocks
 local function fix_nodes(from, to)
     log_action("Fixing unknown node using alias from "..from..", to "..to)
     minetest.register_alias(from, to)
 end
+
+log_action("Initializing server overrides ...")
 fix_nodes("ethereal:redwood_wood_micropanel", "ethereal:panel_redwood_wood_1")
 fix_nodes("ethereal:redwood_wood_microslab", "ethereal:slab_redwood_wood_1")
 fix_nodes("stairs:stair_red",      "bakedclay:stair_baked_clay_red")
@@ -69,19 +82,9 @@ fix_nodes("bakedclay:grey_microslab",  "bakedclay:slab_baked_clay_grey_1")
 fix_nodes("stairs:stair_Adobe", "building_blocks:stair_Adobe")
 -- Removes surprise blocks replacing them with air
 fix_nodes("tsm_surprise:question", "air")
-
--- Remove unknown entities
-local function remove_entity(name)
-    log_action("Registering entities with name=" .. name .. " for removal.")
-    minetest.register_entity(name, {
-        on_activate = function(self, dtime, staticdata)
-            local o = self.object
-            local pos = fmt_pos(o:get_pos())
-            log_action("Removing entity " .. self.name .. " at " .. pos)
-            o:remove()
-        end
-    })
-end
+-- Try to fix trike:repair_tool into airutils:repair_tool
+fix_nodes("trike:repair_tool", "airutils:repair_tool")
+-- Removing disabled entities from previous mods
 remove_entity(":dmobs:nyan")
 remove_entity(":loot_crates:common")
 remove_entity(":loot_crates:uncommon")
@@ -98,6 +101,7 @@ local function mercurio_spawn_abm_check(self, pos, node, name)
     return _orig_spawn_check(pos, node, name)
 end
 mobs.spawn_abm_check = mercurio_spawn_abm_check
+
 -- Debug spawning mobs from mobs_redo:
 log_action("mobs.spawning_mobs = " .. minetest.write_json(mobs.spawning_mobs))
 
