@@ -2,7 +2,7 @@
 # Restore from a given backup file into the db service.
 
 # Exit on any error
-set -e
+set -e -o pipefail
 BASEDIR=`readlink -f $(dirname $0)`
 BASENAME=`basename $BASEDIR`
 
@@ -22,7 +22,7 @@ fi
 case $FILE in
     gs://*)
         log "Fetching from Cloud Storage ..."
-        gsutil -m --quiet cp $FILE /tmp/restore.tar.gz
+        gsutil -m cp $FILE /tmp/restore.tar.gz
         export FILE=/tmp/restore.tar.gz
         log "Done. Using $FILE to restore."
     ;;
@@ -45,7 +45,7 @@ sudo tar xvf $FILE .minetest/world
 
 # Restore the database from backup
 log "Restoring database. This may take a long time"
-tar xf $FILE .minetest/sql.gz | gunzip -c | docker-compose exec -T db psql -U mercurio
+tar -xOf $FILE .minetest/db.sql.gz | gunzip -c | docker-compose exec -T db psql -U mercurio
 
 # Fix permissions after restore
 log "Fixing permissions after restore"
