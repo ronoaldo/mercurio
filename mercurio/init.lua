@@ -62,6 +62,7 @@ local function fix_nodes(from, to)
 end
 
 log_action("Initializing server overrides ...")
+-- Fixes several nodes missing missing after adding moreores/moreblocks
 fix_nodes("ethereal:redwood_wood_micropanel", "ethereal:panel_redwood_wood_1")
 fix_nodes("ethereal:redwood_wood_microslab", "ethereal:slab_redwood_wood_1")
 fix_nodes("stairs:stair_red",      "bakedclay:stair_baked_clay_red")
@@ -82,8 +83,19 @@ fix_nodes("bakedclay:grey_microslab",  "bakedclay:slab_baked_clay_grey_1")
 fix_nodes("stairs:stair_Adobe", "building_blocks:stair_Adobe")
 -- Removes surprise blocks replacing them with air
 fix_nodes("tsm_surprise:question", "air")
--- Try to fix trike:repair_tool into airutils:repair_tool
+-- Replace trike:repair_tool into airutils:repair_tool
 fix_nodes("trike:repair_tool", "airutils:repair_tool")
+-- Temporary fix for Draconis upgrade
+fix_nodes("draconis:egg_ice_dragon_white", "default:diamondblock")
+fix_nodes("draconis:egg_ice_dragon_slate", "default:diamondblock")
+fix_nodes("draconis:egg_ice_dragon_silver", "default:diamondblock")
+fix_nodes("draconis:egg_ice_dragon_light_blue", "default:diamondblock")
+fix_nodes("draconis:egg_ice_dragon_sapphire", "default:diamondblock")
+fix_nodes("draconis:egg_fire_dragon_green", "default:diamondblock")
+fix_nodes("draconis:egg_fire_dragon_red", "default:diamondblock")
+fix_nodes("draconis:egg_fire_dragon_gold", "default:diamondblock")
+fix_nodes("draconis:egg_fire_dragon_black", "default:diamondblock")
+fix_nodes("draconis:egg_fire_dragon_bronze", "default:diamondblock")
 -- Removing disabled entities from previous mods
 remove_entity(":dmobs:nyan")
 remove_entity(":loot_crates:common")
