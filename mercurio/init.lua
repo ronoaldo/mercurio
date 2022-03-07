@@ -62,6 +62,7 @@ local function fix_nodes(from, to)
 end
 
 log_action("Initializing server overrides ...")
+-- Fixes several nodes missing missing after adding moreores/moreblocks
 fix_nodes("ethereal:redwood_wood_micropanel", "ethereal:panel_redwood_wood_1")
 fix_nodes("ethereal:redwood_wood_microslab", "ethereal:slab_redwood_wood_1")
 fix_nodes("stairs:stair_red",      "bakedclay:stair_baked_clay_red")
@@ -82,14 +83,28 @@ fix_nodes("bakedclay:grey_microslab",  "bakedclay:slab_baked_clay_grey_1")
 fix_nodes("stairs:stair_Adobe", "building_blocks:stair_Adobe")
 -- Removes surprise blocks replacing them with air
 fix_nodes("tsm_surprise:question", "air")
--- Try to fix trike:repair_tool into airutils:repair_tool
+-- Replace trike:repair_tool into airutils:repair_tool
 fix_nodes("trike:repair_tool", "airutils:repair_tool")
+-- Temporary fix for draconis after upgrade to 1.2.x
+fix_nodes("draconis:egg_ice_dragon_white",      "draconis:egg_ice_white")
+fix_nodes("draconis:egg_ice_dragon_slate",      "draconis:egg_ice_slate")
+fix_nodes("draconis:egg_ice_dragon_silver",     "draconis:egg_ice_silver")
+fix_nodes("draconis:egg_ice_dragon_light_blue", "draconis:egg_ice_light_blue")
+fix_nodes("draconis:egg_ice_dragon_sapphire",   "draconis:egg_ice_sapphire")
+fix_nodes("draconis:egg_fire_dragon_green",     "draconis:egg_fire_green")
+fix_nodes("draconis:egg_fire_dragon_red",       "draconis:egg_fire_red")
+fix_nodes("draconis:egg_fire_dragon_gold",      "draconis:egg_fire_gold")
+fix_nodes("draconis:egg_fire_dragon_black",     "draconis:egg_fire_black")
+fix_nodes("draconis:egg_fire_dragon_bronze",    "draconis:egg_fire_bronze")
+fix_nodes("draconis:dracolily_fire", "air")
+fix_nodes("draconis:dracolily_ice", "air")
 -- Removing disabled entities from previous mods
 remove_entity(":dmobs:nyan")
 remove_entity(":loot_crates:common")
 remove_entity(":loot_crates:uncommon")
 remove_entity(":loot_crates:rare")
-
+remove_entity(":draconis:dracolily_fire")
+remove_entity(":draconis:dracolily_ice")
 -- Spawn overrides
 local _orig_spawn_check = mobs.spawn_abm_check
 local function mercurio_spawn_abm_check(self, pos, node, name)

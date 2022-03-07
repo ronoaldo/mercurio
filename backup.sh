@@ -5,7 +5,7 @@ set -e
 BASEDIR=`readlink -f $(dirname $0)`
 BASENAME=`basename $BASEDIR`
 BACKUP_DIR=$HOME/backups/$(date +'%Y%m')
-BACKUP_FILE=$BACKUP_DIR/$BASENAME-$(date +'%Y%m%d-%H%M%S').tar.gz
+BACKUP_FILE=$BACKUP_DIR/$BASENAME-$(date +'%Y%m%d-%H%M%S').tar
 
 # Log with timestamps for measuring time.
 log() {
