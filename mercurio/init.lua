@@ -103,7 +103,8 @@ remove_entity(":dmobs:nyan")
 remove_entity(":loot_crates:common")
 remove_entity(":loot_crates:uncommon")
 remove_entity(":loot_crates:rare")
-
+remove_entity(":draconis:dracolily_fire")
+remove_entity(":draconis:dracolily_ice")
 -- Spawn overrides
 local _orig_spawn_check = mobs.spawn_abm_check
 local function mercurio_spawn_abm_check(self, pos, node, name)
