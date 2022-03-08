@@ -36,6 +36,7 @@ RUN mkdir -p /usr/share/minetest/mods &&\
         Jeija/digilines@8574 \
         Jeija/mesecons@11304 \
         joe7575/lumberjack@11039 \
+        joe7575/tubelib2@10505 \
         jp/xdecor@10178 \
         Liil/nativevillages@7404 \
         Liil/people@6771 \
@@ -101,7 +102,9 @@ RUN apt-get update && apt-get install git -yq && apt-get clean &&\
     git clone --depth=1 https://github.com/ronoaldo/x_bows --branch="v1.0.5" &&\
     git clone --depth=1 https://github.com/ronoaldo/hbsprint --branch="v1.0.0-mercurio" &&\
     git clone --depth=1 https://github.com/ronoaldo/ju52 --branch="git20211207" &&\
-    git clone --depth=1 https://github.com/ronoaldo/helicopter --branch="before"
+    git clone --depth=1 https://github.com/ronoaldo/helicopter --branch="before" &&\
+    git clone --depth=1 https://github.com/ronoaldo/techpack --branch="v2.02-mercurio" &&\
+    git clone --depth=1 https://github.com/ronoaldo/drawers --branch="v0.6.3-mercurio"
 # Add server skins to database
 COPY skins/meta     /usr/share/minetest/mods/skinsdb/meta
 COPY skins/textures /usr/share/minetest/mods/skinsdb/textures
