@@ -93,7 +93,7 @@ RUN mkdir -p /usr/share/minetest/mods &&\
         Wuzzy/tsm_pyramids@3355 \
         x2048/cinematic@7122
 # Install mods from git when not available elsewhere
-RUN apt-get update && apt-get install git -yq && apt-get clean &&\
+RUN apt-get update && apt-get install git -yq && apt-get clean && git config --global advice.detachedHead false &&\
     cd /usr/share/minetest/mods &&\
     git clone --depth=1 https://github.com/ronoaldo/aviator --branch="V1.6" &&\
     git clone --depth=1 https://github.com/ronoaldo/filler --branch="git20180215" &&\
@@ -105,7 +105,8 @@ RUN apt-get update && apt-get install git -yq && apt-get clean &&\
     git clone --depth=1 https://github.com/ronoaldo/ju52 --branch="git20211207" &&\
     git clone --depth=1 https://github.com/ronoaldo/helicopter --branch="before" &&\
     git clone --depth=1 https://github.com/ronoaldo/techpack --branch="v2.02-mercurio" &&\
-    git clone --depth=1 https://github.com/ronoaldo/drawers --branch="v0.6.3-mercurio"
+    git clone --depth=1 https://github.com/ronoaldo/drawers --branch="v0.6.3-mercurio" &&\
+    git clone --depth=1 https://github.com/ronoaldo/xtraores --branch="v0.22-mercurio"
 # Add server skins to database
 COPY skins/meta     /usr/share/minetest/mods/skinsdb/meta
 COPY skins/textures /usr/share/minetest/mods/skinsdb/textures
