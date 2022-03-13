@@ -1,5 +1,7 @@
 run: 
 	docker-compose down && docker-compose up --build --detach
+	@echo -e "\n\nServer is running in background ... showing logs\n\n"
+	docker-compose logs -f
 
 run-interactive: 
 	docker-compose down && docker-compose up --build
