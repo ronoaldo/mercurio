@@ -1,5 +1,7 @@
 -- Mercurio server overrides
 
+local path = minetest.get_modpath("mercurio")
+
 -- log_action logs the provided message with 'action' level.
 local function log_action(msg)
     minetest.log("action", "[MOD]mercurio: "..msg)
@@ -137,3 +139,9 @@ minetest.register_abm({
 })
 
 log_action("Server overrides loaded!")
+
+local is_beta_server = minetest.settings:get("mercurio_beta_server")
+if is_beta_server == "true" then
+    log_action("Enabling beta features")
+    dofile(path .. "/beta.lua")
+end

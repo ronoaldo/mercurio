@@ -1,5 +1,5 @@
 # Pinned ghcr.io/ronoaldo/minetestserver:stable-5 release
-FROM ghcr.io/ronoaldo/minetestserver@sha256:f1ef7e9f136895b1ed412233abe086d759eb4c02f459af9cf6739081258f6391
+FROM ghcr.io/ronoaldo/minetestserver@sha256:ba5a3af29f086d94339f5bada2d7374c97ff1347896fec216e3e1f54206f8a65
 
 # Setup system-wide settings
 USER root
