@@ -1,4 +1,3 @@
--- log_action logs the provided message with 'action' level.
 local function log_action(msg)
     minetest.log("action", "[MOD]mercurio: "..msg)
 end
@@ -28,8 +27,8 @@ local function auto_grant_privs(player, last_login)
     log_action("Granted give to player "..name.." new privs => "..to_json(privs))
 
     -- Explains this is a beta server and things may break/be reset.
-    minetest.chat_send_player(name, "ATENÇÃO Este é um servidor de testes! Tudo que fizermos aqui será resetado!")
-    minetest.chat_send_player(name, "WARNING This is a test server! All we do here will be reset!")
+    minetest.chat_send_player(name, "*** ATENÇÃO: Este é um servidor de testes! Tudo que fizermos aqui será resetado!")
+    minetest.chat_send_player(name, "*** WARNING: This is a test server! All we do here will be reset!")
 end
 
 minetest.register_on_joinplayer(auto_grant_privs)
