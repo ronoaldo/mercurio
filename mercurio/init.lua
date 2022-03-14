@@ -105,8 +105,6 @@ remove_entity(":dmobs:nyan")
 remove_entity(":loot_crates:common")
 remove_entity(":loot_crates:uncommon")
 remove_entity(":loot_crates:rare")
-remove_entity(":draconis:dracolily_fire")
-remove_entity(":draconis:dracolily_ice")
 -- Spawn overrides
 local _orig_spawn_check = mobs.spawn_abm_check
 local function mercurio_spawn_abm_check(self, pos, node, name)
@@ -120,7 +118,7 @@ end
 mobs.spawn_abm_check = mercurio_spawn_abm_check
 
 -- Debug spawning mobs from mobs_redo:
-log_action("mobs.spawning_mobs = " .. minetest.write_json(mobs.spawning_mobs))
+-- log_action("mobs.spawning_mobs = " .. minetest.write_json(mobs.spawning_mobs))
 
 -- ABM to fix Nether unknown blocks already created
 minetest.register_abm({
@@ -138,10 +136,11 @@ minetest.register_abm({
     end,
 })
 
-log_action("Server overrides loaded!")
-
+-- Load beta server settings
 local is_beta_server = minetest.settings:get("mercurio_beta_server")
 if is_beta_server == "true" then
     log_action("Enabling beta features")
     dofile(path .. "/beta.lua")
 end
+
+log_action("Server overrides loaded!")
