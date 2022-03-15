@@ -84,7 +84,8 @@ load_mod_homedecor_inbox = true
 load_mod_homedecor_kitchen = true
 load_mod_homedecor_laundry = true
 load_mod_homedecor_lighting = truegit fetch origin
-git checkout 45-add-mod-xtraores
+load_mod_homedecor_misc = false
+load_mod_homedecor_office = false
 load_mod_homedecor_pictures_and_paintings = true
 load_mod_homedecor_plasmascreen = true 
 load_mod_homedecor_roofing = true
