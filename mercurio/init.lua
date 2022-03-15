@@ -30,23 +30,8 @@ end
 local pvp_center = minetest.setting_get_pos("pvp_area_center")
 local pvp_size   = minetest.settings:get("pvp_area_size")
 
--- Creating the video_producer privilege to allow players to record vídeos from battles.
-minetest.register_privilege("video_producer", {
-    description = "Can record vídeos not taking any damage",
-    give_to_singleplayer = false
-})
-
 -- Custom on_punchplayer callback to implement server-wide damage overrides.
 minetest.register_on_punchplayer(function(player, hitter, time_from_last_punch, tool_capabilities, dir, damage)
-    -- If damaged entity is a player, but it is a video_producer, don't take damage
-    if player:is_player() then
-        local name = player:get_name()
-        if minetest.check_player_privs(name, { video_producer = true }) then
-            log_action("Player " .. name .. " is a video_producer; ignoring damage")
-            return true
-        end
-    end
-    
     -- If the damage is not between players, proceed regular damage calculation.
     if not hitter:is_player() or not player:is_player() then
         return
@@ -65,6 +50,36 @@ minetest.register_on_punchplayer(function(player, hitter, time_from_last_punch, 
     return
 end)
 log_action("PvP area with center at " .. fmt_pos(pvp_center) .. ", and " .. pvp_size .. " blocks.")
+
+-- Creating the video_producer privilege to allow players to record vídeos from battles.
+minetest.register_privilege("video_producer", {
+    description = "Can record vídeos not taking any damage",
+    give_to_singleplayer = false
+})
+minetest.register_on_joinplayer(function(player)
+    local name = player:get_player_name()
+    if minetest.check_player_privs(name, {video_producer = true}) then
+        local groups = player:get_armor_groups() or {}
+        groups.immortal = 1
+        player:set_armor_groups(groups)
+        log_action("*** Player is a video_producer, adding invincible armor group")
+    end
+end)
+
+-- Small fix to respawn mod to avoid showing immortal players death message/log.
+local _orig_respawn_death = respawn.death
+local function respawn_death(player, data)
+    if not player then return false end
+    local groups = player:get_armor_groups()
+    if groups then
+        if groups.immortal then
+            -- Avoid showing the message for immortal players
+            return false
+        end
+    end
+    return _orig_respawn_death(player, data)
+end
+respawn.death = respawn_death
 
 -- Remove unknown entities
 local function remove_entity(name)
