@@ -42,7 +42,7 @@ services:
     working_dir: "/minetest"
 
   discordmt:
-    image: ghcr.io/ronoaldo/discordmt:latest
+    image: ghcr.io/ronoaldo/discordmt:r20220319
     restart: always
     env_file:
       - .env
