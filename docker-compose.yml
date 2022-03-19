@@ -1,11 +1,15 @@
 version: "3.3"
 services:
-  db:
-    image: postgres:13
-    command: -c shared_buffers=1024MB
+  game:
+    image: ghcr.io/ronoaldo/mercurio:main
+    build: .
     restart: always
+    depends_on:
+      - db
+      - mapserver
+      - discordmt
     volumes:
-      - ./.minetest/db:/var/lib/postgresql/data
+      - ./.minetest/world:/var/lib/mercurio
     env_file:
       - .env
     logging:
@@ -14,14 +18,12 @@ services:
         gcp-project: minetest-hosting
         gcp-meta-name: mercuriovps
 
-  game:
-    image: ghcr.io/ronoaldo/mercurio:main
-    build: .
+  db:
+    image: postgres:13
+    command: -c shared_buffers=1024MB
     restart: always
-    depends_on:
-      - db
     volumes:
-      - ./.minetest/world:/var/lib/mercurio
+      - ./.minetest/db:/var/lib/postgresql/data
     env_file:
       - .env
     logging:
@@ -38,3 +40,9 @@ services:
     volumes:
       - "./.minetest/world:/minetest"
     working_dir: "/minetest"
+
+  discordmt:
+    image: ghcr.io/ronoaldo/discordmt:latest
+    restart: always
+    env_file:
+      - .env

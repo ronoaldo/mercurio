@@ -42,6 +42,7 @@ load_mod_crops = true
 load_mod_currency = true 
 load_mod_demoiselle = true
 load_mod_digilines = true
+load_mod_discordmt = true
 load_mod_dmobs = true
 load_mod_draconis = true
 load_mod_drawers = true
