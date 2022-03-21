@@ -107,7 +107,8 @@ RUN apt-get update && apt-get install git -yq && apt-get clean && git config --g
     git clone --depth=1 https://github.com/ronoaldo/techpack --branch="v2.02-mercurio" &&\
     git clone --depth=1 https://github.com/ronoaldo/drawers --branch="v0.6.3-mercurio" &&\
     git clone --depth=1 https://github.com/ronoaldo/xtraores --branch="v0.22-mercurio3" &&\
-    git clone --depth=1 https://github.com/ronoaldo/discordmt --branch="v0.2+mercurio1"
+    git clone --depth=1 https://github.com/ronoaldo/discordmt --branch="v0.2+mercurio1" &&\
+    git clone --depth=2 https://github.com/ronoaldo/mtinfo --branch="resursive-texture-export"
 
 # Add server skins to database
 COPY skins/meta     /usr/share/minetest/mods/skinsdb/meta

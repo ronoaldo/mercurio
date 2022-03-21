@@ -46,3 +46,9 @@ services:
     restart: always
     env_file:
       - .env
+  
+  mtinfo:
+    image: lipanski/docker-static-website:1.0.0
+    restart: always
+    volumes:
+      - "./.minetest/world/mtinfo:/home/static"

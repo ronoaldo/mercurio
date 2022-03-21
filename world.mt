@@ -153,6 +153,7 @@ load_mod_moreores = true
 load_mod_moreswords = true
 load_mod_motorboat = true
 load_mod_mtimer = true
+load_mod_mtinfo = true
 load_mod_my_castle_doors = true
 load_mod_my_cottage_doors = true
 load_mod_my_default_doors = true
