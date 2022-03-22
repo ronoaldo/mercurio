@@ -119,6 +119,7 @@ COPY ./mercurio /usr/share/minetest/mods/mercurio
 # Add configuration files to image
 COPY world.mt      /etc/minetest/world.mt
 COPY minetest.conf /etc/minetest/minetest.conf
+COPY news          /etc/minetest/news
 COPY mercurio.sh   /usr/bin
 COPY backup.sh     /usr/bin
 # Restore user to minetest and redefine launch script
