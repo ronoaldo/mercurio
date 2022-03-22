@@ -198,4 +198,12 @@ end
 -- Load admin commands
 dofile(path .. "/admin.lua")
 
+minetest.register_on_mods_loaded(function()
+    discord.send("Server started :D")
+end)
+
+minetest.register_on_shutdown(function()
+    discord.send("Server is shutting down :(")
+end)
+
 log_action("Server overrides loaded!")
