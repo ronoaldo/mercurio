@@ -18,7 +18,14 @@ update:
 	docker-compose up -d
 
 check-mod-updates:
-	docker-compose exec --user 0 game bash -c 'cd /usr/share/minetest && contentdb update --dry-run' | tee /tmp/updates.log
+	docker-compose exec --user 0 game bash -c \
+		'cd /usr/share/minetest && contentdb update --dry-run' |\
+		sed -r "s/\x1B\[([0-9]{1,3}(;[0-9]{1,2})?)?[mGK]//g" |\
+		tee /tmp/updates.log
+
+extract-server-mods:
+	docker-compose exec --user 0 -T game bash -c \
+		'cd /usr/share/minetest && tar -czf - mods/' > /tmp/mods.tar.gz
 
 fix-perms:
 	sudo chown -R 30000:$$(id -g) .minetest/world
