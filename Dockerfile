@@ -51,6 +51,7 @@ RUN mkdir -p /usr/share/minetest/mods &&\
         Piezo_/illumination@1091 \
         Piezo_/hangglider@ \
         PilzAdam/nether@11303 \
+        ronoaldo/minenews@11619 \
         RealBadAngel/unified_inventory@10829 \
         rael5/nether_mobs@6364 \
         rnd/basic_machines@58 \
@@ -97,7 +98,6 @@ RUN apt-get update && apt-get install git -yq && apt-get clean && git config --g
     cd /usr/share/minetest/mods &&\
     git clone --depth=1 https://github.com/ronoaldo/aviator --branch="V1.6" &&\
     git clone --depth=1 https://github.com/ronoaldo/filler --branch="git20180215" &&\
-    git clone --depth=1 https://github.com/ronoaldo/minenews --branch="v1.0.0" &&\
     git clone --depth=1 https://github.com/ronoaldo/patron --branch="v1.0.0" &&\
     git clone --depth=1 https://github.com/ronoaldo/extra_doors --branch="v1.0.0-mercurio" &&\
     git clone --depth=1 https://github.com/ronoaldo/x_bows --branch="v1.0.5" &&\
@@ -108,7 +108,8 @@ RUN apt-get update && apt-get install git -yq && apt-get clean && git config --g
     git clone --depth=1 https://github.com/ronoaldo/drawers --branch="v0.6.3-mercurio" &&\
     git clone --depth=1 https://github.com/ronoaldo/xtraores --branch="v0.22-mercurio3" &&\
     git clone --depth=1 https://github.com/ronoaldo/discordmt --branch="v0.2+mercurio1" &&\
-    git clone --depth=2 https://github.com/ronoaldo/mtinfo --branch="resursive-texture-export"
+    git clone --depth=2 https://github.com/ronoaldo/mtinfo --branch="v1-mercurio1" &&\
+    git clone --depth=1 https://github.com/ronoaldo/markdown2formspec --branch="v1.1-mercurio1"
 
 # Add server skins to database
 COPY skins/meta     /usr/share/minetest/mods/skinsdb/meta
