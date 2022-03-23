@@ -14,6 +14,7 @@ __configure() {
 # Always use configuration from the image, replacing credentials
 # from environment
 cp -v /etc/minetest/world.mt /var/lib/mercurio/world.mt
+cp -v /etc/minetest/news/*   /var/lib/mercurio/
 __configure /var/lib/mercurio/world.mt
 __configure /etc/minetest/minetest.conf
 
