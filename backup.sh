@@ -1,5 +1,6 @@
 #!/bin/bash
 set -e
+set -o pipefail
 
 # Config
 BASEDIR=`readlink -f $(dirname $0)`
@@ -31,7 +32,10 @@ log "Saving backup to $BACKUP_FILE ..."
 
 log "Entering $BASEDIR, and sourcing $BASEDIR/.env"
 cd $BASEDIR
-. .env
+# Replace docker-compose env definitions with bash compatible definitions
+sed -e 's/=/="/' -e 's/=\(.*\)$/\0"/' < .env > .env.sh
+. .env.sh
+rm .env.sh
 
 log "Initializing $BACKUP_DIR"
 mkdir -p $BACKUP_DIR
