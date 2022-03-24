@@ -1,3 +1,16 @@
+build:
+	docker-compose build
+
+test:
+	sed -e 's/AUTOSHUTDOWN=.*/AUTOSHUTDOWN=true/g' .env.sample > /tmp/.env.test
+	docker-compose --env-file /tmp/.env.test run \
+		-e MERCURIO_MTINFO_AUTOSHUTDOWN=true \
+		-e NO_WRAPPER=true game
+	docker-compose --env-file /tmp/.env.test run \
+		--user 0 -T game bash -c \
+		'cd /usr/share/minetest && tar -czf - mods/' > /tmp/mods.tar.gz
+	docker-compose down
+
 run: 
 	docker-compose down && docker-compose up --build --detach
 	@echo -e "\n\nServer is running in background ... showing logs\n\n"

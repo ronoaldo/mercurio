@@ -11,7 +11,7 @@ env:
   IMAGE_NAME: ${{ github.repository }}
 
 jobs:
-  build-image:
+  test-the-server:
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -20,20 +20,14 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Extract metadata (tags, labels) for Docker
-        id: meta
-        uses: docker/metadata-action@v3.5.0
+      - name: Build docker image
+        run: docker-compose build
+      
+      - name: Run tests and export mods
+        run: make test
+      
+      - name: Publish mods for this build
+        uses: actions/upload-artifact@v3
         with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-          tags: |
-            type=ref,event=branch
-            type=ref,event=tag
-            type=raw,value=r{{date 'YYYYMMDD'}}
-
-      - name: Test Docker image build
-        uses: docker/build-push-action@v2
-        with:
-          context: .
-          push: false
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
+          name: mods.tar.gz
+          path: /tmp/mods.tar.gz
