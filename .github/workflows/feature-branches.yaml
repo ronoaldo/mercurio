@@ -1,0 +1,33 @@
+name: Test docker image builds for pull-requests
+
+on:
+  push:
+    branches-ignore: ['main']
+  pull_request:
+    branches: ['main']
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
+jobs:
+  test-the-server:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Build docker image
+        run: docker-compose build
+      
+      - name: Run tests and export mods
+        run: make test
+      
+      - name: Publish mods for this build
+        uses: actions/upload-artifact@v3
+        with:
+          name: mods.tar.gz
+          path: /tmp/mods.tar.gz

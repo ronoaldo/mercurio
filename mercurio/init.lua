@@ -4,27 +4,35 @@
 
 local path = minetest.get_modpath("mercurio")
 
+-- Helper functions
+mercurio = {}
+
 -- log_action logs the provided message with 'action' level.
-local function log_action(msg)
+mercurio.log_action = function(msg)
     minetest.log("action", "[MOD]mercurio: "..msg)
 end
 
 -- format_pos formats the given position with no decimal places
-local function fmt_pos(pos)
+mercurio.fmt_pos = function(pos)
     return minetest.pos_to_string(pos, 0)
 end
 
 -- to_json formats the provided value as a JSON string.
-local function to_json(val)
+mercurio.to_json = function(val, pretty)
     if val == nil then
         return "null"
     end
-    local str = minetest.write_json(val)
+    local str = minetest.write_json(val, pretty)
     if str == nil then
         return "null"
     end
     return str
 end
+
+-- Syntax suggar
+local log_action = mercurio.log_action
+local fmt_pos = mercurio.fmt_pos
+local to_json = mercurio.to_json
 
 -- PvP area as defined by the server settings.
 local pvp_center = minetest.setting_get_pos("pvp_area_center")
@@ -95,9 +103,13 @@ local function remove_entity(name)
 end
 
 -- Fix remaining unknown nodes after adding moreblocks
-local function alias(from, to)
+local function alias(from, to, force)
     log_action("Fixing unknown node using alias from "..from..", to "..to)
-    minetest.register_alias(from, to)
+    if force and force == true then
+        minetest.register_alias_force(from, to)
+    else
+        minetest.register_alias(from, to)
+    end
 end
 
 log_action("Initializing server overrides ...")
@@ -135,8 +147,11 @@ alias("draconis:egg_fire_dragon_red",       "draconis:egg_fire_red")
 alias("draconis:egg_fire_dragon_gold",      "draconis:egg_fire_gold")
 alias("draconis:egg_fire_dragon_black",     "draconis:egg_fire_black")
 alias("draconis:egg_fire_dragon_bronze",    "draconis:egg_fire_bronze")
-alias("draconis:dracolily_fire", "air")
-alias("draconis:dracolily_ice", "air")
+-- Force alias for stone to avoid inventory bug (game replacing inv item with air)
+alias("draconis:dracolily_fire", "default:stone", true)
+alias("draconis:dracolily_ice", "default:stone", true)
+alias("draconis:blood_fire_dragon", "default:stone", true)
+alias("draconis:blood_ice_dragon", "default:stone", true)
 -- Removing disabled entities from previous mods
 remove_entity(":dmobs:nyan")
 remove_entity(":loot_crates:common")
@@ -180,7 +195,8 @@ if is_beta_server == "true" then
     dofile(path .. "/beta.lua")
 end
 
-log_action("Server overrides loaded!")
+-- Load admin commands
+dofile(path .. "/admin.lua")
 
 minetest.register_on_mods_loaded(function()
     discord.send("Server started :D")
@@ -189,3 +205,5 @@ end)
 minetest.register_on_shutdown(function()
     discord.send("Server is shutting down :(")
 end)
+
+log_action("Server overrides loaded!")
