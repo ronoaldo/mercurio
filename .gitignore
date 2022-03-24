@@ -1,3 +1,4 @@
 .minetest
 .env
+.env.*
 docker-compose.override.yml
