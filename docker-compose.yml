@@ -10,8 +10,18 @@ services:
       - discordmt
     volumes:
       - ./.minetest/world:/var/lib/mercurio
-    env_file:
-      - .env
+    environment:
+      - MERCURIO_PGSQL_CONNECTION
+      - MERCURIO_TELEGRAM_TOKEN
+      - MERCURIO_TELEGRAM_CHATID
+      - MERCURIO_SERVER_ANNOUNCE
+      - MERCURIO_SERVER_NAME
+      - MERCURIO_PORT
+      - MERCURIO_MAPSERVER_KEY
+      - MERCURIO_LOAD_PROFILER
+      - MERCURIO_DEBUG_LOGLEVEL
+      - MERCURIO_BETA_SERVER
+      - MERCURIO_MTINFO_AUTOSHUTDOWN
     logging:
       driver: gcplogs
       options:
@@ -24,8 +34,10 @@ services:
     restart: always
     volumes:
       - ./.minetest/db:/var/lib/postgresql/data
-    env_file:
-      - .env
+    environment:
+      - POSTGRES_DB
+      - POSTGRES_USER
+      - POSTGRES_PASSWORD
     logging:
       driver: gcplogs
       options:
@@ -44,9 +56,12 @@ services:
   discordmt:
     image: ghcr.io/ronoaldo/discordmt:r20220319
     restart: always
-    env_file:
-      - .env
-  
+    environment:
+      - DISCORD_BOT_PREFIX
+      - DISCORD_PORT
+      - DISCORD_BOT_TOKEN
+      - DISCORD_CHANNEL_ID
+
   mtinfo:
     image: lipanski/docker-static-website:1.0.0
     restart: always

@@ -1,14 +1,18 @@
 build:
 	docker-compose build
 
+TEST_ARGS=--env-file /tmp/.env.test -f docker-compose.yml -f docker-compose.test.yml
+TEST_ENV= -e MERCURIO_MTINFO_AUTOSHUTDOWN=true -e NO_WRAPPER=true
+
 test:
+	docker-compose down
 	sed -e 's/AUTOSHUTDOWN=.*/AUTOSHUTDOWN=true/g' .env.sample > /tmp/.env.test
-	docker-compose --env-file /tmp/.env.test run \
-		-e MERCURIO_MTINFO_AUTOSHUTDOWN=true \
-		-e NO_WRAPPER=true game
-	docker-compose --env-file /tmp/.env.test run \
-		--user 0 -T game bash -c \
-		'cd /usr/share/minetest && tar -czf - mods/' > /tmp/mods.tar.gz
+	docker-compose $(TEST_ARGS) run -d db && sleep 5
+	docker-compose $(TEST_ARGS) run --user 0 -T game \
+		bash -c 'chown -R minetest:minetest /var/lib/mercurio'
+	docker-compose $(TEST_ARGS) run $(TEST_ENV) game
+	docker-compose $(TEST_ARGS) run --user 0 -T game \
+		bash -c 'cd /usr/share/minetest && tar -czf - mods/' > /tmp/mods.tar.gz
 	docker-compose down
 
 run: 
