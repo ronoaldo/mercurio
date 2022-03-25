@@ -180,12 +180,15 @@ if is_beta_server == "true" then
     dofile(path .. "/beta.lua")
 end
 
+-- Load server-only craft items
+dofile(path .. "/items.lua")
+
 log_action("Server overrides loaded!")
 
 minetest.register_on_mods_loaded(function()
-    discord.send("Server started :D")
+    discord.send("*** Servidor Iniciado!")
 end)
 
 minetest.register_on_shutdown(function()
-    discord.send("Server is shutting down :(")
+    discord.send("*** Servidor está desligando ...")
 end)
