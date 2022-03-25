@@ -18,6 +18,8 @@ RUN mkdir -p /usr/share/minetest/mods &&\
         apercy/demoiselle@11065 \
         apercy/supercub@11295 \
         apercy/automobiles_pck@11425 \
+        apercy/nautilus@11298 \
+        AiTechEye/hook@1891 \
         AiTechEye/smartshop@903 \
         BuckarooBanzay/mapserver@10938 \
         bell07/carpets@3671 \
@@ -49,7 +51,7 @@ RUN mkdir -p /usr/share/minetest/mods &&\
         neko259/telegram@6870 \
         philipmi/regrowing_fruits@10631 \
         Piezo_/illumination@1091 \
-        Piezo_/hangglider@ \
+        Piezo_/hangglider@1269 \
         PilzAdam/nether@11303 \
         ronoaldo/minenews@11619 \
         RealBadAngel/unified_inventory@10829 \
@@ -77,6 +79,7 @@ RUN mkdir -p /usr/share/minetest/mods &&\
         TenPlus1/mobs_npc@10750 \
         TenPlus1/protector@11106 \
         Termos/mobkit@6391 \
+        Termos/sailing_kit@6033 \
         Traxie21/tpr@8314 \
         VanessaE/basic_materials@10975 \
         VanessaE/basic_signs@7503 \
