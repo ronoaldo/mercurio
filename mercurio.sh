@@ -20,8 +20,13 @@ __configure /etc/minetest/minetest.conf
 
 echo "[mercurio] Server configured, launching."
 
+export CMD=minetest-wrapper.sh
+if [ x"$NO_WRAPPER" = x"true" ] ; then
+    export CMD=minetestserver
+fi
+
 # Launch run-loop wrapper in a clean environment
 /usr/bin/env -i HOME=/var/lib/minetest \
-    minetest-wrapper.sh \
+    $CMD \
     --world /var/lib/mercurio \
     --config /etc/minetest/minetest.conf
