@@ -23,6 +23,7 @@ services:
       - MERCURIO_DEBUG_LOGLEVEL
       - MERCURIO_BETA_SERVER
       - MERCURIO_MTINFO_AUTOSHUTDOWN
+      - MERCURIO_MONITORING_NAME
     logging:
       driver: gcplogs
       options:

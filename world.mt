@@ -149,6 +149,7 @@ load_mod_mobs = true
 load_mod_mobs_animal = true
 load_mod_mobs_monster = true
 load_mod_mobs_npc = true
+load_mod_monitoring = true
 load_mod_moreblocks = true
 load_mod_moreores = true
 load_mod_moreswords = true
