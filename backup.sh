@@ -41,7 +41,7 @@ log "Initializing $BACKUP_DIR"
 mkdir -p $BACKUP_DIR
 
 log "Exporting compressed SQL ..."
-docker-compose exec -T db pg_dump -c -U mercurio | gzip --fast -c > .minetest/db.sql.gz
+docker-compose exec -T db pg_dump -Z0 -j $(nproc) -c -U mercurio | gzip --fast -c > .minetest/db.sql.gz
 
 log "Creating backup archive $BACKUP_FILE ..."
 tar --exclude=mapserver.tiles --exclude=mapserver.sqlite -cvf $BACKUP_FILE .minetest/world .minetest/db.sql.gz
@@ -50,8 +50,18 @@ log "Removing backup file .minetest/db.sql.gz"
 rm -vf .minetest/db.sql.gz
 
 if [ x$MINETEST_BACKUP_GCS = x"true" ] ; then
-    log "Moving backup to Cloud Storage ... "
-    gsutil -m --quiet mv $BACKUP_FILE gs://minetest-hosting/servers/mercurio/backups/${BASENAME}.current.tar.gz
-else
-    log "Not moving to Cloud Storage. MINETEST_BACKUP_GCS env is not set to 'true'."
+    log "Copying backup to Cloud Storage ..."
+    gsutil -m --quiet cp $BACKUP_FILE gs://minetest-hosting/servers/mercurio/backups/${BASENAME}.current.tar.gz
+    export DO_REMOVE=true
+fi
+
+if [ x"$MINETEST_BACKUP_S3CMD" = x"true" ] ; then
+    log "Copying backup to S3 Storage ..."
+    s3cmd put --no-progress $BACKUP_FILE s3://backups/${BASENAME}.current.tar.gz 
+    export DO_REMOVE=true
+fi
+
+if [ x"$DO_REMOVE" = x"true" ] ; then
+    log "Removing local file to free space ..."
+    rm -vf $BACKUP_FILE
 fi
