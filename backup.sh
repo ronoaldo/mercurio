@@ -1,6 +1,7 @@
 #!/bin/bash
 set -e
 set -o pipefail
+[ x"$DEBUG" == x"true" ] && set -x
 
 # Config
 BASEDIR=`readlink -f $(dirname $0)`
@@ -17,7 +18,7 @@ log() {
 _cleanup() {
     echo "Cleaning up ..."
     cd $BASEDIR
-    rm -vf .minetest/db.sql .minetest/db.sql.gz
+    rm -vf .minetest/db.sql .minetest/db.sql.gz .minetest/db.pg_dump.tar
 }
 
 # Main
@@ -40,18 +41,35 @@ rm .env.sh
 log "Initializing $BACKUP_DIR"
 mkdir -p $BACKUP_DIR
 
-log "Exporting compressed SQL ..."
-docker-compose exec -T db pg_dump -c -U mercurio | gzip --fast -c > .minetest/db.sql.gz
+log "Exporting compressed pg_dump file ..."
+docker-compose exec -T db rm -rf /tmp/pg_dump
+docker-compose exec -T db \
+	pg_dump --verbose \
+	--username mercurio \
+	--format directory \
+	--file /tmp/pg_dump \
+	--create
+docker-compose exec -T db bash -c 'cd /tmp && tar -cf - pg_dump && rm -rf /tmp/pg_dump' > .minetest/db.pg_dump.tar
 
 log "Creating backup archive $BACKUP_FILE ..."
-tar --exclude=mapserver.tiles --exclude=mapserver.sqlite -cvf $BACKUP_FILE .minetest/world .minetest/db.sql.gz
+tar --exclude=mapserver.tiles --exclude=mapserver.sqlite -cvf $BACKUP_FILE .minetest/world .minetest/db.pg_dump.tar
 
-log "Removing backup file .minetest/db.sql.gz"
-rm -vf .minetest/db.sql.gz
+log "Removing backup file .minetest/db.pg_dump.tar"
+rm -vf .minetest/db.pg_dump.tar
 
 if [ x$MINETEST_BACKUP_GCS = x"true" ] ; then
-    log "Moving backup to Cloud Storage ... "
-    gsutil -m --quiet mv $BACKUP_FILE gs://minetest-hosting/servers/mercurio/backups/${BASENAME}.current.tar.gz
-else
-    log "Not moving to Cloud Storage. MINETEST_BACKUP_GCS env is not set to 'true'."
+    log "Copying backup to Cloud Storage ..."
+    gsutil -m --quiet cp $BACKUP_FILE gs://minetest-hosting/servers/mercurio/backups/${BASENAME}.current.tar.gz
+    export DO_REMOVE=true
+fi
+
+if [ x"$MINETEST_BACKUP_S3CMD" = x"true" ] ; then
+    log "Copying backup to S3 Storage ..."
+    s3cmd put --no-progress $BACKUP_FILE s3://backups/${BASENAME}.current.tar.gz 
+    export DO_REMOVE=true
+fi
+
+if [ x"$DO_REMOVE" = x"true" ] ; then
+    log "Removing local file to free space ..."
+    rm -vf $BACKUP_FILE
 fi
