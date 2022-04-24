@@ -41,21 +41,14 @@ rm .env.sh
 log "Initializing $BACKUP_DIR"
 mkdir -p $BACKUP_DIR
 
-log "Exporting compressed pg_dump file ..."
-docker-compose exec -T db rm -rf /tmp/pg_dump
-docker-compose exec -T db \
-	pg_dump --verbose \
-	--username mercurio \
-	--format directory \
-	--file /tmp/pg_dump \
-	--create
-docker-compose exec -T db bash -c 'cd /tmp && tar -cf - pg_dump && rm -rf /tmp/pg_dump' > .minetest/db.pg_dump.tar
+log "Exporting compressed SQL file ..."
+docker-compose exec -T db pg_dump -c -U mercurio | gzip --fast -c > .minetest/db.sql.gz
 
 log "Creating backup archive $BACKUP_FILE ..."
-tar --exclude=mapserver.tiles --exclude=mapserver.sqlite -cvf $BACKUP_FILE .minetest/world .minetest/db.pg_dump.tar
+tar --exclude=mapserver.tiles --exclude=mapserver.sqlite -cvf $BACKUP_FILE .minetest/world .minetest/db.sql.gz
 
-log "Removing backup file .minetest/db.pg_dump.tar"
-rm -vf .minetest/db.pg_dump.tar
+log "Removing backup file .minetest/db.sql.gz"
+rm -vf .minetest/db.sql.gz
 
 if [ x$MINETEST_BACKUP_GCS = x"true" ] ; then
     log "Copying backup to Cloud Storage ..."

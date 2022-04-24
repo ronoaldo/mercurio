@@ -3,6 +3,8 @@
 
 # Exit on any error
 set -e -o pipefail
+[ x"$DEBUG" == x"true" ] && set -x
+
 BASEDIR=`readlink -f $(dirname $0)`
 BASENAME=`basename $BASEDIR`
 
@@ -31,13 +33,17 @@ esac
 # Only keep the container server running
 log "Shutting services down"
 docker-compose down
-log "Starting database"
-docker-compose up -d db
 
-# Move current world folder to timestamped one
-AUX=.minetest/world.$(date +%Y%m%d-%H%M%S)
+TIMESTAMP=$(date +%Y%m%d-%H%M%S)
+AUX=.minetest/world.$TIMESTAMP
 log "Moving current world dir to $AUX"
 sudo mv .minetest/world $AUX
+AUX=.minetest/db.$TIMESTAMP
+log "Moving current db dir to $AUX"
+sudo mv .minetest/db $AUX
+
+log "Starting database with empty structure"
+docker-compose up -d db
 
 # Extract the world folder from backup
 log "Restoring world from backup ... "
@@ -45,25 +51,10 @@ sudo tar xvf $FILE .minetest/world
 
 # Restore the database from backup
 log "Restoring database. This may take a long time"
-tar -xOf $FILE .minetest/db.pg_dump.tar | docker-compose exec -T db tar -C /tmp/ -xf -
-docker-compose exec -T db \
-	pg_restore \
-	--verbose \
-	--username mercurio \
-	--format directory \
-	--file /tmp/pg_dump.out \
-	--clean \
-	--if-exists \
-	--no-acl \
-	--no-privileges \
-	--no-owner \
-	--exit-on-error \
-	/tmp/pg_dump
+tar -xOf $FILE .minetest/db.sql.gz | gunzip -c | docker-compose exec -T db psql -U mercurio
 
 # Fix permissions after restore
 log "Fixing permissions after restore"
 make fix-perms
 
-# Restart services back
-log "Starting services back"
-make run
+log "Server restore completed"
