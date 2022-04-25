@@ -44,6 +44,7 @@ sudo mv .minetest/db $AUX
 
 log "Starting database with empty structure"
 docker-compose up -d db
+sleep 10
 
 # Extract the world folder from backup
 log "Restoring world from backup ... "
