@@ -31,6 +31,7 @@ shell:
 
 update:
 	git pull
+	docker pull ghcr.io/ronoaldo/mercurio:main
 	docker-compose pull
 	docker-compose up -d
 
