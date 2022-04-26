@@ -16,6 +16,37 @@ O servidor foi projetado para ser amigável e agradável! Por favor:
 
 ![1,1](halo)
 
+# **Atualização do servidor em 25 de abril de 2022**
+
+O servidor foi atualizado esta semana para obter algumas atualizações de mod do
+ContentDB. As atualizações são principalmente algumas pequenas correções de
+bugs, algumas que não afetaram o Mercurio.
+
+## Os veículos agora têm um inventário!
+
+Sim! Agora você pode viajar com coisas em seus aviões e carros! Para usar o
+inventário, **CTRL + CLIQUE DIREITO** no veículo enquanto aponta para ele.
+
+## Mods atualizados
+
+A lista de mods atualizados é:
+
+    airutils, trike, hidroplane, demoiselle, supercub, automobiles_pck (by APercy)
+    skinsdb (by bell07)
+    water_life (by Gundul)
+    mesecons (by Jeija)
+    tubelib2 (by joe7575)
+    xdecor (by jp)
+    regrowing_fruits (by philipmi)
+    unified_inventory (by RealBadAngel)
+    3d_armor (by stu)
+    bonemeal, dmobs, ethereal, farming, mobs, protector (by TenPlus1)
+    basic_materials, homedecor_modpack, unifieddyes, signs_lib (by VanessaE)
+    tsm_pyramids (by Wuzzy)
+
+Ainda existem alguns **problemas conhecidos**, especialmente com o mod Draconis,
+que ainda não foram corrigidos. Draconis não foi atualizado, pois mostrou
+problemas mais recentes durante a fase de teste.
 
 # **Atualização do servidor em 13 de março de 2022**
 

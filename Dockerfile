@@ -10,18 +10,18 @@ RUN mkdir -p /var/lib/mercurio &&\
 RUN mkdir -p /usr/share/minetest/mods &&\
     cd /usr/share/minetest &&\
     contentdb install --debug --url=https://contentdb.ronoaldo.net \
-        apercy/airutils@11252 \
+        apercy/airutils@11901 \
         apercy/kartcar@10587 \
-        apercy/trike@11084 \
-        apercy/hidroplane@11294 \
+        apercy/trike@11914 \
+        apercy/hidroplane@11913 \
         apercy/motorboat@10996 \
-        apercy/demoiselle@11065 \
-        apercy/supercub@11295 \
-        apercy/automobiles_pck@11425 \
+        apercy/demoiselle@11909 \
+        apercy/supercub@11911 \
+        apercy/automobiles_pck@11916 \
         AiTechEye/smartshop@903 \
         BuckarooBanzay/mapserver@10938 \
         bell07/carpets@3671 \
-        bell07/skinsdb@11044 \
+        bell07/skinsdb@11695 \
         Calinou/moreblocks@8247 \
         Calinou/moreores@8248 \
         cronvel/respawn@2406 \
@@ -31,14 +31,14 @@ RUN mkdir -p /usr/share/minetest/mods &&\
         ElCeejo/creatura@11412 \
         FaceDeer/anvil@5696 \
         FaceDeer/hopper@6074 \
-        Gundul/water_life@10254 \
+        Gundul/water_life@11762 \
         "Hybrid Dog/we_undo@9288" \
         JAstudios/moreswords@9585 \
         Jeija/digilines@8574 \
-        Jeija/mesecons@11304 \
+        Jeija/mesecons@11716 \
         joe7575/lumberjack@11039 \
-        joe7575/tubelib2@10505 \
-        jp/xdecor@10178 \
+        joe7575/tubelib2@11557 \
+        jp/xdecor@11439 \
         Liil/nativevillages@7404 \
         Liil/people@6771 \
         Linuxdirk/mtimer@9958 \
@@ -47,12 +47,12 @@ RUN mkdir -p /usr/share/minetest/mods &&\
         MeseCraft/void_chest@5565 \
         mt-mods/travelnet@8497 \
         neko259/telegram@6870 \
-        philipmi/regrowing_fruits@10631 \
+        philipmi/regrowing_fruits@11665 \
         Piezo_/illumination@1091 \
         Piezo_/hangglider@ \
         PilzAdam/nether@11303 \
         ronoaldo/minenews@11619 \
-        RealBadAngel/unified_inventory@10829 \
+        RealBadAngel/unified_inventory@11814 \
         rael5/nether_mobs@6364 \
         rnd/basic_machines@58 \
         rubenwardy/awards@6092 \
@@ -63,35 +63,35 @@ RUN mkdir -p /usr/share/minetest/mods &&\
         sofar/emote@1317 \
         Sokomine/markers@306 \
         Sokomine/replacer@76 \
-        stu/3d_armor@11131 \
+        stu/3d_armor@11723 \
         TenPlus1/bakedclay@9438 \
-        TenPlus1/bonemeal@10585 \
-        TenPlus1/dmobs@11181 \
-        TenPlus1/ethereal@11207 \
-        TenPlus1/farming@10944 \
+        TenPlus1/bonemeal@11596 \
+        TenPlus1/dmobs@11568 \
+        TenPlus1/ethereal@11781 \
+        TenPlus1/farming@11538 \
         TenPlus1/itemframes@10483 \
         TenPlus1/mob_horse@11324 \
-        TenPlus1/mobs@11107 \
+        TenPlus1/mobs@11924 \
         TenPlus1/mobs_animal@10737 \
         TenPlus1/mobs_monster@10752 \
         TenPlus1/mobs_npc@10750 \
-        TenPlus1/protector@11106 \
+        TenPlus1/protector@11445 \
         Termos/mobkit@6391 \
         Traxie21/tpr@8314 \
-        VanessaE/basic_materials@10975 \
+        VanessaE/basic_materials@11672 \
         VanessaE/basic_signs@7503 \
         VanessaE/currency@10265 \
-        VanessaE/homedecor_modpack@11314 \
+        VanessaE/homedecor_modpack@11680 \
         VanessaE/home_workshop_modpack@9914 \
-        VanessaE/unifieddyes@7577 \
-        VanessaE/signs_lib@11166 \
+        VanessaE/unifieddyes@11844 \
+        VanessaE/signs_lib@11527 \
         Wuzzy/calendar@5062 \
         Wuzzy/hbarmor@1275 \
         Wuzzy/hbhunger@9156 \
         Wuzzy/hudbars@8390 \
         Wuzzy/inventory_icon@469 \
         Wuzzy/show_wielded_item@7596 \
-        Wuzzy/tsm_pyramids@3355 \
+        Wuzzy/tsm_pyramids@11352 \
         x2048/cinematic@7122
 # Install mods from git when not available elsewhere
 RUN apt-get update && apt-get install git -yq && apt-get clean && git config --global advice.detachedHead false &&\

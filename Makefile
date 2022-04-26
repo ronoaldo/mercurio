@@ -40,6 +40,13 @@ check-mod-updates:
 		sed -r "s/\x1B\[([0-9]{1,3}(;[0-9]{1,2})?)?[mGK]//g" |\
 		tee /tmp/updates.log
 
+apply-mod-updates:
+	grep updating /tmp/updates.log |\
+		awk '{print $$11}' | tr -d : | tr '@' ' ' |\
+		while read m v ; do echo "$${m} => $${v}" ; \
+			sed -e "s,$${m}@[0-9]\+,$${m}@$${v},g" -i Dockerfile ;\
+		done
+
 extract-server-mods:
 	docker-compose exec --user 0 -T game bash -c \
 		'cd /usr/share/minetest && tar -czf - mods/' > /tmp/mods.tar.gz

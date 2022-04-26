@@ -16,6 +16,36 @@ The server is designed to be friendly and enjoyable! Please:
 
 ![1,1](halo)
 
+# **Server Update April 25, 2022**
+
+Server was updated this week to pull in some mod updates from ContentDB. The
+updates are mainly some minor bug fixes, some which did not affected Mercurio.
+
+## Vehicles now have an inventory!
+
+Yep! You can now travel with stuff in your planes and cars! To use the inventory,
+**CTRL + RIGHT CLICK** on the vehicle while pointing to it.
+
+## Updated Mods
+
+The list of updated mods is:
+
+    airutils, trike, hidroplane, demoiselle, supercub, automobiles_pck (by APercy)
+    skinsdb (by bell07)
+    water_life (by Gundul)
+    mesecons (by Jeija)
+    tubelib2 (by joe7575)
+    xdecor (by jp)
+    regrowing_fruits (by philipmi)
+    unified_inventory (by RealBadAngel)
+    3d_armor (by stu)
+    bonemeal, dmobs, ethereal, farming, mobs, protector (by TenPlus1)
+    basic_materials, homedecor_modpack, unifieddyes, signs_lib (by VanessaE)
+    tsm_pyramids (by Wuzzy)
+
+There are still some known issues, specially with the Draconis mod, that are yet
+to be fixed. Draconis was not updated as it showed newer issues during the test
+phase.
 
 # **Server Update March 13, 2022**
 
@@ -25,7 +55,7 @@ Server was updated this week to add two new mods! New vehicles to drive around
 and 11 new elements, ores and equipments. Special thanks to player **bramos**,
 **farribeiro** and **joseanastacio** who suggeted the mods and helped with testing!
 
-## New vhicles
+## New vehicles
 Added APercy's automobiles modpack, adding three new cars for us
 to drive: coupe, buggy and roadster.
 
