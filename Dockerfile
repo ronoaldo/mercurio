@@ -110,7 +110,8 @@ RUN apt-get update && apt-get install git -yq && apt-get clean && git config --g
     git clone --depth=1 https://github.com/ronoaldo/discordmt --branch="v0.2+mercurio1" &&\
     git clone --depth=2 https://github.com/ronoaldo/mtinfo --branch="v1-mercurio1" &&\
     git clone --depth=1 https://github.com/ronoaldo/markdown2formspec --branch="v1.1-mercurio1" &&\
-    git clone --depth=1 https://github.com/ronoaldo/minetest-monitoring --branch="v1.04-mercurio1" monitoring
+    git clone --depth=1 https://github.com/ronoaldo/minetest-monitoring --branch="v1.04-mercurio1" monitoring &&\
+    git clone --depth=1 https://github.com/ronoaldo/minecaptcha --branch="v1.0-beta3"
 
 # Add server skins to database
 COPY skins/meta     /usr/share/minetest/mods/skinsdb/meta
