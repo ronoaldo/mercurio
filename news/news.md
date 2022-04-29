@@ -18,6 +18,8 @@ The server is designed to be friendly and enjoyable! Please:
 
 # **Server Update April 25, 2022**
 
+![0,0,r](item:///default:pick_diamond)
+
 Server was updated this week to pull in some mod updates from ContentDB. The
 updates are mainly some minor bug fixes, some which did not affected Mercurio.
 
@@ -30,22 +32,26 @@ Yep! You can now travel with stuff in your planes and cars! To use the inventory
 
 The list of updated mods is:
 
-    airutils, trike, hidroplane, demoiselle, supercub, automobiles_pck (by APercy)
-    skinsdb (by bell07)
-    water_life (by Gundul)
-    mesecons (by Jeija)
-    tubelib2 (by joe7575)
-    xdecor (by jp)
-    regrowing_fruits (by philipmi)
-    unified_inventory (by RealBadAngel)
-    3d_armor (by stu)
-    bonemeal, dmobs, ethereal, farming, mobs, protector (by TenPlus1)
-    basic_materials, homedecor_modpack, unifieddyes, signs_lib (by VanessaE)
-    tsm_pyramids (by Wuzzy)
+```
+airutils, trike, hidroplane, demoiselle, supercub, automobiles_pck (by APercy)
+skinsdb (by bell07)
+water_life (by Gundul)
+mesecons (by Jeija)
+tubelib2 (by joe7575)
+xdecor (by jp)
+regrowing_fruits (by philipmi)
+unified_inventory (by RealBadAngel)
+3d_armor (by stu)
+bonemeal, dmobs, ethereal, farming, mobs, protector (by TenPlus1)
+basic_materials, homedecor_modpack, unifieddyes, signs_lib (by VanessaE)
+tsm_pyramids (by Wuzzy)
+```
 
 There are still some known issues, specially with the Draconis mod, that are yet
 to be fixed. Draconis was not updated as it showed newer issues during the test
 phase.
+
+![1,1](halo)
 
 # **Server Update March 13, 2022**
 
