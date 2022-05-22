@@ -26,8 +26,8 @@ RUN contentdb install --debug --url=https://contentdb.ronoaldo.net \
     cronvel/respawn@2406 \
     Dragonop/tools_obsidian@6102 \
     Don/mydoors@222 \
-    ElCeejo/draconis@11512 \
-    ElCeejo/creatura@11412 \
+    ElCeejo/creatura@12331 \
+    ElCeejo/draconis@11787 \
     FaceDeer/anvil@5696 \
     FaceDeer/hopper@6074 \
     Gundul/water_life@11762 \
