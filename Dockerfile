@@ -9,13 +9,13 @@ RUN mkdir -p /var/lib/mercurio &&\
 # Install mods system-wide (ro)
 WORKDIR /usr/share/minetest
 RUN contentdb install --debug --url=https://contentdb.ronoaldo.net \
-    apercy/airutils@11901 \
+    apercy/airutils@12289 \
     apercy/kartcar@10587 \
-    apercy/trike@11914 \
-    apercy/hidroplane@11913 \
+    apercy/trike@12225 \
+    apercy/hidroplane@12249 \
     apercy/motorboat@10996 \
-    apercy/demoiselle@11909 \
-    apercy/supercub@11911 \
+    apercy/demoiselle@12294 \
+    apercy/supercub@12247 \
     apercy/automobiles_pck@11916 \
     AiTechEye/smartshop@903 \
     BuckarooBanzay/mapserver@10938 \
