@@ -36,7 +36,7 @@ RUN contentdb install --debug --url=https://contentdb.ronoaldo.net \
     Jeija/digilines@8574 \
     Jeija/mesecons@11716 \
     joe7575/lumberjack@11039 \
-    joe7575/tubelib2@11557 \
+    joe7575/tubelib2@12002 \
     jp/xdecor@11439 \
     Liil/nativevillages@7404 \
     Liil/people@6771 \
@@ -50,7 +50,7 @@ RUN contentdb install --debug --url=https://contentdb.ronoaldo.net \
     Piezo_/illumination@1091 \
     Piezo_/hangglider@ \
     PilzAdam/nether@11303 \
-    ronoaldo/minenews@11619 \
+    ronoaldo/minenews@12102 \
     RealBadAngel/unified_inventory@11942 \
     rael5/nether_mobs@6364 \
     rnd/basic_machines@58 \
