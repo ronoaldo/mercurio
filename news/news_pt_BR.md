@@ -16,6 +16,31 @@ O servidor foi projetado para ser amigável e agradável! Por favor:
 
 ![1,1](halo)
 
+# **Atualização do servidor em 22 de março de 2022**
+
+![0,0,r](item:///default:pick_diamond)
+
+O servidor foi atualizado esta semana para trazer algumas correções importantes.
+Atualizamos o servidor engine para `5.5.1`, que possui importantes correções de
+segurança, bem como várias correções de bugs da versão `5.5.0`.
+
+Nós também as atualizações regulares do mod, especificamente:
+
+```
+APercy Airplanes (airutils, demoiselle, supercub, trike)
+ElCeejo Draconis (creatura, draconis)
+Unified Inventory (by RealBadAngel, minetest-mods)
+TenPlus1 mods (bonemeal, ethereal, mobs, mobs_animal)
+VanessaE mods (homedecor_modpack, unifieddyes, signs_lib)
+Minenews (by Ronoaldo)
+Tubelib (by joe7575)
+```
+
+Não foi possível atualizar o `Mesecons`; ele causou muitos erros de dependência,
+porque de nova maneira o modpack declara dependências.
+
+![1,1](halo)
+
 # **Atualização do servidor em 25 de abril de 2022**
 
 ![0,0,r](item:///default:pick_diamond)
