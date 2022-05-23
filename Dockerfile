@@ -64,14 +64,14 @@ RUN contentdb install --debug --url=https://contentdb.ronoaldo.net \
     Sokomine/replacer@76 \
     stu/3d_armor@11723 \
     TenPlus1/bakedclay@9438 \
-    TenPlus1/bonemeal@11596 \
+    TenPlus1/bonemeal@12185 \
     TenPlus1/dmobs@11568 \
-    TenPlus1/ethereal@11781 \
+    TenPlus1/ethereal@12340 \
     TenPlus1/farming@11538 \
     TenPlus1/itemframes@10483 \
     TenPlus1/mob_horse@11324 \
-    TenPlus1/mobs@11924 \
-    TenPlus1/mobs_animal@10737 \
+    TenPlus1/mobs@12063 \
+    TenPlus1/mobs_animal@12027 \
     TenPlus1/mobs_monster@10752 \
     TenPlus1/mobs_npc@10750 \
     TenPlus1/protector@11445 \
