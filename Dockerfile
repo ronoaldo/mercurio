@@ -51,7 +51,7 @@ RUN contentdb install --debug --url=https://contentdb.ronoaldo.net \
     Piezo_/hangglider@ \
     PilzAdam/nether@11303 \
     ronoaldo/minenews@11619 \
-    RealBadAngel/unified_inventory@11814 \
+    RealBadAngel/unified_inventory@11942 \
     rael5/nether_mobs@6364 \
     rnd/basic_machines@58 \
     rubenwardy/awards@6092 \
