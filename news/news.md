@@ -16,7 +16,7 @@ The server is designed to be friendly and enjoyable! Please:
 
 ![1,1](halo)
 
-# **Server Update March 22, 2022**
+# **Server Update May 22, 2022**
 
 ![0,0,r](item:///default:pick_diamond)
 
@@ -27,16 +27,16 @@ from 5.5.0 release.
 We also have the regular mod updates, specifically:
 
 ```
-APercy Airplanes (airutils, demoiselle, supercub, trike)
-ElCeejo Draconis (creatura, draconis)
-Unified Inventory (by RealBadAngel, minetest-mods)
-TenPlus1 mods (bonemeal, ethereal, mobs, mobs_animal)
-VanessaE mods (homedecor_modpack, unifieddyes, signs_lib)
-Minenews (by Ronoaldo)
-Tubelib (by joe7575)
+* APercy Airplanes (airutils, demoiselle, supercub, trike)
+* ElCeejo Draconis (creatura, draconis)
+* Unified Inventory (by RealBadAngel, minetest-mods)
+* TenPlus1 mods (bonemeal, ethereal, mobs, mobs_animal)
+* VanessaE mods (homedecor_modpack, unifieddyes, signs_lib)
+* Minenews (by Ronoaldo)
+* Tubelib (by joe7575)
 ```
 
-We were unable to update `Mesecons`; it caused a lot of dependency errors,
+We were unable to update `Mesecons`. It caused a lot of dependency errors,
 because of new way the modpack declares dependencies.
 
 ![1,1](halo)
