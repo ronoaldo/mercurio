@@ -80,10 +80,10 @@ RUN contentdb install --debug --url=https://contentdb.ronoaldo.net \
     VanessaE/basic_materials@11672 \
     VanessaE/basic_signs@7503 \
     VanessaE/currency@10265 \
-    VanessaE/homedecor_modpack@11680 \
+    VanessaE/homedecor_modpack@12307 \
     VanessaE/home_workshop_modpack@9914 \
-    VanessaE/unifieddyes@11844 \
-    VanessaE/signs_lib@11527 \
+    VanessaE/unifieddyes@12180 \
+    VanessaE/signs_lib@12226 \
     Wuzzy/calendar@5062 \
     Wuzzy/hbarmor@1275 \
     Wuzzy/hbhunger@9156 \
