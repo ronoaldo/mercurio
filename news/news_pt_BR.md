@@ -16,6 +16,32 @@ O servidor foi projetado para ser amigável e agradável! Por favor:
 
 ![1,1](halo)
 
+# **Atualização do servidor em 22 de maio de 2022**
+
+![0,0,r](item:///default:pick_diamond)
+
+O servidor foi atualizado esta semana para trazer algumas correções importantes.
+Atualizamos o servidor engine para `5.5.1`, que possui importantes correções de
+segurança, bem como várias correções de bugs da versão `5.5.0`.
+
+Nós também as atualizações regulares dos mods, especificamente:
+
+```
+* APercy Airplanes (airutils, demoiselle, supercub, trike)
+* ElCeejo Draconis (creatura, draconis)
+* Unified Inventory (by RealBadAngel, minetest-mods)
+* TenPlus1 mods (bonemeal, ethereal, mobs, mobs_animal)
+* VanessaE mods (homedecor_modpack, unifieddyes, signs_lib)
+* Minenews (by Ronoaldo)
+* Tubelib (by joe7575)
+```
+
+Não foi possível atualizar o `Mesecons`. Ele causou muitos erros de dependência,
+por causa da nova maneira que o modpack declara suas dependências. Assim que terminar
+a investigação, acredito que poderemos atualizá-lo.
+
+![1,1](halo)
+
 # **Atualização do servidor em 25 de abril de 2022**
 
 ![0,0,r](item:///default:pick_diamond)
@@ -91,30 +117,8 @@ Aumente o nível das suas fazendas!
 Este mod adiciona uma grande quantidade de novos itens de armazenamento.  Quero
 dizer, *vários* novos itens de armazenamento. Atualize seus armazéns!
 
-![1,1](halo.png)
-
-
-# **Atualização do servidor em 12 de fevereiro de 2022**
-
-![0,0,r](item:///default:pick_diamond)
-
-Servidor foi atualizado com vários mods para suas novas versões.
-
-## Nova versão dos aviões APercy
-
-Mods agora usam *airutils* em comum, incluindo para reparos e lógica básica de
-voo.
-
-## Nova versão do mod Draconis
-
-O mod Draconis foi atualizado para a versão 1.2.  Uma das principais novidades é
-que nesta nova versão o forno pode realmente ser aquecido e usado para produzir
-minério, ferramenta e armadura melhorados! Também temos novos recursos no
-comportamento de dragões selvagens e uma nova interface para gerenciar o dragão
-domesticado.
 
 ![1,1](halo.png)
-
 
 # **Dicas e truques**
 

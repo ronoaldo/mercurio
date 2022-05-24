@@ -16,6 +16,31 @@ The server is designed to be friendly and enjoyable! Please:
 
 ![1,1](halo)
 
+# **Server Update May 22, 2022**
+
+![0,0,r](item:///default:pick_diamond)
+
+Server was updated this week to pull in some important fixes. We updated server
+engine to 5.5.1, which has important security fixes as well as several bug fixes
+from 5.5.0 release.
+
+We also have the regular mod updates, specifically:
+
+```
+* APercy Airplanes (airutils, demoiselle, supercub, trike)
+* ElCeejo Draconis (creatura, draconis)
+* Unified Inventory (by RealBadAngel, minetest-mods)
+* TenPlus1 mods (bonemeal, ethereal, mobs, mobs_animal)
+* VanessaE mods (homedecor_modpack, unifieddyes, signs_lib)
+* Minenews (by Ronoaldo)
+* Tubelib (by joe7575)
+```
+
+We were unable to update `Mesecons`. It caused a lot of dependency errors,
+because of new way the modpack declares dependencies.
+
+![1,1](halo)
+
 # **Server Update April 25, 2022**
 
 ![0,0,r](item:///default:pick_diamond)
@@ -89,29 +114,9 @@ Level up your farming!
 This mod adds a great ammount of new storage items. I mean, *several* new
 storage items. Upgrade your wharehouses!
 
-![1,1](halo.png)
 
-
-
-# **Server Update February 12, 2022**
-
-![0,0,r](item:///default:pick_diamond)
-
-Server was updated with several mods to their new versions.
-
-## New version of APercy planes
-
-Mods now use *airutils* in common, including for repairs and base flight logic.
-
-## New version of Draconis mod
-
-The Draconis mod has been updated to version 1.2.  One of the main news is that
-in this new version the furnace can actually be heated and used to produce the
-improved ore, tool and armor! We also have new features in the behavior of wild
-dragons and a new interface for managing the tamed dragon.
 
 ![1,1](halo.png)
-
 
 # **Tips and Tricks**
 
@@ -122,4 +127,3 @@ breakage of your builds! Remember some kids play here as well so better be safe
 than sorry!
 
 You can use the `search` dommand to find useful information about the world!
-

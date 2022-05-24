@@ -9,13 +9,13 @@ RUN mkdir -p /var/lib/mercurio &&\
 # Install mods system-wide (ro)
 WORKDIR /usr/share/minetest
 RUN contentdb install --debug --url=https://contentdb.ronoaldo.net \
-    apercy/airutils@11901 \
+    apercy/airutils@12289 \
     apercy/kartcar@10587 \
-    apercy/trike@11914 \
-    apercy/hidroplane@11913 \
+    apercy/trike@12225 \
+    apercy/hidroplane@12249 \
     apercy/motorboat@10996 \
-    apercy/demoiselle@11909 \
-    apercy/supercub@11911 \
+    apercy/demoiselle@12294 \
+    apercy/supercub@12247 \
     apercy/automobiles_pck@11916 \
     AiTechEye/smartshop@903 \
     BuckarooBanzay/mapserver@10938 \
@@ -26,8 +26,8 @@ RUN contentdb install --debug --url=https://contentdb.ronoaldo.net \
     cronvel/respawn@2406 \
     Dragonop/tools_obsidian@6102 \
     Don/mydoors@222 \
-    ElCeejo/draconis@11512 \
-    ElCeejo/creatura@11412 \
+    ElCeejo/creatura@12331 \
+    ElCeejo/draconis@11787 \
     FaceDeer/anvil@5696 \
     FaceDeer/hopper@6074 \
     Gundul/water_life@11762 \
@@ -36,7 +36,7 @@ RUN contentdb install --debug --url=https://contentdb.ronoaldo.net \
     Jeija/digilines@8574 \
     Jeija/mesecons@11716 \
     joe7575/lumberjack@11039 \
-    joe7575/tubelib2@11557 \
+    joe7575/tubelib2@12002 \
     jp/xdecor@11439 \
     Liil/nativevillages@7404 \
     Liil/people@6771 \
@@ -50,8 +50,8 @@ RUN contentdb install --debug --url=https://contentdb.ronoaldo.net \
     Piezo_/illumination@1091 \
     Piezo_/hangglider@ \
     PilzAdam/nether@11303 \
-    ronoaldo/minenews@11619 \
-    RealBadAngel/unified_inventory@11814 \
+    ronoaldo/minenews@12102 \
+    RealBadAngel/unified_inventory@11942 \
     rael5/nether_mobs@6364 \
     rnd/basic_machines@58 \
     rubenwardy/awards@6092 \
@@ -64,14 +64,14 @@ RUN contentdb install --debug --url=https://contentdb.ronoaldo.net \
     Sokomine/replacer@76 \
     stu/3d_armor@11723 \
     TenPlus1/bakedclay@9438 \
-    TenPlus1/bonemeal@11596 \
+    TenPlus1/bonemeal@12185 \
     TenPlus1/dmobs@11568 \
-    TenPlus1/ethereal@11781 \
+    TenPlus1/ethereal@12340 \
     TenPlus1/farming@11538 \
     TenPlus1/itemframes@10483 \
     TenPlus1/mob_horse@11324 \
-    TenPlus1/mobs@11924 \
-    TenPlus1/mobs_animal@10737 \
+    TenPlus1/mobs@12063 \
+    TenPlus1/mobs_animal@12027 \
     TenPlus1/mobs_monster@10752 \
     TenPlus1/mobs_npc@10750 \
     TenPlus1/protector@11445 \
@@ -80,10 +80,10 @@ RUN contentdb install --debug --url=https://contentdb.ronoaldo.net \
     VanessaE/basic_materials@11672 \
     VanessaE/basic_signs@7503 \
     VanessaE/currency@10265 \
-    VanessaE/homedecor_modpack@11680 \
+    VanessaE/homedecor_modpack@12307 \
     VanessaE/home_workshop_modpack@9914 \
-    VanessaE/unifieddyes@11844 \
-    VanessaE/signs_lib@11527 \
+    VanessaE/unifieddyes@12180 \
+    VanessaE/signs_lib@12226 \
     Wuzzy/calendar@5062 \
     Wuzzy/hbarmor@1275 \
     Wuzzy/hbhunger@9156 \

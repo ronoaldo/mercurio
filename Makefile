@@ -41,7 +41,12 @@ check-mod-updates:
 		sed -r "s/\x1B\[([0-9]{1,3}(;[0-9]{1,2})?)?[mGK]//g" |\
 		tee /tmp/updates.log
 
-apply-mod-updates:
+list-mod-updates: /tmp/updates.log
+	@grep updating /tmp/updates.log |\
+		awk '{print $$11}' | tr -d : | tr '@' ' ' | sort -V |\
+		while read m v ; do echo "$${m}@$${v}" ; done
+
+apply-mod-updates: /tmp/updates.log
 	grep updating /tmp/updates.log |\
 		awk '{print $$11}' | tr -d : | tr '@' ' ' |\
 		while read m v ; do echo "$${m} => $${v}" ; \
