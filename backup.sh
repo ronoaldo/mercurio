@@ -10,6 +10,7 @@ BASENAME=`basename $BASEDIR`
 BACKUP_DIR=$HOME/backups/$(date +'%Y%m')
 BACKUP_FILE_NAME=$BASENAME-$(date +'%Y%m%d-%H%M%S').tar
 BACKUP_FILE="${BACKUP_DIR}/${BACKUP_FILE_NAME}"
+export LANG=C LC_ALL=C
 
 # Log with timestamps for measuring time.
 log() {
@@ -47,15 +48,15 @@ echo ; echo ; echo
 # On exit callback - cleanup files
 trap "_cleanup" EXIT KILL
 
-log "Saving backup to $BACKUP_FILE ..."
-channel_msg ":floppy_disk: Starting backup of '$BASENAME' ..."
-
 log "Entering $BASEDIR, and sourcing $BASEDIR/.env"
 cd $BASEDIR
 # Replace docker-compose env definitions with bash compatible definitions
 sed -e 's/=/="/' -e 's/=\(.*\)$/\0"/' < .env > .env.sh
 . .env.sh
 rm .env.sh
+
+log "Saving backup to $BACKUP_FILE ..."
+channel_msg ":floppy_disk: Starting backup of '$BASENAME' ..."
 
 log "Configured to export to GCS(${MINETEST_BACKUP_GCS}) / S3(${MINETEST_BACKUP_S3CMD}) cloud storage"
 if [ x"$MINETEST_BACKUP_GCS" = x"true" -o x"$MINETEST_BACKUP_S3CMD" = x"true" ] ; then
