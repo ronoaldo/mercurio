@@ -104,7 +104,6 @@ load_mod_kartcar = true
 load_mod_lavalamp = true
 load_mod_lcdlib = true
 load_mod_lumberjack = true
-load_mod_mapserver = true
 load_mod_markers = true
 load_mod_markdown2formspec = true
 load_mod_mercurio = true

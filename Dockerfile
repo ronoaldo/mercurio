@@ -18,7 +18,6 @@ RUN contentdb install --debug --url=https://contentdb.ronoaldo.net \
     apercy/supercub@12247 \
     apercy/automobiles_pck@11916 \
     AiTechEye/smartshop@903 \
-    BuckarooBanzay/mapserver@10938 \
     bell07/carpets@3671 \
     bell07/skinsdb@11695 \
     Calinou/moreblocks@8247 \
