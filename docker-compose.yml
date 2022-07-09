@@ -6,7 +6,6 @@ services:
     restart: always
     depends_on:
       - db
-      - mapserver
       - discordmt
     volumes:
       - ./.minetest/world:/var/lib/mercurio
