@@ -18,5 +18,3 @@ services:
       - "30000:30000/tcp"
     volumes:
       - /tmp/minetest/world:/var/lib/mercurio
-  mapserver:
-    restart: "no"

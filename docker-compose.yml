@@ -6,7 +6,6 @@ services:
     restart: always
     depends_on:
       - db
-      - mapserver
       - discordmt
     volumes:
       - ./.minetest/world:/var/lib/mercurio
@@ -15,6 +14,7 @@ services:
       - MERCURIO_TELEGRAM_TOKEN
       - MERCURIO_TELEGRAM_CHATID
       - MERCURIO_SERVER_ANNOUNCE
+      - MERCURIO_SERVER_ADDRESS
       - MERCURIO_SERVER_NAME
       - MERCURIO_PORT
       - MERCURIO_MAPSERVER_KEY
@@ -22,11 +22,7 @@ services:
       - MERCURIO_DEBUG_LOGLEVEL
       - MERCURIO_BETA_SERVER
       - MERCURIO_MTINFO_AUTOSHUTDOWN
-    logging:
-      driver: gcplogs
-      options:
-        gcp-project: minetest-hosting
-        gcp-meta-name: mercuriovps
+      - MERCURIO_MONITORING_NAME
 
   db:
     image: postgres:13
@@ -38,23 +34,9 @@ services:
       - POSTGRES_DB
       - POSTGRES_USER
       - POSTGRES_PASSWORD
-    logging:
-      driver: gcplogs
-      options:
-        gcp-project: minetest-hosting
-        gcp-meta-name: mercuriovps
-
-  mapserver:
-    image: minetestmapserver/mapserver:4.5.0
-    restart: always
-    depends_on:
-      - db
-    volumes:
-      - "./.minetest/world:/minetest"
-    working_dir: "/minetest"
 
   discordmt:
-    image: ghcr.io/ronoaldo/discordmt:r20220319
+    image: ghcr.io/ronoaldo/discordmt:main
     restart: always
     environment:
       - DISCORD_BOT_PREFIX
