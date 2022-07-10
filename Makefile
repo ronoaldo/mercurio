@@ -2,7 +2,7 @@ build:
 	docker-compose build
 
 TEST_ARGS=--env-file /tmp/.env.test -f docker-compose.yml -f docker-compose.test.yml
-TEST_ENV= -e MERCURIO_MTINFO_AUTOSHUTDOWN=true -e NO_WRAPPER=true
+TEST_ENV= -e MERCURIO_MTINFO_AUTOSHUTDOWN=true -e NO_LOOP=true
 
 test:
 	docker-compose down
@@ -15,7 +15,15 @@ test:
 		bash -c 'cd /usr/share/minetest && tar -czf - mods/' > /tmp/mods.tar.gz
 	docker-compose down
 
-run: 
+.minetest/world:
+	mkdir -p .minetest/world
+	chmod a+w .minetest/world
+
+.minetest/logs:
+	mkdir -p .minetest/logs
+	chmod a+w .minetest/logs
+
+run: .minetest/world .minetest/logs
 	docker-compose down && docker-compose up --build --detach
 	@echo -e "\n\nServer is running in background ... showing logs\n\n"
 	docker-compose logs -f
@@ -58,7 +66,7 @@ extract-server-mods:
 		'cd /usr/share/minetest && tar -czf - mods/' > /tmp/mods.tar.gz
 
 fix-perms:
-	sudo chown -R 30000:$$(id -g) .minetest/world
+	sudo chown -R 30000:$$(id -g) .minetest/world .minetest/logs
 	sudo chmod -R g+w .minetest/world
 	sudo find .minetest/world -type d -exec chmod g+rwx {} ';'
 	sudo chgrp $$(id -g) .minetest
