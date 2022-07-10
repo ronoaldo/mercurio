@@ -14,9 +14,11 @@ RUN contentdb install --debug --url=https://contentdb.ronoaldo.net \
     apercy/trike@12225 \
     apercy/hidroplane@12249 \
     apercy/motorboat@10996 \
+    apercy/nautilus@11298 \
     apercy/demoiselle@12294 \
     apercy/supercub@12247 \
     apercy/automobiles_pck@11916 \
+    AiTechEye/hook@1891 \
     AiTechEye/smartshop@903 \
     bell07/carpets@3671 \
     bell07/skinsdb@11695 \
@@ -47,7 +49,7 @@ RUN contentdb install --debug --url=https://contentdb.ronoaldo.net \
     neko259/telegram@6870 \
     philipmi/regrowing_fruits@11665 \
     Piezo_/illumination@1091 \
-    Piezo_/hangglider@ \
+    Piezo_/hangglider@1269 \
     PilzAdam/nether@11303 \
     ronoaldo/minenews@12102 \
     RealBadAngel/unified_inventory@11942 \
@@ -75,6 +77,7 @@ RUN contentdb install --debug --url=https://contentdb.ronoaldo.net \
     TenPlus1/mobs_npc@10750 \
     TenPlus1/protector@11445 \
     Termos/mobkit@6391 \
+    Termos/sailing_kit@6033 \
     Traxie21/tpr@8314 \
     VanessaE/basic_materials@11672 \
     VanessaE/basic_signs@7503 \

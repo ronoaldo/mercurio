@@ -16,6 +16,37 @@ The server is designed to be friendly and enjoyable! Please:
 
 ![1,1](halo)
 
+# **Server Update July 10, 2022**
+
+Server was updated this week to add new mods and fixes! New items for those who
+enjoy **climbing** and **sailing**, new **tools** for farmers and a new vehicle to
+explore deep underseas.
+
+## Climbing
+
+![0,0,r](item:///hook:hook)
+
+New **climbing** items for you to explore the high mountains that the mapgen creates.
+You can use the **hook** and **ropes** to easily reach high parts without an airplane.
+After you are high in the sky, you can jump with a **hang glider** and enjoy the view.
+
+## More ways to explore the sea
+
+![0,0,r](item:///nautilus:boat)
+
+We already have a **motor boat**, and now with this update we have two new ways to
+enjoy the sea. The **sailing kit** will make your sailing simulation a bit more fun,
+including the mod **sailing cloth**.
+
+Once you reach a place you want to explore deeper, use the newly added **nautilus**
+submarine crafted with different materials for under sea exporation.
+
+## Farming tools
+
+![0,0,r](item:///moreores:hoe_silver)
+
+Missing recipes for the farming hoes were added for Silver and Mithril hoes. You can
+now craft these items from the inventory page and use them in your farms.
 # **Server Update May 22, 2022**
 
 ![0,0,r](item:///default:pick_diamond)

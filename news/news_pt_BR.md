@@ -16,6 +16,40 @@ O servidor foi projetado para ser amigável e agradável! Por favor:
 
 ![1,1](halo)
 
+# **Atualização do servidor em 10 de julho de 2022**
+
+O servidor foi atualizado esta semana para adicionar novos mods e correções!
+Novos itens para quem gosta de **escalar** e **velejar**, novas **ferramentas**
+para agricultores e um novo veículo para explorar o **fundo do mar**.
+
+## Escalada
+
+![0,0,r](item:///hook:hook)
+
+Novos itens de **escalada** para você explorar as altas montanhas que o mapgen
+cria.  Você pode usar o **gancho** e as **cordas** para alcançar facilmente
+partes altas sem um avião.  Depois de estar no alto do céu, você pode pular com
+uma **asa delta** e apreciar a vista.
+
+## Mais formas de explorar o mar
+
+![0,0,r](item:///nautilus:boat)
+
+Já temos uma **lancha**, e agora com esta atualização temos duas novas formas de
+aproveite o mar. O **kit de navegação** tornará sua simulação de navegação um
+pouco mais divertida, incluindo o mod **pano de vela**.
+
+Quando chegar a um lugar que deseja explorar mais a fundo, use o **nautilus**
+recém-adicionado submarino feito com diversos materiais para exportação
+submarina.
+
+## Ferramentas agrícolas
+
+![0,0,r](item:///moreores:hoe_silver)
+
+As receitas que faltavam para as enxadas agrícolas foram adicionadas às enxadas
+de prata e mithril. Você pode agora crie esses itens na página de inventário e
+use-os em suas fazendas.
 # **Atualização do servidor em 22 de maio de 2022**
 
 ![0,0,r](item:///default:pick_diamond)
