@@ -104,7 +104,7 @@ RUN git config --global advice.detachedHead false &&\
     git clone --depth=1 https://github.com/ronoaldo/helicopter --branch="before" &&\
     git clone --depth=1 https://github.com/ronoaldo/techpack --branch="v2.02-mercurio" &&\
     git clone --depth=1 https://github.com/ronoaldo/drawers --branch="v0.6.3-mercurio" &&\
-    git clone --depth=1 https://github.com/ronoaldo/xtraores --branch="v0.22-mercurio3" &&\
+    git clone --depth=1 https://github.com/ronoaldo/xtraores --branch="v0.22-mercurio4" &&\
     git clone --depth=1 https://github.com/ronoaldo/discordmt --branch="v0.2+mercurio1" &&\
     git clone --depth=2 https://github.com/ronoaldo/mtinfo --branch="v1-mercurio1" &&\
     git clone --depth=1 https://github.com/ronoaldo/markdown2formspec --branch="v1.1-mercurio1" &&\
