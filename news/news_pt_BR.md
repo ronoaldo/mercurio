@@ -16,6 +16,29 @@ O servidor foi projetado para ser amigável e agradável! Por favor:
 
 ![1,1](halo)
 
+![0,0,r](item:///default:furnace)
+
+# Mudança Importante!
+
+Estamos movendo o servidor para uma nova máquina virtual. Uma versão beta da nova infra
+está disponível para testes. Quando ela está ligada, ela aparece na lista de servidores
+como **Mercurio | Open Beta Test Server**, e está com um backup mais antigo do mundo.
+
+Todos são bem-vindos para ajudar com os testes desta nova versão enquanto ainda está na
+fornalha e reportar qualquer problema pelo Discord (o link para o discord está no final
+dest janela).
+
+*Obrigado! -- Ronoaldo Pereira*
+
+![1,1](halo)
+
+# **Atualização do servidor em 11 de julho de 2022**
+
+Pequeno update para atualizar versões dos mods de **veículos** do APercy,
+e os mods **tubelib**, **drawers**
+
+![1,1](halo)
+
 # **Atualização do servidor em 10 de julho de 2022**
 
 O servidor foi atualizado esta semana para adicionar novos mods e correções!
@@ -50,6 +73,9 @@ submarina.
 As receitas que faltavam para as enxadas agrícolas foram adicionadas às enxadas
 de prata e mithril. Você pode agora crie esses itens na página de inventário e
 use-os em suas fazendas.
+
+![1,1](halo)
+
 # **Atualização do servidor em 22 de maio de 2022**
 
 ![0,0,r](item:///default:pick_diamond)

@@ -9,15 +9,16 @@ RUN mkdir -p /var/lib/mercurio &&\
 # Install mods system-wide (ro)
 WORKDIR /usr/share/minetest
 RUN contentdb install --debug --url=https://contentdb.ronoaldo.net \
-    apercy/airutils@12289 \
+    apercy/airutils@12779 \
+    apercy/automobiles_pck@11916 \
+    apercy/demoiselle@12716 \
+    apercy/hidroplane@12718 \
+    apercy/ju52@12719 \
     apercy/kartcar@10587 \
-    apercy/trike@12225 \
-    apercy/hidroplane@12249 \
     apercy/motorboat@10996 \
     apercy/nautilus@11298 \
-    apercy/demoiselle@12294 \
-    apercy/supercub@12247 \
-    apercy/automobiles_pck@11916 \
+    apercy/supercub@12717 \
+    apercy/trike@12720 \
     AiTechEye/hook@1891 \
     AiTechEye/smartshop@903 \
     bell07/carpets@3671 \
@@ -39,6 +40,7 @@ RUN contentdb install --debug --url=https://contentdb.ronoaldo.net \
     joe7575/lumberjack@11039 \
     joe7575/tubelib2@12002 \
     jp/xdecor@11439 \
+    Just_Visiting/markdown2formspec@11639 \
     Liil/nativevillages@7404 \
     Liil/people@6771 \
     Linuxdirk/mtimer@9958 \
@@ -103,14 +105,12 @@ RUN git config --global advice.detachedHead false &&\
     git clone --depth=1 https://github.com/ronoaldo/extra_doors --branch="v1.0.0-mercurio" &&\
     git clone --depth=1 https://github.com/ronoaldo/x_bows --branch="v1.0.5" &&\
     git clone --depth=1 https://github.com/ronoaldo/hbsprint --branch="v1.0.0-mercurio" &&\
-    git clone --depth=1 https://github.com/ronoaldo/ju52 --branch="git20211207" &&\
     git clone --depth=1 https://github.com/ronoaldo/helicopter --branch="before" &&\
-    git clone --depth=1 https://github.com/ronoaldo/techpack --branch="v2.02-mercurio" &&\
-    git clone --depth=1 https://github.com/ronoaldo/drawers --branch="v0.6.3-mercurio" &&\
+    git clone --depth=1 https://github.com/ronoaldo/techpack --branch="v2.06-mercurio" &&\
+    git clone --depth=1 https://github.com/ronoaldo/drawers --branch="v0.6.5-mercurio1" &&\
     git clone --depth=1 https://github.com/ronoaldo/xtraores --branch="v0.22-mercurio4" &&\
     git clone --depth=1 https://github.com/ronoaldo/discordmt --branch="v0.2+mercurio1" &&\
     git clone --depth=2 https://github.com/ronoaldo/mtinfo --branch="v1-mercurio1" &&\
-    git clone --depth=1 https://github.com/ronoaldo/markdown2formspec --branch="v1.1-mercurio1" &&\
     git clone --depth=1 https://github.com/ronoaldo/minetest-monitoring --branch="v1.04-mercurio1" monitoring
 # Install additional tools for the server
 RUN apt-get update && apt-get install jq curl -yq && apt-get clean
