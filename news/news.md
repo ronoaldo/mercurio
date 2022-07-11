@@ -16,6 +16,28 @@ The server is designed to be friendly and enjoyable! Please:
 
 ![1,1](halo)
 
+![0,0,r](item:///default:furnace)
+
+# Important Change
+
+We are moving the server to a new virtual machine. A beta release of the newer infra
+is available for testing. When it is up, it shows as **Mercurio | Open Beta Test Server**
+on the official server list, and it has an old backup that was restored for testing.
+
+Everyone is welcome to try the new version while it is hot and kindly report any issues
+to Discord (link to discord at the end of this dialog).
+
+*Thanks! -- Ronoaldo Pereira*
+
+![1,1](halo)
+
+# **Server Update July 11, 2022**
+
+Small update to bring in newer versions of the mods **APercy vehicles**,
+**tubelib** and **drawers**.
+
+![1,1](halo)
+
 # **Server Update July 10, 2022**
 
 Server was updated this week to add new mods and fixes! New items for those who
@@ -47,6 +69,9 @@ submarine crafted with different materials for under sea exporation.
 
 Missing recipes for the farming hoes were added for Silver and Mithril hoes. You can
 now craft these items from the inventory page and use them in your farms.
+
+![1,1](halo)
+
 # **Server Update May 22, 2022**
 
 ![0,0,r](item:///default:pick_diamond)
