@@ -210,13 +210,4 @@ dofile(path .. "/items.lua")
 -- Load admin commands
 dofile(path .. "/admin.lua")
 
-
-minetest.register_on_mods_loaded(function()
-    discord.send("*** Servidor Iniciado!")
-end)
-
-minetest.register_on_shutdown(function()
-    discord.send("*** Servidor está desligando")
-end)
-
 log_action("Server overrides loaded!")

@@ -112,6 +112,8 @@ RUN git config --global advice.detachedHead false &&\
     git clone --depth=2 https://github.com/ronoaldo/mtinfo --branch="v1-mercurio1" &&\
     git clone --depth=1 https://github.com/ronoaldo/markdown2formspec --branch="v1.1-mercurio1" &&\
     git clone --depth=1 https://github.com/ronoaldo/minetest-monitoring --branch="v1.04-mercurio1" monitoring
+# Install additional tools for the server
+RUN apt-get update && apt-get install jq curl -yq && apt-get clean
 
 # Add server skins to database
 COPY skins/meta     /usr/share/minetest/mods/skinsdb/meta
@@ -124,6 +126,7 @@ COPY minetest.conf /etc/minetest/minetest.conf
 COPY news          /etc/minetest/news
 COPY mercurio.sh   /usr/bin
 COPY backup.sh     /usr/bin
+COPY scripts/lib   /usr/lib/scripts
 # Restore user to minetest and redefine launch script
 WORKDIR /var/lib/minetest
 USER minetest

@@ -11,33 +11,32 @@ BACKUP_DIR=$HOME/backups/$(date +'%Y%m')
 BACKUP_FILE_NAME=$BASENAME-$(date +'%Y%m%d-%H%M%S').tar
 BACKUP_FILE="${BACKUP_DIR}/${BACKUP_FILE_NAME}"
 export LANG=C LC_ALL=C
+# Include helper functions
+source $BASEDIR/scripts/lib/all.sh
 
 # Log with timestamps for measuring time.
 log() {
     echo "$(date '+%Y-%m-%d %H:%M:%S') $BASENAME: $@"
 }
 
-channel_msg() {
-    if [ x"${MINETEST_BACKUP_WEBHOOK}" == x"" ]; then
-        return
-    fi
-    log "Posting [$@] to webhook channel"
-    curl -X POST -H 'Content-Type: application/json' \
-        --data "{ \"content\": \"$@\" }" "${MINETEST_BACKUP_WEBHOOK}"
-    echo ""
-}
-
 # Ensure we clean the temp db.sql file which is HUGE
 _cleanup() {
-    log "Cleaning up (DO_REMOVE=${DO_REMOVE})... (exit_status=$?)"
+    RET=$?
+    log "Cleaning up (DO_REMOVE=${DO_REMOVE})... (exit_status=$RET)"
+    
     cd $BASEDIR
     rm -vf .minetest/db.sql .minetest/db.sql.gz .minetest/db.pg_dump.tar
     if [ x"$DO_REMOVE" = x"true" ] ; then
         log "Removing local file to free space ${BACKUP_FILE} ..."
         rm -vf $BACKUP_FILE
     fi
-    DISK_SPACE="$(df -h $PWD | grep -v 'Size' | awk  '{print $4" "$5}')"
-    channel_msg ":cd: Free disk space: $DISK_SPACE"
+
+    if [ x"$RET" != x"0" ]; then
+        discord_message ":x: Backup execution failed."
+    fi
+
+    DISK_SPACE="$(df -h $PWD | grep -v 'Size' | awk  '{print $4", "$5}')"
+    discord_message ":mag_right: Free disk space: $DISK_SPACE used"
 }
 
 # Main
@@ -56,7 +55,7 @@ sed -e 's/=/="/' -e 's/=\(.*\)$/\0"/' < .env > .env.sh
 rm .env.sh
 
 log "Saving backup to $BACKUP_FILE ..."
-channel_msg ":floppy_disk: Starting backup of '$BASENAME' ..."
+discord_message ":vhs: Starting backup of '$BASENAME' ..."
 
 log "Configured to export to GCS(${MINETEST_BACKUP_GCS}) / S3(${MINETEST_BACKUP_S3CMD}) cloud storage"
 if [ x"$MINETEST_BACKUP_GCS" = x"true" -o x"$MINETEST_BACKUP_S3CMD" = x"true" ] ; then
@@ -94,4 +93,4 @@ fi
 
 # Post to webhook, if configured to
 log "Backup finished"
-channel_msg ":floppy_disk: Backup finished: ${BACKUP_FILE_NAME}!"
+discord_message ":vhs: Backup finished: ${BACKUP_FILE_NAME}!"

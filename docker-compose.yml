@@ -4,11 +4,14 @@ services:
     image: ghcr.io/ronoaldo/mercurio:main
     build: .
     restart: always
+    stop_signal: SIGINT
+    stop_grace_period: 5s
     depends_on:
       - db
       - discordmt
     volumes:
       - ./.minetest/world:/var/lib/mercurio
+      - ./.minetest/logs:/var/logs/minetest
     environment:
       - MERCURIO_PGSQL_CONNECTION
       - MERCURIO_TELEGRAM_TOKEN
@@ -23,6 +26,7 @@ services:
       - MERCURIO_BETA_SERVER
       - MERCURIO_MTINFO_AUTOSHUTDOWN
       - MERCURIO_MONITORING_NAME
+      - MINETEST_DISCORD_WEBHOOK
 
   db:
     image: postgres:13
