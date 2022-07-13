@@ -12,11 +12,18 @@ __configure() {
 }
 
 notify_crash() {
-    CRASH_REPORT="$(echo -e "\n\ndebug.txt:\n" ; grep -E 'ERR|WARN' ${MINETEST_DEBUG_FILE} | tail -n 10)"
-    CRASH_REPORT="${CRASH_REPORT}$(echo -e "\n\nminetest.out:\n"; tail -n 10 ${MINETEST_STDERR_FILE})"
+    CRASH_REPORT="$(
+        echo -e "\n\ndebug.txt:" ;
+        grep -E 'ERROR|WARNING' ${MINETEST_DEBUG_FILE} |
+        grep -v 'api.telegram.org' |
+        tail -n 8)"
+    CRASH_REPORT="${CRASH_REPORT}$(
+        echo -e "\n\nminetest.out:";
+        tail -n 8 ${MINETEST_STDERR_FILE} |
+        grep -v 'api.telegram.org')"
     discord_message "**Server crashed!**
 \`\`\`
-${CRASH_REPORT: -1900}
+${CRASH_REPORT: -1950}
 \`\`\`
 Should restart soon."
 }
@@ -41,22 +48,28 @@ export MINETEST_DEBUG_FILE=${LOGDIR}/debug.txt
 
 # Launch run-loop for the server in a clean environment
 while true ; do
-    echo -e "\n\n--- Separator ---\n\n" >> ${MINETEST_STDERR_FILE}
-    /usr/bin/env -i HOME=/var/lib/minetest \
-        minetestserver \
-        --quiet \
-        --logfile ${MINETEST_DEBUG_FILE} \
-        --world /var/lib/mercurio \
-        --config /etc/minetest/minetest.conf \
-            2>&1 >> ${MINETEST_STDERR_FILE}
-    RET="$?"
-    sleep 1
-    if [ x"$RET" != x"0" ] ; then 
-        notify_crash
-    fi
-    if [ x"$NO_LOOP" == x"true" ]; then
-        break
-    fi
-    echo "Restarting server in 10s..."
-    sleep 10
+    {
+        echo -e "\n\n--- Separator ---\n\n" 
+        /usr/bin/env -i HOME=/var/lib/minetest \
+            minetestserver \
+            --quiet \
+            --logfile ${MINETEST_DEBUG_FILE} \
+            --world /var/lib/mercurio \
+            --config /etc/minetest/minetest.conf
+        RET="$?"
+        sleep 1
+        if [ x"$RET" != x"0" ] ; then
+            if [ -f core* ]; then
+                mv -v core* ${LOGDIR}/core-$(date +%Y%m%d-%H%M%S).dump
+            else
+                echo "No core dump found."
+            fi
+            notify_crash
+        fi
+        if [ x"$NO_LOOP" == x"true" ]; then
+            break
+        fi
+        echo "Restarting server in 10s..."
+        sleep 10
+    } |& tee -a ${MINETEST_STDERR_FILE}
 done
