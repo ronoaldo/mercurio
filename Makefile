@@ -4,7 +4,17 @@ build:
 TEST_ARGS=--env-file /tmp/.env.test -f docker-compose.yml -f docker-compose.test.yml
 TEST_ENV= -e MERCURIO_MTINFO_AUTOSHUTDOWN=true -e NO_LOOP=true
 
-test:
+.minetest/world:
+	mkdir -p .minetest/world
+	chmod a+wx .minetest/world
+
+.minetest/logs:
+	mkdir -p .minetest/logs
+	chmod a+wx .minetest/logs
+
+volumes: .minetest/world .minetest/logs
+
+test: volumes
 	docker-compose down
 	sed -e 's/AUTOSHUTDOWN=.*/AUTOSHUTDOWN=true/g' .env.sample > /tmp/.env.test
 	docker-compose $(TEST_ARGS) run -d db && sleep 5
@@ -15,15 +25,8 @@ test:
 		bash -c 'cd /usr/share/minetest && tar -czf - mods/' > /tmp/mods.tar.gz
 	docker-compose down
 
-.minetest/world:
-	mkdir -p .minetest/world
-	chmod a+w .minetest/world
 
-.minetest/logs:
-	mkdir -p .minetest/logs
-	chmod a+w .minetest/logs
-
-run: .minetest/world .minetest/logs
+run: volumes
 	docker-compose down && docker-compose up --build --detach
 	@echo -e "\n\nServer is running in background ... showing logs\n\n"
 	docker-compose logs -f

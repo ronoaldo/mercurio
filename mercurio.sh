@@ -1,6 +1,5 @@
 #!/bin/bash
 
-echo "[mercurio] Starting"
 
 # Apply all MERCURIO_* variables as substitutions to the configuration
 # file from the environment passed to the container.
@@ -28,14 +27,20 @@ ${CRASH_REPORT: -1950}
 Should restart soon."
 }
 
+log() {
+    echo "[mercurio] $@"
+}
+
 # Always use configuration from the image, replacing credentials
 # from environment
+log "Starting server configuration"
+
 cp -v /etc/minetest/world.mt /var/lib/mercurio/world.mt
 cp -v /etc/minetest/news/*   /var/lib/mercurio/
 __configure /var/lib/mercurio/world.mt
 __configure /etc/minetest/minetest.conf
 
-echo "[mercurio] Server configured, launching."
+log "Server configured, launching."
 
 if [ -f /usr/lib/scripts/all.sh ]; then
     source /usr/lib/scripts/all.sh
@@ -50,6 +55,11 @@ export MINETEST_DEBUG_FILE=${LOGDIR}/debug.txt
 while true ; do
     {
         echo -e "\n\n--- Separator ---\n\n" 
+        log "Working directory: $PWD"
+        log "Preparing to collect core dumps ..."
+        ulimit -c unlimited  # Makes sure core dumps can be written with any size
+        echo "$$" > pid      # Testing write access to $PWD
+        rm -vf core          # Remove any previous core dumps
         /usr/bin/env -i HOME=/var/lib/minetest \
             minetestserver \
             --quiet \
@@ -57,19 +67,24 @@ while true ; do
             --world /var/lib/mercurio \
             --config /etc/minetest/minetest.conf
         RET="$?"
-        sleep 1
-        if [ x"$RET" != x"0" ] ; then
-            if [ -f core* ]; then
-                mv -v core* ${LOGDIR}/core-$(date +%Y%m%d-%H%M%S).dump
-            else
-                echo "No core dump found."
-            fi
-            notify_crash
-        fi
-        if [ x"$NO_LOOP" == x"true" ]; then
-            break
-        fi
-        echo "Restarting server in 10s..."
-        sleep 10
     } |& tee -a ${MINETEST_STDERR_FILE}
+    
+    sleep 1
+    if [ x"$RET" != x"0" ] ; then
+        if [ -f core* ]; then
+            log "Found a core dump."
+            mv -v core* ${LOGDIR}/core-$(date +%Y%m%d-%H%M%S).dump
+        else
+            log "No core dump found."
+        fi
+        sleep 1
+        notify_crash
+    else
+        log "Server shutdown normaly."
+    fi
+    if [ x"$NO_LOOP" == x"true" ]; then
+        break
+    fi
+    log "Restarting server in 10s..."
+    sleep 10
 done
