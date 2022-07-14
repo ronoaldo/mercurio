@@ -10,12 +10,12 @@ RUN mkdir -p /var/lib/mercurio &&\
 WORKDIR /usr/share/minetest
 RUN contentdb install --debug --url=https://contentdb.ronoaldo.net \
     apercy/airutils@12779 \
-    apercy/automobiles_pck@11916 \
+    apercy/automobiles_pck@12778 \
     apercy/demoiselle@12716 \
     apercy/hidroplane@12718 \
     apercy/ju52@12719 \
-    apercy/kartcar@10587 \
-    apercy/motorboat@10996 \
+    apercy/kartcar@12788 \
+    apercy/motorboat@12792 \
     apercy/nautilus@11298 \
     apercy/supercub@12717 \
     apercy/trike@12720 \
@@ -28,23 +28,23 @@ RUN contentdb install --debug --url=https://contentdb.ronoaldo.net \
     cronvel/respawn@2406 \
     Dragonop/tools_obsidian@6102 \
     Don/mydoors@222 \
-    ElCeejo/creatura@12331 \
+    ElCeejo/creatura@12540 \
     ElCeejo/draconis@11787 \
     FaceDeer/anvil@5696 \
     FaceDeer/hopper@6074 \
-    Gundul/water_life@11762 \
+    Gundul/water_life@12786 \
     "Hybrid Dog/we_undo@9288" \
     JAstudios/moreswords@9585 \
     Jeija/digilines@8574 \
-    Jeija/mesecons@11716 \
+    Jeija/mesecons@12542 \
     joe7575/lumberjack@11039 \
-    joe7575/tubelib2@12002 \
+    joe7575/tubelib2@12793 \
     jp/xdecor@11439 \
     Just_Visiting/markdown2formspec@11639 \
     Liil/nativevillages@7404 \
     Liil/people@6771 \
     Linuxdirk/mtimer@9958 \
-    Lokrates/biofuel@5970 \
+    Lokrates/biofuel@12552 \
     Lone_Wolf/headanim@8888 \
     MeseCraft/void_chest@5565 \
     mt-mods/travelnet@8497 \
@@ -66,27 +66,27 @@ RUN contentdb install --debug --url=https://contentdb.ronoaldo.net \
     Sokomine/replacer@76 \
     stu/3d_armor@11723 \
     TenPlus1/bakedclay@9438 \
-    TenPlus1/bonemeal@12185 \
+    TenPlus1/bonemeal@12754 \
     TenPlus1/dmobs@11568 \
-    TenPlus1/ethereal@12340 \
-    TenPlus1/farming@11538 \
+    TenPlus1/ethereal@12755 \
+    TenPlus1/farming@12615 \
     TenPlus1/itemframes@10483 \
     TenPlus1/mob_horse@11324 \
-    TenPlus1/mobs@12063 \
-    TenPlus1/mobs_animal@12027 \
-    TenPlus1/mobs_monster@10752 \
-    TenPlus1/mobs_npc@10750 \
+    TenPlus1/mobs@12801 \
+    TenPlus1/mobs_animal@12783 \
+    TenPlus1/mobs_monster@12803 \
+    TenPlus1/mobs_npc@12477 \
     TenPlus1/protector@11445 \
     Termos/mobkit@6391 \
     Termos/sailing_kit@6033 \
     Traxie21/tpr@8314 \
     VanessaE/basic_materials@11672 \
-    VanessaE/basic_signs@7503 \
+    VanessaE/basic_signs@12541 \
     VanessaE/currency@10265 \
-    VanessaE/homedecor_modpack@12307 \
-    VanessaE/home_workshop_modpack@9914 \
-    VanessaE/unifieddyes@12180 \
-    VanessaE/signs_lib@12226 \
+    VanessaE/homedecor_modpack@12610 \
+    VanessaE/home_workshop_modpack@12664 \
+    VanessaE/unifieddyes@12422 \
+    VanessaE/signs_lib@12557 \
     Wuzzy/calendar@5062 \
     Wuzzy/hbarmor@1275 \
     Wuzzy/hbhunger@9156 \

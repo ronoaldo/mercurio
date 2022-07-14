@@ -53,7 +53,7 @@ update:
 	docker-compose up -d
 
 /tmp/updates.log: check-mod-updates
-check-mod-updates:
+check-mod-updates: Dockerfile
 	docker-compose exec --user 0 game bash -c \
 		'cd /usr/share/minetest && contentdb update --dry-run' |\
 		sed -r "s/\x1B\[([0-9]{1,3}(;[0-9]{1,2})?)?[mGK]//g" |\

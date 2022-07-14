@@ -119,6 +119,7 @@ load_mod_mesecons_doors = true
 load_mod_mesecons_extrawires = true
 load_mod_mesecons_fpga = true
 load_mod_mesecons_gates = true
+load_mod_mesecons_gamecompat = true
 load_mod_mesecons_hydroturbine = true
 load_mod_mesecons_insulated = true
 load_mod_mesecons_lamp = true
