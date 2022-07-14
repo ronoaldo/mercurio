@@ -1,8 +1,12 @@
-build:
-	docker-compose build
+# Mercurio server build/management tool
 
 TEST_ARGS=--env-file /tmp/.env.test -f docker-compose.yml -f docker-compose.test.yml
 TEST_ENV= -e MERCURIO_MTINFO_AUTOSHUTDOWN=true -e NO_LOOP=true
+
+all: build
+
+build:
+	docker-compose build
 
 .minetest/world:
 	mkdir -p .minetest/world
@@ -25,7 +29,6 @@ test: volumes
 		bash -c 'cd /usr/share/minetest && tar -czf - mods/' > /tmp/mods.tar.gz
 	docker-compose down
 
-
 run: volumes
 	docker-compose down && docker-compose up --build --detach
 	@echo -e "\n\nServer is running in background ... showing logs\n\n"
@@ -33,6 +36,9 @@ run: volumes
 
 run-interactive: 
 	docker-compose down && docker-compose up --build
+
+stop:
+	docker-compose down || true
 
 backup:
 	./backup.sh
@@ -46,6 +52,7 @@ update:
 	docker-compose pull
 	docker-compose up -d
 
+/tmp/updates.log: check-mod-updates
 check-mod-updates:
 	docker-compose exec --user 0 game bash -c \
 		'cd /usr/share/minetest && contentdb update --dry-run' |\

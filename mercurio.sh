@@ -11,20 +11,21 @@ __configure() {
 }
 
 notify_crash() {
-    CRASH_REPORT="$(
-        echo -e "\n\ndebug.txt:" ;
-        grep -E 'ERROR|WARNING' ${MINETEST_DEBUG_FILE} |
-        grep -v 'api.telegram.org' |
-        tail -n 8)"
-    CRASH_REPORT="${CRASH_REPORT}$(
-        echo -e "\n\nminetest.out:";
-        tail -n 8 ${MINETEST_STDERR_FILE} |
-        grep -v 'api.telegram.org')"
-    discord_message "**Server crashed!**
-\`\`\`
-${CRASH_REPORT: -1950}
-\`\`\`
-Should restart soon."
+    # Build a formatted crash report in three messages to avoid
+    # complex logic to handle with character limit of 2000 lines.
+    discord_message "**Server Crashed** *Collecting logs...*"
+    discord_message "$(
+        echo "debug.txt:" ;
+        echo '```';
+        grep -E 'ERROR|WARNING' ${MINETEST_DEBUG_FILE} | grep -v 'api.telegram.org' | tail -n 10;
+        echo '```';
+    )"
+    discord_message "$(
+        echo "minetest.out:";
+        echo '```';
+        tail -n 10 ${MINETEST_STDERR_FILE} | grep -v 'api.telegram.org';
+        echo '```';
+    )"
 }
 
 log() {
@@ -71,6 +72,7 @@ while true ; do
     
     sleep 1
     if [ x"$RET" != x"0" ] ; then
+        log "Server shutdown with status code $RET."
         if [ -f core* ]; then
             log "Found a core dump."
             mv -v core* ${LOGDIR}/core-$(date +%Y%m%d-%H%M%S).dump
