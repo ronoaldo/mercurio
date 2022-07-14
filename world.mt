@@ -188,7 +188,6 @@ load_mod_smartshop = true
 load_mod_supercub = true
 load_mod_techpack_stairway = true
 load_mod_techpack_warehouse = true
-load_mod_telegram = true
 load_mod_tools_obsidian = true
 load_mod_tpr = true
 load_mod_travelnet = true

@@ -48,7 +48,6 @@ RUN contentdb install --debug --url=https://contentdb.ronoaldo.net \
     Lone_Wolf/headanim@8888 \
     MeseCraft/void_chest@5565 \
     mt-mods/travelnet@8497 \
-    neko259/telegram@6870 \
     philipmi/regrowing_fruits@11665 \
     Piezo_/illumination@1091 \
     Piezo_/hangglider@1269 \
