@@ -1,7 +1,7 @@
 # Mercurio server build/management tool
 
 TEST_ARGS=--env-file /tmp/.env.test -f docker-compose.yml -f docker-compose.test.yml
-TEST_ENV= -e MERCURIO_MTINFO_AUTOSHUTDOWN=true -e NO_LOOP=true
+TEST_ENV= -e MERCURIO_AUTO_SHUTDOWN=true -e NO_LOOP=true
 
 all: build
 
@@ -20,10 +20,10 @@ volumes: .minetest/world .minetest/logs
 
 test: volumes
 	docker-compose down
-	sed -e 's/AUTOSHUTDOWN=.*/AUTOSHUTDOWN=true/g' .env.sample > /tmp/.env.test
+	sed -e 's/AUTO_SHUTDOWN=.*/AUTO_SHUTDOWN=true/g' .env.sample > /tmp/.env.test
 	docker-compose $(TEST_ARGS) run -d db && sleep 5
 	docker-compose $(TEST_ARGS) run --user 0 -T game \
-		bash -c 'chown -R minetest:minetest /var/lib/mercurio'
+		bash -c 'chown -R minetest:minetest /var/lib/mercurio /var/logs/minetest'
 	docker-compose $(TEST_ARGS) run $(TEST_ENV) game
 	docker-compose $(TEST_ARGS) run --user 0 -T game \
 		bash -c 'cd /usr/share/minetest && tar -czf - mods/' > /tmp/mods.tar.gz

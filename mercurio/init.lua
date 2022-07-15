@@ -197,6 +197,19 @@ minetest.register_abm({
     end,
 })
 
+-- Auto-shutdown hook - for testing basic server startup/shutdown
+local auto_shutdown = minetest.settings:get("mercurio_auto_shutdown") or "false"
+log_action("mercurio_auto_shutdown => " .. auto_shutdown)
+if auto_shutdown == "true" then
+    minetest.register_on_mods_loaded(function()
+        log_action("Auto shutdown is enabled. Turning server off after 15s.")
+        minetest.after(15, function()
+            log_action("Requesting shutdown...")
+            minetest.request_shutdown("", false, 1)
+        end)
+    end)
+end
+
 -- Load beta server settings
 local is_beta_server = minetest.settings:get("mercurio_beta_server")
 if is_beta_server == "true" then

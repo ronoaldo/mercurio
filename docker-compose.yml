@@ -24,7 +24,7 @@ services:
       - MERCURIO_LOAD_PROFILER
       - MERCURIO_DEBUG_LOGLEVEL
       - MERCURIO_BETA_SERVER
-      - MERCURIO_MTINFO_AUTOSHUTDOWN
+      - MERCURIO_AUTO_SHUTDOWN
       - MERCURIO_MONITORING_NAME
       - MINETEST_DISCORD_WEBHOOK
 
@@ -47,9 +47,3 @@ services:
       - DISCORD_PORT
       - DISCORD_BOT_TOKEN
       - DISCORD_CHANNEL_ID
-
-  mtinfo:
-    image: lipanski/docker-static-website:1.0.0
-    restart: always
-    volumes:
-      - "./.minetest/world/mtinfo:/home/static"

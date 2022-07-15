@@ -67,12 +67,12 @@ while true ; do
             --logfile ${MINETEST_DEBUG_FILE} \
             --world /var/lib/mercurio \
             --config /etc/minetest/minetest.conf
-        RET="$?"
+        echo -n "$?" > status
+        log "Server shutdown with status code '$(cat status)'."
     } |& tee -a ${MINETEST_STDERR_FILE}
-    
+    EXIT_STATUS="$(cat status)"
     sleep 1
-    if [ x"$RET" != x"0" ] ; then
-        log "Server shutdown with status code $RET."
+    if [ x"$EXIT_STATUS" != x"0" ] ; then
         if [ -f core* ]; then
             log "Found a core dump."
             mv -v core* ${LOGDIR}/core-$(date +%Y%m%d-%H%M%S).dump
