@@ -32,6 +32,27 @@ dest janela).
 
 ![1,1](halo)
 
+
+# **Server Update July 14, 2022**
+
+Regular mod update to fetch upstream fixes!
+Atualização regular dos mods para obter atualizações e correções!
+
+Mods atualizados:
+
+```
+* APercy vehicles (automobiles_pck, kartcar, motorboat)
+* ElCeejo Creatura (creatura)
+* Gundul Water Life (water_life)
+* Jeija Mesecons (mesecons)
+* joe7575 Tubelib (tubelib2)
+* Lokrates Biofuel (biofuel)
+* TenPlus1 mods (bonemeal, ethereal, farming, mobs, mobs_animal, mobs_monster, mobs_npc)
+* VanessaE mods (basic_signs, homedecor_modpack, home_workshop_modpack, signs_lib, unifieddyes)
+```
+
+![1,1](halo)
+
 # **Atualização do servidor em 11 de julho de 2022**
 
 Pequeno update para atualizar versões dos mods de **veículos** do APercy,

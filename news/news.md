@@ -20,14 +20,34 @@ The server is designed to be friendly and enjoyable! Please:
 
 # Important Change
 
-We are moving the server to a new virtual machine. A beta release of the newer infra
-is available for testing. When it is up, it shows as **Mercurio | Open Beta Test Server**
-on the official server list, and it has an old backup that was restored for testing.
+We are moving the server to a new virtual machine. A beta release of the newer
+infra is available for testing. When it is up, it shows as **Mercurio | Open
+Beta Test Server** on the official server list, and it has an old backup that
+was restored for testing.
 
-Everyone is welcome to try the new version while it is hot and kindly report any issues
-to Discord (link to discord at the end of this dialog).
+Everyone is welcome to try the new version while it is hot and kindly report any
+issues to Discord (link to discord at the end of this dialog).
 
 *Thanks! -- Ronoaldo Pereira*
+
+![1,1](halo)
+
+# **Server Update July 14, 2022**
+
+Regular mod update to fetch upstream fixes!
+
+Updated mods:
+
+```
+* APercy vehicles (automobiles_pck, kartcar, motorboat)
+* ElCeejo Creatura (creatura)
+* Gundul Water Life (water_life)
+* Jeija Mesecons (mesecons)
+* joe7575 Tubelib (tubelib2)
+* Lokrates Biofuel (biofuel)
+* TenPlus1 mods (bonemeal, ethereal, farming, mobs, mobs_animal, mobs_monster, mobs_npc)
+* VanessaE mods (basic_signs, homedecor_modpack, home_workshop_modpack, signs_lib, unifieddyes)
+```
 
 ![1,1](halo)
 
@@ -151,7 +171,7 @@ Added Xtraores (by David), adding 11 new minerals, swords, tools
 and armor. More rare minerals are only obtainable bellow the layer -11000, so get
 your pickaxle ready!
 
-![1,1](halo.png)
+![1,1](halo)
 
 
 # **Server Update March 07, 2022**
@@ -172,7 +192,7 @@ storage items. Upgrade your wharehouses!
 
 
 
-![1,1](halo.png)
+![1,1](halo)
 
 # **Tips and Tricks**
 
