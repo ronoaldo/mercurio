@@ -17,7 +17,9 @@ RUN contentdb install --debug --url=https://contentdb.ronoaldo.net \
     apercy/kartcar@12788 \
     apercy/motorboat@12792 \
     apercy/nautilus@11298 \
+    apercy/pa28@12709 \
     apercy/supercub@12717 \
+    apercy/steampunk_blimp@12712 \
     apercy/trike@12720 \
     AiTechEye/hook@1891 \
     AiTechEye/smartshop@903 \

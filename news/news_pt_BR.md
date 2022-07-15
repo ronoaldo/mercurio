@@ -35,10 +35,19 @@ dest janela).
 
 # **Server Update July 14, 2022**
 
-Regular mod update to fetch upstream fixes!
-Atualização regular dos mods para obter atualizações e correções!
+![0,0,r](item:///steampunk_blimp:blimp)
 
-Mods atualizados:
+A atualização de hoje traz o aguardado mod de APercy: Blimp! Você pode craftar
+esse fantástico veículo voador para levar seu jogo multiplayer para o próximo
+nível!
+
+![0,0,r](item:///pa28:pa28)
+
+Esta atualização também traz um novo avião, o PA 28! Esta é mais uma máquina
+voadora feita por APercy, que traz uma nova experiência de vôo para o servidor.
+
+Além disso, temos o nosso update regular para atualizações e correções! Mods
+atualizados:
 
 ```
 * APercy vehicles (automobiles_pck, kartcar, motorboat)

@@ -34,9 +34,18 @@ issues to Discord (link to discord at the end of this dialog).
 
 # **Server Update July 14, 2022**
 
-Regular mod update to fetch upstream fixes!
+![0,0,r](item:///steampunk_blimp:blimp)
 
-Updated mods:
+Today's update adds the long awaited APercy mod: Blimp! You can craft this
+awesome fantasy flying machine and move your multiplayer adventures to the next
+level!
+
+![0,0,r](item:///pa28:pa28)
+
+This update includes a new plane as well, the PA 28! This is yet another flying
+mod by APercy, which brings another flying experience to the server.
+
+And as usual, a regular mod update to fetch upstream fixes! Updated mods:
 
 ```
 * APercy vehicles (automobiles_pck, kartcar, motorboat)
