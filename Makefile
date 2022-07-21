@@ -52,20 +52,20 @@ update:
 	docker-compose pull
 	docker-compose up -d
 
-/tmp/updates.log: check-mod-updates
-check-mod-updates: Dockerfile
+check-mod-updates: updates.log
+updates.log: Dockerfile
 	docker-compose exec --user 0 game bash -c \
 		'cd /usr/share/minetest && contentdb update --dry-run' |\
 		sed -r "s/\x1B\[([0-9]{1,3}(;[0-9]{1,2})?)?[mGK]//g" |\
-		tee /tmp/updates.log
+		tee updates.log
 
-list-mod-updates: /tmp/updates.log
-	@grep updating /tmp/updates.log |\
+list-mod-updates: updates.log
+	@grep updating updates.log |\
 		awk '{print $$11}' | tr -d : | tr '@' ' ' | sort -V |\
 		while read m v ; do echo "$${m}@$${v}" ; done
 
-apply-mod-updates: /tmp/updates.log
-	grep updating /tmp/updates.log |\
+apply-mod-updates: updates.log
+	grep updating updates.log |\
 		awk '{print $$11}' | tr -d : | tr '@' ' ' |\
 		while read m v ; do echo "$${m} => $${v}" ; \
 			sed -e "s,$${m}@[0-9]\+,$${m}@$${v},g" -i Dockerfile ;\

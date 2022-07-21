@@ -16,31 +16,29 @@ The server is designed to be friendly and enjoyable! Please:
 
 ![1,1](halo)
 
-![0,0,r](item:///default:furnace)
+![0,0,r](item:///default:pick_diamond)
 
-# Important Change
+# **Server Update July 21, 2022**
 
-We are moving the server to a new virtual machine. A beta release of the newer
-infra is available for testing. When it is up, it shows as **Mercurio | Open
-Beta Test Server** on the official server list, and it has an old backup that
-was restored for testing.
+Regular update to fetch newer versions of server mods, specifically an important
+fix on **Hopper** mod, reducing the logs produced by it's operation.
 
-Everyone is welcome to try the new version while it is hot and kindly report any
-issues to Discord (link to discord at the end of this dialog).
-
-*Thanks! -- Ronoaldo Pereira*
+```
+* APercy mods (airutils, kartcar)
+* FaceDeer Hopper (hopper)
+* MeseCraft Void Chest (void_chest)
+* TenPlus1 mods (ethereal, itemframes)
+```
 
 ![1,1](halo)
 
-# **Server Update July 14, 2022**
+![82,82,r](item:///steampunk_blimp:blimp)
 
-![0,0,r](item:///steampunk_blimp:blimp)
+# **Server Update July 14, 2022**
 
 Today's update adds the long awaited APercy mod: Blimp! You can craft this
 awesome fantasy flying machine and move your multiplayer adventures to the next
 level!
-
-![0,0,r](item:///pa28:pa28)
 
 This update includes a new plane as well, the PA 28! This is yet another flying
 mod by APercy, which brings another flying experience to the server.
@@ -60,6 +58,8 @@ And as usual, a regular mod update to fetch upstream fixes! Updated mods:
 
 ![1,1](halo)
 
+![0,0,r](item:///default:pick_diamond)
+
 # **Server Update July 11, 2022**
 
 Small update to bring in newer versions of the mods **APercy vehicles**,
@@ -73,17 +73,17 @@ Server was updated this week to add new mods and fixes! New items for those who
 enjoy **climbing** and **sailing**, new **tools** for farmers and a new vehicle to
 explore deep underseas.
 
-## Climbing
-
 ![0,0,r](item:///hook:hook)
+
+## Climbing
 
 New **climbing** items for you to explore the high mountains that the mapgen creates.
 You can use the **hook** and **ropes** to easily reach high parts without an airplane.
 After you are high in the sky, you can jump with a **hang glider** and enjoy the view.
 
-## More ways to explore the sea
-
 ![0,0,r](item:///nautilus:boat)
+
+## More ways to explore the sea
 
 We already have a **motor boat**, and now with this update we have two new ways to
 enjoy the sea. The **sailing kit** will make your sailing simulation a bit more fun,
@@ -92,9 +92,9 @@ including the mod **sailing cloth**.
 Once you reach a place you want to explore deeper, use the newly added **nautilus**
 submarine crafted with different materials for under sea exporation.
 
-## Farming tools
-
 ![0,0,r](item:///moreores:hoe_silver)
+
+## Farming tools
 
 Missing recipes for the farming hoes were added for Silver and Mithril hoes. You can
 now craft these items from the inventory page and use them in your farms.

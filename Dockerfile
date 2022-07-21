@@ -9,12 +9,12 @@ RUN mkdir -p /var/lib/mercurio &&\
 # Install mods system-wide (ro)
 WORKDIR /usr/share/minetest
 RUN contentdb install --debug --url=https://contentdb.ronoaldo.net \
-    apercy/airutils@12779 \
+    apercy/airutils@12849 \
     apercy/automobiles_pck@12778 \
     apercy/demoiselle@12716 \
     apercy/hidroplane@12718 \
     apercy/ju52@12719 \
-    apercy/kartcar@12788 \
+    apercy/kartcar@12847 \
     apercy/motorboat@12792 \
     apercy/nautilus@11298 \
     apercy/pa28@12709 \
@@ -33,7 +33,7 @@ RUN contentdb install --debug --url=https://contentdb.ronoaldo.net \
     ElCeejo/creatura@12540 \
     ElCeejo/draconis@11787 \
     FaceDeer/anvil@5696 \
-    FaceDeer/hopper@6074 \
+    FaceDeer/hopper@12882 \
     Gundul/water_life@12786 \
     "Hybrid Dog/we_undo@9288" \
     JAstudios/moreswords@9585 \
@@ -48,7 +48,7 @@ RUN contentdb install --debug --url=https://contentdb.ronoaldo.net \
     Linuxdirk/mtimer@9958 \
     Lokrates/biofuel@12552 \
     Lone_Wolf/headanim@8888 \
-    MeseCraft/void_chest@5565 \
+    MeseCraft/void_chest@12862 \
     mt-mods/travelnet@8497 \
     philipmi/regrowing_fruits@11665 \
     Piezo_/illumination@1091 \
@@ -70,9 +70,9 @@ RUN contentdb install --debug --url=https://contentdb.ronoaldo.net \
     TenPlus1/bakedclay@9438 \
     TenPlus1/bonemeal@12754 \
     TenPlus1/dmobs@11568 \
-    TenPlus1/ethereal@12755 \
+    TenPlus1/ethereal@12870 \
     TenPlus1/farming@12615 \
-    TenPlus1/itemframes@10483 \
+    TenPlus1/itemframes@12838 \
     TenPlus1/mob_horse@11324 \
     TenPlus1/mobs@12801 \
     TenPlus1/mobs_animal@12783 \

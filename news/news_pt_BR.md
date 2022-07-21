@@ -16,32 +16,30 @@ O servidor foi projetado para ser amigável e agradável! Por favor:
 
 ![1,1](halo)
 
-![0,0,r](item:///default:furnace)
+![0,0,r](item:///default:pick_diamond)
 
-# Mudança Importante!
+# **Atualização do servidor em 21 de Julho de 2022**
 
-Estamos movendo o servidor para uma nova máquina virtual. Uma versão beta da nova infra
-está disponível para testes. Quando ela está ligada, ela aparece na lista de servidores
-como **Mercurio | Open Beta Test Server**, e está com um backup mais antigo do mundo.
+Atualização pontual para obter as atualizações dos mods, especialmente uma
+correção importante do mod **Hopper**, evitando uma explosão nos logs quando
+usados em setups mais robustos.
 
-Todos são bem-vindos para ajudar com os testes desta nova versão enquanto ainda está na
-fornalha e reportar qualquer problema pelo Discord (o link para o discord está no final
-dest janela).
-
-*Obrigado! -- Ronoaldo Pereira*
+```
+* APercy mods (airutils, kartcar)
+* FaceDeer Hopper (hopper)
+* MeseCraft Void Chest (void_chest)
+* TenPlus1 mods (ethereal, itemframes)
+```
 
 ![1,1](halo)
 
+![82,82,r](item:///steampunk_blimp:blimp)
 
-# **Server Update July 14, 2022**
-
-![0,0,r](item:///steampunk_blimp:blimp)
+# **Atualização do servidor em 14 de Julho de 2022**
 
 A atualização de hoje traz o aguardado mod de APercy: Blimp! Você pode craftar
 esse fantástico veículo voador para levar seu jogo multiplayer para o próximo
 nível!
-
-![0,0,r](item:///pa28:pa28)
 
 Esta atualização também traz um novo avião, o PA 28! Esta é mais uma máquina
 voadora feita por APercy, que traz uma nova experiência de vôo para o servidor.
@@ -62,6 +60,8 @@ atualizados:
 
 ![1,1](halo)
 
+![0,0,r](item:///default:pick_diamond)
+
 # **Atualização do servidor em 11 de julho de 2022**
 
 Pequeno update para atualizar versões dos mods de **veículos** do APercy,
@@ -75,18 +75,18 @@ O servidor foi atualizado esta semana para adicionar novos mods e correções!
 Novos itens para quem gosta de **escalar** e **velejar**, novas **ferramentas**
 para agricultores e um novo veículo para explorar o **fundo do mar**.
 
-## Escalada
-
 ![0,0,r](item:///hook:hook)
+
+## Escalada
 
 Novos itens de **escalada** para você explorar as altas montanhas que o mapgen
 cria.  Você pode usar o **gancho** e as **cordas** para alcançar facilmente
 partes altas sem um avião.  Depois de estar no alto do céu, você pode pular com
 uma **asa delta** e apreciar a vista.
 
-## Mais formas de explorar o mar
-
 ![0,0,r](item:///nautilus:boat)
+
+## Mais formas de explorar o mar
 
 Já temos uma **lancha**, e agora com esta atualização temos duas novas formas de
 aproveite o mar. O **kit de navegação** tornará sua simulação de navegação um
@@ -96,9 +96,9 @@ Quando chegar a um lugar que deseja explorar mais a fundo, use o **nautilus**
 recém-adicionado submarino feito com diversos materiais para exportação
 submarina.
 
-## Ferramentas agrícolas
-
 ![0,0,r](item:///moreores:hoe_silver)
+
+## Ferramentas agrícolas
 
 As receitas que faltavam para as enxadas agrícolas foram adicionadas às enxadas
 de prata e mithril. Você pode agora crie esses itens na página de inventário e
