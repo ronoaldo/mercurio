@@ -211,4 +211,6 @@ Use `protectors`, `protector blocks` and the `area` delimiters to avoid unwanted
 breakage of your builds! Remember some kids play here as well so better be safe
 than sorry!
 
-You can use the `search` dommand to find useful information about the world!
+![1,1](halo)
+
+---

@@ -218,5 +218,6 @@ Use `protectors`, `protector blocks` e os delimitadores `area` para evitar
 quebra de suas construções! Lembre-se de que algumas crianças brincam aqui
 também, então é melhor estar seguro do que desculpe!
 
-Você pode usar o comando `search` para encontrar informações úteis sobre o
-mundo!
+![1,1](halo.png)
+
+---
