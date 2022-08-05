@@ -1,5 +1,4 @@
-# Pinned ghcr.io/ronoaldo/minetestserver:stable-5 release
-FROM ghcr.io/ronoaldo/minetestserver:stable-5
+FROM ghcr.io/ronoaldo/minetestserver:5.6.0
 
 # Setup system-wide settings
 USER root
