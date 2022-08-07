@@ -8,23 +8,23 @@ RUN mkdir -p /var/lib/mercurio &&\
 # Install mods system-wide (ro)
 WORKDIR /usr/share/minetest
 RUN contentdb install --debug --url=https://contentdb.ronoaldo.net \
-    apercy/airutils@12779 \
-    apercy/automobiles_pck@12778 \
+    apercy/airutils@12849 \
+    apercy/automobiles_pck@12972 \
     apercy/demoiselle@12716 \
     apercy/hidroplane@12718 \
     apercy/ju52@12719 \
-    apercy/kartcar@12788 \
+    apercy/kartcar@12847 \
     apercy/motorboat@12792 \
     apercy/nautilus@11298 \
     apercy/pa28@12709 \
     apercy/supercub@12717 \
     apercy/steampunk_blimp@12712 \
-    apercy/trike@12720 \
+    apercy/trike@13058 \
     AiTechEye/hook@1891 \
     AiTechEye/smartshop@903 \
     bell07/carpets@3671 \
     bell07/skinsdb@11695 \
-    Calinou/moreblocks@8247 \
+    Calinou/moreblocks@13045 \
     Calinou/moreores@8248 \
     cronvel/respawn@2406 \
     Dragonop/tools_obsidian@6102 \
@@ -32,29 +32,29 @@ RUN contentdb install --debug --url=https://contentdb.ronoaldo.net \
     ElCeejo/creatura@12540 \
     ElCeejo/draconis@11787 \
     FaceDeer/anvil@5696 \
-    FaceDeer/hopper@6074 \
+    FaceDeer/hopper@12882 \
     Gundul/water_life@12786 \
     "Hybrid Dog/we_undo@9288" \
     JAstudios/moreswords@9585 \
     Jeija/digilines@8574 \
-    Jeija/mesecons@12542 \
+    Jeija/mesecons@13007 \
     joe7575/lumberjack@11039 \
     joe7575/tubelib2@12793 \
-    jp/xdecor@11439 \
+    jp/xdecor@12938 \
     Just_Visiting/markdown2formspec@11639 \
     Liil/nativevillages@7404 \
     Liil/people@6771 \
     Linuxdirk/mtimer@9958 \
     Lokrates/biofuel@12552 \
     Lone_Wolf/headanim@8888 \
-    MeseCraft/void_chest@5565 \
+    MeseCraft/void_chest@12862 \
     mt-mods/travelnet@8497 \
     philipmi/regrowing_fruits@11665 \
     Piezo_/illumination@1091 \
     Piezo_/hangglider@1269 \
     PilzAdam/nether@11303 \
     ronoaldo/minenews@12102 \
-    RealBadAngel/unified_inventory@11942 \
+    RealBadAngel/unified_inventory@12953 \
     rael5/nether_mobs@6364 \
     rnd/basic_machines@58 \
     rubenwardy/awards@6092 \
@@ -67,29 +67,29 @@ RUN contentdb install --debug --url=https://contentdb.ronoaldo.net \
     Sokomine/replacer@76 \
     stu/3d_armor@11723 \
     TenPlus1/bakedclay@9438 \
-    TenPlus1/bonemeal@12754 \
+    TenPlus1/bonemeal@12905 \
     TenPlus1/dmobs@11568 \
-    TenPlus1/ethereal@12755 \
+    TenPlus1/ethereal@12930 \
     TenPlus1/farming@12615 \
-    TenPlus1/itemframes@10483 \
+    TenPlus1/itemframes@12838 \
     TenPlus1/mob_horse@11324 \
-    TenPlus1/mobs@12801 \
+    TenPlus1/mobs@13053 \
     TenPlus1/mobs_animal@12783 \
     TenPlus1/mobs_monster@12803 \
-    TenPlus1/mobs_npc@12477 \
+    TenPlus1/mobs_npc@13079 \
     TenPlus1/protector@11445 \
     Termos/mobkit@6391 \
     Termos/sailing_kit@6033 \
     Traxie21/tpr@8314 \
-    VanessaE/basic_materials@11672 \
+    VanessaE/basic_materials@13049 \
     VanessaE/basic_signs@12541 \
     VanessaE/currency@10265 \
-    VanessaE/homedecor_modpack@12610 \
-    VanessaE/home_workshop_modpack@12664 \
+    VanessaE/homedecor_modpack@13048 \
+    VanessaE/home_workshop_modpack@12937 \
     VanessaE/unifieddyes@12422 \
-    VanessaE/signs_lib@12557 \
+    VanessaE/signs_lib@12884 \
     Wuzzy/calendar@5062 \
-    Wuzzy/hbarmor@1275 \
+    Wuzzy/hbarmor@12993 \
     Wuzzy/hbhunger@9156 \
     Wuzzy/hudbars@8390 \
     Wuzzy/inventory_icon@469 \
