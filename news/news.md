@@ -18,16 +18,21 @@ The server is designed to be friendly and enjoyable! Please:
 
 ![0,0,r](item:///default:pick_diamond)
 
-# **Server Update July 21, 2022**
+# **Server Update August 7, 2022**
 
 Regular update to fetch newer versions of server mods, specifically an important
 fix on **Hopper** mod, reducing the logs produced by it's operation.
 
 ```
-* APercy mods (airutils, kartcar)
+* APercy mods (airutils, kartcar, automobiles_pck, trike)
+* Calinou More Blocks (moreblocks)
+* Jeija Mesecons (mesecons)
+* jp mods (xdecor)
 * FaceDeer Hopper (hopper)
 * MeseCraft Void Chest (void_chest)
-* TenPlus1 mods (ethereal, itemframes)
+* TenPlus1 mods (ethereal, itemframes, bonemeal, mobs, mobs_npc)
+* VanessaE mods (basic_materials,homedecor_modpack, home_workshop_modpack)
+* Wuzzy Hudbar Armor (hbarmor)
 ```
 
 ![1,1](halo)
