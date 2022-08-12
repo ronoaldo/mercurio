@@ -1,5 +1,6 @@
 # Mercurio server build/management tool
 
+INTERACTIVE=true
 TEST_ARGS=--env-file /tmp/.env.test -f docker-compose.yml -f docker-compose.test.yml
 TEST_ENV= -e MERCURIO_AUTO_SHUTDOWN=true -e NO_LOOP=true
 
@@ -31,8 +32,8 @@ test: volumes
 
 run: volumes
 	docker-compose down && docker-compose up --build --detach
-	@echo -e "\n\nServer is running in background ... showing logs\n\n"
-	docker-compose logs -f
+	@echo "Server is running in background"
+	if [ x"$(INTERACTIVE)" = x"true" ] ; then docker-compose logs -f ; fi
 
 run-interactive: 
 	docker-compose down && docker-compose up --build

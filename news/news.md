@@ -13,6 +13,19 @@ The server is designed to be friendly and enjoyable! Please:
 ```
 
 -------------------------------
+![1,1](halo)
+
+![0,0,r](item:///default:pick_diamond)
+
+# **Server Update August 10, 2022**
+
+Regular update to fetch newer versions of server mods, and fix server crashes
+as well.
+
+We noticed that first Trike and after that, PA28, started to cause server
+crashes.  This is strange, as the mods has not been updated when it started to
+crash, but we don't know the reason yet. APercy made updates to the mods in
+order to protect the server from crashing while we investigate further.
 
 ![1,1](halo)
 

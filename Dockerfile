@@ -16,22 +16,22 @@ RUN contentdb install --debug --url=https://contentdb.ronoaldo.net \
     apercy/kartcar@12847 \
     apercy/motorboat@12792 \
     apercy/nautilus@11298 \
-    apercy/pa28@12709 \
+    apercy/pa28@13170 \
     apercy/supercub@12717 \
-    apercy/steampunk_blimp@12712 \
+    apercy/steampunk_blimp@13095 \
     apercy/trike@13058 \
     AiTechEye/hook@1891 \
     AiTechEye/smartshop@903 \
     bell07/carpets@3671 \
     bell07/skinsdb@11695 \
     Calinou/moreblocks@13045 \
-    Calinou/moreores@8248 \
+    Calinou/moreores@13155 \
     cronvel/respawn@2406 \
     Dragonop/tools_obsidian@6102 \
-    Don/mydoors@222 \
+    Don/mydoors@13157 \
     ElCeejo/creatura@12540 \
     ElCeejo/draconis@11787 \
-    FaceDeer/anvil@5696 \
+    FaceDeer/anvil@13166 \
     FaceDeer/hopper@12882 \
     Gundul/water_life@12786 \
     "Hybrid Dog/we_undo@9288" \
@@ -62,7 +62,7 @@ RUN contentdb install --debug --url=https://contentdb.ronoaldo.net \
     Shara/abriglass@32 \
     sfan5/worldedit@9572 \
     sofar/crops@176 \
-    sofar/emote@1317 \
+    sofar/emote@13167 \
     Sokomine/markers@306 \
     Sokomine/replacer@76 \
     stu/3d_armor@11723 \
@@ -75,15 +75,15 @@ RUN contentdb install --debug --url=https://contentdb.ronoaldo.net \
     TenPlus1/mob_horse@11324 \
     TenPlus1/mobs@13053 \
     TenPlus1/mobs_animal@12783 \
-    TenPlus1/mobs_monster@12803 \
+    TenPlus1/mobs_monster@13182 \
     TenPlus1/mobs_npc@13079 \
     TenPlus1/protector@11445 \
     Termos/mobkit@6391 \
     Termos/sailing_kit@6033 \
-    Traxie21/tpr@8314 \
+    Traxie21/tpr@13153 \
     VanessaE/basic_materials@13049 \
     VanessaE/basic_signs@12541 \
-    VanessaE/currency@10265 \
+    VanessaE/currency@13120 \
     VanessaE/homedecor_modpack@13048 \
     VanessaE/home_workshop_modpack@12937 \
     VanessaE/unifieddyes@12422 \

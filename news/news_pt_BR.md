@@ -13,6 +13,18 @@ O servidor foi projetado para ser amigável e agradável! Por favor:
 ```
 
 -------------------------------
+![1,1](halo)
+
+![0,0,r](item:///default:pick_diamond)
+
+# **Atualização do servidor em 10 de Agosto de 2022**
+
+Atualização regular do servidor para obter novas versões dos mods, e corrigir
+os crashes do servidor.
+
+Nós notamos que o servidor está caindo recentemente, primeiro com o Trike e
+agora com o PA28. Entretanto, não sabemos ainda a causa. O APercy atualizou os
+mods para proteger o servidor de um *crash* enquanto investigamos mais a fundo.
 
 ![1,1](halo)
 
