@@ -17,6 +17,25 @@ The server is designed to be friendly and enjoyable! Please:
 
 ![0,0,r](item:///default:pick_diamond)
 
+# **Server Update August 15, 2022**
+
+New update to mods up to August 15. This release updates basically the APercy
+vehicles and airplanes which should bring some extra sanity checks to avoid
+server crashes as well as the updated and reformulated Draconis mod.
+
+In this update Draconis brings a new set of behavor changes, including the new
+Libri, the way dragons attack players as well as other mobs, and the way we
+build the draconis tools. The main focus is also with the artwork, so all
+models and textures were remade with a new style.
+
+Make sure to check if your dragons have any issues and report in our Discord
+server linked bellow!
+
+
+![1,1](halo)
+
+![0,0,r](item:///default:pick_diamond)
+
 # **Server Update August 10, 2022**
 
 Regular update to fetch newer versions of server mods, and fix server crashes
@@ -216,7 +235,6 @@ Level up your farming!
 
 This mod adds a great ammount of new storage items. I mean, *several* new
 storage items. Upgrade your wharehouses!
-
 
 
 ![1,1](halo)
