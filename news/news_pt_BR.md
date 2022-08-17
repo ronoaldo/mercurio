@@ -17,6 +17,26 @@ O servidor foi projetado para ser amigável e agradável! Por favor:
 
 ![0,0,r](item:///default:pick_diamond)
 
+# **Atualização do servidor em 15 de agosto de 2022**
+
+Nova atualização para mods até 15 de agosto. Esta versão atualiza basicamente o
+APercy veículos e aviões que devem trazer algumas verificações extras de
+sanidade para evitar servidor trava, bem como o mod Draconis atualizado e
+reformulado.
+
+Nesta atualização Draconis traz um novo conjunto de mudanças de comportamento,
+incluindo o novo Libri, a forma como os dragões atacam os jogadores, assim como
+outros mobs, e a forma como construir as ferramentas draconis. O foco principal
+também é com a obra de arte, então todos modelos e texturas foram refeitos com
+um novo estilo.
+
+Certifique-se de verificar se seus dragões têm algum problema e relate em nosso
+Discord servidor linkado abaixo!
+
+![1,1](halo)
+
+![0,0,r](item:///default:pick_diamond)
+
 # **Atualização do servidor em 10 de Agosto de 2022**
 
 Atualização regular do servidor para obter novas versões dos mods, e corrigir

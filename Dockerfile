@@ -9,17 +9,17 @@ RUN mkdir -p /var/lib/mercurio &&\
 WORKDIR /usr/share/minetest
 RUN contentdb install --debug --url=https://contentdb.ronoaldo.net \
     apercy/airutils@12849 \
-    apercy/automobiles_pck@12972 \
-    apercy/demoiselle@12716 \
-    apercy/hidroplane@12718 \
-    apercy/ju52@12719 \
+    apercy/automobiles_pck@13252 \
+    apercy/demoiselle@13211 \
+    apercy/hidroplane@13254 \
+    apercy/ju52@13256 \
     apercy/kartcar@12847 \
     apercy/motorboat@12792 \
     apercy/nautilus@11298 \
-    apercy/pa28@13170 \
-    apercy/supercub@12717 \
+    apercy/pa28@13257 \
+    apercy/supercub@13255 \
     apercy/steampunk_blimp@13095 \
-    apercy/trike@13058 \
+    apercy/trike@13253 \
     AiTechEye/hook@1891 \
     AiTechEye/smartshop@903 \
     bell07/carpets@3671 \
@@ -29,14 +29,14 @@ RUN contentdb install --debug --url=https://contentdb.ronoaldo.net \
     cronvel/respawn@2406 \
     Dragonop/tools_obsidian@6102 \
     Don/mydoors@13157 \
-    ElCeejo/creatura@12540 \
-    ElCeejo/draconis@11787 \
+    ElCeejo/creatura@13260 \
+    ElCeejo/draconis@13310 \
     FaceDeer/anvil@13166 \
     FaceDeer/hopper@12882 \
     Gundul/water_life@12786 \
     "Hybrid Dog/we_undo@9288" \
     JAstudios/moreswords@9585 \
-    Jeija/digilines@8574 \
+    Jeija/digilines@13248 \
     Jeija/mesecons@13007 \
     joe7575/lumberjack@11039 \
     joe7575/tubelib2@12793 \
@@ -44,7 +44,7 @@ RUN contentdb install --debug --url=https://contentdb.ronoaldo.net \
     Just_Visiting/markdown2formspec@11639 \
     Liil/nativevillages@7404 \
     Liil/people@6771 \
-    Linuxdirk/mtimer@9958 \
+    Linuxdirk/mtimer@13201 \
     Lokrates/biofuel@12552 \
     Lone_Wolf/headanim@8888 \
     MeseCraft/void_chest@12862 \
@@ -81,10 +81,10 @@ RUN contentdb install --debug --url=https://contentdb.ronoaldo.net \
     Termos/mobkit@6391 \
     Termos/sailing_kit@6033 \
     Traxie21/tpr@13153 \
-    VanessaE/basic_materials@13049 \
+    VanessaE/basic_materials@13187 \
     VanessaE/basic_signs@12541 \
     VanessaE/currency@13120 \
-    VanessaE/homedecor_modpack@13048 \
+    VanessaE/homedecor_modpack@13213 \
     VanessaE/home_workshop_modpack@12937 \
     VanessaE/unifieddyes@12422 \
     VanessaE/signs_lib@12884 \
