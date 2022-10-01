@@ -1,4 +1,4 @@
-FROM ghcr.io/ronoaldo/minetestserver:5.6.0
+FROM ghcr.io/ronoaldo/minetestserver:5.6.1
 
 # Setup system-wide settings
 USER root
@@ -7,7 +7,7 @@ RUN mkdir -p /var/lib/mercurio &&\
     chown -R minetest /var/lib/mercurio /var/lib/minetest /etc/minetest
 # Install mods system-wide (ro)
 WORKDIR /usr/share/minetest
-RUN contentdb install --debug --url=https://contentdb.ronoaldo.net \
+RUN contentdb install --debug \
     apercy/airutils@12849 \
     apercy/automobiles_pck@13252 \
     apercy/demoiselle@13211 \
@@ -33,7 +33,6 @@ RUN contentdb install --debug --url=https://contentdb.ronoaldo.net \
     ElCeejo/draconis@13310 \
     FaceDeer/anvil@13166 \
     FaceDeer/hopper@12882 \
-    Gundul/water_life@12786 \
     "Hybrid Dog/we_undo@9288" \
     JAstudios/moreswords@9585 \
     Jeija/digilines@13248 \
@@ -66,18 +65,18 @@ RUN contentdb install --debug --url=https://contentdb.ronoaldo.net \
     Sokomine/markers@306 \
     Sokomine/replacer@76 \
     stu/3d_armor@11723 \
-    TenPlus1/bakedclay@9438 \
-    TenPlus1/bonemeal@12905 \
-    TenPlus1/dmobs@11568 \
-    TenPlus1/ethereal@12930 \
-    TenPlus1/farming@12615 \
+    TenPlus1/bakedclay@13687 \
+    TenPlus1/bonemeal@13876 \
+    TenPlus1/dmobs@13567 \
+    TenPlus1/ethereal@14136 \
+    TenPlus1/farming@14060 \
     TenPlus1/itemframes@12838 \
-    TenPlus1/mob_horse@11324 \
-    TenPlus1/mobs@13053 \
-    TenPlus1/mobs_animal@12783 \
-    TenPlus1/mobs_monster@13182 \
-    TenPlus1/mobs_npc@13079 \
-    TenPlus1/protector@11445 \
+    TenPlus1/mob_horse@14104 \
+    TenPlus1/mobs@14135 \
+    TenPlus1/mobs_animal@13899 \
+    TenPlus1/mobs_monster@13462 \
+    TenPlus1/mobs_npc@ \
+    TenPlus1/protector@13500 \
     Termos/mobkit@6391 \
     Termos/sailing_kit@6033 \
     Traxie21/tpr@13153 \
@@ -88,7 +87,7 @@ RUN contentdb install --debug --url=https://contentdb.ronoaldo.net \
     VanessaE/home_workshop_modpack@12937 \
     VanessaE/unifieddyes@12422 \
     VanessaE/signs_lib@12884 \
-    Wuzzy/calendar@5062 \
+    Wuzzy/calendar@14049 \
     Wuzzy/hbarmor@12993 \
     Wuzzy/hbhunger@9156 \
     Wuzzy/hudbars@8390 \
@@ -109,7 +108,8 @@ RUN git config --global advice.detachedHead false &&\
     git clone --depth=1 https://github.com/ronoaldo/techpack --branch="v2.06-mercurio" &&\
     git clone --depth=1 https://github.com/ronoaldo/drawers --branch="v0.6.5-mercurio1" &&\
     git clone --depth=1 https://github.com/ronoaldo/xtraores --branch="v0.22-mercurio4" &&\
-    git clone --depth=1 https://github.com/ronoaldo/discordmt --branch="v0.2+mercurio1"
+    git clone --depth=1 https://github.com/ronoaldo/discordmt --branch="v0.2+mercurio1" &&\
+    git clone --depth=1 https://github.com/ronoaldo/water_life --branch="v1.01-mercurio1"
 # Install additional tools for the server
 RUN apt-get update && apt-get install jq curl -yq && apt-get clean
 
