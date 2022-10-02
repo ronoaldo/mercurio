@@ -9,14 +9,14 @@ RUN mkdir -p /var/lib/mercurio &&\
 WORKDIR /usr/share/minetest
 RUN contentdb install --debug \
     apercy/airutils@12849 \
-    apercy/automobiles_pck@13252 \
-    apercy/demoiselle@13211 \
-    apercy/hidroplane@13254 \
-    apercy/ju52@13256 \
-    apercy/kartcar@12847 \
+    apercy/automobiles_pck@14143 \
+    apercy/demoiselle@13829 \
+    apercy/hidroplane@14162 \
+    apercy/ju52@13762 \
+    apercy/kartcar@13842 \
     apercy/motorboat@12792 \
     apercy/nautilus@11298 \
-    apercy/pa28@13257 \
+    apercy/pa28@13830 \
     apercy/supercub@13255 \
     apercy/steampunk_blimp@13095 \
     apercy/trike@13253 \
@@ -29,17 +29,17 @@ RUN contentdb install --debug \
     cronvel/respawn@2406 \
     Dragonop/tools_obsidian@6102 \
     Don/mydoors@13157 \
-    ElCeejo/creatura@13260 \
-    ElCeejo/draconis@13310 \
+    ElCeejo/creatura@13780 \
+    ElCeejo/draconis@13785 \
     FaceDeer/anvil@13166 \
     FaceDeer/hopper@12882 \
     "Hybrid Dog/we_undo@9288" \
     JAstudios/moreswords@9585 \
     Jeija/digilines@13248 \
-    Jeija/mesecons@13007 \
+    Jeija/mesecons@13816 \
     joe7575/lumberjack@11039 \
     joe7575/tubelib2@12793 \
-    jp/xdecor@12938 \
+    jp/xdecor@13983 \
     Just_Visiting/markdown2formspec@11639 \
     Liil/nativevillages@7404 \
     Liil/people@6771 \
@@ -53,18 +53,18 @@ RUN contentdb install --debug \
     Piezo_/hangglider@1269 \
     PilzAdam/nether@11303 \
     ronoaldo/minenews@12102 \
-    RealBadAngel/unified_inventory@12953 \
+    RealBadAngel/unified_inventory@13891 \
     rael5/nether_mobs@6364 \
     rnd/basic_machines@58 \
     rubenwardy/awards@6092 \
     ShadowNinja/areas@5030 \
     Shara/abriglass@32 \
-    sfan5/worldedit@9572 \
+    sfan5/worldedit@13367 \
     sofar/crops@176 \
     sofar/emote@13167 \
     Sokomine/markers@306 \
     Sokomine/replacer@76 \
-    stu/3d_armor@11723 \
+    stu/3d_armor@13753 \
     TenPlus1/bakedclay@13687 \
     TenPlus1/bonemeal@13876 \
     TenPlus1/dmobs@13567 \
@@ -83,9 +83,9 @@ RUN contentdb install --debug \
     VanessaE/basic_materials@13187 \
     VanessaE/basic_signs@12541 \
     VanessaE/currency@13120 \
-    VanessaE/homedecor_modpack@13213 \
+    VanessaE/homedecor_modpack@13683 \
     VanessaE/home_workshop_modpack@12937 \
-    VanessaE/unifieddyes@12422 \
+    VanessaE/unifieddyes@13815 \
     VanessaE/signs_lib@12884 \
     Wuzzy/calendar@14049 \
     Wuzzy/hbarmor@12993 \
