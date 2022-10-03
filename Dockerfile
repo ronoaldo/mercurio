@@ -11,7 +11,7 @@ RUN contentdb install --debug \
     apercy/airutils@12849 \
     apercy/automobiles_pck@14143 \
     apercy/demoiselle@13829 \
-    apercy/hidroplane@14162 \
+    apercy/hidroplane@14176 \
     apercy/ju52@13762 \
     apercy/kartcar@13842 \
     apercy/motorboat@12792 \
