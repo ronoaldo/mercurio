@@ -9,9 +9,9 @@ RUN mkdir -p /var/lib/mercurio &&\
 WORKDIR /usr/share/minetest
 RUN contentdb install --debug \
     apercy/airutils@12849 \
-    apercy/automobiles_pck@14143 \
+    apercy/automobiles_pck@14192 \
     apercy/demoiselle@13829 \
-    apercy/hidroplane@14176 \
+    apercy/hidroplane@14199 \
     apercy/ju52@13762 \
     apercy/kartcar@13842 \
     apercy/motorboat@12792 \
