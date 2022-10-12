@@ -1,0 +1,27 @@
+# textdomain: signs_lib
+Locked sign, owned by @1@n=Panneau verrouillé, appartient à @1@n
+Write=
+@1 wrote "@2" to sign at @3=
+@1 flipped the wide-font switch to "@2" at @3=
+@1 flipped the unicode-font switch to "@2" at @3=
+
+
+##### not used anymore #####
+
+locked =verrouillé 
+@1 wrote "@2" to @3sign at @4=@1 a écrit "@2" sur le panneau @3en @4
+Sign=Panneau
+Can edit all locked signs=Peut modifier les panneaux verrouillés
+Locked Sign=Panneau (verrouillé)
+green=vert
+yellow=jaune
+red=rouge
+white_red=rouge et blanc
+white_black=noir et blanc
+orange=orange
+blue=bleu
+brown=marron
+Sign (@1, metal)=Panneau (@1, métal)
+Attempt to register unknown node as fence=Tentative d'enregistrer un nœud inconnu comme barrière
+Registered @1 and @2=Enregistrement de @1 et @
+[MOD] signs loaded=[MOD] signs chargé

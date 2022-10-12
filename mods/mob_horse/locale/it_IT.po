@@ -1,0 +1,59 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2018-02-06 00:07+0800\n"
+"PO-Revision-Date: 2020-05-11 13:43+0200\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 2.2.1\n"
+"Last-Translator: Hamlet <hamlatgitlab@riseup.net>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Language: it_IT\n"
+
+#: init.lua
+msgid "Horse"
+msgstr "Cavallo"
+
+#: init.lua
+msgid "Horse shoes fitted -"
+msgstr "Ferri di cavallo indossati -"
+
+#: init.lua
+msgid " speed: "
+msgstr " velocità: "
+
+#: init.lua
+msgid " , jump height: "
+msgstr " , altezza di salto: "
+
+#: init.lua
+msgid " , stop speed: "
+msgstr " , velocità di arresto: "
+
+#: init.lua
+msgid "Horse shoes only work on horses!"
+msgstr "I ferri di cavallo funzionano solo sui cavalli!"
+
+#: init.lua
+msgid "Steel HorseShoes (use on horse to apply)"
+msgstr "Ferri di cavallo d'acciaio (usarli su un cavallo per applicarli)"
+
+#: init.lua
+msgid "Bronze HorseShoes (use on horse to apply)"
+msgstr "Ferri di cavallo di bronzo (usarli su un cavallo per applicarli)"
+
+#: init.lua
+msgid "Mese HorseShoes (use on horse to apply)"
+msgstr "Ferri di cavallo di mese (usarli su un cavallo per applicarli)"
+
+#: init.lua
+msgid "Diamond HorseShoes (use on horse to apply)"
+msgstr "Ferri di cavallo di diamante (usarli su un cavallo per applicarli)"

@@ -1,0 +1,27 @@
+# textdomain: signs_lib
+Locked sign, owned by @1@n=gesperrter Schild, gehört @1@n
+Write=schreiben
+@1 wrote "@2" to sign at @3=
+@1 flipped the wide-font switch to "@2" at @3=
+@1 flipped the unicode-font switch to "@2" at @3=
+
+
+##### not used anymore #####
+
+locked =gesperrt 
+@1 wrote "@2" to @3sign at @4=@1 schrieb "@2" auf das @3Schild bei @4
+Sign=Schild
+Can edit all locked signs=Kann alle gesperrte Schilder bearbeiten
+Locked Sign=gesperrter Schild
+green=grün
+yellow=gelb
+red=rot
+white_red=weißrot
+white_black=schwarzweiß
+orange=orange
+blue=blau
+brown=braun
+Sign (@1, metal)=Schild (@1, Metall)
+Attempt to register unknown node as fence=Versuch ein unbekanntes Element als Zaun zu registrieren
+Registered @1 and @2=Registrierte @1 und @2
+[MOD] signs loaded=[MOD] Schilder-Mod geladen

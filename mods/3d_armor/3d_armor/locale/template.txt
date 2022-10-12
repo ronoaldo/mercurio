@@ -1,0 +1,19 @@
+# textdomain: 3d_armor
+
+
+### api.lua ###
+
+3d_armor: Detached armor inventory is nil @1=
+3d_armor: Player name is nil @1=
+3d_armor: Player reference is nil @1=
+
+### init.lua ###
+
+3d_armor: Failed to initialize player=
+Fire=
+Heal=
+Level=
+Radiation=
+Your @1 got destroyed!=
+Your @1 is almost broken!=
+[3d_armor] Fire Nodes disabled=

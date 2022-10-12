@@ -1,0 +1,17 @@
+# textdomain: lumberjack
+
+
+
+### init.lua ###
+
+Give a player lumberjack points=
+Output your lumberjack points=
+Player @1 is unknown!=
+Player @1 now has @2 tree and @3 sapling points.=
+You are already a lumberjack.=
+You need further @1 sapling points.=
+You need further @1 tree and @2 sapling points.=
+You need further @1 tree points.=
+You're a real lumberjack now!=
+[Lumberjack Mod] From the top, please=
+[Lumberjack Mod] You are using the wrong tool=

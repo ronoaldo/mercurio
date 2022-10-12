@@ -1,0 +1,7 @@
+This project provides colored metal wall signs, and an extension to the 
+default wooden signs, to place either a wall sign, a yard sign, or a 
+hanging-from-ceiling sign, depending on where the user points.
+
+Most items herein were originally part of signs_lib.
+
+Requires signs_lib commit 4ff54c9a (2019-09-11) or later.

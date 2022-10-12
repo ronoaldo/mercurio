@@ -1,0 +1,228 @@
+
+local S = mobs_npc.S
+
+-- define table containing names for use and shop items for sale
+
+mobs.human = {
+
+	names = {
+		"Bob", "Duncan", "Bill", "Tom", "James", "Ian", "Lenny",
+		"Dylan", "Ethan"
+	},
+
+	items = {
+		--{item for sale, price, chance of appearing in trader's inventory}
+		{"default:apple 10", "default:gold_ingot 2", 10},
+		{"farming:bread 10", "default:gold_ingot 4", 5},
+		{"default:clay 10", "default:gold_ingot 2", 12},
+		{"default:brick 10", "default:gold_ingot 4", 17},
+		{"default:glass 10", "default:gold_ingot 4", 17},
+		{"default:obsidian 10", "default:gold_ingot 15", 50},
+		{"default:diamond 1", "default:gold_ingot 5", 40},
+		{"farming:wheat 10", "default:gold_ingot 2", 17},
+		{"default:tree 5", "default:gold_ingot 4", 20},
+		{"default:stone 10", "default:gold_ingot 8", 17},
+		{"default:desert_stone 10", "default:gold_ingot 8", 27},
+		{"default:sapling 1", "default:gold_ingot 1", 7},
+		{"default:pick_steel 1", "default:gold_ingot 2", 7},
+		{"default:sword_steel 1", "default:gold_ingot 2", 17},
+		{"default:shovel_steel 1", "default:gold_ingot 1", 17},
+		{"default:cactus 2", "default:gold_ingot 2", 40},
+		{"default:papyrus 2", "default:gold_ingot 2", 40},
+		{"default:mese_crystal_fragment 1", "default:dirt_with_grass 10", 90},
+		{"default:mese_crystal_fragment 1", "default:gold_ingot 5", 90}
+	}
+}
+
+-- Trader (same as NPC but with right-click shop)
+
+mobs:register_mob("mobs_npc:trader", {
+	type = "npc",
+	passive = false,
+	damage = 3,
+	attack_type = "dogfight",
+	attacks_monsters = true,
+	attack_animals = false,
+	attack_npcs = false,
+	pathfinding = false,
+	hp_min = 10,
+	hp_max = 20,
+	armor = 100,
+	collisionbox = {-0.35,-1.0,-0.35, 0.35,0.8,0.35},
+	visual = "mesh",
+	mesh = "mobs_character.b3d",
+	textures = {
+		{"mobs_trader.png"}, -- by Frerin
+		{"mobs_trader2.png"},
+		{"mobs_trader3.png"},
+		{"mobs_trader4.png"} -- female by Astrobe
+	},
+	makes_footstep_sound = true,
+	sounds = {},
+	walk_velocity = 2,
+	run_velocity = 3,
+	jump = false,
+	drops = {},
+	water_damage = 0,
+	lava_damage = 4,
+	light_damage = 0,
+	follow = {"default:diamond"},
+	view_range = 15,
+	owner = "",
+	order = "stand",
+	fear_height = 3,
+	animation = {
+		speed_normal = 30,
+		speed_run = 30,
+		stand_start = 0,
+		stand_end = 79,
+		walk_start = 168,
+		walk_end = 187,
+		run_start = 168,
+		run_end = 187,
+		punch_start = 200,
+		punch_end = 219
+	},
+
+	-- stop attacking on right-click and open shop
+	on_rightclick = function(self, clicker)
+		self.attack = nil
+		mobs_npc.shop_trade(self, clicker, mobs.human)
+	end,
+
+	-- show that npc is a trader once spawned
+	on_spawn = function(self)
+
+		self.nametag = S("Trader")
+
+		self.object:set_properties({
+			nametag = self.nametag,
+			nametag_color = "#FFFFFF"
+		})
+
+		return true -- return true so on_spawn is run once only
+	end
+})
+
+
+-- add spawn egg
+mobs:register_egg("mobs_npc:trader", S("Trader"), "default_sandstone.png", 1)
+
+
+-- this is only required for servers that previously used the old mobs mod
+mobs:alias_mob("mobs:trader", "mobs_npc:trader")
+
+
+local trader_lists = {}
+
+-- global function to add to list
+mobs_npc.add_trader_list = function(def)
+	table.insert(trader_lists, def)
+end
+
+mobs_npc.add_trader_list({
+	block = "default:tinblock",
+	nametag = "Castro",
+	textures = {"mobs_trader2.png"},
+	item_list = {
+		{"default:gold_lump 2", "default:gold_ingot 3"},
+		{"default:iron_lump 2", "default:steel_ingot 2"},
+		{"default:copper_lump 2", "default:copper_ingot 3"},
+		{"default:tin_lump 2", "default:tin_ingot 3"}
+	}
+})
+
+
+-- helper function
+local function place_trader(pos, node)
+
+	local face = node.param2
+	local pos2, def
+
+	-- find which way block is facing
+	if face == 0 then
+		pos2 = {x = pos.x, y = pos.y, z = pos.z - 1}
+	elseif face == 1 then
+		pos2 = {x = pos.x - 1, y = pos.y, z = pos.z}
+	elseif face == 2 then
+		pos2 = {x = pos.x, y = pos.y, z = pos.z + 1}
+	elseif face == 3 then
+		pos2 = {x = pos.x + 1, y = pos.y, z = pos.z}
+	else
+		return
+	end
+
+	-- do we already have a trader spawned?
+	local objs = minetest.get_objects_inside_radius(pos2, 1)
+
+	if objs and #objs > 0 then
+		return
+	end
+
+	-- get block below
+	local bnode = minetest.get_node({x = pos2.x, y = pos2.y - 1, z = pos2.z})
+
+	pos2.y = pos2.y + 0.5
+
+	-- add new trader
+	local obj = minetest.add_entity(pos2, "mobs_npc:trader")
+	local ent = obj and obj:get_luaentity()
+
+	if not ent then return end -- nil check
+
+	for n = 1, #trader_lists do
+
+		def = trader_lists[n]
+
+		if bnode.name == def.block then
+
+			ent.trades = def.item_list
+			ent.nametag = def.nametag
+			ent.game_name = def.nametag
+			ent.base_texture = def.textures
+			ent.textures = def.textures
+
+			obj:set_properties({
+				textures = ent.textures
+			})
+
+			break
+		end
+	end
+
+	-- pop sound
+	minetest.sound_play("default_place_node_hard", {
+			pos = pos, gain = 1.0, max_hear_distance = 5, pitch = 2.0})
+end
+
+
+-- trader block (punch to spawn trader)
+minetest.register_node(":mobs:trader_block", {
+	description = S("Place this and punch to spawn Trader"),
+	groups = {cracky = 3},
+	paramtype = "light",
+	paramtype2 = "facedir",
+	tiles = {
+		"default_stone.png", "default_stone.png", "default_stone.png",
+		"default_stone.png", "default_stone.png", "default_stone.png^mobs_npc_shop_icon.png"
+	},
+
+	-- punch block to spawn trader
+	on_punch = function(pos, node, puncher, pointed_thing)
+		place_trader(pos, node)
+	end,
+
+	on_rotate = screwdriver and screwdriver.rotate_simple,
+	on_blast = function() end
+})
+
+
+-- trader block recipe
+minetest.register_craft({
+	output = "mobs:trader_block",
+	recipe = {
+		{"group:stone", "group:stone", "group:stone"},
+		{"group:stone", "default:diamondblock", "group:stone"},
+		{"group:stone", "default:tinblock", "group:stone"}
+	}
+})

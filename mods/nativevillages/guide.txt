@@ -1,0 +1,91 @@
+People Mod provides NPCs to be integrated in your own village, follow you and provide many trading items. 
+Native Villages is focused on ambience. The villagers of this mod can be found in the specific biomes but 
+wont follow you and some are even aggressive by nature.
+As an additional challenge similar to Minecraft Creepers, you will find now exploding toads at night near the coastal regions 
+of jungle, savanna and forest biomes.
+
+This guide will shortly introduce you to the trading options of every specific tribe provided by the mod. 
+All trading drops are random (Like in People Mod)
+
+Arctic/Icelander Tribe:
+
+Sledge Trader
+Sells Ice Dogs and Dog Sledges for steel ingots.
+
+Ice Villager 
+Sells brown and white wool, leather and meat for iron lumps.
+
+Sledge with Dog
+Can be fed with meat(Mod Mobs Redo), dogfood or cooked dogfood.
+
+Desert Tribe:
+
+Villagers, Raiders and Rangers are aggressive and don't like to trade with you.
+
+Desert Slave Trader
+Sells Chicken Breeders, Cow Herders, Lion Trainers, Dancers and Loyal Cannibals for gold ingots.
+
+Grasslander Tribe:
+
+Grasslander
+Sells milk buckets, mozzarella cheese, iron lumps, copper lumps, tin lumps and meat for bread, garlic bread and ethereal banana bread.
+
+Grassland Witch
+Sells cats and bags of exploding toads for diamonds.
+
+Lake Tribe:
+
+Lake Villager
+Sells cooked catfish, strings, water buckets, salt and pearls for ethereal bananas, sugar, cocoa and bananas(farming).
+
+Fisher
+Sells domesticated catfish(can be bred) and pearls for gold lumps.
+
+Savanna Tribe:
+
+Witch Doctor
+Sells tamed zombies for all graves found in People Mod.
+
+Savanna Queen + King
+Sells gold block for diamond.
+
+Savanna Villagers
+Sells pumpkin, vanilla, potatoes, pineapple, pepper, onion, peas, melon, cucumber and coffee beans for pearls.
+
+Various Creatures:
+
+Tamed Catfish
+Can be bred with worm, seaweed, grass, cucumber, cabbage, ants, termite, fish food.
+
+Tamed Zombie
+Can be bred with dried human meat(Can be found in Jungle/Cannibal settlements).
+
+Cow Herder
+Sells domestic cows for various farming dishes.
+
+Domestic Cow
+Can be milked with a bucket, can be bred with wheat, grass, barley, oat, rye, carrot, beans and lettuce.
+
+Chicken Breeder
+Sells tamed desert chickens for various farming dishes.
+
+Tamed Desert Chicken
+Can be bred with wheat seeds, cotton seeds, barley seeds, oat seeds and rye seeds.
+
+Lion Trainer
+Sells tamed lions for gold lumps.
+
+Tamed Lions
+Can be fed with many kind of raw meat and fish. 
+
+Grassland Cat
+Can be fed with many kind of raw meat and fish. 
+
+Dancers
+Can be fed with various farming dishes.
+
+Loyal Cannibal
+Can be fed with dried human meat(Can be found in Jungle/Cannibal settlements).
+
+
+It is useless to kill animals to be found in the villages, they wont drop anything and wont get tame to prevent cheating.

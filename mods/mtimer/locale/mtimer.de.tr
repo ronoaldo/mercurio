@@ -1,0 +1,209 @@
+# textdomain: mtimer
+
+
+# mTimer Configuration Names
+Open Main Menu=Hauptmenü öffnen
+mTimer Configuration=mTimer-Konfiguration
+
+
+# Dialog: Visibility
+Visibility=Sichtbarkeit
+Make invisible=Verbergen
+Make visible=Anzeigen
+The timer is currently @1.=Der Timer ist aktuell @1.
+visible=sichtbar
+invisible=verborgen
+
+
+# Dialog: Position
+Position=Ausrichtung
+Click the position you want to place the timer at.=Auf die Stelle klicken, an der der Timer angezeigt werden soll.
+Current position: @1=Aktuelle Position: @1
+top=Oben
+middle=mittig
+bottom=Unten
+left=links
+center=zentriert
+right=rechts
+
+
+# Dialog: Color
+Color=Farbe
+Current color: @1=Aktuelle Farbe: @1
+Use `@1` format only!=Ausschließlich `@1`-Format benutzen!
+Set a predefined color=Eine vordefinierte Farbe einstellen
+
+
+# Dialog: HUD Element Scale
+HUD Element Scale=Anzeigeskalierung
+The HUD element can be scaled between 1x (original size) and 10x (largest size due to performance reasons). Use the slider above to adjust the scaling to your needs.=Die Anzeige kann über den oben vorhandenen Schieberegler zwischen 1x (Originalgröße) und 10x (die aus Leistungsgründen die größte Größe) skaliert werden.
+Due to technical reasons the slider position does not reset when clicking the button to set to default values. The HUD element itself resets, and when re-entering this dialog the slider position is properly set.=Aus technischen Gründen wird die Position des Schiebereglers beim einstellen der Standardwerte nicht zurückgesetzt, die Anzeige selbst wird aber zurückgesetzt. Beim erneuten öffnen des Dialogs wird der Schieberegler automatisch angepasst.
+
+
+# Dialog: HUD Element Offset
+HUD Element Offset=Anzeigeversatz
+Vertical=Vertikal
+Horizontal=Horizontal
+Control the HUD element offset using the input on the right side and use the screenshot and markings as orientation for what is changed. The result is shown in the HUD in real time, so check for the actual timner position using the timer HUD element itself.=Anzeigeversatz des HUD-Elements über die Eingaben an der rechten Seite konfigurieren und dafür die Markierungen zur Orientierung verwenden. Das Ergebnis wir direkt übernommen. Die getätigen Änderungen können anhand des HUD-Elements sofort überprüft werden.
+
+
+# Dialog: Ingame Time
+Ingame Time Format=Spielzeit-Format
+
+
+# Dialog: Real-World Time Format
+Real-World Time Format=Realzeit-Format
+
+
+# Dialog: Session Start Time Format
+Session Start Time Format=Sitzungsstartzeit-Format
+
+
+# Dialog: Session Duration Format
+Session Duration Format=Sitzungsdauer-Format
+
+
+# Dialog: Host Time Format
+Host Time Format=Hostzeit-Format
+
+
+# Dialog: Timer Format
+Timer Format=Timerformat
+
+
+# Dialog: Timezone Offset
+Timezone Offset=Zeitzonenunterschied
+set a value between -12 and +12 hours=einen Wert zwischen -12 und +12 Stunden setzen
+Set timezone offset to @1=Zeitzonenunterschied auf @1 setzen
+Current server time: @1=Aktuelle Serverseitige Zeit: @1
+Calculated local time: @1=Errechnete lokale Zeit: @1
+Please note that daylight saving time (DST) is ignored entirely due to minimizing implementation complexity. You need to manually adjust the time zone in order to adapt to any DST changes. This messes up the visual representation a bit (but it’s not very accurate anyways …).=Die Sommerzeit wird aus Gründen der Komplexität der Implementierung vollständig ignoriert. Um der Sommerzeit Rechnung zu tragen muss die Zeitzone angepasst werden. Dies bringt zwar die grafische Darstellung durcheinander, aber die ist eh nicht ganz genau.
+
+
+# Dialog: Custom Timer
+Custom Timer=Individueller Timer
+Running=Timer läuft
+Stopped=Angehalten
+Finished=Abgeschlossen
+Countdown=Countdown
+Timer Mode=Zielzeit
+Continuous Run=Dauerlauf
+Used Value=Benutzter Wert
+As configured=Wie konfiguriert
+The timer is stopped=Der Timer ist angehalten
+The timer has finished=Der Timer hat sein Ziel erreicht
+Configure the custom timer=Individuellen Timer konfigurieren
+Start the custom timer=Individuellen Timer starten
+Stop stop custom timer=Individuellen Timer anhalten
+Restart the custom timer=Individuellen Timer neu starten
+
+
+# Dialog: Reset Everything (also messages)
+Reset Everything=Alles zurücksetzen
+Soft-reset all values to their defaults=Alle Werte auf die definierten Standards setzen
+Request hard-reset (kicks you from the server!)=Löschen anfordern (führt einen Kick vom Server aus!)
+All configuration was reset. Server time of the requested: @1=Alle Konfiguration wurde zurückgesetzt. Serverzeit der Anfrage: @1
+You requested a hard reset of the mTimer configuration. This request was stored. As described, you were kicked from the server in order to have the hard reset performed. Please rejoin the server. On rejoin all previously stored configuration regarding mTimer will be deleted.=Ein hartes Zurücksetzen der mTimer-Konfiguration wurde angefordert. Die Anfrage wurde gespeichert. Wie beschrieben wurde ein Kick vom Server ausgeführt. Um das harte Zurücksetzen der Konfiguration abzuschließen ist ein Neuverbinden zum Server erforderlich. Dabei wird die gesamte mTimer-bezogene Konfiguration entfernt.
+Cancel reset and return to main menu=Zurücksetzen abbrechen und zurück zum Hauptmenü
+For resetting the configuration you have two options.=Für das zurücksetzen der Konfiguration bestehen zwei Optionen.
+Usually using a soft reset is enough. The soft reset sets all values based on mTimer functionality to the default values while staying connected.=Üblicher weise reicht ein sanftes Zurücksetzen. Dies setzt direkt alle Werte mittels mTimer-Funktionen auf die entsprecheden Standardwerte.
+If the soft reset does not work you can hard reset the configuration. This stores a request and then kicks you from the server. On rejoining mTimer forcefully removes all stored configuration and sets the current default values.=Sollte dies nicht funktionieren kann ein hartes Zurücksetzen angefordert werden. Es wird ein entsprechender Eintrag gesetzt und eine Trennung vom Server ausgeführt. Beim Neuverbinden wird zwangsweise die Standardkonfiguration geladen.
+
+
+
+# Default custom timer status messages
+The custom timer is already running=Der individuelle Timer läuft bereits
+The custom timer is not running=Der individuelle Timer läuft nicht
+The custom timer was started=Der individuelle Timer wurde gestartet
+The custom timer was stopped=Der individuelle Timer wurde angehalten
+The custom timer was restarted=Der individuelle timer wurde neu gestartet
+
+
+# Custom Timer Controls
+The timer is currently @1=Der Timer ist aktuell @1
+running=aktiv
+stopped=angehalten
+Start=Starten
+Stop=Anhalten
+Restart=Neustart
+
+
+# Named Times
+ISO 8601 Date=Datum nach ISO 8601
+ISO 8601 Time=Zeit nach ISO 8601
+Ingame Timestamp=Spielzeitstempel
+Local Time: @1=Lokale Zeit: @1
+Server Time: @1=Serverzeit: @1
+Timestamp=Zeitstempel
+
+
+# Named Time Parts
+Day Name=Tagesname
+Day=Tag
+Days=Tage
+Hours (12h)=12-Stunden-Stunde
+Hours (24h)=24-Stunden-Stunde
+Hours=Stunden
+Minutes=Minuten
+Month Name=Monatsname
+Month=Monat
+Seconds=Sekunden
+Year=Jahr
+
+
+# Timer Format Variables
+In-Game Time=Spielzeit
+Real-World Date=Reale Zeit
+Session Duration=Sitzungsdauer
+Session Start Time=Sitzungsstart-Zeit
+Host Time=Hostzeit
+
+
+# Default Timer Format
+Current Date: @1=Aktuelles Datum: @1
+Ingame Time: @1=Spielzeit: @1
+Session Duration: @1=Sitzungsdauer: @1
+Session Start: @1=Sitzungsstart: @1
+Custom Timer: @1=Individueller Timer: @1
+
+
+# Dialog Buttons generic terms
+Apply=Anwenden
+Current Result=Aktuelles Ergebnis
+Current Value=Aktueller Wert
+Default=Standard
+Exit=Verlassen
+Main Menu=Hauptmenü
+Variable=Variable
+
+
+# Weekdays
+Monday=Montag
+Tuesday=Dienstag
+Wednesday=Mittwoch
+Thursday=Donnerstag
+Friday=Freitag
+Saturday=Samstag
+Sunday=Sonntag
+
+
+# Months
+January=Januar
+February=Februar
+March=März
+April=April
+May=Mai
+June=Juni
+July=Juli
+August=Auggust
+September=September
+October=Oktober
+November=November
+December=Dezember
+
+
+# Related to the meridiem indicator
+Meridiem Indicator=Tageshälftenhinweis
+am=vorm.
+pm=nachm.
+(ERROR)=(FEHLER)

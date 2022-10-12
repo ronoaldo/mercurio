@@ -1,0 +1,14 @@
+# textdomain: basic_signs
+Locked Sign=gesperrter Schild
+Glass Sign=Glas Schild
+Obsidian Glass Sign=Obsidian Glas Schild
+Plastic Sign=Plastik Schild
+green=grün
+yellow=gelb
+red=rot
+white_red=weißrot
+white_black=schwarzweiß
+orange=orange
+blue=blau
+brown=braun
+Sign (@1, steel)=Schild (@1, eisen)

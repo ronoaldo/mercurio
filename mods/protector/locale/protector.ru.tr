@@ -1,0 +1,55 @@
+# textdomain: protector
+# author: CodeXP
+# last update: 2018/Jul/10
+
+### admin.lua ###
+Remove Protectors around players (separate names with spaces)=Удалить защиту рядом с игроками (перечислить имена, разделяя пробелами)
+<names list>=<список имён>
+Replace Protector Owner with name provided=Заменить владельца защиты новым владельцем
+<owner name> <name to replace with>=<имя владельца> <имя нового владельца>
+Replacing Protector name '@1' with '@2'=Заменяется владелец защиты с '@1' на '@2'
+Show protected areas of your nearby protectors=Показать ближайшие защищённые территории
+Protector Names to remove: @1=Имена, подлежащие удалению: @1
+Name List Reset=Очистить список имён
+
+### doors_chest.lua ###
+Protected Wooden Door=Защищённая яблоневая дверь
+Protected Steel Door=Защищённая стальная дверь
+Protected Trapdoor=Защищённый яблоневый люк
+Protected Steel Trapdoor=Защищённый стальной люк
+Protected Chest=Защищённый сундук
+To Chest=В сундук
+To Inventory=В инвентрарь
+Protected Chest (@1)=Защищённый сундук (@1)
+
+### init.lua ###
+-- Protector interface --=-- Настройка защиты --
+PUNCH node to show protected area=СТУКНУТЬ узел для подсветки защищённой территории
+USE for area check=ЛКМ для проверки защищённой территории
+Members:=Участники:
+Close=Закрыть
+Protection located at: @1=Защита находится на координатах @1
+Members: @1.=Участники: @1.
+This area is not protected.=Территория свободна.
+You can build here.=Здесь можно ставить блоки.
+Overlaps into above players protected area=Защитный блок не может быть установлен: пересечение с областями, защищёнными другими игроками
+Protection Block=Защитный блок
+Protection (owned by @1)=Защита игрока @1
+Protection Logo=Защитный знак
+[MOD] Protector Redo loaded=[МОД] Protector Redo загружен
+Spawn @1 has been protected up to a @2 block radius.=Спаун @1 защищён в радиусе @2 блока.
+This area is owned by @1=Эта территория пренадлежит @1
+
+### pvp.lua ###
+[Protector] on_punchplayer called with nil objects=[Защита] on_punchplayer вызвана с нулевыми объектами
+[Protector] pvp_protect not active, update your version of Minetest=[Защита] pvp_protect неактивен, обновите версию Minetest
+[Protector] pvp_protect is disabled=[Защита] pvp_protect отключён
+
+### hud.lua ###
+Owner: @1=Владелец: @1
+
+### tool.lua ###
+Protector Placer Tool (stand near protector, face direction and use)=Инструмент установки защиты (встаньте рядом с защитой, повернитесь в нужном направлении и используйте)
+Protector already in place!=Защита уже установлена!
+No protectors available to place!=У вас нет защитных блоков в инвентаре!
+Protector placed at @1=Защита находится на координатах @1
