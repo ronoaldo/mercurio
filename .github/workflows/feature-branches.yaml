@@ -25,9 +25,3 @@ jobs:
       
       - name: Run tests and export mods
         run: make test
-      
-      - name: Publish mods for this build
-        uses: actions/upload-artifact@v3
-        with:
-          name: mods.tar.gz
-          path: /tmp/mods.tar.gz
