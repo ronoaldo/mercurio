@@ -85,7 +85,8 @@ while true ; do
         log "Server shutdown normaly."
     fi
     if [ x"$NO_LOOP" == x"true" ]; then
-        break
+        log "Exiting script with status code $EXIT_STATUS "
+        exit $EXIT_STATUS
     fi
     log "Restarting server in 10s..."
     sleep 10

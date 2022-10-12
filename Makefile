@@ -21,13 +21,11 @@ volumes: .minetest/world .minetest/logs
 
 test: volumes
 	docker-compose down
+	docker-compose build --no-cache game
 	sed -e 's/AUTO_SHUTDOWN=.*/AUTO_SHUTDOWN=true/g' .env.sample > /tmp/.env.test
 	docker-compose $(TEST_ARGS) run -d db && sleep 5
-	docker-compose $(TEST_ARGS) run --user 0 -T game \
-		bash -c 'chown -R minetest:minetest /var/lib/mercurio /var/logs/minetest'
+	docker-compose $(TEST_ARGS) run --user 0 -T game bash -c 'chown -R minetest:minetest /var/lib/mercurio /var/logs/minetest'
 	docker-compose $(TEST_ARGS) run $(TEST_ENV) game
-	docker-compose $(TEST_ARGS) run --user 0 -T game \
-		bash -c 'cd /usr/share/minetest && tar -czf - mods/' > /tmp/mods.tar.gz
 	docker-compose down
 
 run: volumes
