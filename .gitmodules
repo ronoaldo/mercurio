@@ -1,0 +1,36 @@
+[submodule "mods/aviator"]
+	path = mods/aviator
+	url = https://github.com/ronoaldo/aviator
+[submodule "mods/filler"]
+	path = mods/filler
+	url = https://github.com/ronoaldo/filler
+[submodule "mods/patron"]
+	path = mods/patron
+	url = https://github.com/ronoaldo/patron
+[submodule "mods/extra_doors"]
+	path = mods/extra_doors
+	url = https://github.com/ronoaldo/extra_doors
+[submodule "mods/x_bows"]
+	path = mods/x_bows
+	url = https://github.com/ronoaldo/x_bows
+[submodule "mods/hbsprint"]
+	path = mods/hbsprint
+	url = https://github.com/ronoaldo/hbsprint
+[submodule "mods/helicopter"]
+	path = mods/helicopter
+	url = https://github.com/ronoaldo/helicopter
+[submodule "mods/techpack"]
+	path = mods/techpack
+	url = https://github.com/ronoaldo/techpack
+[submodule "mods/drawers"]
+	path = mods/drawers
+	url = https://github.com/ronoaldo/drawers
+[submodule "mods/xtraores"]
+	path = mods/xtraores
+	url = https://github.com/ronoaldo/xtraores
+[submodule "mods/discordmt"]
+	path = mods/discordmt
+	url = https://github.com/ronoaldo/discordmt
+[submodule "mods/water_life"]
+	path = mods/water_life
+	url = https://github.com/ronoaldo/water_life

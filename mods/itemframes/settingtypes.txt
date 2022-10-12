@@ -1,0 +1,2 @@
+# If false, the item will always just be dropped on the ground.
+itemframes.return_item (return placed item to the player's inventory on right-click) bool false

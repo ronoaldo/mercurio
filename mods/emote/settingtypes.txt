@@ -1,0 +1,3 @@
+
+emote.announce_in_chat (announce emote in chat) bool false
+

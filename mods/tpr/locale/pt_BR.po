@@ -1,0 +1,245 @@
+# Brazilian Portuguese translation for Teleport Request.
+# Copyright (C) 2014-2022 ChaosWormz and contributors.
+# This file is distributed under under the same license as the Teleport Request package.
+# Animetrom <contatoanimetrom@gmail.com>, 2020.
+
+msgid ""
+msgstr ""
+"Project-Id-Version: Teleport Request\n"
+"Report-Msgid-Bugs-To: Animetrom\n"
+"POT-Creation-Date: 2020-03-19 5:07+0200\n"
+"PO-Revision-Date: 2020-03-19\n"
+"Last-Translator: Animetrom <contatoanimetrom@gmail.com>\n"
+"Language-Team: \n"
+"Language: pt_BR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: config.lua
+msgid "Let players teleport to other players (request will be sent)"
+msgstr "Permita que os jogadores se teletransportem para outros jogadores (a solicitacao sera' enviada)"
+
+#: config.lua
+msgid "Gives full admin-access to a player."
+msgstr "Da acesso de administrador completo a um jogador."
+
+#: config.lua
+msgid "Allow player to teleport to coordinates (if allowed by area protection)"
+msgstr "Permitir que o jogador se teletransporte para coordenadas (se permitido pela protecao da area)"
+
+#: init.lua
+msgid "tpr_mute: Failed to mute player @1: they have the tp_admin privilege."
+msgstr ""
+
+#: init.lua
+msgid "You are not allowed to send requests because you're muted."
+msgstr "Voce nao tem permissao para enviar solicitacoes porque esta' sem som."
+
+#: init.lua
+msgid "Cannot send request to @1 (you have been muted)."
+msgstr ""
+
+#: init.lua
+msgid "tpr_mute: Player @1 is already muted."
+msgstr ""
+
+#: init.lua
+msgid "tpr_mute: Player @1 successfully muted."
+msgstr ""
+
+#: init.lua
+msgid "Usage: /tpr_unmute <player>"
+msgstr ""
+
+#: init.lua
+msgid "tpr_mute: Player @1 is not muted yet."
+msgstr ""
+
+#: init.lua
+msgid "tpr_mute: Player @1 successfully unmuted."
+msgstr ""
+
+#: init.lua
+msgid "Usage: /tpr <Player name>"
+msgstr "Use: /tpr <Nome do jogador>"
+
+#: init.lua
+msgid "There is no player by that name. Keep in mind this is case-sensitive, and the player must be online"
+msgstr "Nao existe nenhum jogador com esse nome. Lembre-se de que isso diferencia maiusculas de minusculas e o player deve estar online"
+
+#: init.lua
+msgid "Teleport request denied, player is in the gamehub!"
+msgstr "Pedido de teleporte negado, o jogador esta' no gamehub!"
+
+#: init.lua
+msgid "You are teleporting to @1."
+msgstr "Voce esta' se teletransportando para @1."
+
+#: init.lua
+msgid "@1 is requesting to teleport to you. /tpy to accept"
+msgstr "@1 esta' solicitando o teletransporte para voce. /tpy para aceitar"
+
+#: init.lua
+msgid "Teleport request sent! It will timeout in @1 seconds"
+msgstr "Pedido de teleporte enviado! Tempo limite em @1 segundos"
+
+#: init.lua
+msgid "Request timed-out."
+msgstr "O pedido expirou."
+
+#: init.lua
+msgid "@1 is teleporting to you."
+msgstr "@1 esta' se teletransportando para voce."
+
+#: init.lua
+msgid "Usage: /tphr <Player name>"
+msgstr "Use: /tphr <Nome do jogador>"
+
+#: init.lua
+msgid "@1 is requesting that you teleport to them. /tpy to accept; /tpn to deny"
+msgstr "@1 esta' solicitando que voce se teletransporte para ele. /tpy para aceitar; /tpn para negar"
+
+#: init.lua
+msgid "Usage: /tpc <x, y, z>"
+msgstr "Use: /tpc <x, y, z>"
+
+#: init.lua
+msgid "You cannot teleport to a location outside the map!"
+msgstr "Voce nao pode se teletransportar para um local fora do mapa!"
+
+#: init.lua
+msgid "Teleporting to: @1, @2, @3"
+msgstr "Teleportar para: @1, @2, @3"
+
+#: init.lua
+msgid "Error: @1 is protected by @2."
+msgstr "Erro: @1 e' protegido por @2."
+
+#: init.lua
+msgid "Error: You do not have permission to teleport to those coordinates."
+msgstr "Erro: voce nao tem permissao para se teletransportar para essas coordenadas."
+
+#: init.lua
+msgid "Teleport request denied."
+msgstr "Pedido de teleporte negado."
+
+#: init.lua
+msgid "You denied the request @1 sent you."
+msgstr "Voce negou a solicitacao @1 enviei a voce."
+
+#: init.lua
+msgid "You denied your request sent to @1."
+msgstr "Voce negou sua solicitacao enviada para @1."
+
+#: init.lua
+msgid "@1 denied their request sent to you."
+msgstr "@1 negou o pedido enviado a voce."
+
+#: init.lua
+msgid "Usage: /tpn allows you to deny teleport requests sent to you by other players."
+msgstr "Use: /tpn permite negar solicitacoes de teleporte enviadas a voce por outros jogadores."
+
+#: init.lua
+msgid "Usage: /tpy allows you to accept teleport requests sent to you by other players"
+msgstr "Use: /tpy permite que voce aceite solicitacoes de teleporte enviadas a voce por outros jogadores"
+
+#: init.lua
+msgid "@1 doesn't exist, or just disconnected/left (by timeout)."
+msgstr "@1 nao existe ou apenas desconectado / deixado (por tempo limite)."
+
+#: init.lua
+msgid "Request Accepted!"
+msgstr "Pedido aceito!"
+
+#: init.lua
+msgid "Usage: <x|y|z> <number>"
+msgstr "Use: <x|y|z> <numero>"
+
+#: init.lua
+msgid "Not a number!"
+msgstr "Nao e' um numero!"
+
+#: init.lua
+msgid "Not a valid axis. Valid options are X, Y or Z"
+msgstr "Nao e' um eixo valido. Opcoes validas sao X, Y ou Z"
+
+#: init.lua
+msgid "EVADE!"
+msgstr "EVADE!"
+
+#: init.lua
+msgid "Teleport to a place (i.e., spawn, shop)."
+msgstr "Teleporte para um lugar (i.e., spawn, shop)."
+
+#: init.lua
+msgid "<place> | leave empty to see available places"
+msgstr "<Lugar> | deixe em branco para ver os lugares disponiveis"
+
+#: init.lua
+msgid "There are no places yet."
+msgstr "Ainda nao ha lugares."
+
+#: init.lua
+msgid "Usage: /tpp <place>"
+msgstr "Use: /tpp <Lugar>"
+
+#: init.lua
+msgid "Teleporting to @1."
+msgstr "Teleportar para @1."
+
+#: init.lua
+msgid "There is no place by that name. Keep in mind this is case-sensitive."
+msgstr "Nao ha' lugar com esse nome. Lembre-se de que isso diferencia maiusculas de minusculas."
+
+#: init.lua
+msgid "Request teleport to another player."
+msgstr "Solicitar teleporte para outro jogador."
+
+#: init.lua
+msgid "<playername> | leave playername empty to see help message"
+msgstr "<nome do jogador> | deixe o nome do jogador em branco para ver a mensagem de ajuda"
+
+#: init.lua
+msgid "Request player to teleport to you"
+msgstr "Solicitar que o jogador se teleporte para voce"
+
+#: init.lua
+msgid "Teleport to coordinates"
+msgstr "Teleporte para coordenadas"
+
+#: init.lua
+msgid "<coordinates> | leave coordinates empty to see help message"
+msgstr "<coordenadas> | deixe as coordenadas vazias para ver a mensagem de ajuda"
+
+#: init.lua
+msgid "Teleport to relative position"
+msgstr "Teleporte para a posicao relativa"
+
+#: init.lua
+msgid "<axis> <distance> | leave empty to see help message"
+msgstr "<eixo> <distancia> | deixe em branco para ver a mensagem de ajuda"
+
+#: init.lua
+msgid "Evade Enemy"
+msgstr "Iludir o Inimigo"
+
+#: init.lua
+msgid "Accept teleport requests from another player"
+msgstr "Aceitar pedidos de teleporte de outro jogador"
+
+#: init.lua
+msgid "Deny teleport requests from another player"
+msgstr "Negar pedidos de teleporte de outro jogador"
+
+#: init.lua
+msgid "Mutes a player: denies them from sending you teleport requests"
+msgstr ""
+
+#: init.lua
+msgid "Unmutes a player: allow them to send you teleport requests again"
+msgstr ""
+
+#: init.lua
+msgid "[Teleport Request] TPS Teleport v@1 Loaded!"
+msgstr "[Solicitacao de Teleporte] Teletransporte TPS v@1 Carregado!"

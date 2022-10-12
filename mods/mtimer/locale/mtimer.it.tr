@@ -1,0 +1,90 @@
+# textdomain: mtimer
+
+# mTimer configuration section names
+Color=Colore
+Ingame Time Format=Orario nel gioco
+Open Main Menu=Menu princ.
+Position=Posizione
+Real-World Time Format=Orario reale
+Reset Everything=Reimp. tutto
+Session Duration Format=Durata della sess.
+Session Start Time Format=Orario inizio sess.
+Timer Format=Cronometro
+Timezone Offset=Fascia oraria
+Visibility=Visibilità
+mTimer Configuration=mTimer-Configurazione
+
+# Settings
+Visible=Visibile
+Invisible=Invisibile
+
+# Information & Warnings
+30 minutes @= 0.5, 60 minutes @= 1=30 minuti @= 0.5, 60 minuti @= 1
+Click the position you want to place the timer at.=Cliccate il punto in cui volete posizionare il cronometro.
+Use `@1` format only!=Utilizzate solo il formato "@1"!
+“Arbitrary” values are possible.=Sono possibili valori "arbitrari".
+
+# Named Times
+ISO 8601 Date=Data ISO 8601
+ISO 8601 Time=Orario ISO 8601
+Ingame Timestamp=Timestamp gioco
+Local Time: @1=Orario locale: @1
+Server Time: @1=Orario del server: @1
+Timestamp=Timestamp
+
+# Named Time Parts
+Day Name=Nome del giorno
+Day=Giorno
+Days=Giorni
+Hours (12h)=Formato 12 ore
+Hours (24h)=Formato 24 ore
+Hours=Ore
+Minutes=Minuti
+Month Name=Nome del mese
+Month=Mese
+Seconds=Secondi
+Year=Anno
+
+# Timer Variables
+In-Game Time=Orario nel gioco
+Real-World Date=Data reale
+Session Duration=Durata sessione
+Session Start Time=Inizio sessione
+
+# Timer default format
+Current Date: @1=Data attuale: @1
+Ingame Time: @1=Orario nel gioco: @1
+Session Duration: @1=Durata della sessione: @1
+Session Start: @1=Inizio della sessione: @1
+
+# Generic Formspec Strings
+Apply=Applicare
+Current Result=Risultato attuale
+Current Value=Valore attuale
+Default=Predefinito
+Exit=Uscire
+Main Menu=Menu princ.
+Variable=Variabile
+
+# Timer Weekdays
+Monday=Lunedì
+Tuesday=Martedì
+Wednesday=Mercoledì
+Thursday=Giovedì
+Friday=Venerdì
+Saturday=Sabato
+Sunday=Domenica
+
+# Timer Months
+January=gennaio
+February=febbraio
+March=marzo
+April=aprile
+May=maggio
+June=giugno
+July=luglio
+August=agosto
+September=settembre
+October=ottobre
+November=novembre
+December=dicembre

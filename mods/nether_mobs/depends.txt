@@ -1,0 +1,6 @@
+stairs
+nether
+mobs
+default
+real_suffocation?
+3d_armor?

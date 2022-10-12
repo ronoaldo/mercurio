@@ -1,0 +1,12 @@
+#Mod: mob_horse
+
+Horse = 马
+Horse shoes fitted - = 马蹄铁 -
+ speed:  = 速度：
+ , jump height:  = ，跳跃高度：
+ , stop speed:  = ，停止速度：
+Horse shoes only work on horses! = 马蹄铁只对马有效！
+Steel HorseShoes (use on horse to apply) = 钢马蹄铁（用在马匹上）
+Bronze HorseShoes (use on horse to apply) = 青铜马蹄铁（用在马匹上）
+Mese HorseShoes (use on horse to apply) = 黄石马蹄铁（用在马匹上）
+Diamond HorseShoes (use on horse to apply) = 钻石马蹄铁（用在马匹上）

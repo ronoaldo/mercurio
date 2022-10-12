@@ -1,0 +1,27 @@
+# textdomain: signs_lib
+Locked sign, owned by @1@n=защищенная табличка, пренадлежит @1@n
+Write=записать
+@1 wrote "@2" to sign at @3=
+@1 flipped the wide-font switch to "@2" at @3=
+@1 flipped the unicode-font switch to "@2" at @3=
+
+
+##### not used anymore #####
+
+locked =защищенный 
+@1 wrote "@2" to @3sign at @4=@1 записал "@2" в @3sign на @4
+Sign=табличка
+Can edit all locked signs=Может редактировать все защищенные таблички
+Locked Sign=защищенная табличка
+green=зеленая
+yellow=желтая
+red=красная
+white_red=краснобелая
+white_black=чернобелая
+orange=оранжевая
+blue=синея
+brown=коричневая
+Sign (@1, metal)=Табличка (@1, металл)
+Attempt to register unknown node as fence=Попытка зарегистрировать неизвестный узел как забор
+Registered @1 and @2=Зарегистрировано @1 для @2
+[MOD] signs loaded=[MOD] мод табличек загружен

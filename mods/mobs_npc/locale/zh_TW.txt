@@ -1,0 +1,24 @@
+# Template for translations of mobs_npc mod
+# last update: 2016/June/10
+
+#init.lua
+[MOD] Mobs Redo 'NPCs' loaded = [模組] Mobs Redo 'NPCs' 已加載
+
+#npc.lua
+NPC dropped you an item for gold! = NPC給你丟了一個金幣！
+NPC stands still. = NPC 站住不動。
+NPC will follow you. = NPC 會跟著你。
+Npc =
+
+#trader.lua
+Trader @1 = 商人 @1
+[NPC] <Trader @1 > Hello, @2, have a look at my wares. = [NPC] < 商人 @1 > 你好，@2，來看看我的東西！
+Trader @1's stock: = 商人@1的現貨：
+Selection = 選擇
+Price = 單價
+Payment = 付款
+Bought items = 購買的物品
+Trader = 商人
+
+#igor.lua
+Igor = 伊戈爾

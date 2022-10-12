@@ -1,0 +1,20 @@
+diff --git a/mods/stairs/init.lua b/mods/stairs/init.lua
+index 191c78d..5759ce5 100644
+--- a/mods/stairs/init.lua
++++ b/mods/stairs/init.lua
+@@ -77,6 +77,15 @@ function stairs.register_stair(subname, recipeitem, groups, images, description,
+ 
+ 			return minetest.item_place(itemstack, placer, pointed_thing, param2)
+ 		end,
++		emote = {
++			emotestring = "sit",
++			eye_offset = {x = 0, y = 9, z = 0},
++			player_offset = {x = 3/16, y = 1/16, z = 0},
++			look_horizontal_offset = math.pi,
++		},
++		on_rightclick = function(pos, node, clicker)
++			emote.attach_to_node(clicker, pos, true)
++		end,
+ 	})
+ 
+ 	-- for replace ABM

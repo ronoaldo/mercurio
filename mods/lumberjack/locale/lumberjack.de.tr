@@ -1,0 +1,16 @@
+# textdomain: lumberjack
+
+
+### init.lua ###
+
+Give a player lumberjack points=Gibt einem Spieler Holzfällerpunkte
+Output your lumberjack points=Holzfällerpunkte ausgeben
+Player @1 is unknown!=Spieler @1 ist unbekannt!
+Player @1 now has @2 tree and @3 sapling points.=Spieler @1 hat jetzt @2 Baum- und @3 Setzlingspunkte.
+You are already a lumberjack.=Du bist schon ein Holzfäller.
+You need further @1 sapling points.=Du benötigst weitere @1 Setzlingspunkte.
+You need further @1 tree and @2 sapling points.=Du benötigst weitere @1 Baum- und @2 Setzlingspunkte.
+You need further @1 tree points.=Du benötigst weitere @1 Baumpunkte.
+You're a real lumberjack now!=Du bist jetzt ein richtiger Holzfäller!
+[Lumberjack Mod] From the top, please=[Lumberjack Mod] Von oben bitte
+[Lumberjack Mod] You are using the wrong tool=[Lumberjack Mod] Du verwendest das falsche Werkzeug

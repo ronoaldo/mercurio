@@ -1,0 +1,3 @@
+The mod is licensed under MIT,
+except for the code parts which are copied from WorldEdit, which has the
+GNU Affero General Public License v3.0.

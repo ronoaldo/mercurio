@@ -1,0 +1,27 @@
+# textdomain: signs_lib
+Locked sign, owned by @1@n=Papan tanda berkunci, milik @1@n
+Write=
+@1 wrote "@2" to sign at @3=
+@1 flipped the wide-font switch to "@2" at @3=
+@1 flipped the unicode-font switch to "@2" at @3=
+
+
+##### not used anymore #####
+
+locked =berkunci 
+@1 wrote "@2" to @3sign at @4=@1 menulis "@2" atas papan tanda @3dekat @4
+Sign=Papan Tanda
+Can edit all locked signs=Boleh sunting semua papan tanda berkunci
+Locked Sign=Papan Tanda Berkunci
+green=hijau
+yellow=kuning
+red=merah
+white_red=putih_merah
+white_black=putih_hitam
+orange=jingga
+blue=biru
+brown=perang
+Sign (@1, metal)=Papan Tanda (@1, logam)
+Attempt to register unknown node as fence=Cuba untuk mendaftar nod tidak diketahui sebagai pagar
+Registered @1 and @2=Telah daftar @1 dan @2
+[MOD] signs loaded=[MODS] signs telah dimuatkan

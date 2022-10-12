@@ -1,0 +1,17 @@
+# textdomain: lumberjack
+
+
+
+### init.lua ###
+
+Give a player lumberjack points=Done à un joint des points de bûcheronnage
+Output your lumberjack points=Affiche tes points de bûcheronnage
+Player @1 is unknown!=Le joueur @1 n'est pas connu!
+Player @1 now has @2 tree and @3 sapling points.=Le joueur @1 a maintenant @2 points de coupe et @3 points de replantage.
+You are already a lumberjack.=Tu es déjà un bûcheron.
+You need further @1 sapling points.=Il te manque @1 points de replantage.
+You need further @1 tree and @2 sapling points.=Il te manque @1 points de coupe et @2 points de replantage.
+You need further @1 tree points.=Il te manque @1 points de coupe.
+You're a real lumberjack now!=Vous devenez un vrai bûcheron!
+[Lumberjack Mod] From the top, please=[Lumberjack mod] Depuis le haut
+[Lumberjack Mod] You are using the wrong tool= [Lumberjack mod] Vous utilisez le mauvais outil 

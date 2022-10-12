@@ -1,0 +1,6 @@
+# textdomain: signs_lib
+Locked sign, owned by @1@n=
+Write=
+@1 wrote "@2" to sign at @3=
+@1 flipped the wide-font switch to "@2" at @3=
+@1 flipped the unicode-font switch to "@2" at @3=

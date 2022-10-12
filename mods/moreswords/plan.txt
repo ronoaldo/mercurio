@@ -1,0 +1,36 @@
+james c and adam c
+Description:
+Adds more powerfull swords that do different things.
+
+Must have:
+  Swords:
+    Lava swords:Hit enemy laver spawns and you can walk on lava
+    Water sword:Hit enemy water spawns
+    Ice sword: Hit enemy, encase them in ice and walk on water
+    Teleportation Sword: Hit enemy, telport them 50 nodes in look drecshon
+    Pick(axe) sword:  Hit enemy, brake a 4x4x4 50nodes deep hole
+    Smoke Sword: Hit enemy, spawn a lot of smoke
+
+Should have:
+Particle affects (apart from smoke sword)
+Block which is an upgrade station(to create the swords)
+
+Could have:
+Float sword(ice spawns when you walk on water)
+Builder sword(when you hit something it will place wooden blocks from inventory)
+Floaty sword(when selected, you float up, cloud particles below you)
+
+Won't have (this time):
+Entity sword: Sword that spawns entities(pigs)
+
+Where to start:
+
+First item:
+ Lava sword: Spawns lava one node above the players head.
+ Crafting recipe: Diamond sword with two lava buckets next to it.
+
+Finishing touches:
+*Make itemstack only 1 item,
+Make swords ware over usage.
+Make swords do damage.
+*Make swords have cooldown.

@@ -1,0 +1,9 @@
+# Settings for Lumberjack privs
+# 0  = Every player has lumberjack privs from the beginning.
+# >0 = Player has to collect the number points to get lumberjack privs (default 400).
+lumberjack_points (needed points to get lumberjack privs) int 400
+
+# Drop tree trunk items
+# If activated (set to true), tree trunk items will be dropped.
+# If deactivated (set to false), tree trunk items will be moved to the player's inventory.
+lumberjack_drop_tree_items (drop tree trunk items) bool false

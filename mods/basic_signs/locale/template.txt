@@ -1,0 +1,14 @@
+# textdomain: basic_signs
+Locked Sign=
+Glass Sign=
+Obsidian Glass Sign=
+Plastic Sign=
+green=
+yellow=
+red=
+white_red=
+white_black=
+orange=
+blue=
+brown=
+Sign (@1, steel)=

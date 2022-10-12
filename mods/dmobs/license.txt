@@ -1,0 +1,59 @@
+
+
+License for Code
+----------------
+
+Copyright (C) 2016 D00Med <heiselong@gmx.com>
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU Lesser General Public License as published by
+the Free Software Foundation; either version 2.1 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License along
+with this program; if not, write to the Free Software Foundation, Inc.,
+51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+
+License for Textures, Models
+---------------------------------------
+
+CC BY-SA 3.0 UNPORTED. Created by D00Med except where an author is listed
+
+Roar.ogg - CC BY 3.0 Mike Koenig - http://soundbible.com/1165-Dinosaur-Roar.html
+Velociraptor.ogg - CC BY 3.0 snottyboi - http://soundbible.com/1373-Velociraptor-Call.html
+whale_1.ogg - CC0 Public Domain - https://en.wikipedia.org/wiki/File:Humpbackwhale2.ogg
+mobs_pig.ogg - from mobs_animal by TenPlus1 (MIT)
+dmobs_chirrup.ogg - CC BY SA 3.0 taikedz
+wasp.ogg - Public Domain
+dmobs_panda.png - CC BY SA 3.0 2016 D00Med & 2021 Poikilos
+
+* dmobs_thunder.ogg - CC-0 : https://freesound.org/people/Josh74000MC/sounds/475094/
+* dmobs_wind.ogg - CC-BY 3.0 : https://freesound.org/people/Pedaling%20Prince/sounds/338952/
+* dmobs_poison.ogg - CC-BY 3.0 : https://freesound.org/people/qubodup/sounds/182789/
+* dmobs_wave.ogg - CC-BY 3.0 : https://freesound.org/people/Kayyy/sounds/61011/
+
+
+--License of lib_mount:
+-- Minetest mod: lib_mount
+-- =======================
+-- by blert2112
+
+-- Based on the Boats mod by PilzAdam.
+
+
+-- -----------------------------------------------------------
+-- -----------------------------------------------------------
+
+
+-- Minetest Game mod: boats
+-- ========================
+-- by PilzAdam
+
+-- License of source code:
+-- -----------------------
+-- WTFPL
