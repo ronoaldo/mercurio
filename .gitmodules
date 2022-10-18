@@ -34,6 +34,3 @@
 [submodule "mods/water_life"]
 	path = mods/water_life
 	url = https://github.com/ronoaldo/water_life
-[submodule "mods/tsm_pyramids"]
-	path = mods/tsm_pyramids
-	url = https://github.com/ronoaldo/tsm_pyramids
