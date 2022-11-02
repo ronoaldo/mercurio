@@ -83,7 +83,7 @@ rm -vf .minetest/db.sql.gz
 # Move backups to Cloud Storage if applicable
 if [ x$MINETEST_BACKUP_GCS = x"true" ] ; then
     log "Copying backup to Cloud Storage ..."
-    gsutil -m --quiet cp $BACKUP_FILE gs://minetest-hosting/servers/mercurio/backups/${BASENAME}.current.tar.gz
+    gsutil -m --quiet cp $BACKUP_FILE gs://minetest-backups/servers/mercurio/backups/${BASENAME}.current.tar.gz
 fi
 
 if [ x"$MINETEST_BACKUP_S3CMD" = x"true" ] ; then
