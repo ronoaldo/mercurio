@@ -90,7 +90,35 @@ function pa28.pax_formspec(name)
     minetest.show_formspec(name, "pa28:passenger_main", basic_form)
 end
 
+function pa28.go_out_confirmation_formspec(name)
+    local basic_form = table.concat({
+        "formspec_version[3]",
+        "size[7,2.2]",
+	}, "")
+
+    basic_form = basic_form.."label[0.5,0.5;Do you really want to go offboard now?]"
+	basic_form = basic_form.."button[1.3,1.0;2,0.8;no;No]"
+	basic_form = basic_form.."button[3.6,1.0;2,0.8;yes;Yes]"
+
+    minetest.show_formspec(name, "pa28:go_out_confirmation_form", basic_form)
+end
+
 minetest.register_on_player_receive_fields(function(player, formname, fields)
+    if formname == "pa28:go_out_confirmation_form" then
+        local name = player:get_player_name()
+        local plane_obj = pa28.getPlaneFromPlayer(player)
+        if plane_obj == nil then
+            minetest.close_formspec(name, "pa28:go_out_confirmation_form")
+            return
+        end
+        local ent = plane_obj:get_luaentity()
+        if ent then
+		    if fields.yes then
+                pa28.dettach_pax(ent, player)
+		    end
+        end
+        minetest.close_formspec(name, "pa28:go_out_confirmation_form")
+    end
 	if formname == "pa28:passenger_main" then
         local name = player:get_player_name()
         local plane_obj = pa28.getPlaneFromPlayer(player)
@@ -105,7 +133,12 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
                 pa28.attach_pax(ent, player)
 		    end
 		    if fields.go_out then
-                pa28.dettach_pax(ent, player)
+                local touching_ground, liquid_below = airutils.check_node_below(plane_obj, 2.5)
+                if ent.isinliquid or touching_ground then --isn't flying?
+                    pa28.dettach_pax(ent, player)
+                else
+                    pa28.go_out_confirmation_formspec(name)
+                end
 		    end
         end
         minetest.close_formspec(name, "pa28:passenger_main")

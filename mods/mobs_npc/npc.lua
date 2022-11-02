@@ -55,7 +55,7 @@ mobs:register_mob("mobs_npc:npc", {
 	follow = {"farming:bread", "mobs:meat", "default:diamond"},
 	view_range = 15,
 	owner = "",
-	order = "stand",
+	order = "wander",
 	fear_height = 3,
 	animation = {
 		speed_normal = 30,
@@ -92,7 +92,8 @@ mobs:register_mob("mobs_npc:npc", {
 
 		-- owner can right-click with stick to show control formspec
 		if item:get_name() == "default:stick"
-		and self.owner == name then
+		and (self.owner == name or
+		minetest.check_player_privs(clicker, {protection_bypass = true}) )then
 
 			minetest.show_formspec(name, "mobs_npc:controls",
 					mobs_npc.get_controls_formspec(name, self))

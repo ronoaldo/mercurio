@@ -52,9 +52,11 @@ local function formspec_tab_buttons(player, formspec, style)
 
 	local filtered_inv_buttons = {}
 
-	for i, def in pairs(ui.buttons) do
+	for _, def in pairs(ui.buttons) do
 		if not (style.is_lite_mode and def.hide_lite) then
-			table.insert(filtered_inv_buttons, def)
+			if def.condition == nil or def.condition(player) or not ui.hide_disabled_buttons then
+				table.insert(filtered_inv_buttons, def)
+			end
 		end
 	end
 
@@ -71,13 +73,14 @@ local function formspec_tab_buttons(player, formspec, style)
 		local pos_y = math.floor((i - 1) / style.main_button_cols) * style.btn_spc
 
 		if def.type == "image" then
-			if (def.condition == nil or def.condition(player) == true) then
+			if (def.condition == nil or def.condition(player)) then
 				formspec[n] = string.format("image_button[%g,%g;%g,%g;%s;%s;]",
 					pos_x, pos_y, style.btn_size, style.btn_size,
 					F(def.image),
 					F(def.name))
 				formspec[n+1] = "tooltip["..F(def.name)..";"..(def.tooltip or "").."]"
 				n = n+2
+
 			else
 				formspec[n] = string.format("image[%g,%g;%g,%g;%s^[colorize:#808080:alpha]",
 					pos_x, pos_y, style.btn_size, style.btn_size,
@@ -358,7 +361,7 @@ function ui.apply_filter(player, filter, search_dir)
 			return true
 		end
 	else
-		-- Name filter: fuzzy match item names and descriptions 
+		-- Name filter: fuzzy match item names and descriptions
 		local player_info = minetest.get_player_information(player_name)
 		local lang = player_info and player_info.lang_code or ""
 

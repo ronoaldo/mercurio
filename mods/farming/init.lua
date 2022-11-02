@@ -7,7 +7,7 @@
 
 farming = {
 	mod = "redo",
-	version = "20220915",
+	version = "20221028",
 	path = minetest.get_modpath("farming"),
 	select = {
 		type = "fixed",
@@ -670,6 +670,7 @@ farming.lettuce = 0.001
 farming.artichoke = 0.001
 farming.parsley = 0.002
 farming.sunflower = 0.001
+farming.ginger = 0.002
 farming.strawberry = not minetest.get_modpath("ethereal") and 0.002
 farming.grains = true
 farming.rice = true
@@ -749,6 +750,7 @@ ddoo("strawberry.lua", farming.strawberry)
 ddoo("asparagus.lua", farming.asparagus)
 ddoo("eggplant.lua", farming.eggplant)
 ddoo("spinach.lua", farming.eggplant)
+ddoo("ginger.lua", farming.ginger)
 
 dofile(farming.path .. "/food.lua")
 dofile(farming.path .. "/compatibility.lua") -- Farming Plus compatibility

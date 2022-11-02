@@ -144,7 +144,7 @@ end
 add_biome("grayness", 2, 41, 15, 30, ethereal.grayness,
 	nil, "ethereal:gray_dirt", 1, "default:dirt", 3)
 
-add_biome("grayness_ocean", -28, 1, 15, 30, ethereal.grayness,
+add_biome("grayness_ocean", -18, 1, 15, 30, ethereal.grayness,
 	nil, tmp, 2, "default:sand", 2, "ethereal:blue_marble")
 
 

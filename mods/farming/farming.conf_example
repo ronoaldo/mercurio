@@ -41,6 +41,7 @@ farming.vanilla = 0.001
 farming.artichoke = 0.001
 farming.parsley = 0.002
 farming.sunflower = 0.001
+farming.ginger = 0.002
 farming.strawberry = not minetest.get_modpath("ethereal") and 0.002
 farming.grains = true -- true or false only
 farming.rice = true

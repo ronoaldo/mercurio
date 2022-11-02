@@ -250,7 +250,7 @@ signs_lib.register_sign("basic_signs:sign_wall_glass", {
 
 * `signs_lib.rightclick_sign(pos, node, player, itemstack, pointed_thing)`
 
-  Open the default sign formspec, if the player has the `signslib_edit` privilege.
+  Open the default sign formspec, if the player has the `signslib_edit` privilege. (privilege can be set by `signs_lib.edit_priv` setting)
 
 * `signs_lib.destruct_sign(pos)`
 

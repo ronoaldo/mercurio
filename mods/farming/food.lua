@@ -340,7 +340,7 @@ minetest.register_craft({
 		{"farming:baking_tray", "farming:baking_tray"},
 		{"mobs:bucket_milk", "bucket:bucket_empty"},
 		{"mobs:wooden_bucket_milk", "wooden_bucket:bucket_wood_empty"},
-		{"farming:soy_milk", "vessels:drining_glass"}
+		{"farming:soy_milk", "vessels:drinking_glass"}
 	}
 })
 

@@ -62,6 +62,10 @@ minetest.register_entity("itemframes:item",{
 		end
 
 		return ""
+	end,
+
+	on_blast = function(self, damage)
+		return false, false, {}
 	end
 })
 

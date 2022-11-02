@@ -80,7 +80,7 @@ minetest.register_alias("ethereal:fencegate_pine_closed", "doors:gate_pine_wood_
 -- sakura door
 if door_mod then
 
-	doors.register_door("ethereal:door_sakura", {
+	doors.register("ethereal:door_sakura", {
 		tiles = {
 			{name = "ethereal_sakura_door.png", backface_culling = true}
 		},

@@ -57,6 +57,11 @@ minetest.register_node("farming:rhubarb_2", table.copy(def))
 
 -- stage3
 def.tiles = {"farming_rhubarb_3.png"}
+def.drop = {
+	items = {
+		{items = {"farming:rhubarb"}, rarity = 1},
+	}
+}
 minetest.register_node("farming:rhubarb_3", table.copy(def))
 
 -- stage 4 (final)
@@ -65,7 +70,7 @@ def.groups.growing = nil
 def.selection_box = farming.select_final
 def.drop = {
 	items = {
-	{items = {"farming:rhubarb 2"}, rarity = 1},
+		{items = {"farming:rhubarb 2"}, rarity = 1},
 		{items = {"farming:rhubarb"}, rarity = 2},
 		{items = {"farming:rhubarb"}, rarity = 3}
 	}

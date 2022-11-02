@@ -17,6 +17,34 @@ O servidor foi projetado para ser amigável e agradável! Por favor:
 
 ![0,0,r](item:///default:pick_diamond)
 
+# **Atualização do servidor em 10 de novembro de 2022**
+
+Atualização regular dos mods do servidor para obter novidades. Lista de mods
+atualizada nesse update:
+
+```
+bonemeal
+creatura
+draconis
+ethereal
+farming
+homedecor_modpack
+itemframes
+lumberjack
+mobs
+mobs_monster
+mobs_npc
+nautilus
+pa28
+signs_lib
+steampunk_blimp
+unified_inventory
+```
+
+![1,1](halo)
+
+![0,0,r](item:///default:pick_diamond)
+
 # **Atualização do servidor em 15 de agosto de 2022**
 
 Nova atualização para mods até 15 de agosto. Esta versão atualiza basicamente o

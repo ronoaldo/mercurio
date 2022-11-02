@@ -201,6 +201,4 @@ Everyone is permitted to copy and distribute verbatim copies
   farming_asparagus*
   farming_eggplant*
   farming_spinach*
-  farming_onigiri.png
-  farming_rice.png
-  farming_chili_powder.png
+  farming_ginger*

@@ -120,6 +120,8 @@ function nautilus.destroy(self, overload)
         self.driver_name = nil
     end
 
+    local player = minetest.get_player_by_name(self.owner)
+
     local pos = self.object:get_pos()
     if self.pointer then self.pointer:remove() end
     if self.pointer_air then self.pointer_air:remove() end
@@ -127,39 +129,46 @@ function nautilus.destroy(self, overload)
     self.object:remove()
 
     pos.y=pos.y+2
-    --[[for i=1,7 do
-        minetest.add_item({x=pos.x+math.random()-0.5,y=pos.y,z=pos.z+math.random()-0.5},'default:steel_ingot')
-    end
-
-    for i=1,7 do
-        minetest.add_item({x=pos.x+math.random()-0.5,y=pos.y,z=pos.z+math.random()-0.5},'default:mese_crystal')
-    end]]--
-
-    --minetest.add_item({x=pos.x+math.random()-0.5,y=pos.y,z=pos.z+math.random()-0.5},'nautilus:boat')
-    --minetest.add_item({x=pos.x+math.random()-0.5,y=pos.y,z=pos.z+math.random()-0.5},'default:diamond')
-
-    --[[local total_biofuel = math.floor(self.energy) - 1
-    for i=0,total_biofuel do
-        minetest.add_item({x=pos.x+math.random()-0.5,y=pos.y,z=pos.z+math.random()-0.5},'biofuel:biofuel')
-    end]]--
     if overload then
         local stack = ItemStack(self.item)
         local item_def = stack:get_definition()
         
         if item_def.overload_drop then
             for _,item in pairs(item_def.overload_drop) do
-                minetest.add_item({x=pos.x+math.random()-0.5,y=pos.y,z=pos.z+math.random()-0.5},item)
+                if player then
+                    local item_to_add = player:get_inventory():add_item("main", item)
+                    if item_to_add then
+                        minetest.add_item(player:getpos(), item_to_add)
+                    else
+                        minetest.add_item({x=pos.x+math.random()-0.5,y=pos.y,z=pos.z+math.random()-0.5},item)
+                    end
+                else
+                    minetest.add_item({x=pos.x+math.random()-0.5,y=pos.y,z=pos.z+math.random()-0.5},item)
+                end
             end
             return
         end
     end
+    
     local stack = ItemStack(self.item)
     local item_def = stack:get_definition()
     if self.hull_integrity then
         local boat_wear = math.floor(65535*(1-(self.hull_integrity/item_def.hull_integrity)))
         stack:set_wear(boat_wear)
     end
-    minetest.add_item({x=pos.x+math.random()-0.5,y=pos.y,z=pos.z+math.random()-0.5}, stack)
+
+    if player then
+        local inv = player:get_inventory()
+        if inv then
+            if inv:room_for_item("main", stack) then
+                inv:add_item("main", stack)
+            else
+                minetest.add_item({x=pos.x+math.random()-0.5,y=pos.y,z=pos.z+math.random()-0.5}, stack)
+            end
+        end
+    else
+        minetest.add_item({x=pos.x+math.random()-0.5,y=pos.y,z=pos.z+math.random()-0.5}, stack)
+    end
 end
 
 --returns 0 for old, 1 for new
@@ -823,19 +832,19 @@ function nautilus.find_collision(pos1,dir)
     local distance = 20
     local pos2 = mobkit.pos_shift(pos1,vector.multiply(dir,distance))
     local ray = minetest.raycast(pos1, pos2, true, false)
-            for pointed_thing in ray do
-                if pointed_thing.type == "node" then
-                    local dist = math.floor(vector.distance(pos1,pointed_thing.under))
-                    pos2 = mobkit.pos_shift(pos1,vector.multiply(dir,dist-1))
-                    return pos2
-                end
-                if pointed_thing.type == "object" then
-                    local obj = pointed_thing.ref
-                    local objpos = obj:get_pos()
-                    return objpos
-                end
-            end
-    return nil
+    for pointed_thing in ray do
+        if pointed_thing.type == "node" then
+            local dist = math.floor(vector.distance(pos1,pointed_thing.under))
+            pos2 = mobkit.pos_shift(pos1,vector.multiply(dir,dist-1))
+            return pos2
+        end
+        if pointed_thing.type == "object" then
+            local obj = pointed_thing.ref
+            local objpos = obj:get_pos()
+            return objpos
+        end
+    end
+    return pos2
 end
 
 -- item submarine on_place

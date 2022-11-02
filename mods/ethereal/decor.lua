@@ -303,7 +303,7 @@ add_node({"default:dirt_with_snow"}, 0.8, {"taiga"}, 40, 140,
 	{"default:snow"}, nil, nil, nil, ethereal.alpine)
 
 -- wild onion
-add_node({"default:dirt_with_grass", "ethereal:prairie_dirt"}, 0.25,
+add_node({"default:dirt_with_grass", "ethereal:prairie_dirt"}, 0.025,
 	{"deciduous_forest", "grassytwo", "jumble", "prairie"}, 1, 100,
 	{"ethereal:onion_4"}, nil, nil, nil, 1)
 
@@ -326,11 +326,11 @@ print ("[MOD] Ethereal - Farming Redo detected and in use")
 
 -- potato
 add_node({"ethereal:jungle_dirt", "default:dirt_with_rainforest_litter"},
-	0.035, {"junglee"}, 1, 100, {"farming:potato_3"}, nil, nil, nil,
+	0.002, {"junglee"}, 1, 100, {"farming:potato_3"}, nil, nil, nil,
 	ethereal.junglee)
 
 -- carrot, cucumber, potato, tomato, corn, coffee, raspberry, rhubarb
-add_node({"default:dirt_with_grass"}, 0.05, {"grassytwo"}, 1, 100,
+add_node({"default:dirt_with_grass"}, 0.002, {"grassytwo"}, 1, 100,
 	{"farming:carrot_7", "farming:cucumber_4", "farming:potato_3", "farming:vanilla_7",
 	"farming:tomato_7", "farming:corn_8", "farming:coffee_5", "farming:blackberry_4",
 	"farming:raspberry_4", "farming:rhubarb_3", "farming:blueberry_4",
@@ -338,64 +338,64 @@ add_node({"default:dirt_with_grass"}, 0.05, {"grassytwo"}, 1, 100,
 	"farming:asparagus"}, nil, nil, nil,
 	ethereal.grassytwo)
 
-add_node({"default:dirt_with_grass"}, 0.05, {"deciduous_forest"}, 1, 100,
+add_node({"default:dirt_with_grass"}, 0.002, {"deciduous_forest"}, 1, 100,
 	{"farming:carrot_7", "farming:cucumber_4", "farming:potato_3", "farming:vanilla_7",
 	"farming:tomato_7", "farming:corn_8", "farming:coffee_5", "farming:blackberry_4",
 	"farming:raspberry_4", "farming:rhubarb_3", "farming:blueberry_4",
 	"farming:beetroot_5", "farming:sunflower_8",
-	"farming:eggplant"}, nil, nil, nil, ethereal.grassy)
+	"farming:eggplant_3"}, nil, nil, nil, ethereal.grassy)
 
-add_node({"default:dirt_with_grass"}, 0.05, {"jumble"}, 1, 100,
+add_node({"default:dirt_with_grass"}, 0.002, {"jumble"}, 1, 100,
 	{"farming:carrot_7", "farming:cucumber_4", "farming:potato_3", "farming:vanilla_7",
 	"farming:tomato_7", "farming:corn_8", "farming:coffee_5", "farming:blackberry_4",
 	"farming:raspberry_4", "farming:rhubarb_3", "farming:blueberry_4",
 	"farming:cabbage_6", "farming:lettuce_5",
-	"farming:spinach"}, nil, nil, nil, ethereal.jumble)
+	"farming:spinach_3"}, nil, nil, nil, ethereal.jumble)
 
-add_node({"ethereal:prairie_dirt"}, 0.05, {"prairie"}, 1, 100,
+add_node({"ethereal:prairie_dirt"}, 0.025, {"prairie"}, 1, 100,
 	{"farming:carrot_7", "farming:cucumber_4", "farming:potato_3", "farming:parsley_3",
 	"farming:tomato_7", "farming:corn_8", "farming:coffee_5", "farming:blackberry_4",
 	"farming:raspberry_4", "farming:rhubarb_3", "farming:blueberry_4",
 	"farming:pea_5", "farming:beetroot_5", "farming:sunflower_8"}, nil, nil, nil,
 	ethereal.prairie)
 
-add_node({"ethereal:grove_dirt"}, 0.025, {"mediterranean"}, 1, 100,
+add_node({"ethereal:grove_dirt"}, 0.002, {"mediterranean"}, 1, 100,
 	{"farming:parsley_3"}, nil, nil, nil, ethereal.mediterranean)
 
 -- melon and pumpkin
 add_node({"ethereal:jungle_dirt", "default:dirt_with_rainforest_litter"},
-	0.015, {"junglee"}, 1, 1, {"farming:melon_8", "farming:pumpkin_8"},
+	0.001, {"junglee"}, 1, 1, {"farming:melon_8", "farming:pumpkin_8"},
 	nil, "default:water_source", 1, ethereal.junglee)
 
-add_node({"default:dirt_with_grass"}, 0.015, {"deciduous_forest"}, 1, 1,
+add_node({"default:dirt_with_grass"}, 0.001, {"deciduous_forest"}, 1, 1,
 	{"farming:melon_8", "farming:pumpkin_8"}, nil, "default:water_source",
 	1, ethereal.grassy)
 
-add_node({"default:dirt_with_grass"}, 0.015, {"grassytwo"}, 1, 1,
+add_node({"default:dirt_with_grass"}, 0.001, {"grassytwo"}, 1, 1,
 	{"farming:melon_8", "farming:pumpkin_8"}, nil, "default:water_source",
 	1, ethereal.grassytwo)
 
-add_node({"default:dirt_with_grass"}, 0.015, {"jumble"}, 1, 1,
+add_node({"default:dirt_with_grass"}, 0.001, {"jumble"}, 1, 1,
 	{"farming:melon_8", "farming:pumpkin_8"}, nil, "default:water_source",
 	1, ethereal.jumble)
 
 -- mint
 add_node({"default:dirt_with_grass", "default:dirt_with_coniferous_litter",
-	"ethereal:bamboo_dirt"}, 0.003, nil, 1, 75, "farming:mint_4", nil,
-	"group:water", 1, 1)
+	"ethereal:bamboo_dirt"}, 0.005, nil, 1, 75, "farming:mint_4", nil,
+	{"group:water", "group:sand"}, 1, 1)
 
 -- green beans
-add_node({"default:dirt_with_grass"}, 0.035, {"grassytwo"}, 1, 100,
+add_node({"default:dirt_with_grass"}, 0.001, {"grassytwo"}, 1, 100,
 	{"farming:beanbush"}, nil, nil, nil, ethereal.grassytwo)
 
 -- grape bushel
-add_node({"default:dirt_with_grass"}, 0.025, {"grassytwo"}, 1, 100,
+add_node({"default:dirt_with_grass"}, 0.001, {"grassytwo"}, 1, 100,
 	{"farming:grapebush"}, nil, nil, nil, ethereal.grassytwo)
 
-add_node({"default:dirt_with_grass"}, 0.025, {"deciduous_forest"}, 1, 100,
+add_node({"default:dirt_with_grass"}, 0.001, {"deciduous_forest"}, 1, 100,
 	{"farming:grapebush"}, nil, nil, nil, ethereal.grassy)
 
-add_node({"ethereal:prairie_dirt"}, 0.025, {"prairie"}, 1, 100,
+add_node({"ethereal:prairie_dirt"}, 0.001, {"prairie"}, 1, 100,
 	{"farming:grapebush"}, nil, nil, nil, ethereal.prairie)
 
 minetest.register_decoration({
@@ -405,7 +405,7 @@ minetest.register_decoration({
 	sidelen = 16,
 	noise_params = {
 		offset = 0,
-		scale = 0.09,
+		scale = 0.002,
 		spread = {x = 100, y = 100, z = 100},
 		seed = 760,
 		octaves = 3,
@@ -415,7 +415,8 @@ minetest.register_decoration({
 	y_max = 35,
 	decoration = {
 		"farming:chili_8", "farming:garlic_5", "farming:pepper_5", "farming:pepper_6",
-		"farming:onion_5", "farming:hemp_7", "farming:pepper_7", "farming:soy_5"
+		"farming:onion_5", "farming:hemp_7", "farming:pepper_7", "farming:soy_5",
+		"farming:ginger"
 	},
 	spawn_by = "group:tree",
 	num_spawn_by = 1
@@ -427,7 +428,7 @@ minetest.register_decoration({
 	sidelen = 16,
 	noise_params = {
 		offset = 0,
-		scale = 0.06,
+		scale = 0.002,
 		spread = {x = 100, y = 100, z = 100},
 		seed = 917,
 		octaves = 3,
@@ -444,7 +445,7 @@ minetest.register_decoration({
 	sidelen = 16,
 	noise_params = {
 		offset = 0,
-		scale = 0.06,
+		scale = 0.002,
 		spread = {x = 100, y = 100, z = 100},
 		seed = 448,
 		octaves = 3,

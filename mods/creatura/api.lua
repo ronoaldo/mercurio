@@ -9,11 +9,11 @@ creatura.api = {}
 local floor = math.floor
 local random = math.random
 
-local function clamp(val, min, max)
-	if val < min then
-		val = min
-	elseif max < val then
-		val = max
+local function clamp(val, min_n, max_n)
+	if val < min_n then
+		val = min_n
+	elseif max_n < val then
+		val = max_n
 	end
 	return val
 end
@@ -121,9 +121,11 @@ function creatura.get_node_height_from_def(name)
 	end
 end
 
+local get_node = minetest.get_node
+
 function creatura.get_node_def(node) -- Node can be name or pos
 	if type(node) == "table" then
-		node = minetest.get_node(node).name
+		node = get_node(node).name
 	end
 	local def = minetest.registered_nodes[node] or default_node_def
 	if def.walkable
@@ -133,66 +135,51 @@ function creatura.get_node_def(node) -- Node can be name or pos
 	return def
 end
 
-function creatura.get_ground_level(pos, max_diff)
-	local pos2 = pos -- Prevent modifying table that shouldn't be changed
-	pos2.y = math.floor(pos2.y - 0.49)
-	local node = minetest.get_node(pos2)
-	local node_under = minetest.get_node({
-		x = pos2.x,
-		y = pos2.y - 1,
-		z = pos2.z
-	})
-	local walkable = creatura.get_node_def(node_under.name).walkable and not creatura.get_node_def(node.name).walkable
-	if walkable then
-		return pos2
-	end
-	if not creatura.get_node_def(node_under.name).walkable then
-		for _ = 1, max_diff do
-			pos2.y = pos2.y - 1
-			node = minetest.get_node(pos2)
-			node_under = minetest.get_node({
-				x = pos2.x,
-				y = pos2.y - 1,
-				z = pos2.z
-			})
-			walkable = creatura.get_node_def(node_under.name).walkable and not creatura.get_node_def(node.name).walkable
-			if walkable then break end
-		end
-	else
-		for _ = 1, max_diff do
-			pos2.y = pos2.y + 1
-			node = minetest.get_node(pos2)
-			node_under = minetest.get_node({
-				x = pos2.x,
-				y = pos2.y - 1,
-				z = pos2.z
-			})
-			walkable = creatura.get_node_def(node_under.name).walkable and not creatura.get_node_def(node.name).walkable
-			if walkable then break end
+local get_node_def = creatura.get_node_def
+
+function creatura.get_ground_level(pos, range)
+	range = range or 2
+	local above = vector.round(pos)
+	local under = {x = above.x, y = above.y - 1, z = above.z}
+	if not get_node_def(above).walkable and get_node_def(under).walkable then return above end
+	if get_node_def(above).walkable then
+		for _ = 1, range do
+			under = above
+			above = {x = above.x, y = above.y + 1, z = above.z}
+			if not get_node_def(above).walkable and get_node_def(under).walkable then return above end
 		end
 	end
-	return pos2
+	if not get_node_def(under).walkable then
+		for _ = 1, range do
+			above = under
+			under = {x = under.x, y = under.y - 1, z = under.z}
+			if not get_node_def(above).walkable and get_node_def(under).walkable then return above end
+		end
+	end
+	return above
 end
 
 function creatura.is_pos_moveable(pos, width, height)
-	local pos1 = {
+	local edge1 = {
 		x = pos.x - (width + 0.2),
 		y = pos.y,
 		z = pos.z - (width + 0.2),
 	}
-	local pos2 = {
+	local edge2 = {
 		x = pos.x + (width + 0.2),
 		y = pos.y,
 		z = pos.z + (width + 0.2),
 	}
-	for z = pos1.z, pos2.z do
-		for x = pos1.x, pos2.x do
-			local pos3 = {x = x, y = pos.y + height, z = z}
-			local pos4 = {x = x, y = pos.y + 0.01, z = z}
-			local ray = minetest.raycast(pos3, pos4, false, false)
+	local base_p = {x = pos.x, y = pos.y, z = pos.z}
+	local top_p = {x = pos.x, y = pos.y + height, z = pos.z}
+	for z = edge1.z, edge2.z do
+		for x = edge1.x, edge2.x do
+			base_p.x, base_p.z = pos.x + x, pos.z + z
+			top_p.x, top_p.z = pos.x + x, pos.z + z
+			local ray = minetest.raycast(base_p, top_p, false, false)
 			for pointed_thing in ray do
 				if pointed_thing.type == "node" then
-					local name = minetest.get_node(pointed_thing.under).name
+					local name = get_node(pointed_thing.under).name
 					if creatura.get_node_def(name).walkable then
 						return false
 					end
@@ -464,18 +451,21 @@ function creatura.basic_punch_func(self, puncher, tflp, tool_caps, dir)
 	and contains_val(self.immune_to, tool_name)) then
 		return
 	end
-	self:apply_knockback(dir, 12)
-	if not tool_caps
-	or not tool_caps.damage_groups
-	or not tool_caps.damage_groups.fleshy then
-		tool_caps = {
-			damage_groups = {
-				fleshy = 2
-			},
-			full_punch_interval = 1.4
-		}
+	local damage = 0
+	local armor_grps = self.object:get_armor_groups() or self.armor_groups or {}
+	for group, val in pairs(tool_caps.damage_groups or {}) do
+		local dmg_x = tflp / (tool_caps.full_punch_interval or 1.4)
+		damage = damage + val * clamp(dmg_x, 0, 1) * ((armor_grps[group] or 0) / 100.0)
 	end
-	self:hurt(tool_caps.damage_groups.fleshy)
+	if damage > 0 then
+		local dist = vec_dist(self.object:get_pos(), puncher:get_pos())
+		dir.y = 0.2
+		if self.touching_ground then
+			local power = clamp((damage / dist) * 8, 0, 8)
+			self:apply_knockback(dir, power)
+		end
+		self:hurt(damage)
+	end
 	if add_wear then
 		local wear = floor((tool_caps.full_punch_interval / 75) * 9000)
 		tool:add_wear(wear)

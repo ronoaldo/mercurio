@@ -17,6 +17,34 @@ The server is designed to be friendly and enjoyable! Please:
 
 ![0,0,r](item:///default:pick_diamond)
 
+# **Server Update, November 2, 2022**
+
+Regular server update to fetch newer versions of the mods. The following mods
+where updated this time:
+
+```
+bonemeal
+creatura
+draconis
+ethereal
+farming
+homedecor_modpack
+itemframes
+lumberjack
+mobs
+mobs_monster
+mobs_npc
+nautilus
+pa28
+signs_lib
+steampunk_blimp
+unified_inventory
+```
+
+![1,1](halo)
+
+![0,0,r](item:///default:pick_diamond)
+
 # **Server Update August 15, 2022**
 
 New update to mods up to August 15. This release updates basically the APercy

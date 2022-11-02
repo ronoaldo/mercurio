@@ -67,3 +67,4 @@ The list of loaded, sign-bearing blocks is created/populated by an LBM (and trim
 * `signslib_edit`
 
 Allows to rotate signs and to open (and consequently edit) any default sign formspec.
+(privilege can be set by `signs_lib.edit_priv` setting)

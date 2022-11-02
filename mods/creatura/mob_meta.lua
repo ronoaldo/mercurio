@@ -94,36 +94,6 @@ local mob = {
 
 local mob_meta = {__index = mob}
 
-local function index_box_border(self)
-	local width = self.width
-	local pos = self.object:get_pos()
-	pos.y = pos.y + 0.5
-	local pos1 = {
-		x = pos.x - (width + 0.7),
-		y = pos.y,
-		z = pos.z - (width + 0.7),
-	}
-	local pos2 = {
-		x = pos.x + (width + 0.7),
-		y = pos.y,
-		z = pos.z + (width + 0.7),
-	}
-	local border = {}
-	for z = pos1.z, pos2.z do
-		for x = pos1.x, pos2.x do
-			local vec = {
-				x = x,
-				y = pos.y,
-				z = z
-			}
-			if not self:pos_in_box(vec, width) then
-				table.insert(border, vec_sub(vec, pos))
-			end
-		end
-	end
-	return border
-end
-
 function mob:indicate_damage()
 	self._original_texture_mod = self._original_texture_mod or self.object:get_texture_mod()
 	self.object:set_texture_mod(self._original_texture_mod .. "^[colorize:#FF000040")
@@ -249,11 +219,7 @@ end
 function mob:apply_knockback(dir, power)
 	if not dir then return end
 	power = power or 6
-	if not self.touching_ground then
-		power = power * 0.8
-	end
 	local knockback = vec_multi(dir, power)
-	knockback.y = abs(power * 0.22)
 	self.object:add_velocity(knockback)
 end
 
@@ -426,7 +392,6 @@ function mob:get_wander_pos_3d(min_range, max_range, dir, vert_bias)
 end
 
 function mob:is_pos_safe(pos)
-	local mob_pos = self.object:get_pos()
 	if not pos then return end
 	local node = minetest.get_node(pos)
 	if not node then return false end
@@ -438,7 +403,7 @@ function mob:is_pos_safe(pos)
 		for i = 1, self.max_fall or 3 do
 			local fall_pos = {
 				x = pos.x,
-				y = floor(mob_pos.y + 0.5) - i,
+				y = floor(pos.y + 0.5) - i,
 				z = pos.z
 			}
 			if creatura.get_node_def(fall_pos).walkable then
@@ -494,7 +459,7 @@ end
 
 function mob:set_scale(x)
 	local def = minetest.registered_entities[self.name]
-	local scale = def.visual_size
+	local scale = def.visual_size or {x = 1, y = 1}
 	local box = def.collisionbox
 	local new_box = {}
 	for k, v in ipairs(box) do
@@ -507,7 +472,7 @@ function mob:set_scale(x)
 		},
 		collisionbox = new_box
 	})
-	self._border = index_box_border(self)
+	--self._border = index_box_border(self)
 end
 
 -- Fixes mob scale being changed when attached to a parent
@@ -594,7 +559,8 @@ end
 
 local function is_group_in_table(tbl, name)
 	for _, v in pairs(tbl) do
-		if minetest.get_item_group(name, v:split(":")[2]) > 0 then
+		if type(v) == "string"
+		and minetest.get_item_group(name, v:split(":")[2]) > 0 then
 			return true
 		end
 	end
@@ -695,6 +661,8 @@ end
 
 function mob:clear_action()
 	self._action = {}
+	self._movement_data.goal = nil
+	self._movement_data.func = nil
 end
 
 function mob:set_utility(func)
@@ -747,7 +715,6 @@ function mob:activate(staticdata, dtime)
 	self.height = self:get_height() or 1
 	self._tyaw = self.object:get_yaw()
 	self.last_yaw = self.object:get_yaw()
-	self.active_time = 0
 	self.in_liquid = false
 	self.is_falling = false
 	self.touching_ground = false
@@ -775,10 +742,15 @@ function mob:activate(staticdata, dtime)
 	end
 
 	-- Staticdata
-	if staticdata then
-		local data = minetest.deserialize(staticdata)
-		if data then
-			for k, v in pairs(data) do
+	local data = minetest.deserialize(staticdata)
+
+	if data then
+		local tp
+		for k, v in pairs(data) do
+			tp = type(v)
+			if tp ~= "function"
+			and tp ~= "nil"
+			and tp ~= "userdata" then
 				self[k] = v
 			end
 		end
@@ -799,10 +771,12 @@ function mob:activate(staticdata, dtime)
 		if #self.textures > 0 then self.texture_no = random(#self.textures) end
 	end
 
+	self.active_time = self:recall("active_time") or 0
+
 	if self:recall("despawn_after") ~= nil then
 		self.despawn_after = self:recall("despawn_after")
 	end
-	self._despawn = self:recall("_despawn") or false
+	self._despawn = self:recall("_despawn") or nil
 
 	if self._despawn
 	and self.despawn_after
@@ -812,7 +786,7 @@ function mob:activate(staticdata, dtime)
 	end
 
 	self._breath =  self:recall("_breath") or (self.max_breath or 30)
-	self._border = index_box_border(self)
+	--self._border = index_box_border(self)
 
 	if self.textures
 	and self.texture_no then
@@ -902,9 +876,14 @@ function mob:on_step(dtime, moveresult)
 	end
 	self.properties = nil
 	self.active_time = self.active_time + dtime
-	if self.despawn_after
-	and self.active_time >= self.despawn_after then
-		self._despawn = self:memorize("_despawn", true)
+	self:memorize("active_time", self.active_time)
+	if self.despawn_after then
+		local despawn = math.floor(self.active_time / self.despawn_after)
+		if despawn > 1 then self.object:remove() return end
+		if despawn > 0
+		and not self._despawn then
+			self._despawn = self:memorize("_despawn", true)
+		end
 	end
 end
 
@@ -920,51 +899,7 @@ end
 -- Object API --
 ----------------
 
-local fancy_step = false
-
-local step_type = minetest.settings:get("creatura_step_type")
-
-if step_type == "fancy" then
-	fancy_step = true
-end
-
 -- Physics
-
-local moveable = creatura.is_pos_moveable
-
-local function do_step(self)
-	if not fancy_step then return end
-	local pos = self.object:get_pos()
-	local vel = self.object:get_velocity()
-	if not self._step then
-		if self.touching_ground
-		and abs(vel.x + vel.z) > 0 then
-			local border = self._border
-			local yaw_offset = vec_add(pos, vec_multi(minetest.yaw_to_dir(self.object:get_yaw()), self.width + 0.7))
-			table.sort(border, function(a, b)
-				return vec_dist(vec_add(pos, a), yaw_offset) < vec_dist(vec_add(pos, b), yaw_offset)
-			end)
-			local step_pos = vec_center(vec_add(pos, border[1]))
-			local halfway = vec_add(pos, vec_multi(vec_dir(pos, step_pos), 0.5))
-			halfway.y = step_pos.y
-			if creatura.get_node_def(step_pos).walkable
-			and abs(diff(self.object:get_yaw(), minetest.dir_to_yaw(vec_dir(pos, step_pos)))) < 1.5
-			and moveable(halfway, self.width, self.height) then
-				self._step = vec_center(step_pos)
-			end
-		end
-	else
-		self.object:set_velocity(vector.new(vel.x, 7, vel.z))
-		if self._step.y < pos.y - 0.5 then
-			self.object:set_velocity(vector.new(vel.x, 0.5, vel.z))
-			self._step = nil
-			local step_pos = self.object:get_pos()
-			local dir = minetest.yaw_to_dir(self.object:get_yaw())
-			step_pos = vec_add(step_pos, vec_multi(dir, 0.1))
-			self.object:set_pos(step_pos)
-		end
-	end
-end
 
 local function collision_detection(self)
 	if not creatura.is_alive(self)
@@ -1047,13 +982,11 @@ local function water_physics(self, pos, node)
 	self.object:set_velocity(vel)
 end
 
-function mob:_physics(moveresult)
+function mob:_physics()
 	local pos = self.stand_pos
 	local node = self.stand_node
 	if not pos or not node then return end
 	water_physics(self, pos, node)
-	-- Step up nodes
-	do_step(self, moveresult)
 	-- Object collision
 	collision_detection(self)
 	local in_liquid = self.in_liquid
@@ -1069,25 +1002,11 @@ function mob:_physics(moveresult)
 	--and not move_data.func
 	and move_data.gravity ~= 0 then
 		local vel = self.object:get_velocity()
-		if on_ground then
-			local nvel = vector.multiply(vel, 0.2)
-			if nvel.x < 0.2
-			and nvel.z < 0.2 then
-				nvel.x = 0
-				nvel.z = 0
-			end
-			nvel.y = vel.y
-			self.object:set_velocity(nvel)
-		else
-			local nvel = vector.multiply(vel, 0.1)
-			if nvel.x < 0.2
-			and nvel.z < 0.2 then
-				nvel.x = 0
-				nvel.z = 0
-			end
-			nvel.y = vel.y
-			self.object:set_velocity(nvel)
-		end
+		local friction = self.dtime * 10
+		if friction > 0.5 then friction = 0.5 end
+		if not on_ground then friction = 0.25 end
+		local nvel = {x = vel.x * (1 - friction), y = vel.y, z = vel.z * (1 - friction)}
+		self.object:set_velocity(nvel)
 	end
 end
 
@@ -1142,12 +1061,13 @@ function mob:_execute_utilities()
 	and is_alive then
 		for i = 1, #self.utility_stack do
 			local utility = self.utility_stack[i].utility
+			local util_data = self._utility_data
 			local get_score = self.utility_stack[i].get_score
 			local step_delay = self.utility_stack[i].step_delay
 			local score, args = get_score(self)
-			if self._utility_data.utility
-			and utility == self._utility_data.utility
-			and self._utility_data.score > 0
+			if util_data.utility
+			and utility == util_data.utility
+			and util_data.score > 0
 			and score <= 0 then
 				self._utility_data = {
 					utility = nil,
@@ -1155,9 +1075,10 @@ function mob:_execute_utilities()
 					step_delay = nil,
 					score = 0
 				}
+				util_data = self._utility_data
 			end
 			if score > 0
-			and score >= self._utility_data.score
+			and score >= util_data.score
 			and score >= loop_data.score then
 				loop_data = {
 					utility = utility,
@@ -1241,10 +1162,10 @@ function mob:_vitals()
 	local pos = self.stand_pos
 	local node = self.stand_node
 	if not pos or not node then return end
-	local max_fall = self.max_fall or 0
+	local max_fall = self.max_fall or 3
 	local in_liquid = self.in_liquid
 	local on_ground = self.touching_ground
-	local damage
+	local damage = 0
 	if max_fall > 0
 	and not in_liquid then
 		local fall_start = self._fall_start or (not on_ground and pos.y)
@@ -1252,21 +1173,24 @@ function mob:_vitals()
 			if on_ground then
 				damage = fall_start - pos.y
 				if damage < max_fall then
-					damage = nil
+					damage = 0
+				else
+					local resist = self.fall_resistance or 0
+					damage = damage - damage * resist
+					fall_start = nil
 				end
-				local resist = self.fall_resistance or 0
-				damage = damage - damage * resist
-				self._fall_start = nil
 			end
 		end
+		self._fall_start = fall_start
 	end
 	if self:timer(1) then
 		local stand_def = creatura.get_node_def(node.name)
 		if not self.max_breath
 		or self.max_breath > 0 then
-			local head_pos = vec_raise(pos, self.height)
+			local head_pos = vec_raise(pos, self.height - 0.01)
 			local head_node = minetest.get_node(head_pos)
-			if minetest.get_item_group(head_node.name, "liquid") > 0 then
+			if minetest.get_item_group(head_node.name, "liquid") > 0
+			or creatura.get_node_def(head_node.name).walkable then
 				if self._breath <= 0 then
 					damage = (damage or 0) + 1
 				else
@@ -1286,7 +1210,7 @@ function mob:_vitals()
 			damage = (damage or 0) + stand_def.damage_per_second * resist
 		end
 	end
-	if damage then
+	if damage > 0 then
 		self:hurt(damage)
 		self:indicate_damage()
 		if random(4) < 2 then

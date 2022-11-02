@@ -289,6 +289,12 @@ local function can_dig(pos, digger)
 	if node.param1 ~= 0 then 
 		return true
 	end
+	-- compatibility with digtron mod
+	local dbg_info = debug.getinfo(2)
+	if dbg_info.source:sub(-17) == "/digtron/util.lua"
+		and dbg_info.name == "execute_dig" then
+		return true
+	end
 	local tree_points, sapl_points = get_points(digger)
 	if is_lumberjack(digger, tree_points, sapl_points) then
 		if chopper_tool(digger) then
