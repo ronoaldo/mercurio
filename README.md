@@ -8,8 +8,9 @@ for the Mercurio minetest server.
 You need to have both `docker` and `docker composer` installed and working, and
 optionally you can use `make` to run the scripts more easily.
 
-In order to change some settings, copy the docker-compose.dev.yml as a local
-override:
+In order to change some settings for your local develoopment environment, copy
+the `docker-compose.dev.yml` as a local override. This way you can change things
+such as the server port:
 
     cp docker-compose.dev.yml docker-compose.override.yml
 
@@ -17,10 +18,10 @@ override:
 
 To test locally, you can use:
 
-    make run-interactive
+    make run
 
 This command will use `docker compose` to execute all the services needed,
-including a local PostgreSQL database, the Mapserver backend and the game
+including a local PostgreSQL database, the Discord chat bridge and the game
 server itself.
 
 To test the server, launch the minetest client and connect with `127.0.0.1`
@@ -36,7 +37,7 @@ To make a backup you can use the following make target:
 
     make backup
 
-Backups will be stored in $HOME/backups/
+Backups will be stored in `$HOME/backups/`.
 
 ### Container shell
 
@@ -46,6 +47,8 @@ in order to check if all things are right. There is a make target for that as we
     make shell
 
 This will open a shell with `root` privileges so you can debug the game server.
+It is required that you have the server running in the background (i.e. you need
+to have it running from `make run` first).
 
 ### Troubheshooting
 
@@ -57,17 +60,39 @@ workaround:
 
 This one requires your login shell to have `sudo` privileges.
 
-## Updating mods
+## Install and update mods
 
-For this implementation, I'm considering both game files as well as mod code
-to be part of the "game codebase". Thus, as much as possible, mods are *pinned*
-to specific versions.
+For this server, we are using a local copy of the released mods from ContentDB
+whenever possible, plus a few set of Git submodules when some special patch is
+needed or when the mod is not published to the central repository.
 
-In order to check for updates, you can use the `contentdb` program inside the
-container either manually via the `make shell` program, or using the convenient
-target:
+The reason to use ContentDB is mostly because a) I'm using specific versions of
+the mods, that are released by the mod authors and intended to be used by the
+public and b) there is a team of people that curates the published mods to make
+sure they abide for the [documented policies](https://content.minetest.net/policy_and_guidance/).
 
-    make check-mod-updates
+If mods are available from ContentDB, one can use the command line tool `contentdb`
+that I have developed to both add a new mod or to update existing ones. Please
+check the installation instructions here: https://github.com/ronoaldo/minetools#install-pre-compiled-binaries-on-linux.
 
-The output will print all mods with newer versions on Contentdb, and which Git
-mods can be updated.
+### Installing a new mod from ContentDB
+
+It is as simple as running the `contentdb install` command. For instance, to install
+the mod PA 28 from APercy, available at content.minetest.net/packages/**apercy/pa28**, use:
+
+    contentdb install apercy/pa28
+
+The syntax is basically `author/modname` from the ContentDB API (same used in
+the browser URL). The command **must be executed from the root folder of the project**.
+
+### Update mods from ContentDB
+
+Similar to the [Installing a new mod from ContentDB](#installing-a-new-mod-from-contentdb)
+part, the tool can be used to update a mod:
+
+    contentdb install --update apercy/pa28
+
+There is a convenience command in the tool that can be used to **update all at
+once**:
+
+    contentdb update
