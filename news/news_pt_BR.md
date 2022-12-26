@@ -15,6 +15,19 @@ O servidor foi projetado para ser amigável e agradável! Por favor:
 -------------------------------
 ![1,1](halo)
 
+![0,0,r](item:///x_bows:bow_wood)
+
+# **Hotfix 26 de dezembro de 2022**
+
+Pequeno *hotfix* para corrigir um bug no mod `x_bows` que estava derrubando o
+servidor.
+
+Esta correção foi feita atualizando o mod para a versão mais recente. Isso
+significa que agora nós temos que adicionar as flexas em uma nova aba no Unified
+Inventory (inventário) para ser possível disparar com o arco.
+
+![1,1](halo)
+
 ![0,0,r](item:///default:pick_diamond)
 
 # **Atualização do servidor em 10 de novembro de 2022**

@@ -15,6 +15,18 @@ The server is designed to be friendly and enjoyable! Please:
 -------------------------------
 ![1,1](halo)
 
+![0,0,r](item:///x_bows:bow_wood)
+
+# **Hotfix December 26, 2022**
+
+Small hotfix added to fix a `x_bows` mod bug that was crashing the server.
+
+This fix was made by upgrading the mod to the more recent version. That means we
+now need to add arrows to a new tab in the Unified Inventory to be able to fire
+with the bow and quiver.
+
+![1,1](halo)
+
 ![0,0,r](item:///default:pick_diamond)
 
 # **Server Update, November 2, 2022**
