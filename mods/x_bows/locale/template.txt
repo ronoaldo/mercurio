@@ -1,0 +1,21 @@
+# textdomain: x_bows
+Critical Arrow Chance=
+Strength=
+Allowed ammunition=
+none=
+Damage=
+Charge Time=
+Faster Arrows=
+Arrow Damage=
+No Ammo=
+Arrows=
+Quiver=
+Empty=
+Wooden Bow=
+Arrow Wood=
+Arrow Stone=
+Arrow Bronze=
+Arrow Steel=
+Arrow Mese=
+Arrow Diamond=
+Target=
