@@ -10,9 +10,6 @@
 [submodule "mods/extra_doors"]
 	path = mods/extra_doors
 	url = https://github.com/ronoaldo/extra_doors
-[submodule "mods/x_bows"]
-	path = mods/x_bows
-	url = https://github.com/ronoaldo/x_bows
 [submodule "mods/hbsprint"]
 	path = mods/hbsprint
 	url = https://github.com/ronoaldo/hbsprint
