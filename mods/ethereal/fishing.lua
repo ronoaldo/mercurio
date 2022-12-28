@@ -376,7 +376,7 @@ local use_rod = function(itemstack, player, pointed_thing)
 		local pos = {x = playerpos.x, y = playerpos.y + 1.5, z = playerpos.z}
 
 		minetest.sound_play("ethereal_casting_rod",
-			{pos = pos, gain = 0.4, max_hear_distance = 16}, true)
+			{pos = pos, gain = 1.0, max_hear_distance = 10}, true)
 
 		-- place actual bob
 		local obj = minetest.add_entity(pos, "ethereal:bob_entity")

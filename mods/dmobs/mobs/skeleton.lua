@@ -1,5 +1,3 @@
---skeleton
-
 mobs:register_mob("dmobs:skeleton", {
 	type = "monster",
 	reach = 3,
@@ -12,16 +10,16 @@ mobs:register_mob("dmobs:skeleton", {
 	visual = "mesh",
 	mesh = "skeleton.b3d",
 	textures = {
-		{"dmobs_skeleton.png"},
+		{"dmobs_skeleton.png"}
 	},
 	blood_texture = "default_stone.png",
-	visual_size = {x=1, y=1},
+	visual_size = {x = 1, y = 1},
 	makes_footstep_sound = true,
 	walk_velocity = 1,
 	run_velocity = 2.5,
 	jump = true,
 	drops = {
-		{name = "bones:bones", chance = 5, min = 3, max = 6},
+		{name = "bones:bones", chance = 5, min = 3, max = 6}
 	},
 	water_damage = 0,
 	lava_damage = 2,
@@ -41,7 +39,7 @@ mobs:register_mob("dmobs:skeleton", {
 		run_end = 66,
 		punch_start = 20,
 		punch_end = 45,
-	},
+	}
 })
 
 

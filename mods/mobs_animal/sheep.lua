@@ -22,7 +22,7 @@ local all_colours = {
 }
 
 
--- Sheep by PilzAdam, texture converted to minetest by AMMOnym from Summerfield pack
+-- Sheep by PilzAdam/K Pavel, texture converted to minetest by AMMOnym from Summerfield pack
 
 for _, col in ipairs(all_colours) do
 
@@ -35,7 +35,7 @@ for _, col in ipairs(all_colours) do
 		{name = "mobs:mutton_raw", chance = 1, min = 1, max = 2}
 	}
 
-	mobs:register_mob("mobs_animal:sheep_"..col[1], {
+	mobs:register_mob("mobs_animal:sheep_" .. col[1], {
 		stay_near = {"farming:straw", 10},
 		stepheight = 0.6,
 		type = "animal",
@@ -201,6 +201,8 @@ for _, col in ipairs(all_colours) do
 
 							ent.owner = name
 							ent.tamed = true
+							ent.protected = self.protected
+							ent.fire_damage = self.fire_damage
 
 							-- take item
 							if not mobs.is_creative(clicker:get_player_name()) then
@@ -226,7 +228,7 @@ for _, col in ipairs(all_colours) do
 
 	-- spawn egg
 	mobs:register_egg("mobs_animal:sheep_"..col[1], S("@1 Sheep", col[2]),
-			"wool_"..col[1]..".png^mobs_sheep_inv.png")
+			"wool_" .. col[1] .. ".png^mobs_sheep_inv.png")
 
 	-- compatibility
 	mobs:alias_mob("mobs:sheep_" .. col[1], "mobs_animal:sheep_" .. col[1])

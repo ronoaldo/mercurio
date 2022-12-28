@@ -6,7 +6,7 @@ mobs:register_mob("dmobs:waterdragon", {
 	attack_type = "dogshoot",
 	dogshoot_switch = 2,
 	dogshoot_count = 0,
-	dogshoot_count_max =5,
+	dogshoot_count_max = 5,
 	shoot_interval = 2.5,
 	arrow = "dmobs:ice",
 	shoot_offset = 0,
@@ -21,7 +21,7 @@ mobs:register_mob("dmobs:waterdragon", {
 	visual = "mesh",
 	mesh = "water_dragon.b3d",
 	textures = {
-		{"dmobs_waterdragon.png"},
+		{"dmobs_waterdragon.png"}
 	},
 	blood_texture = "mobs_blood.png",
 	makes_footstep_sound = true,
@@ -36,7 +36,7 @@ mobs:register_mob("dmobs:waterdragon", {
 	jump = false,
 	drops = {
 		{name = "dmobs:dragon_gem_ice", chance = 1, min = 1, max = 1},
-		{name = "dmobs:dragon_gem_fire", chance = 1, min = 1, max = 1},
+		{name = "dmobs:dragon_gem_fire", chance = 1, min = 1, max = 1}
 	},
 	water_damage = 0,
 	lava_damage = 5,
@@ -55,8 +55,9 @@ mobs:register_mob("dmobs:waterdragon", {
 		punch_start = 40,
 		punch_end = 60,
 		shoot_start = 20,
-		shoot_end = 40,
+		shoot_end = 40
 	},
+
 	do_custom = function(self)
 
 		--follow thanks to TenPlus1 and Byakuren
@@ -69,20 +70,20 @@ mobs:register_mob("dmobs:waterdragon", {
 			local obj, obj2, ent
 
 			-- add body and make it follow head
-			obj = minetest.add_entity(
-					{x=pos.x+1, y=pos.y, z=pos.z}, "dmobs:waterdragon_2")
+			obj = minetest.add_entity({
+				x = pos.x + 1, y = pos.y, z = pos.z}, "dmobs:waterdragon_2")
 
 			ent = obj:get_luaentity()
 			ent.following = self.object
 
 			-- add body and make it follow previous body segment
-			obj2 = minetest.add_entity(
-					{x=pos.x-1, y=pos.y, z=pos.z}, "dmobs:waterdragon_2")
+			obj2 = minetest.add_entity({
+				x = pos.x - 1, y = pos.y, z = pos.z}, "dmobs:waterdragon_2")
 
 			ent = obj2:get_luaentity()
 			ent.following = self.object
 		end
-	end,
+	end
 })
 
 
@@ -92,7 +93,7 @@ mobs:register_mob("dmobs:waterdragon_2", {
 	attack_type = "shoot",
 	dogshoot_switch = 2,
 	dogshoot_count = 0,
-	dogshoot_count_max =5,
+	dogshoot_count_max = 5,
 	shoot_interval = 3,
 	arrow = "dmobs:ice",
 	shoot_offset = 0,
@@ -103,17 +104,17 @@ mobs:register_mob("dmobs:waterdragon_2", {
 	hp_max = 60,
 	armor = 50,
 	collisionbox = {-0.4, -0.2, -0.4, 0.4, 5, 0.4},
-	visual_size = {x=3, y=3},
+	visual_size = {x = 3, y = 3},
 	visual = "mesh",
 	mesh = "water_dragon.b3d",
 	textures = {
-		{"dmobs_waterdragon.png"},
+		{"dmobs_waterdragon.png"}
 	},
 	blood_texture = "mobs_blood.png",
 	makes_footstep_sound = true,
 	sounds = {
 		shoot_attack = "dmobs_wave",
-		random = "velociraptor",
+		random = "velociraptor"
 	},
 	view_range = 15,
 	rotate = 180,
@@ -136,6 +137,6 @@ mobs:register_mob("dmobs:waterdragon_2", {
 		punch_start = 40,
 		punch_end = 60,
 		shoot_start = 20,
-		shoot_end = 40,
-	},
+		shoot_end = 40
+	}
 })

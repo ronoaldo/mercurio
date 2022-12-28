@@ -1,10 +1,30 @@
-
+local function check_protection(pos, name)
+	if minetest.is_protected(pos, name) then
+		minetest.log("action", name
+			.. " tried to place a PAPI"
+			.. " at protected position "
+			.. minetest.pos_to_string(pos)
+        )
+		minetest.record_protection_violation(pos, name)
+		return true
+	end
+	return false
+end
 
 function airutils.PAPIplace(player,pos)
+    if not player then
+        return
+    end
+
 	local dir = minetest.dir_to_facedir(player:get_look_dir())
 	local pos1 = vector.new(pos)
+
+    local player_name = player:get_player_name()
+	if check_protection(pos, player_name) then
+		return
+	end
+
 	core.set_node(pos, {name="airutils:papi", param2=dir})
-	local player_name = player:get_player_name()
 	local meta = core.get_meta(pos)
 	meta:set_string("infotext", "PAPI\rOwned by: "..player_name)
 	meta:set_string("owner", player_name)

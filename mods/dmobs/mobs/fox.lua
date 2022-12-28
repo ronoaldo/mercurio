@@ -1,5 +1,3 @@
--- Fox
-
 mobs:register_mob("dmobs:fox", {
 	type = "monster",
 	attacks_monsters = true,
@@ -15,22 +13,17 @@ mobs:register_mob("dmobs:fox", {
 	visual = "mesh",
 	mesh = "fox.b3d",
 	textures = {
-		{"dmobs_fox.png"},
+		{"dmobs_fox.png"}
 	},
 	blood_texture = "mobs_blood.png",
-	visual_size = {x=1.5, y=1.5},
+	visual_size = {x = 1.5, y = 1.5},
 	makes_footstep_sound = true,
 	walk_velocity = 1,
 	run_velocity = 2.5,
 	jump = true,
 	drops = {
-		{name = "mobs:meat_raw", chance = 1, min = 1, max = 1},
+		{name = "mobs:meat_raw", chance = 1, min = 1, max = 1}
 	},
-	on_activate = function(self)
-		if math.random(1,5) == 1 then
-		self.type = "animal"
-		end
-	end,
 	water_damage = 0,
 	lava_damage = 2,
 	fire_damage = 2,
@@ -55,8 +48,16 @@ mobs:register_mob("dmobs:fox", {
 		run_start = 1,
 		run_end = 16,
 		punch_start = 36,
-		punch_end = 51,
+		punch_end = 51
 	},
+
+	on_activate = function(self)
+
+		if math.random(5) == 1 then
+			self.type = "animal"
+		end
+	end,
+
 	on_rightclick = function(self, clicker)
 
 		if mobs:feed_tame(self, clicker, 8, true, true) then
@@ -64,7 +65,7 @@ mobs:register_mob("dmobs:fox", {
 		end
 
 		mobs:capture_mob(self, clicker, 0, 5, 50, false, nil)
-	end,
+	end
 })
 
 

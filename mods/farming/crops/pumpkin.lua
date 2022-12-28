@@ -1,8 +1,4 @@
 
---[[
-	Big thanks to PainterlyPack.net for allowing me to use these textures
-]]
-
 local S = farming.intllib
 
 -- pumpkin slice
@@ -34,9 +30,9 @@ minetest.register_craft({
 minetest.register_node("farming:jackolantern", {
 	description = S("Jack 'O Lantern (punch to turn on and off)"),
 	tiles = {
-		"farming_pumpkin_top.png", "farming_pumpkin_top.png",
+		"farming_pumpkin_bottom.png^farming_pumpkin_top.png", "farming_pumpkin_bottom.png",
 		"farming_pumpkin_side.png", "farming_pumpkin_side.png",
-		"farming_pumpkin_side.png", "farming_pumpkin_face_off.png"
+		"farming_pumpkin_side.png", "farming_pumpkin_side.png^farming_pumpkin_face_off.png"
 	},
 	paramtype2 = "facedir",
 	groups = {snappy = 2, choppy = 2, oddly_breakable_by_hand = 2, flammable = 2},
@@ -51,9 +47,9 @@ minetest.register_node("farming:jackolantern", {
 
 minetest.register_node("farming:jackolantern_on", {
 	tiles = {
-		"farming_pumpkin_top.png", "farming_pumpkin_top.png",
+		"farming_pumpkin_bottom.png^farming_pumpkin_top.png", "farming_pumpkin_bottom.png",
 		"farming_pumpkin_side.png", "farming_pumpkin_side.png",
-		"farming_pumpkin_side.png", "farming_pumpkin_face_on.png"
+		"farming_pumpkin_side.png", "farming_pumpkin_side.png^farming_pumpkin_face_on.png"
 	},
 	light_source = default.LIGHT_MAX - 1,
 	paramtype2 = "facedir",
@@ -182,7 +178,7 @@ minetest.register_node("farming:pumpkin_7", table.copy(def))
 minetest.register_node("farming:pumpkin_8", {
 	description = S("Pumpkin"),
 	tiles = {
-		"farming_pumpkin_top.png",
+		"farming_pumpkin_bottom.png^farming_pumpkin_top.png",
 		"farming_pumpkin_bottom.png",
 		"farming_pumpkin_side.png"
 	},

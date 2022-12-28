@@ -1,6 +1,3 @@
-
--- Orc
-
 mobs:register_mob("dmobs:orc", {
 	type = "monster",
 	passive = false,
@@ -14,13 +11,13 @@ mobs:register_mob("dmobs:orc", {
 	visual = "mesh",
 	mesh = "orc.b3d",
 	textures = {
-		{"dmobs_orc.png"},
+		{"dmobs_orc.png"}
 	},
 	blood_texture = "mobs_blood.png",
-	visual_size = {x=3, y=3},
+	visual_size = {x = 3, y = 3},
 	makes_footstep_sound = true,
 	drops = {
-		{name = "mobs:meat_raw", chance = 1, min = 1, max = 1},
+		{name = "mobs:meat_raw", chance = 1, min = 1, max = 1}
 	},
 	walk_velocity = 1,
 	run_velocity = 2,
@@ -43,9 +40,12 @@ mobs:register_mob("dmobs:orc", {
 		run_start = 2,
 		run_end = 18,
 		punch_start = 20,
-		punch_end = 30,
-	},
+		punch_end = 30
+	}
 })
+
+
+mobs:register_egg("dmobs:orc", "Orc", "default_desert_sand.png", 1)
 
 
 -- Orc (Redesign)
@@ -62,13 +62,13 @@ mobs:register_mob("dmobs:orc2", {
 	visual = "mesh",
 	mesh = "orc_redesign.b3d",
 	textures = {
-		{"dmobs_orc_redesign.png"},
+		{"dmobs_orc_redesign.png"}
 	},
 	blood_texture = "mobs_blood.png",
-	visual_size = {x=1.5, y=1.5},
+	visual_size = {x = 1.5, y = 1.5},
 	makes_footstep_sound = true,
 	drops = {
-		{name = "mobs:meat_raw", chance = 1, min = 1, max = 1},
+		{name = "mobs:meat_raw", chance = 1, min = 1, max = 1}
 	},
 	walk_velocity = 1,
 	run_velocity = 2,
@@ -90,11 +90,9 @@ mobs:register_mob("dmobs:orc2", {
 		run_start = 20,
 		run_end = 40,
 		punch_start = 1,
-		punch_end = 15,
-	},
+		punch_end = 15
+	}
 })
 
 
-mobs:register_egg("dmobs:orc", "Orc", "default_desert_sand.png", 1)
--- new and improved, hey
 mobs:register_egg("dmobs:orc2", "Morgul Orc", "default_desert_sand.png", 1)

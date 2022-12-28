@@ -36,6 +36,12 @@ minetest.register_craft({
 	replacements = {{"farming:pot", "farming:pot"}}
 })
 
+-- yellow dye
+minetest.register_craft({
+	output = "dye:yellow",
+	recipe = {{"group:food_onion"}}
+})
+
 -- crop definition
 local def = {
 	drawtype = "plantlike",

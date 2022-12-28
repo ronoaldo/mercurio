@@ -11,10 +11,10 @@ mobs:register_mob("dmobs:whale", {
 	visual = "mesh",
 	mesh = "whale.b3d",
 	textures = {
-		{"dmobs_whale.png"},
+		{"dmobs_whale.png"}
 	},
 	blood_texture = "mobs_blood.png",
-	visual_size = {x=2.5, y=2.5},
+	visual_size = {x = 2.5, y = 2.5},
 	makes_footstep_sound = true,
 	walk_velocity = 0.5,
 	run_velocity = 1,
@@ -31,12 +31,12 @@ mobs:register_mob("dmobs:whale", {
 	follow = {"fishing:fish_cooked"},
 	view_range = 14,
 	drops = {
-		{name = "mobs:meat_raw", chance = 1, min = 1, max = 1},
+		{name = "mobs:meat_raw", chance = 1, min = 1, max = 1}
 	},
 	sounds = {
 		random = "whale_1",
 		death = "whale_1",
-		distance = 128,
+		distance = 128
 	},
 	animation = {
 		speed_normal = 5,
@@ -46,7 +46,7 @@ mobs:register_mob("dmobs:whale", {
 		stand_start = 2,
 		stand_end = 39,
 		run_start = 2,
-		run_end = 39,
+		run_end = 39
 	},
 
 	on_rightclick = function(self, clicker)
@@ -56,7 +56,7 @@ mobs:register_mob("dmobs:whale", {
 		end
 
 		mobs:capture_mob(self, clicker, 0, 5, 50, false, nil)
-	end,
+	end
 })
 
 

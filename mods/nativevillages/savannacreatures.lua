@@ -208,7 +208,7 @@ sounds = {
 	lava_damage = 2,
 	light_damage = 0,
 	follow = {},
-        stay_near = "nativevillages:savannashrine",
+        stay_near = "nativevillages:savannavshrine",
 	view_range = 15,
 	owner = "",
 	order = "follow",
@@ -286,7 +286,7 @@ if not mobs.custom_spawn_nativevillages then
 mobs:spawn({
 	name = "nativevillages:savannadoctor",
 	nodes = {"default:dry_dirt_with_dry_grass", "default:clay"},
-	neighbors = {"nativevillages:savannashrine"},
+	neighbors = {"nativevillages:savannavshrine"},
 	min_light = 0,
 	interval = 60,
 	active_object_count = 1,

@@ -7,7 +7,7 @@
 ]]
 
 
-ethereal = {version = "20220930"}
+ethereal = {version = "20221128"}
 
 
 local function setting(stype, name, default)
@@ -123,7 +123,11 @@ dofile(path .. "/fishing.lua")
 dofile(path .. "/extra.lua")
 dofile(path .. "/sealife.lua")
 dofile(path .. "/fences.lua")
-dofile(path .. "/biomes_init.lua")
+
+if minetest.settings:get_bool("ethereal.clear_default_biomes", true) then
+	dofile(path .. "/biomes_init.lua")
+end
+
 dofile(path .. "/biomes.lua")
 dofile(path .. "/ores.lua")
 dofile(path .. "/schems.lua")

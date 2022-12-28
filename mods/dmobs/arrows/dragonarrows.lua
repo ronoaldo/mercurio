@@ -10,7 +10,7 @@ local base_arrow = {
 
 		player:punch(self.object, 1.0, {
 			full_punch_interval = 1.0,
-			damage_groups = {fleshy = 8},
+			damage_groups = {fleshy = 8}
 		}, nil)
 	end,
 
@@ -18,13 +18,13 @@ local base_arrow = {
 
 		player:punch(self.object, 1.0, {
 			full_punch_interval = 1.0,
-			damage_groups = {fleshy = 8},
+			damage_groups = {fleshy = 8}
 		}, nil)
 	end,
 
 	hit_node = function(self, pos, node)
 		self.object:remove()
-	end,
+	end
 }
 
 for _,arrowtype in pairs({"ice","lightning","poison"}) do

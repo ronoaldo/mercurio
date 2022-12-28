@@ -1,5 +1,3 @@
---Wasps!
-
 mobs:register_mob("dmobs:wasp", {
 	type = "monster",
 	reach = 1,
@@ -15,13 +13,13 @@ mobs:register_mob("dmobs:wasp", {
 	visual = "mesh",
 	mesh = "wasp.b3d",
 	textures = {
-		{"dmobs_wasp.png"},
+		{"dmobs_wasp.png"}
 	},
 	sounds = {
-		random = "wasp",
+		random = "wasp"
 	},
 	blood_texture = "mobs_blood.png",
-	visual_size = {x=0.6, y=0.6},
+	visual_size = {x = 0.6, y = 0.6},
 	makes_footstep_sound = true,
 	walk_velocity = 2,
 	run_velocity = 3,
@@ -41,8 +39,8 @@ mobs:register_mob("dmobs:wasp", {
 		run_start = 1,
 		run_end = 5,
 		punch_start = 6,
-		punch_end = 15,
-	},
+		punch_end = 15
+	}
 })
 
 
@@ -68,19 +66,19 @@ mobs:register_mob("dmobs:wasp_leader", {
 	visual = "mesh",
 	mesh = "wasp.b3d",
 	textures = {
-		{"dmobs_wasp.png"},
+		{"dmobs_wasp.png"}
 	},
 	sounds = {
-		random = "wasp",
+		random = "wasp"
 	},
 	blood_texture = "mobs_blood.png",
-	visual_size = {x=3.5, y=3.5},
+	visual_size = {x = 3.5, y = 3.5},
 	makes_footstep_sound = true,
 	walk_velocity = 1,
 	run_velocity = 2.5,
 	jump = true,
 	drops = {
-		{name = "default:gold_lump", chance = 1, min = 3, max = 5},
+		{name = "default:gold_lump", chance = 1, min = 3, max = 5}
 	},
 	replace_rate = 700,
 	replace_what = {"air"},
@@ -99,18 +97,18 @@ mobs:register_mob("dmobs:wasp_leader", {
 		run_start = 1,
 		run_end = 5,
 		shoot_start = 6,
-		shoot_end = 15,
+		shoot_end = 15
 	},
 
 	do_custom = function(self)
 
-		if math.random(1, 500) >= 500 then
+		if math.random(500) >= 500 then
 
 			local pos = self.object:get_pos() ; if not pos then return end
 
 			minetest.add_entity(pos, "dmobs:wasp")
 		end
-	end,
+	end
 })
 
 

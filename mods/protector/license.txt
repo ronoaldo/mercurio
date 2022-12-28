@@ -19,3 +19,12 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
+
+
+Original doors mod code (WTFPL license)
+
+Textures by TenPlus1 (CC0) unless mentioned below
+
+Textures from original Minetest doors mod (CC-BY-SA 3.0)
+  doors_*.png
+..default_chest*.png

@@ -1,2 +1,5 @@
 # If false, the item will always just be dropped on the ground.
 itemframes.return_item (return placed item to the player's inventory on right-click) bool false
+
+# if false, inserting and removing items from frames and pedestals will not be logged
+itemframes.log_actions (log player actions when using itemframes and pedestals) bool false

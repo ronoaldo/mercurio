@@ -1,6 +1,0 @@
-default
-stairs
-moreblocks?
-lucky_block?
-technic_cnc?
-flowerpot?

@@ -1,4 +1,4 @@
--- eggs from mobs_dragon --------------------------------------------------------------------------
+-- eggs from mobs_dragon
 
 local dragonpairs = {
 	fire = {colour = "red", nest = "default:lava_source"},
@@ -8,6 +8,7 @@ local dragonpairs = {
 	-- You've to deserve greatness !'
 	great = {colour = "great", nest = "default:diamond_block"}
 }
+
 
 local function egg_transform(pos, node, clicker, item, _)
 
@@ -67,6 +68,7 @@ local function egg_transform(pos, node, clicker, item, _)
 	end
 end
 
+
 local function egghatch(pos, node, clicker, item, _)
 
 	local wield_item = clicker:get_wielded_item():get_name()
@@ -99,7 +101,8 @@ local function egghatch(pos, node, clicker, item, _)
 
 					local ent = minetest.add_entity(pos, thedragon)
 
-					minetest.sound_play("dmobs_chirrup",{pos=pos,max_hear_distance=20})
+					minetest.sound_play("dmobs_chirrup",{
+						pos = pos, max_hear_distance = 20}, true)
 
 					local obj = ent:get_luaentity()
 
@@ -107,7 +110,7 @@ local function egghatch(pos, node, clicker, item, _)
 
 						ent:set_properties({
 							textures = {"dmobs_dragon_young.png"},
-							visual_size = {x=1, y=1},
+							visual_size = {x = 1, y = 1}
 						})
 					end
 
@@ -138,14 +141,15 @@ local base_egg = { -- base template for all dragon eggs
 	is_ground_content = false,
 	groups = {fleshy=3, dig_immediate=3},
 	sounds = default.node_sound_leaves_defaults(),
-	on_rightclick = egg_transform,
+	on_rightclick = egg_transform
 }
 
 
-minetest.register_node("dmobs:egg", dmobs.deepclone(base_egg) ) -- clone, to not affect the base template
+-- clone, to not affect the base template
+minetest.register_node("dmobs:egg", dmobs.deepclone(base_egg) )
 
 -- Fire egg
-base_egg.groups.not_in_creative_inventory=1
+base_egg.groups.not_in_creative_inventory = 1
 base_egg.on_rightclick = egghatch
 base_egg.tiles = {"dmobs_egg1.png"}
 minetest.register_node("dmobs:dragon_egg_fire", dmobs.deepclone(base_egg) )
@@ -163,7 +167,7 @@ base_egg.tiles = {"dmobs_egg4.png"}
 minetest.register_node("dmobs:dragon_egg_ice", dmobs.deepclone(base_egg) )
 
 -- Great dragon egg
-base_egg.groups.not_in_creative_inventory=nil
+base_egg.groups.not_in_creative_inventory = nil
 base_egg.tiles = {"default_sandstone.png"}
 base_egg.description = "Great Dragon Egg"
 minetest.register_node("dmobs:dragon_egg_great", dmobs.deepclone(base_egg) )

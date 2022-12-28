@@ -1,7 +1,6 @@
 
-if not dmobs.dragon then
-	dmobs.dragon = {}
-end
+dmobs.dragon = dmobs.dragon or {}
+
 
 dmobs.dragon.step_custom = function(self, dtime)
 
@@ -28,7 +27,7 @@ dmobs.dragon.ride = function(self, clicker)
 
 		if self.driver and clicker == self.driver then
 
-			object_detach(self, clicker, {x=1, y=0, z=1})
+			object_detach(self, clicker, {x = 1, y = 0, z = 1})
 
 			if inv:room_for_item("main", "mobs:saddle") then
 				inv:add_item("main", "mobs:saddle")
@@ -40,7 +39,7 @@ dmobs.dragon.ride = function(self, clicker)
 
 			if clicker:get_wielded_item():get_name() == "mobs:saddle" then
 
-				object_attach(self, clicker, {x=0, y=12, z=4}, {x=0, y=0, z=4})
+				object_attach(self, clicker, {x = 0, y = 12, z = 4}, {x = 0, y = 0, z = 4})
 
 				inv:remove_item("main", "mobs:saddle")
 			end

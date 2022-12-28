@@ -1,0 +1,5 @@
+dmobs.dragons (Enable dmobs dragon Mobs and Bosses) bool true
+dmobs.regulars (Enable dmobs Regular Mobs) bool true
+dmobs.allow_nyanc (Enable dmobs Nyan Cats) bool true
+dmobs.destructive (Enable dmobs distructive explosions) bool false
+dmobs.eggtime (Timer for dmobs dragon eggs) int 100

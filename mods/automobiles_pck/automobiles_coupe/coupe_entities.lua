@@ -1,6 +1,15 @@
 --
 -- entity
 --
+local old_entities = {"automobiles_coupe:time_machine_kit", "automobiles_coupe:wheel","automobiles_coupe:normal_kit"}
+for _,entity_name in ipairs(old_entities) do
+    minetest.register_entity(":"..entity_name, {
+        on_activate = function(self, staticdata)
+            self.object:remove()
+        end,
+    })
+end
+
 
 minetest.register_entity('automobiles_coupe:front_suspension',{
 initial_properties = {
@@ -459,6 +468,7 @@ minetest.register_entity("automobiles_coupe:coupe", {
             later_speed*coupe.LATER_DRAG_FACTOR*-1*automobiles_lib.sign(later_speed))
 
         local accel = vector.add(longit_drag,later_drag)
+        local stop = nil
 
         local player = nil
         local is_attached = false

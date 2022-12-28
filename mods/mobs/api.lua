@@ -25,7 +25,7 @@ local use_cmi = minetest.global_exists("cmi")
 
 mobs = {
 	mod = "redo",
-	version = "20221031",
+	version = "20221222",
 	intllib = S,
 	invis = minetest.global_exists("invisibility") and invisibility or {}
 }
@@ -354,16 +354,6 @@ function mob_class:set_yaw(yaw, delay)
 
 	if not yaw or yaw ~= yaw then
 		yaw = 0
-	end
-
-	-- clamp our yaw to a 360 range
-	if deg(self.object:get_yaw()) > 360 then
-
-		yaw = rad(10) ; delay = 0
-
-	elseif deg(self.object:get_yaw()) < 0 then
-
-		yaw = rad(350) ; delay = 0
 	end
 
 	delay = mob_smooth_rotate and (delay or 0) or 0
@@ -773,8 +763,7 @@ function mob_class:item_drop()
 	local pos = self.object:get_pos()
 
 	-- check for drops function
-	self.drops = type(self.drops) == "function"
-		and self.drops(pos) or self.drops
+	self.drops = type(self.drops) == "function" and self.drops(pos) or self.drops
 
 	-- check for nil or no drops
 	if not self.drops or #self.drops == 0 then
@@ -785,6 +774,25 @@ function mob_class:item_drop()
 	local death_by_player = self.cause_of_death
 		and self.cause_of_death.puncher
 		and self.cause_of_death.puncher:is_player()
+
+	-- check for tool 'looting_level' under tool_capabilities as default, or use
+	-- meta string 'looting_level' if found (max looting level is 3).
+	local looting = 0
+
+	if death_by_player then
+
+		local wield_stack = self.cause_of_death.puncher:get_wielded_item()
+		local wield_name = wield_stack:get_name()
+		local wield_stack_meta = wield_stack:get_meta()
+		local item_def = minetest.registered_items[wield_name]
+		local item_looting = item_def and item_def.tool_capabilities and
+				item_def.tool_capabilities.looting_level or 0
+
+		looting = tonumber(wield_stack_meta:get_string("looting_level")) or item_looting
+		looting = min(looting, 3)
+	end
+
+--print("--- looting level", looting)
 
 	local obj, item, num
 
@@ -808,7 +816,7 @@ function mob_class:item_drop()
 
 			-- only drop rare items (drops.min = 0) if killed by player
 			if death_by_player or self.drops[n].min ~= 0 then
-				obj = minetest.add_item(pos, ItemStack(item .. " " .. num))
+				obj = minetest.add_item(pos, ItemStack(item .. " " .. (num + looting)))
 			end
 
 			if obj and obj:get_luaentity() then
@@ -2918,7 +2926,7 @@ function mob_class:on_punch(hitter, tflp, tool_capabilities, dir, damage)
 
 		-- select tool use sound if found, or fallback to default
 		local snd = weapon_def.sound and weapon_def.sound.use
-				or "default_punch"
+				or "mobs_punch"
 
 		minetest.sound_play(snd, {object = self.object, max_hear_distance = 8}, true)
 
@@ -4416,7 +4424,9 @@ function mobs:force_capture(self, clicker)
 
 		if  t ~= "function"
 		and t ~= "nil"
-		and t ~= "userdata" then
+		and t ~= "userdata"
+		and _ ~= "object"
+		and _ ~= "_cmi_components" then
 			tmp[_] = self[_]
 		end
 	end
@@ -4530,7 +4540,9 @@ function mobs:capture_mob(self, clicker, chance_hand, chance_net,
 
 					if  t ~= "function"
 					and t ~= "nil"
-					and t ~= "userdata" then
+					and t ~= "userdata"
+					and _ ~= "object"
+					and _ ~= "_cmi_components" then
 						tmp[_] = self[_]
 					end
 				end
@@ -4818,7 +4830,23 @@ function mobs:alias_mob(old_name, new_name)
 		end,
 
 		get_staticdata = function(self)
-			return self
+
+			local tmp, t = {}
+
+			for _,stat in pairs(self) do
+
+				t = type(stat)
+
+				if  t ~= "function"
+				and t ~= "nil"
+				and t ~= "userdata"
+				and _ ~= "object"
+				and _ ~= "_cmi_components" then
+					tmp[_] = self[_]
+				end
+			end
+
+			return minetest.serialize(tmp)
 		end
 	})
 end

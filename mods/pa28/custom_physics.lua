@@ -76,9 +76,9 @@ function pa28.physics(self)
 
     if new_velocity then
         new_velocity = vector.add(new_velocity, vector.multiply(self._last_accell, self.dtime))
-        if new_velocity.x == nil then new_velocity.x = 0 end
-        if new_velocity.y == nil then new_velocity.y = 0 end
-        if new_velocity.z == nil then new_velocity.z = 0 end        
+        if new_velocity.x == nil or minetest.is_nan(new_velocity.x) then new_velocity.x = 0 end
+        if new_velocity.y == nil or minetest.is_nan(new_velocity.y) then new_velocity.y = 0 end
+        if new_velocity.z == nil or minetest.is_nan(new_velocity.z) then new_velocity.z = 0 end        
 
         --[[
         new_velocity correction

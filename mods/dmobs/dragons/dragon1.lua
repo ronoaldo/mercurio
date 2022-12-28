@@ -20,7 +20,7 @@ local dragondef = {
 	visual = "mesh",
 	mesh = "dragon.b3d",
 	textures = {
-		{"dmobs_dragon.png"},
+		{"dmobs_dragon.png"}
 	},
 	blood_texture = "mobs_blood.png",
 	visual_size = {x = 2, y = 2},
@@ -33,7 +33,7 @@ local dragondef = {
 	pathfinding = true,
 	fall_damage = 0,
 	sounds = {
-		shoot_attack = "mobs_fireball",
+		shoot_attack = "mobs_fireball"
 	},
 	walk_velocity = 3,
 	run_velocity = 5,
@@ -45,7 +45,7 @@ local dragondef = {
 	},
 	drops = {
 		{name = "dmobs:egg", chance = 1, min = 1, max = 1},
-		{name = "dmobs:dragon_gem", chance = 1, min = 1, max = 1},
+		{name = "dmobs:dragon_gem", chance = 1, min = 1, max = 1}
 	},
 	fall_speed = 0,
 	stepheight = 10,
@@ -64,7 +64,7 @@ local dragondef = {
 		run_start = 1,
 		run_end = 22,
 		punch_start = 22,
-		punch_end = 47,
+		punch_end = 47
 	},
 	knock_back = 2,
 	do_custom = dmobs.dragon.step_custom,

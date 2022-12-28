@@ -51,6 +51,13 @@ function emote.start(player, emote_name)
 		player_api.player_attached[player_name] = true
 	end
 
+	if emote_def.eye_offset then
+		player:set_eye_offset(emote_def.eye_offset, emote_def.eye_offset)
+
+	else
+		player:set_eye_offset()
+	end
+
 	if emote.settings.announce_in_chat then
 		minetest.chat_send_all(("* %s %s"):format(player_name, emote_def.description))
 	end

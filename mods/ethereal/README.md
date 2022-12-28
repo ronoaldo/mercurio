@@ -105,6 +105,7 @@ who helped make this mod bigger and better throughout it's release :)
  - Make stairs and doors a soft dependency, fix willow recipes (thanks sangeet)
  - Added 'ethereal.flightpotion_duration' setting, potion also works on 0.4.x clients
  - Added olive wood fences, gates, mese posts
+ - Added lilac to sakura biome (can be crafted into magenta dye)
 
 #### 1.28
 

@@ -12,14 +12,14 @@ mobs:register_mob("dmobs:pig", {
 	visual = "mesh",
 	mesh = "flying_pig.b3d",
 	textures = {
-		{"dmobs_flying_pig.png"},
+		{"dmobs_flying_pig.png"}
 	},
 	jump = true,
 	fly = true,
 	fall_speed = 0,
 	stepheight = 1.5,
 	blood_texture = "mobs_blood.png",
-	visual_size = {x=1, y=1},
+	visual_size = {x = 1, y = 1},
 	makes_footstep_sound = true,
 	runaway = false,
 	walk_velocity = 2,
@@ -27,11 +27,11 @@ mobs:register_mob("dmobs:pig", {
 	run_chance = 20,
 	jump = true,
 	drops = {
-		{name = "mobs:meat_raw", chance = 2, min = 1, max = 1},
+		{name = "mobs:meat_raw", chance = 2, min = 1, max = 1}
 	},
 	sounds = {
 		random = "mobs_pig",
-		explode = "tnt_explode",
+		explode = "tnt_explode"
 	},
 	water_damage = 0,
 	lava_damage = 2,
@@ -47,8 +47,7 @@ mobs:register_mob("dmobs:pig", {
 		stand_start = 1,
 		stand_end = 20,
 		run_start = 22,
-		run_end = 28,
-
+		run_end = 28
 	},
 
 	do_custom = function(self)
@@ -66,7 +65,7 @@ mobs:register_mob("dmobs:pig", {
 		end
 
 		mobs:capture_mob(self, clicker, 0, 5, 50, false, nil)
-	end,
+	end
 })
 
 

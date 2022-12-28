@@ -69,6 +69,8 @@ stepheight = 0.6,
 				clicker:set_wielded_item(item)
 			end
 
+			self.base_texture = {"mobs_bunny_evil.png"}
+
 			self.object:set_properties({
 				textures = {"mobs_bunny_evil.png"}
 			})
@@ -76,6 +78,7 @@ stepheight = 0.6,
 			self.type = "monster"
 			self.health = 20
 			self.passive = false
+			self.runaway = false
 
 			return
 		end

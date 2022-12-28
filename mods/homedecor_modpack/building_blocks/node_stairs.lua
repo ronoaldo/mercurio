@@ -1,6 +1,18 @@
 local S = minetest.get_translator("building_blocks")
 
 local function building_blocks_stairs(nodename, def)
+
+	if def.groups and (def.groups.crumbly or def.groups.oddly_breakable_by_hand) then
+		def.groups["handy"]=1
+		def._mcl_hardness=0.6
+	elseif def.groups and (def.groups.snappy or def.groups.choppy) then
+		def.groups["axey"]=5
+		def._mcl_hardness=1.6
+	elseif def.groups and (def.groups.cracky or def.groups.crumbly) then
+		def.groups["pickaxey"]=5
+		def._mcl_hardness=1.6
+	end
+
 	minetest.register_node(nodename, def)
 	if minetest.get_modpath("moreblocks") then
 		local mod, name = nodename:match("(.*):(.*)")
@@ -128,7 +140,8 @@ minetest.register_node("building_blocks:brobble_spread", {
 	},
 	sunlight_propagates = true,
 	is_ground_content = true,
-	groups = {crumbly=3, dig_generic=4},
+	groups = {crumbly=3, dig_generic=4, handy=1},
+	_mcl_hardness=0.6
 })
 
 if not minetest.get_modpath("moreblocks") or not minetest.get_modpath("gloopblocks") then
@@ -150,7 +163,8 @@ if not minetest.get_modpath("moreblocks") or not minetest.get_modpath("gloopbloc
 		},
 		sunlight_propagates = true,
 		is_ground_content = true,
-		groups = {crumbly=2, dig_generic=4},
+		groups = {crumbly=2, dig_generic=4, handy=1},
+		_mcl_hardness=0.6,
 		_sound_def = {
 			key = "node_sound_dirt_defaults",
 		},
@@ -171,7 +185,8 @@ minetest.register_node("building_blocks:Tarmac_spread", {
 	},
 	sunlight_propagates = true,
 	is_ground_content = true,
-	groups = {cracky=3, dig_generic=4},
+	groups = {cracky=3, dig_generic=4, pickaxey=5},
+	_mcl_hardness=1.6,
 	_sound_def = {
 		key = "node_sound_dirt_defaults",
 	},
@@ -190,7 +205,8 @@ minetest.register_node("building_blocks:terrycloth_towel", {
 	},
 	sunlight_propagates = true,
 	is_ground_content = true,
-	groups = {crumbly=3, dig_generic=4},
+	groups = {crumbly=3, dig_generic=4, handy=1},
+	_mcl_hardness=0.6
 })
 
 minetest.register_node("building_blocks:BWtile", {
@@ -213,7 +229,8 @@ minetest.register_node("building_blocks:BWtile", {
 	},
 	sunlight_propagates = true,
 	is_ground_content = true,
-	groups = {crumbly=3, dig_generic=4},
+	groups = {crumbly=3, dig_generic=4, handy=1},
+	_mcl_hardness=0.6
 })
 
 minetest.register_node("building_blocks:Fireplace", {
@@ -229,7 +246,8 @@ minetest.register_node("building_blocks:Fireplace", {
 	light_source = minetest.LIGHT_MAX,
 	sunlight_propagates = true,
 	is_ground_content = true,
-	groups = {cracky=2, dig_generic=4},
+	groups = {cracky=2, dig_generic=4, pickaxey=5},
+	_mcl_hardness=1.6,
 	_sound_def = {
 		key = "node_sound_stone_defaults",
 	},

@@ -10,14 +10,14 @@ mobs:register_mob("dmobs:nyan", {
 	visual = "mesh",
 	mesh = "nyancat.b3d",
 	textures = {
-		{"dmobs_nyancat.png"},
+		{"dmobs_nyancat.png"}
 	},
 	jump = true,
 	fly = true,
 	fall_speed = 0,
 	stepheight = 1.5,
 	blood_texture = "mobs_blood.png",
-	visual_size = {x=1, y=1},
+	visual_size = {x = 1, y = 1},
 	makes_footstep_sound = true,
 	runaway = false,
 	walk_velocity = 2,
@@ -25,7 +25,7 @@ mobs:register_mob("dmobs:nyan", {
 	run_chance = 20,
 	jump = true,
 	drops = {
-		{name = "default:nyan_cat", chance = 2, min = 1, max = 1},
+		{name = "default:nyan_cat", chance = 2, min = 1, max = 1}
 	},
 	water_damage = 0,
 	lava_damage = 2,
@@ -40,15 +40,17 @@ mobs:register_mob("dmobs:nyan", {
 		stand_start = 1,
 		stand_end = 7,
 		run_start = 1,
-		run_end = 7,
-
+		run_end = 7
 	},
+
 	do_custom = function(self, dtime)
 
 		self.rb_count = (self.rb_count or 0) + dtime
+
 		if self.rb_count < .2 then
 			return
 		end
+
 		self.rb_count = 0
 
 		local apos = self.object:get_pos() ; if not apos then return end
@@ -57,12 +59,12 @@ mobs:register_mob("dmobs:nyan", {
 		minetest.add_particlespawner({
 			amount = 5,
 			time = 0.3,
-			minpos = {x=apos.x-0.1, y=apos.y+0.3, z=apos.z-0.1},
-			maxpos = {x=apos.x+0.1, y=apos.y+0.4, z=apos.z+0.1},
-			minvel = {x=-0, y=-0, z=-0},
-			maxvel = {x=0, y=0, z=0},
-			minacc = {x=0,y=0,z=0},
-			maxacc = {x=-vec.x,y=0,z=-vec.z},
+			minpos = {x = apos.x - 0.1, y = apos.y + 0.3, z = apos.z - 0.1},
+			maxpos = {x = apos.x + 0.1, y = apos.y + 0.4, z = apos.z + 0.1},
+			minvel = {x = -0, y = -0, z = -0},
+			maxvel = {x = 0, y = 0, z = 0},
+			minacc = {x = 0, y = 0, z = 0},
+			maxacc = {x = -vec.x, y = 0, z = -vec.z},
 			minexptime = 0.5,
 			maxexptime = 1.5,
 			minsize = 3,
@@ -80,7 +82,7 @@ mobs:register_mob("dmobs:nyan", {
 		end
 
 		mobs:capture_mob(self, clicker, 0, 5, 50, false, nil)
-	end,
+	end
 })
 
 
