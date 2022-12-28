@@ -1,6 +1,11 @@
 -- signs_lib api, backported from street_signs
 
 local S = signs_lib.S
+local has_default_mod = minetest.get_modpath("default")
+
+local function log(level, messagefmt, ...)
+	minetest.log(level, "[signs_lib] " .. messagefmt:format(...))
+end
 
 local function get_sign_formspec() end
 
@@ -21,14 +26,14 @@ signs_lib.standard_xoffs = 4
 signs_lib.standard_yoffs = 0
 signs_lib.standard_cpl = 35
 
-signs_lib.standard_wood_groups = table.copy(default and minetest.registered_items["default:sign_wall_wood"].groups or {})
+signs_lib.standard_wood_groups = table.copy(has_default_mod and minetest.registered_items["default:sign_wall_wood"].groups or {})
 signs_lib.standard_wood_groups.attached_node = nil
 
-signs_lib.standard_steel_groups = table.copy(default and minetest.registered_items["default:sign_wall_steel"].groups or {})
+signs_lib.standard_steel_groups = table.copy(has_default_mod and minetest.registered_items["default:sign_wall_steel"].groups or {})
 signs_lib.standard_steel_groups.attached_node = nil
 
-signs_lib.standard_wood_sign_sounds  = table.copy(default and minetest.registered_items["default:sign_wall_wood"].sounds or {})
-signs_lib.standard_steel_sign_sounds = table.copy(default and minetest.registered_items["default:sign_wall_steel"].sounds or {})
+signs_lib.standard_wood_sign_sounds  = table.copy(has_default_mod and minetest.registered_items["default:sign_wall_wood"].sounds or {})
+signs_lib.standard_steel_sign_sounds = table.copy(has_default_mod and minetest.registered_items["default:sign_wall_steel"].sounds or {})
 
 signs_lib.default_text_scale = {x=10, y=10}
 
@@ -972,7 +977,7 @@ function signs_lib.after_place_node(pos, placer, itemstack, pointed_thing, locke
 end
 
 function signs_lib.register_fence_with_sign()
-	minetest.log("warning", "[signs_lib] ".."Attempt to call no longer used function signs_lib.register_fence_with_sign()")
+	log("warning", "Attempt to call no longer used function signs_lib.register_fence_with_sign()")
 end
 
 local use_glow = function(pos, node, puncher, pointed_thing)
@@ -1363,11 +1368,11 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 	local playername = player:get_player_name()
 
 	if fields.text and fields.ok then
-		minetest.log("action", S("@1 wrote \"@2\" to sign at @3",
+		log("action", "%s wrote %q to sign at %s",
 			(playername or ""),
-			fields.text:gsub('\\', '\\\\'):gsub("\n", "\\n"),
+			fields.text:gsub("\n", "\\n"),
 			pos_string
-		))
+		)
 		signs_lib.update_sign(pos, fields)
 	elseif fields.wide_on or fields.wide_off or fields.uni_on or fields.uni_off then
 		local node = minetest.get_node(pos)
@@ -1391,20 +1396,20 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 		end
 
 		if change_wide then
-			minetest.log("action", S("@1 flipped the wide-font switch to \"@2\" at @3",
+			log("action", "%s flipped the wide-font switch to %q at %s",
 				(playername or ""),
 				(fields.wide_on and "off" or "on"),
 				minetest.pos_to_string(pos)
-			))
+			)
 			signs_lib.update_sign(pos, fields)
 			minetest.show_formspec(playername, "signs_lib:sign", get_sign_formspec(pos, node.name))
 		end
 		if change_uni then
-			minetest.log("action", S("@1 flipped the unicode-font switch to \"@2\" at @3",
+			log("action", "%s flipped the unicode-font switch to %q at %s",
 				(playername or ""),
 				(fields.uni_on and "off" or "on"),
 				minetest.pos_to_string(pos)
-			))
+			)
 			signs_lib.update_sign(pos, fields)
 			minetest.show_formspec(playername, "signs_lib:sign", get_sign_formspec(pos, node.name))
 		end

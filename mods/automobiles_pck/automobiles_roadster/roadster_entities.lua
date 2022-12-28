@@ -432,13 +432,14 @@ minetest.register_entity("automobiles_roadster:roadster", {
             later_speed*roadster.LATER_DRAG_FACTOR*-1*automobiles_lib.sign(later_speed))
 
         local accel = vector.add(longit_drag,later_drag)
+        local stop = nil
 
         if self._show_rag == true then
-            self.object:set_bone_position("windshield", {x=0, y=15.8317, z=15.0394}, {x=0, y=0, z=0})
+            self.object:set_bone_position("windshield", {x=0, z=15.8317, y=15.0394}, {x=145, y=0, z=0})
             self.top2:set_properties({is_visible=true})
             self.top1:set_properties({is_visible=false})
         else
-            self.object:set_bone_position("windshield", {x=0, y=15.8317, z=15.0394}, {x=math.rad(-145), y=0, z=0})
+            self.object:set_bone_position("windshield", {x=0, z=15.8317, y=15.0394}, {x=0, y=0, z=0})
             self.top2:set_properties({is_visible=false})
             self.top1:set_properties({is_visible=true})
         end

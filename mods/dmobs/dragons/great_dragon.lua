@@ -8,7 +8,7 @@ local gdragon_base = {
 	shoot_interval = 2.5,
 	dogshoot_switch = 2,
 	dogshoot_count = 0,
-	dogshoot_count_max =5,
+	dogshoot_count_max = 5,
 	arrow = "dmobs:lightning",
 	shoot_offset = 1,
 	hp_min = 150,
@@ -18,7 +18,7 @@ local gdragon_base = {
 	visual = "mesh",
 	mesh = "dragon.b3d",
 	textures = {
-		{"dmobs_dragon_great.png"},
+		{"dmobs_dragon_great.png"}
 	},
 	blood_texture = "mobs_blood.png",
 	visual_size = {x = 2.5, y = 2.5},
@@ -31,7 +31,7 @@ local gdragon_base = {
 	fall_damage = 0,
 	sounds = {
 		shoot_attack = "mobs_fireball",
-		random = "roar",
+		random = "roar"
 	},
 	walk_velocity = 3,
 	run_velocity = 5,
@@ -42,7 +42,7 @@ local gdragon_base = {
 		"default:lava_source","default:lava_flowing"
 	},
 	drops = {
-		{name = "dmobs:dragon_egg_great", chance = 1, min = 1, max = 1},
+		{name = "dmobs:dragon_egg_great", chance = 1, min = 1, max = 1}
 	},
 	fall_speed = 0,
 	stepheight = 10,
@@ -61,9 +61,9 @@ local gdragon_base = {
 		run_start = 1,
 		run_end = 22,
 		punch_start = 22,
-		punch_end = 47,
+		punch_end = 47
 	},
-	knock_back = 2,
+	knock_back = 2
 }
 
 mobs:register_mob("dmobs:dragon_great", dmobs.deepclone(gdragon_base))

@@ -1,0 +1,5 @@
+# Minimum interval (in seconds) it takes to regrow fruits
+min_regrow_interval (Minimum Regrow Interval) int 300
+
+# Maximum interval (in seconds) it takes to regrow fruits
+max_regrow_interval (Maximum Regrow Interval) int 1500

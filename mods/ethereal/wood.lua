@@ -289,7 +289,7 @@ minetest.register_craft({
 })
 
 
--- Bamboo (thanks to Nelo-slay on DeviantArt for the free Bamboo base image)
+-- Bamboo
 minetest.register_node("ethereal:bamboo", {
 	description = S("Bamboo"),
 	drawtype = "plantlike",

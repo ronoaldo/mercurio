@@ -98,6 +98,7 @@ This farming mod provides a large selection of craftable food and items:
 | farming:rose_water      | Rose Water            |
 | farming:glass_water     | Glass of Water        |
 | farming:sugar           | Sugar                 |
+| farming:sugar_cube      | Sugar Cube            |
 | farming:caramel         | Caramel               |
 | farming:turkish_delight | Turkish Delight       |
 | farming:garlic_bread    | Garlic Bread          |
@@ -120,7 +121,7 @@ This farming mod provides a large selection of craftable food and items:
 | farming:paella          | Paella                |
 | farming:flan            | Vanilla Flan          |
 | farming:cheese_vegan    | Vegan Cheese          |
-| farming:onigiri         | Onirigi               |
+| farming:onigiri         | Onigiri               |
 | farming:gyoza           | Gyoza                 |
 | farming:mochi           | Mochi                 |
 | farming:beetroot_soup   | Beetroot Soup         |
@@ -217,7 +218,7 @@ on an older map are enabled and growing properly.
 
 ### Changelog:
 
-- 1.47 - Now blueberries can make blue dye, tweak soil types to work better with older 0.4.x clients and add spanish translation (thx mckaygerhard), add trellis setting to registered_crops and fix pea and soy crop names (thx nixnoxus), add strawberries if ethereal mod not active, added asparagus; spinach; eggplant (thx Atlante for new textures)
+- 1.47 - Now blueberries can make blue dye, tweak soil types to work better with older 0.4.x clients and add spanish translation (thx mckaygerhard), add trellis setting to registered_crops and fix pea and soy crop names (thx nixnoxus), add strawberries if ethereal mod not active, added asparagus; spinach; eggplant (thx Atlante for new textures), Sugar Cube
 - 1.46 - Added min/max default light settings, added lettuce and blackberries with food items (thanks OgelGames), added soya, vanilla and sunflowers (thanks Felfa), added tofu, added salt crystals (thanks gorlock)
 - 1.45 - Dirt and Hoes are more in line with default by using dry/wet/base, added cactus juice, added pasta, spaghetti, cabbage, korean bibimbap, code tidy
 options, onion soup added (thanks edcrypt), Added apple pie, added wild cotton to savanna

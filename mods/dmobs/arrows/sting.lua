@@ -10,7 +10,7 @@ mobs:register_arrow("dmobs:sting", {
 
 		player:punch(self.object, 1.0, {
 			full_punch_interval = 1.0,
-			damage_groups = {fleshy = 1},
+			damage_groups = {fleshy = 1}
 		}, nil)
 	end,
 
@@ -19,5 +19,5 @@ mobs:register_arrow("dmobs:sting", {
 
 	hit_node = function(self, pos, node)
 		self.object:remove()
-	end,
+	end
 })

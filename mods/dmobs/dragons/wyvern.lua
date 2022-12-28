@@ -8,7 +8,7 @@ mobs:register_mob("dmobs:wyvern", {
 	shoot_interval = 2.5,
 	dogshoot_switch = 2,
 	dogshoot_count = 0,
-	dogshoot_count_max =5,
+	dogshoot_count_max = 5,
 	arrow = "dmobs:poison",
 	shoot_offset = 0.5,
 	hp_min = 100,
@@ -18,10 +18,10 @@ mobs:register_mob("dmobs:wyvern", {
 	visual = "mesh",
 	mesh = "wyvern.b3d",
 	textures = {
-		{"dmobs_wyvern.png"},
+		{"dmobs_wyvern.png"}
 	},
 	blood_texture = "mobs_blood.png",
-	visual_size = {x=1, y=1},
+	visual_size = {x = 1, y = 1},
 	makes_footstep_sound = true,
 	runaway = true,
 	jump_chance = 30,
@@ -34,11 +34,11 @@ mobs:register_mob("dmobs:wyvern", {
 	fly = false,
 	drops = {
 		{name = "dmobs:dragon_gem_poison", chance = 1, min = 1, max = 1},
-		{name = "dmobs:dragon_gem_lightning", chance = 1, min = 1, max = 1},
+		{name = "dmobs:dragon_gem_lightning", chance = 1, min = 1, max = 1}
 	},
 	sounds = {
 		shoot_attack = "dmobs_poison",
-		random = "velociraptor",
+		random = "velociraptor"
 	},
 	water_damage = 0,
 	lava_damage = 2,
@@ -55,7 +55,7 @@ mobs:register_mob("dmobs:wyvern", {
 		run_start = 33,
 		run_end = 68,
 		punch_start = 70,
-		punch_end = 89,
+		punch_end = 89
 	},
-	knock_back = 2,
+	knock_back = 2
 })

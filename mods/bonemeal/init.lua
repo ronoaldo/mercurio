@@ -340,6 +340,39 @@ local function check_soil(pos, nodename, strength)
 end
 
 
+-- helper function
+local function use_checks(user, pointed_thing)
+
+	-- make sure we use on node
+	if pointed_thing.type ~= "node" then
+		return false
+	end
+
+	-- get position and node info
+	local pos = pointed_thing.under
+	local node = minetest.get_node(pos)
+	local def = minetest.registered_items[node.name]
+	local dirt = def and def.groups
+
+	-- does node exist
+	if not dirt then
+		return false
+	end
+
+	-- if we're using on ground, move position up
+	if dirt.soil or dirt.sand or dirt.can_bonemeal then
+		pos = pointed_thing.above
+	end
+
+	-- check if protected
+	if minetest.is_protected(pos, user:get_player_name()) then
+		return false
+	end
+
+	return node
+end
+
+
 -- global functions
 
 
@@ -521,39 +554,6 @@ function bonemeal:on_use(pos, strength, node)
 end
 
 
--- helper function
-local function find_pos(user, pointed_thing)
-
-	-- make sure we use on node
-	if pointed_thing.type ~= "node" then
-		return false
-	end
-
-	-- get position and node info
-	local pos = pointed_thing.under
-	local node = minetest.get_node(pos)
-	local def = minetest.registered_items[node.name]
-	local dirt = def and def.groups
-
-	-- does node exist
-	if not dirt then
-		return false
-	end
-
-	-- if we're using on ground, move position up
-	if dirt.soil or dirt.sand or dirt.can_bonemeal then
-		pos = pointed_thing.above
-	end
-
-	-- check if protected
-	if minetest.is_protected(pos, user:get_player_name()) then
-		return false
-	end
-
-	return pos, node
-end
-
-
 --
 -- items
 --
@@ -567,10 +567,12 @@ minetest.register_craftitem("bonemeal:mulch", {
 	on_use = function(itemstack, user, pointed_thing)
 
 		-- use helper function to do checks and return position and node
-		local pos, node = find_pos(user, pointed_thing)
+		local node = use_checks(user, pointed_thing)
 
-		-- call global on_use function with strength of 1
-		if pos and bonemeal:on_use(pointed_thing.under, 1, node) then
+		if node then
+
+			-- call global on_use function with strength of 1
+			bonemeal:on_use(pointed_thing.under, 1, node)
 
 			-- take item if not in creative
 			if not bonemeal.is_creative(user:get_player_name()) then
@@ -591,10 +593,12 @@ minetest.register_craftitem("bonemeal:bonemeal", {
 	on_use = function(itemstack, user, pointed_thing)
 
 		-- use helper function to do checks and return position and node
-		local pos, node = find_pos(user, pointed_thing)
+		local node = use_checks(user, pointed_thing)
 
-		-- call global on_use function with strength of 2
-		if pos and bonemeal:on_use(pointed_thing.under, 2, node) then
+		if node then
+
+			-- call global on_use function with strength of 2
+			bonemeal:on_use(pointed_thing.under, 2, node)
 
 			-- take item if not in creative
 			if not bonemeal.is_creative(user:get_player_name()) then
@@ -615,10 +619,12 @@ minetest.register_craftitem("bonemeal:fertiliser", {
 	on_use = function(itemstack, user, pointed_thing)
 
 		-- use helper function to do checks and return position and node
-		local pos, node = find_pos(user, pointed_thing)
+		local node = use_checks(user, pointed_thing)
 
-		-- call global on_use function with strength of 3
-		if pos and bonemeal:on_use(pointed_thing.under, 3, node) then
+		if node then
+
+			-- call global on_use function with strength of 3
+			bonemeal:on_use(pointed_thing.under, 3, node)
 
 			-- take item if not in creative
 			if not bonemeal.is_creative(user:get_player_name()) then

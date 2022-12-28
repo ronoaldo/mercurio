@@ -1,3 +1,8 @@
+
+-- get min and max regrow interval settings
+local min_interval = tonumber(minetest.settings:get("min_regrow_interval")) or 300
+local max_interval = tonumber(minetest.settings:get("max_regrow_interval")) or 1500
+
 local add_fruit_regrowable = function(fruit, node, leaves)
 
 	-- check if node exists
@@ -35,20 +40,14 @@ local add_fruit_regrowable = function(fruit, node, leaves)
 		})
 
 		minetest.register_on_placenode(function(pos, newnode, placer)
-			if placer:is_player() and newnode.name == "cacaotree:pod" then
+			if placer and placer:is_player() and newnode.name == "cacaotree:pod" then
 				minetest.set_node(pos, {name = "regrowing_fruits:cacao", param2 = newnode.param2})
 			end
 		end)
 	end
 
-	local groups = node.groups
-	if minetest.get_item_group(node, "attached_node") == 1 then
-		if node == "default:apple" then
-			groups = {fleshy = 3, dig_immediate = 3, flammable = 2, leafdecay = 3, leafdecay_drop = 1, food_apple = 1}
-		else
-			groups = {fleshy=3, dig_immediate=3, flammable=2, leafdecay = 1, leafdecay_drop = 1}
-		end
-	end
+	local groups = minetest.registered_nodes[node]["groups"]
+	groups.attached_node = 0
 
 	-- wait until mods are loaded to ensure that other mods do not override overrides
 	minetest.after(0.1, function()
@@ -68,7 +67,7 @@ local add_fruit_regrowable = function(fruit, node, leaves)
 						or oldnode.name == "plumtree:plum" and oldnode.param2 == 1
 						or oldnode.name == "cacaotree:pod" then
 					minetest.set_node(pos, {name = "regrowing_fruits:"..fruit.."_mark", param2 = oldnode.param2})
-					minetest.get_node_timer(pos):start(math.random(300, 1500))
+					minetest.get_node_timer(pos):start(math.random(min_interval, max_interval))
 				end
 			end,
 		})
@@ -89,7 +88,7 @@ local add_fruit_regrowable = function(fruit, node, leaves)
 		on_timer = function(pos, elapsed)
 			if not minetest.find_node_near(pos, 1, leaves) then
 				minetest.remove_node(pos)
-			elseif minetest.get_node_light(pos) < 13 then
+			elseif minetest.get_node_light(pos) < 11 then
 				minetest.get_node_timer(pos):start(200)
 			else
 				minetest.set_node(pos, {name = node, param2 = minetest.get_node(pos).param2})

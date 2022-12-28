@@ -3,10 +3,11 @@ screwdriver = screwdriver or {}
 
 local tmp = {}
 local should_return_item = minetest.settings:get_bool("itemframes.return_item", false)
+local log_actions = minetest.settings:get_bool("itemframes.log_actions", false)
 
 -- item entity
 
-minetest.register_entity("itemframes:item",{
+minetest.register_entity("itemframes:item", {
 	hp_max = 1,
 	visual = "wielditem",
 	visual_size = {x = 0.33, y = 0.33},
@@ -17,18 +18,13 @@ minetest.register_entity("itemframes:item",{
 
 	on_activate = function(self, staticdata)
 
-		if tmp.nodename ~= nil
-		and tmp.texture ~= nil then
+		if tmp.nodename and tmp.texture then
 
-			self.nodename = tmp.nodename
-			tmp.nodename = nil
-			self.texture = tmp.texture
-			tmp.texture = nil
-			self.glow = tmp.glow
-			tmp.glow = nil
+			self.nodename = tmp.nodename ; 	tmp.nodename = nil
+			self.texture = tmp.texture ; tmp.texture = nil
+			self.glow = tmp.glow ; tmp.glow = nil
 		else
-			if staticdata ~= nil
-			and staticdata ~= "" then
+			if staticdata and staticdata ~= "" then
 
 				local data = staticdata:split(";")
 
@@ -41,7 +37,7 @@ minetest.register_entity("itemframes:item",{
 			end
 		end
 
-		if self.texture ~= nil then
+		if self.texture then
 			self.object:set_properties({textures = {self.texture}})
 		end
 
@@ -49,15 +45,14 @@ minetest.register_entity("itemframes:item",{
 			self.object:set_properties({automatic_rotate = 1})
 		end
 
-		if self.glow ~= nil then
+		if self.glow then
 			self.object:set_properties({glow = self.glow})
 		end
 	end,
 
 	get_staticdata = function(self)
 
-		if self.nodename ~= nil
-		and self.texture ~= nil then
+		if self.nodename and self.texture then
 			return self.nodename .. ";" .. self.texture .. ";" .. (self.glow or "")
 		end
 
@@ -105,11 +100,11 @@ local facedir = {
 
 -- remove entities
 
-local remove_item = function(pos, nodename)
+local remove_item = function(pos, ntype)
 
 	local ypos = 0
 
-	if nodename == "itemframes:pedestal" then
+	if ntype == "pedestal" then
 		ypos = 1
 	end
 
@@ -130,9 +125,9 @@ end
 
 -- update entity
 
-local update_item = function(pos, node)
+local update_item = function(pos, ntype, node)
 
-	remove_item(pos, node.name)
+	remove_item(pos, ntype)
 
 	local meta = minetest.get_meta(pos)
 
@@ -145,8 +140,7 @@ local update_item = function(pos, node)
 	local pitch = 0
 	local p2 = node.param2
 
-	if node.name == "itemframes:frame"
-	or node.name == "itemframes:frame_invis" then
+	if ntype == "frame" then
 
 		local posad = facedir[p2]
 
@@ -161,7 +155,7 @@ local update_item = function(pos, node)
 			pos.y = pos.y + posad
 		end
 
-	elseif node.name == "itemframes:pedestal" then
+	elseif ntype == "pedestal" then
 
 		pos.y = pos.y + 12 / 16 + 0.33
 	end
@@ -173,10 +167,9 @@ local update_item = function(pos, node)
 
 	tmp.glow = def and def.light_source
 
-	local e = minetest.add_entity(pos,"itemframes:item")
+	local e = minetest.add_entity(pos, "itemframes:item")
 
-	if node.name == "itemframes:frame"
-	or node.name == "itemframes:frame_invis" then
+	if ntype == "frame" then
 
 		--local yaw = math.pi * 2 - node.param2 * math.pi / 2
 		local yaw = 6.28 - p2 * 1.57
@@ -191,7 +184,7 @@ end
 
 -- remove entity and drop as item
 
-local drop_item = function(pos, nodename, metadata)
+local drop_item = function(pos, ntype, metadata)
 
 	local meta = metadata or minetest.get_meta(pos)
 
@@ -203,9 +196,9 @@ local drop_item = function(pos, nodename, metadata)
 
 	if item ~= "" then
 
-		remove_item(pos, nodename)
+		remove_item(pos, ntype)
 
-		if nodename == "itemframes:pedestal" then
+		if ntype == "pedestal" then
 			pos.y = pos.y + 1
 		end
 
@@ -215,7 +208,7 @@ end
 
 -- return item to a player's inventory
 
-local return_item = function(pos, nodename, metadata, clicker, itemstack)
+local return_item = function(pos, ntype, metadata, clicker, itemstack)
 
 	local meta = metadata or minetest.get_meta(pos)
 
@@ -231,7 +224,7 @@ local return_item = function(pos, nodename, metadata, clicker, itemstack)
 
 		meta:set_string("item", "")
 
-		remove_item(pos, nodename)
+		remove_item(pos, ntype)
 
 		return itemstack
 	end
@@ -240,7 +233,7 @@ local return_item = function(pos, nodename, metadata, clicker, itemstack)
 
 	if not inv then
 
-		drop_item(pos, nodename, metadata)
+		drop_item(pos, ntype, metadata)
 
 		return
 	end
@@ -251,9 +244,9 @@ local return_item = function(pos, nodename, metadata, clicker, itemstack)
 
 		meta:set_string("item", "")
 
-		remove_item(pos, nodename)
+		remove_item(pos, ntype)
 	else
-		drop_item(pos, nodename, metadata)
+		drop_item(pos, ntype, metadata)
 	end
 end
 
@@ -292,6 +285,14 @@ local frame_place = function(itemstack, placer, pointed_thing)
 	end
 
 	return minetest.item_place(itemstack, placer, pointed_thing, p2)
+end
+
+-- action logging helper
+local function show_msg(message)
+
+	if log_actions then
+		minetest.log("action", message)
+	end
 end
 
 -- itemframe node and recipe
@@ -338,33 +339,42 @@ minetest.register_node("itemframes:frame",{
 
 		if meta:get_string("item") ~= "" then
 
+			show_msg(clicker:get_player_name()
+				.. " removed " .. meta:get_string("item")
+				.. " from Itemframe at " .. minetest.pos_to_string(pos))
+
 			if should_return_item then
-				return return_item(pos, node.name, meta, clicker, itemstack)
+				return return_item(pos, "frame", meta, clicker, itemstack)
 			else
-				drop_item(pos, node.name, meta)
+				drop_item(pos, "frame", meta)
 			end
+
 		else
 			local s = itemstack:take_item()
 
 			meta:set_string("item", s:to_string())
 
-			update_item(pos, node)
+			update_item(pos, "frame", node)
+
+			show_msg(clicker:get_player_name()
+				.. " inserted " .. meta:get_string("item")
+				.. " into Itemframe at " .. minetest.pos_to_string(pos))
 
 			return itemstack
 		end
 	end,
 
 	on_destruct = function(pos)
-		drop_item(pos, "itemframes:frame")
+		drop_item(pos, "frame")
 	end,
 
 	on_punch = function(pos, node, puncher)
-		update_item(pos, node)
+		update_item(pos, "frame", node)
 	end,
 
 	on_blast = function(pos, intensity)
 
-		drop_item(pos, "itemframes:frame")
+		drop_item(pos, "frame")
 
 		minetest.add_item(pos, {name = "itemframes:frame"})
 
@@ -373,7 +383,7 @@ minetest.register_node("itemframes:frame",{
 
 	on_burn = function(pos)
 
-		drop_item(pos, "itemframes:frame")
+		drop_item(pos, "frame")
 
 		minetest.remove_node(pos)
 	end
@@ -433,42 +443,50 @@ minetest.register_node("itemframes:frame_invis",{
 
 		if meta:get_string("item") ~= "" then
 
+			show_msg(clicker:get_player_name()
+				.. " removed " .. meta:get_string("item")
+				.. " from Itemframe at " .. minetest.pos_to_string(pos))
+
 			if should_return_item then
-				return return_item(pos, node.name, meta, clicker, itemstack)
+				return return_item(pos, "frame", meta, clicker, itemstack)
 			else
-				drop_item(pos, node.name, meta)
+				drop_item(pos, "frame", meta)
 			end
 		else
 			local s = itemstack:take_item()
 
 			meta:set_string("item", s:to_string())
 
-			update_item(pos, node)
+			update_item(pos, "frame", node)
+
+			show_msg(clicker:get_player_name()
+				.. " inserted " .. meta:get_string("item")
+				.. " into Itemframe at " .. minetest.pos_to_string(pos))
 
 			return itemstack
 		end
 	end,
 
 	on_destruct = function(pos)
-		drop_item(pos, "itemframes:frame_invis")
+		drop_item(pos, "frame")
 	end,
 
 	on_punch = function(pos, node, puncher)
-		update_item(pos, node)
+		update_item(pos, "frame", node)
 	end,
 
 	on_blast = function(pos, intensity)
 
-		drop_item(pos, "itemframes:frame_invis")
+		drop_item(pos, "frame")
 
-		minetest.add_item(pos, {name = "itemframes:frame"})
+		minetest.add_item(pos, {name = "itemframes:frame_invis"})
 
 		minetest.remove_node(pos)
 	end,
 
 	on_burn = function(pos)
 
-		drop_item(pos, "itemframes:frame_invis")
+		drop_item(pos, "frame")
 
 		minetest.remove_node(pos)
 	end
@@ -526,10 +544,14 @@ minetest.register_node("itemframes:pedestal",{
 
 		if meta:get_string("item") ~= "" then
 
+			show_msg(clicker:get_player_name()
+				.. " removed " .. meta:get_string("item")
+				.. " from Pedestal at " .. minetest.pos_to_string(pos))
+
 			if should_return_item then
-				return return_item(pos, node.name, meta, clicker, itemstack)
+				return return_item(pos, "pedestal", meta, clicker, itemstack)
 			else
-				drop_item(pos, node.name, meta)
+				drop_item(pos, "pedestal", meta)
 			end
 		else
 
@@ -537,23 +559,27 @@ minetest.register_node("itemframes:pedestal",{
 
 			meta:set_string("item", s:to_string())
 
-			update_item(pos, node)
+			update_item(pos, "pedestal", node)
+
+			show_msg(clicker:get_player_name()
+				.. " inserted " .. meta:get_string("item")
+				.. " into Pedestal at " .. minetest.pos_to_string(pos))
 
 			return itemstack
 		end
 	end,
 
 	on_destruct = function(pos)
-		drop_item(pos, "itemframes:pedestal")
+		drop_item(pos, "pedestal")
 	end,
 
 	on_punch = function(pos, node, puncher)
-		update_item(pos, node)
+		update_item(pos, "pedestal", node)
 	end,
 
 	on_blast = function(pos, intensity)
 
-		drop_item(pos, "itemframes:pedestal")
+		drop_item(pos, "pedestal")
 
 		minetest.add_item(pos, {name = "itemframes:pedestal"})
 
@@ -582,9 +608,11 @@ minetest.register_lbm({
 	action = function(pos, node)
 
 		local ypos = 0
+		local ntype = "frame"
 
 		if node.name == "itemframes:pedestal" then
 			ypos = 1
+			ntype = "pedestal"
 		end
 
 		pos.y = pos.y + ypos
@@ -602,7 +630,7 @@ minetest.register_lbm({
 
 		pos.y = pos.y - ypos
 
-		update_item(pos, node)
+		update_item(pos, ntype, node)
 	end
 })
 

@@ -225,7 +225,7 @@ minetest.register_craft({
 })
 
 
--- dig override for crystal shovel's soft touch ability
+-- dig override for crystal shovel's silk touch ability
 local old_handle_node_drops = minetest.handle_node_drops
 
 function minetest.handle_node_drops(pos, drops, digger)
@@ -238,13 +238,13 @@ function minetest.handle_node_drops(pos, drops, digger)
 
 	local nn = minetest.get_node(pos).name
 
-	if minetest.get_item_group(nn, "crumbly") == 0 then
+	if minetest.get_item_group(nn, "crumbly") == 0
+	or minetest.get_item_group(nn, "no_silktouch") == 1 then
 		return old_handle_node_drops(pos, drops, digger)
 	end
 
 	return old_handle_node_drops(pos, {ItemStack(nn)}, digger)
 end
-
 
 minetest.register_tool("ethereal:shovel_crystal", {
 	description = S("Crystal Shovel"),

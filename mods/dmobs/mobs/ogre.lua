@@ -1,5 +1,3 @@
--- Ogre
-
 mobs:register_mob("dmobs:ogre", {
 	type = "monster",
 	passive = false,
@@ -13,13 +11,13 @@ mobs:register_mob("dmobs:ogre", {
 	visual = "mesh",
 	mesh = "ogre.b3d",
 	textures = {
-		{"dmobs_ogre.png"},
+		{"dmobs_ogre.png"}
 	},
 	blood_texture = "mobs_blood.png",
-	visual_size = {x=3.5, y=3.5},
+	visual_size = {x = 3.5, y = 3.5},
 	makes_footstep_sound = true,
 	drops = {
-		{name = "mobs:meat_raw", chance = 1, min = 1, max = 1},
+		{name = "mobs:meat_raw", chance = 1, min = 1, max = 1}
 	},
 	walk_velocity = 1,
 	run_velocity = 2,
@@ -43,8 +41,8 @@ mobs:register_mob("dmobs:ogre", {
 		run_start = 3,
 		run_end = 38,
 		punch_start = 70,
-		punch_end = 100,
-	},
+		punch_end = 100
+	}
 })
 
 

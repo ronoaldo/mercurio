@@ -462,10 +462,13 @@ stepheight = 1,
 	mesh = "Desertchicken.b3d",
 	textures = {
 		{"texturedesertchicken.png"}, 
+		{"texturedesertchicken2.png"}, 
+		{"texturedesertchicken3.png"}, 
+		{"texturedesertchicken4.png"}, 
 
 	},
 	child_texture = {
-		{"desertchicken.png"},
+		{"texturedesertchickenbaby.png"},
 	},
 	makes_footstep_sound = true,
 	sounds = {

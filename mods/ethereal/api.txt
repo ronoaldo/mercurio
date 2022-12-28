@@ -31,3 +31,7 @@ You may also use a table that not only adds an item but the biome it can be foun
 
 Please note that only Ethereal biome names can be used for specific finds, unless mod
 specifically adds ethereal as an optional dependency.
+
+
+Crystal Shovel has silk touch ability for digging blocks and returning the actual block
+intact.  The {no_silktouch=1} group can be used to override this.

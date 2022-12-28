@@ -1,5 +1,3 @@
--- Rat
-
 mobs:register_mob("dmobs:rat", {
 	type = "monster",
 	reach = 2,
@@ -13,16 +11,16 @@ mobs:register_mob("dmobs:rat", {
 	visual = "mesh",
 	mesh = "dmobs_rat.b3d",
 	textures = {
-		{"dmobs_rat.png"},
+		{"dmobs_rat.png"}
 	},
 	blood_texture = "mobs_blood.png",
-	visual_size = {x=1, y=1},
+	visual_size = {x = 1, y = 1},
 	makes_footstep_sound = true,
 	walk_velocity = 1,
 	run_velocity = 2.5,
 	jump = true,
 	drops = {
-		{name = "mobs:meat_raw", chance = 1, min = 1, max = 1},
+		{name = "mobs:meat_raw", chance = 1, min = 1, max = 1}
 	},
 	water_damage = 0,
 	lava_damage = 2,
@@ -47,8 +45,8 @@ mobs:register_mob("dmobs:rat", {
 		run_start = 43,
 		run_end = 63,
 		punch_start = 20,
-		punch_end = 40,
-	},
+		punch_end = 40
+	}
 })
 
 

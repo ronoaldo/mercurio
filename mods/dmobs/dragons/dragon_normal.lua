@@ -1,4 +1,4 @@
--- 'Generic' dragon
+-- Generic dragon
 
 mobs:register_mob("dmobs:dragon", {
 	type = "monster",
@@ -10,7 +10,7 @@ mobs:register_mob("dmobs:dragon", {
 	shoot_interval = 2.5,
 	dogshoot_switch = 2,
 	dogshoot_count = 0,
-	dogshoot_count_max =5,
+	dogshoot_count_max = 5,
 	arrow = "dmobs:fire",
 	shoot_offset = 1,
 	hp_min = 50,
@@ -23,7 +23,7 @@ mobs:register_mob("dmobs:dragon", {
 		{"dmobs_dragon.png"},
 		{"dmobs_dragon2.png"},
 		{"dmobs_dragon3.png"},
-		{"dmobs_dragon4.png"},
+		{"dmobs_dragon4.png"}
 	},
 	blood_texture = "mobs_blood.png",
 	visual_size = {x = 2, y = 2},
@@ -35,14 +35,14 @@ mobs:register_mob("dmobs:dragon", {
 	pathfinding = true,
 	fall_damage = 0,
 	sounds = {
-		shoot_attack = "mobs_fireball",
+		shoot_attack = "mobs_fireball"
 	},
 	walk_velocity = 3,
 	run_velocity = 5,
 	jump = true,
 	fly = true,
 	drops = {
-		{name = "mobs:lava_orb", chance = 1, min = 1, max = 1},
+		{name = "mobs:lava_orb", chance = 1, min = 1, max = 1}
 	},
 	fall_speed = 0,
 	stepheight = 10,

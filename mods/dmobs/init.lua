@@ -107,3 +107,6 @@ dofile(dpath .. "nodes.lua")
 
 -- Spawning
 dofile(dpath .. "spawn.lua")
+
+
+print("[MOD] Mobs Redo D00Med Mobs loaded")

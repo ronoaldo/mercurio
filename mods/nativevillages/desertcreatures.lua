@@ -585,7 +585,7 @@ stepheight = 1,
 
 	},
 	child_texture = {
-		{"desertchicken.png"},
+		{"texturedesertchickenbaby.png"},
 	},
 	makes_footstep_sound = true,
 	sounds = {

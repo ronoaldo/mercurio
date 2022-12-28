@@ -1,6 +1,7 @@
+-- 5.x translation
+S = minetest.get_translator("bakedclay")
 
--- Baked Clay by TenPlus1
-
+-- list of clay colours
 local clay = {
 	{"natural", "Natural"},
 	{"white", "White"},
@@ -20,22 +21,24 @@ local clay = {
 	{"dark_green", "Dark Green"}
 }
 
+-- check mod support
 local techcnc_mod = minetest.get_modpath("technic_cnc")
 local stairs_mod = minetest.get_modpath("stairs")
 local stairsplus_mod = minetest.get_modpath("moreblocks")
 		and minetest.global_exists("stairsplus")
 
+-- scroll through colours
 for _, clay in pairs(clay) do
 
-	-- node
+	-- register node
 	minetest.register_node("bakedclay:" .. clay[1], {
-		description = clay[2] .. " Baked Clay",
+		description = S(clay[2] .. " Baked Clay"),
 		tiles = {"baked_clay_" .. clay[1] ..".png"},
 		groups = {cracky = 3, bakedclay = 1},
 		sounds = default.node_sound_stone_defaults()
 	})
 
-	-- craft recipe
+	-- register craft recipe
 	if clay[1] ~= "natural" then
 
 		minetest.register_craft({
@@ -88,13 +91,16 @@ for _, clay in pairs(clay) do
 			default.node_sound_stone_defaults())
 	end
 
-	-- register bakedclay for use in technic_cnc mod
+	-- register bakedclay for use in technic_cnc mod after all mods loaded
 	if techcnc_mod then
 
-		technic_cnc.register_all("bakedclay:" .. clay[1],
-		{cracky = 3, not_in_creative_inventory = 1},
-		{"baked_clay_" .. clay[1] .. ".png"},
-		clay[2] .. " Baked Clay")
+		core.register_on_mods_loaded(function()
+
+			technic_cnc.register_all("bakedclay:" .. clay[1],
+				{cracky = 3, not_in_creative_inventory = 1},
+				{"baked_clay_" .. clay[1] .. ".png"},
+				clay[2] .. " Baked Clay")
+		end)
 	end
 end
 
@@ -106,7 +112,7 @@ for _, clay in pairs(clay) do
 		local texture = "baked_clay_terracotta_" .. clay[1] ..".png"
 
 		minetest.register_node("bakedclay:terracotta_" .. clay[1], {
-			description = clay[2] .. " Glazed Terracotta",
+			description = S(clay[2] .. " Glazed Terracotta"),
 			tiles = {
 				texture .. "",
 				texture .. "",

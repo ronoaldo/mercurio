@@ -13,6 +13,59 @@ O servidor foi projetado para ser amigável e agradável! Por favor:
 ```
 
 -------------------------------
+
+![1,1](halo)
+
+![0,0,r](item:///default:pick_diamond)
+
+# **Server Update, December 28, 2022**
+
+Happy Holidays! This is the last update of the year, with new versions of the
+following mods:
+
+```
+3d_armor
+airutils
+anvil
+areas
+automobiles_pck
+bakedclay
+basic_materials
+bonemeal
+creatura
+digilines
+dmobs
+emote
+ethereal
+farming
+homedecor_modpack
+itemframes
+markdown2formspec
+mesecons
+mobs
+mobs_animal
+mobs_monster
+mobs_npc
+moreores
+mydoors
+nativevillages
+nautilus
+pa28
+protector
+regrowing_fruits
+signs_lib
+steampunk_blimp
+tubelib2
+unified_inventory
+```
+
+This update is mostly to bring in the newer versions but no specific hilights
+are available for the mods. Some mods were massivelly improved, like the
+`automobiles_pck` by APercy, with the inclusion of a `DeLorean` and several
+improvements. Most mods had improved translations and additional bug fixes as
+usual.
+
+
 ![1,1](halo)
 
 ![0,0,r](item:///x_bows:bow_wood)

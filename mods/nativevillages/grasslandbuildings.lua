@@ -30,6 +30,7 @@ minetest.register_decoration({
     rotation = "random",
 })
 
+
 minetest.register_decoration({
     name = "nativevillages:grasslandhouse2",
     deco_type = "schematic",

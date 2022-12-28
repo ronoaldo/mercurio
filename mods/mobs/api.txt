@@ -715,6 +715,14 @@ This function returns true if the node name given is harmful to the mob (mob_obj
 it is mainly used when a mob is near a node it has to avoid.
 
 
+Looting Level
+-------------
+
+If a tool is used with 'looting_level' defined under tool_capabilities then mobs can drop
+extra items per level up to a maximum of 3 levels.  'looting_level' can also be read from
+the tools own meta to override the default.
+
+
 External Settings for "minetest.conf"
 ------------------------------------
 

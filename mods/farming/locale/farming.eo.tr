@@ -1,0 +1,194 @@
+# Translation of the farming mod by TenPlus1
+# textdomain: farming
+# author: Jolesh
+# last update: 2022/11/04
+
+###### folder . ######
+
+### init.lua ###
+Seed=Semo
+
+### compatibility.lua ###
+Banana=Banano
+Banana Leaves=Bananaj Folioj
+Orange=Oranĝo
+Strawberry=Frago
+
+### food.lua ###
+Sugar=Sukero
+Salt=Salo
+Rose Water=Roza Akvo
+Turkish Delight=Turka Delico
+Garlic Bread=Ajla Pano
+Donut=Benjeto
+Chocolate Donut=Ĉokolada Benjeto
+Apple Donut=Poma Benjeto
+Porridge=Kaĉo
+Jaffa Cake=Jafa Kuko
+
+### hoes.lua ###
+Hoe=Sarkilo
+Wooden Hoe=Ligna Sarkilo
+Stone Hoe=Ŝtona Sarkilo
+Steel Hoe=Ŝtala Sarkilo
+Bronze Hoe=Bronza Sarkilo
+Mese Hoe=Mesea Sarkilo
+Diamond Hoe=Diamanta Sarkilo
+# Surcharge du mod [Toolranks] à faire #
+Hoe Bomb (use or throw on grassy areas to hoe land)=
+Mithril Scythe (Right-click to harvest and replant crops)=
+# Surcharge du mod [Toolranks] à faire #
+
+### soil.lua ###
+Soil=Tero
+Wet Soil=Malseka Tero
+
+### utensils.lua ###
+Wooden Bowl=Ligna Bovlo
+Saucepan=Kaserolo
+Cooking Pot=Kuirpoto
+Baking Tray=Baka Pleto
+Skillet=Pato
+Mortar and Pestle=Pistujo
+Cutting Board=Tranĉa Tabulo
+Juicer=Spremilo
+Glass Mixing Bowl=Vitra Miksa Bovlo
+
+
+###### folder ./crops ######
+
+### barley.lua ###
+Barley Seed=Hordea Semo
+Barley=Hordeo
+
+### beans.lua ###
+Green Beans=Verdaj Fazeoloj
+Bean Pole (place on soil before planting beans)=Fazeola Poluso (metu sur grundo antaŭ planti fabojn)
+
+### beetroot.lua ###
+Beetroot=Betoto
+Beetroot Soup=Betota Supo
+
+### blueberry.lua ###
+Blueberries=Mirtiloj
+Blueberry Muffin=Mirtila Mufino
+Blueberry Pie=Mirtila Torto
+
+### carrot.lua ##
+Carrot=Karoto
+Carrot Juice=Karota Suko
+Golden Carrot=Ora Karoto
+
+### chili.lua ###
+Chili Pepper=Kapsiketo
+Bowl of Chili=Bovlo da Kapsiketo
+
+### cocoa.lua ###
+Cocoa Beans=Kakaa Faboj
+Cookie=Kuketo
+Bar of Dark Chocolate=Stango de Malhela Ĉokolado
+Chocolate Block=Bloko de Ĉokolado
+
+### coffee.lua ###
+Coffee Beans=Kafaj Seboj
+Cup of Coffee=Taso da Kafo
+
+### corn.lua ###
+Corn=Maizo
+Corn on the Cob=Maiza sur la Spadiko
+Cornstarch=Maizamelo
+Bottle of Ethanol=Botelo da Etanolo
+
+### cotton.lua ###
+Cotton Seed=Kotona Semo
+Cotton=Kotono
+String=Ŝnuro
+
+### cucumber.lua ###
+Cucumber=Kukumo
+
+### garlic.lua ###
+Garlic clove=Ajlokloko
+Garlic=Ajlo
+Garlic Braid=Ajla Plektaĵo
+
+### grapes.lua ###
+Grapes=Vinberoj
+Trellis (place on soil before planting grapes)=Trellis (meti sur grundo antaŭ planti vinberojn)
+
+### hemp.lua ###
+Hemp Seed=Kanaba Semo
+Hemp Leaf=Kanaba Folio
+Bottle of Hemp Oil=Botelo da Kanaba Oleo
+Hemp Fibre=Kanaba Fibro
+Hemp Block=Kanaba Bloko
+Hemp Rope=Kanaba Ŝnuro
+
+### melon.lua ###
+Melon Slice=Tranĉaĵo de Melono
+Melon=Melono
+
+### onion.lua ###
+Onion=Cepo
+
+### peas.lua ###
+Pea Pod=Pizujo
+Peas=Pizoj
+Pea Soup=Piza Supo
+
+### pepper.lua ###
+Peppercorn=Piprograjno
+Pepper=Pipro
+Ground Pepper=Muelita Pipro
+
+### pinapple.lua ###
+Pineapple Top=Pinto de Ananaso
+Pineapple=Ananaso
+Pineapple Ring=Ananasa Ringo
+Pineapple Juice=Ananasa Suko
+
+### potato.lua ###
+Potato=Terpomo
+Baked Potato=Bakita Terpomo
+Cucumber and Potato Salad=Salato de Kukumo kaj Terpomo
+
+### pumpkin.lua ###
+Pumpkin Slice=Tranĉaĵo de Kukurbo
+Jack 'O Lantern (punch to turn on and off)=Kukurba Lanterno (punu por ŝalti kaj malŝalti)
+Scarecrow Bottom=Birdotimigilo Fundo
+Pumpkin Bread=Kukurba Pano
+Pumpkin Dough=Kukurba Pasto
+Pumpkin=Kukurbo
+
+### raspberry.lua ###
+Raspberries=Framboj
+Raspberry Smoothie=Fraba Glataĵo
+
+### rhubarb.lua ###
+Rhubarb=Rabarbo
+Rhubarb Pie=Rabarba Torto
+
+### ryeoatrice.lua ###
+Rye=Sekalo
+Rye seed=Sekala Semo
+Oat=Aveno
+Oat seed=Avena Semo
+Rice=Rizo
+Rice grains=Rizaj grajnoj
+Rice Bread=Riza Pano
+Rice Flour=Riza Faruno
+Multigrain Flour=Multgrajna Faruno
+Multigrain Bread=Multgrajna Pano
+
+### tomato.lua ###
+Tomato=Tomato
+
+### wheat.lua ###
+Wheat Seed=Tritika Semo
+Wheat=Tritiko
+Straw=Pajlo
+Flour=Faruno
+Bread=Pano
+Sliced Bread=Tranĉita Pano
+Toast=Toasto
+Toast Sandwich=Toasta Sandviĉo

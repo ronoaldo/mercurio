@@ -1,5 +1,3 @@
--- Treeman
-
 mobs:register_mob("dmobs:treeman", {
 	type = "monster",
 	reach = 3,
@@ -13,16 +11,16 @@ mobs:register_mob("dmobs:treeman", {
 	mesh = "treeman.b3d",
 	textures = {
 		{"dmobs_treeman.png"},
-		{"dmobs_treeman2.png"},
+		{"dmobs_treeman2.png"}
 	},
 	blood_texture = "default_tree.png",
-	visual_size = {x=1, y=1},
+	visual_size = {x = 1, y = 1},
 	makes_footstep_sound = true,
 	walk_velocity = 1,
 	run_velocity = 2.5,
 	jump = true,
 	drops = {
-		{name = "default:tree", chance = 5, min = 3, max = 6},
+		{name = "default:tree", chance = 5, min = 3, max = 6}
 	},
 	water_damage = 0,
 	lava_damage = 4,
@@ -41,8 +39,8 @@ mobs:register_mob("dmobs:treeman", {
 		run_start = 46,
 		run_end = 66,
 		punch_start = 20,
-		punch_end = 45,
-	},
+		punch_end = 45
+	}
 })
 
 

@@ -11,10 +11,10 @@ mobs:register_mob("dmobs:elephant", {
 	visual = "mesh",
 	mesh = "elephant.b3d",
 	textures = {
-		{"dmobs_elephant.png"},
+		{"dmobs_elephant.png"}
 	},
 	blood_texture = "mobs_blood.png",
-	visual_size = {x=2.5, y=2.5},
+	visual_size = {x = 2.5, y = 2.5},
 	makes_footstep_sound = true,
 	walk_velocity = 0.5,
 	run_velocity = 1,
@@ -38,7 +38,7 @@ mobs:register_mob("dmobs:elephant", {
 	follow = {"farming:wheat"},
 	view_range = 14,
 	drops = {
-		{name = "mobs:meat_raw", chance = 1, min = 1, max = 1},
+		{name = "mobs:meat_raw", chance = 1, min = 1, max = 1}
 	},
 	animation = {
 		speed_normal = 5,
@@ -48,9 +48,9 @@ mobs:register_mob("dmobs:elephant", {
 		stand_start = 20,
 		stand_end = 30,
 		run_start = 3,
-		run_end = 19,
-
+		run_end = 19
 	},
+
 	on_rightclick = function(self, clicker)
 
 		if mobs:feed_tame(self, clicker, 8, true, true) then
@@ -58,7 +58,7 @@ mobs:register_mob("dmobs:elephant", {
 		end
 
 		mobs:capture_mob(self, clicker, 0, 5, 50, false, nil)
-	end,
+	end
 })
 
 

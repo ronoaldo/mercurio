@@ -274,6 +274,9 @@ add_node({"ethereal:bamboo_dirt"}, 0.35, {"sakura"}, 1, 100,
 	{"default:grass_2", "default:grass_3", "default:grass_4",
 	"default:grass_5"}, nil, nil, nil, ethereal.sakura)
 
+add_node({"ethereal:bamboo_dirt"}, 0.025, {"sakura"}, 1, 100,
+	{"ethereal:lilac"}, nil, nil, nil, ethereal.sakura)
+
 -- grass on sand
 if minetest.registered_nodes["default:marram_grass_1"] then
 

@@ -20,7 +20,7 @@ local dragondef = {
 	visual = "mesh",
 	mesh = "dragon.b3d",
 	textures = {
-		{"dmobs_dragon2.png"},
+		{"dmobs_dragon2.png"}
 	},
 	blood_texture = "mobs_blood.png",
 	visual_size = {x = 2, y = 2},
@@ -33,7 +33,7 @@ local dragondef = {
 	pathfinding = true,
 	fall_damage = 0,
 	sounds = {
-		shoot_attack = "dmobs_thunder",
+		shoot_attack = "dmobs_thunder"
 	},
 	walk_velocity = 3,
 	run_velocity = 5,
@@ -42,7 +42,7 @@ local dragondef = {
 	fly_in = {"air","default:water_source","default:water_flowing"},
 	drops = {
 		{name = "dmobs:egg", chance = 1, min = 1, max = 1},
-		{name = "dmobs:dragon_gem", chance = 1, min = 1, max = 1},
+		{name = "dmobs:dragon_gem", chance = 1, min = 1, max = 1}
 	},
 	fall_speed = 0,
 	stepheight = 10,

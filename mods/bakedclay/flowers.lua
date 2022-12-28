@@ -1,3 +1,6 @@
+-- 5.x translation
+S = minetest.get_translator("bakedclay")
+
 local flowers = {
 	{"delphinium", "Blue Delphinium",
 	{-0.15, -0.5, -0.15, 0.15, 0.3, 0.15}, {color_cyan = 1}},
@@ -22,7 +25,7 @@ local function add_simple_flower(name, desc, box, f_groups)
 	f_groups.attached_node = 1
 
 	minetest.register_node("bakedclay:" .. name, {
-		description = desc,
+		description = S(desc),
 		drawtype = "plantlike",
 		waving = 1,
 		tiles = {"baked_clay_" .. name .. ".png"},

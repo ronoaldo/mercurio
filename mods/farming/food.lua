@@ -68,6 +68,28 @@ minetest.register_craft({
 	recipe = "default:papyrus"
 })
 
+minetest.register_node("farming:sugar_cube", {
+	description = S("Sugar Cube"),
+	tiles = {"farming_sugar_cube.png"},
+	groups = {crumbly = 2},
+	floodable = true,
+	sounds = default.node_sound_gravel_defaults()
+})
+
+minetest.register_craft({
+	output = "farming:sugar_cube",
+	recipe = {
+		{"farming:sugar", "farming:sugar", "farming:sugar"},
+		{"farming:sugar", "farming:sugar", "farming:sugar"},
+		{"farming:sugar", "farming:sugar", "farming:sugar"}
+	}
+})
+
+minetest.register_craft({
+	output = "farming:sugar 9",
+	recipe = {{"farming:sugar_cube"}}
+})
+
 --= Sugar caramel
 
 minetest.register_craftitem("farming:caramel", {
@@ -645,7 +667,7 @@ minetest.register_craft({
 -- Onigiri
 
 minetest.register_craftitem("farming:onigiri", {
-	description = S("Onirigi"),
+	description = S("Onigiri"),
 	inventory_image = "farming_onigiri.png",
 	on_use = minetest.item_eat(2),
 	groups = {flammable = 2}

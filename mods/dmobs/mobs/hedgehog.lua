@@ -8,10 +8,10 @@ mobs:register_mob("dmobs:hedgehog", {
 	visual = "mesh",
 	mesh = "hedgehog.b3d",
 	textures = {
-		{"dmobs_hedgehog.png"},
+		{"dmobs_hedgehog.png"}
 	},
 	blood_texture = "mobs_blood.png",
-	visual_size = {x=2, y=2},
+	visual_size = {x = 2, y = 2},
 	makes_footstep_sound = true,
 	walk_velocity = 0.5,
 	run_velocity = 1,
@@ -27,7 +27,7 @@ mobs:register_mob("dmobs:hedgehog", {
 	view_range = 14,
 	follow = {"farming:bread"},
 	drops = {
-		{name = "default:grass_1", chance = 1, min = 1, max = 3},
+		{name = "default:grass_1", chance = 1, min = 1, max = 3}
 	},
 	animation = {
 		speed_normal = 5,
@@ -37,8 +37,9 @@ mobs:register_mob("dmobs:hedgehog", {
 		stand_start = 1,
 		stand_end = 10,
 		run_start = 1,
-		run_end = 10,
+		run_end = 10
 	},
+
 	on_rightclick = function(self, clicker)
 
 		if mobs:feed_tame(self, clicker, 8, true, true) then
@@ -46,7 +47,7 @@ mobs:register_mob("dmobs:hedgehog", {
 		end
 
 		mobs:capture_mob(self, clicker, 0, 5, 50, false, nil)
-	end,
+	end
 })
 
 

@@ -11,14 +11,14 @@ mobs:register_mob("dmobs:golem_friendly", {
 	visual = "mesh",
 	mesh = "golem.b3d",
 	textures = {
-		{"dmobs_golem.png"},
+		{"dmobs_golem.png"}
 	},
 	follow = "default:cobble",
 	drops = {
-		{name = "default:cobble", chance = 1, min = 1, max = 3},
+		{name = "default:cobble", chance = 1, min = 1, max = 3}
 	},
 	blood_texture = "default_stone.png",
-	visual_size = {x=1, y=1},
+	visual_size = {x = 1, y = 1},
 	makes_footstep_sound = true,
 	walk_velocity = 1,
 	run_velocity = 2.5,
@@ -40,8 +40,8 @@ mobs:register_mob("dmobs:golem_friendly", {
 		run_start = 46,
 		run_end = 66,
 		punch_start = 20,
-		punch_end = 45,
-	},
+		punch_end = 45
+	}
 })
 
 
