@@ -22,6 +22,17 @@ volumes: .minetest/world .minetest/logs
 submodules:
 	git submodule update
 
+rm-submodule:
+	@if [ x"" == x"$(M)" ]; then \
+		echo "Pass the M= parameter with the submodule path to remove."; \
+		exit 1; \
+	fi
+	git rm $(M)
+	git commit
+	rm -rvf .git/modules/$(M)
+	git config --remove-section submodule.$(M)
+	git commit
+
 test: volumes submodules
 	docker-compose down
 	docker-compose build --no-cache game
@@ -47,6 +58,7 @@ shell:
 
 update:
 	git pull
+	git submodule update
 	docker pull ghcr.io/ronoaldo/mercurio:main
 	docker-compose pull
 	docker-compose up -d
