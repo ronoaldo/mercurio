@@ -1,5 +1,7 @@
+local S = minetest.get_translator("nativevillages")
+
 minetest.register_node("nativevillages:hookah", {
-    description = "Hookah",
+    description = S"Hookah",
     visual_scale = 1,
     mesh = "Hookah.b3d",
     tiles = {"texturehookah.png"},
@@ -32,7 +34,7 @@ minetest.register_craft({
 })
 
 minetest.register_node("nativevillages:desertcrpet", {
-    description = "Desert Carpet",
+    description = S"Desert Carpet",
     visual_scale = 1,
     mesh = "Desertcarpet.b3d",
     tiles = {"texturedesertcarpet.png"},
@@ -65,7 +67,7 @@ minetest.register_craft({
 })
 
 minetest.register_node("nativevillages:desertcage", {
-    description = "Slave Bracelet",
+    description = S"Slave Bracelet",
     visual_scale = 1,
     mesh = "Desertcage.b3d",
     tiles = {"texturedesertcage.png"},
@@ -73,6 +75,7 @@ minetest.register_node("nativevillages:desertcage", {
     paramtype = "light",
     paramtype2 = "facedir",
     groups = {choppy = 3},
+    walkable = false,
     drawtype = "mesh",
     collision_box = {
         type = "fixed",
@@ -98,7 +101,7 @@ minetest.register_craft({
 })
 
 minetest.register_node("nativevillages:desertseeds", {
-    description = "Desert Seeds",
+    description = S"Desert Seeds",
     visual_scale = 1,
     mesh = "Desertseeds.b3d",
     tiles = {"texturedesertseeds.png"},

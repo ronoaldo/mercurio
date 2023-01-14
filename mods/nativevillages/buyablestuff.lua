@@ -1,3 +1,5 @@
+local S = minetest.get_translator("nativevillages")
+
 mobs:register_mob("nativevillages:tamecatfish", {
 	stepheight = 1,
 	type = "animal",
@@ -33,9 +35,10 @@ mobs:register_mob("nativevillages:tamecatfish", {
 	jump = true,
 	jump_height = 0,
 	pushable = true,
+        stay_near = {{"marinara:sand_with_alage", "marinara:sand_with_seagrass", "default:sand_with_kelp", "marinara:sand_with_kelp", "marinara:reed_root", "flowers:waterlily_waving", "naturalbiomes:waterlily", "default:clay"}, 5},
 	follow = {
 		"ethereal:worm", "seaweed", "fishing:bait_worm",
-		"default:grass", "farming:cucumber", "farming:cabbage", "animalworld:ant", "animalworld:termite", "animalworld:fishfood"
+		"default:grass", "farming:cucumber", "farming:cabbage", "animalworld:ant", "animalworld:termite", "animalworld:fishfood", "animalworld:cockroach", "bees:frame_full", "animalworld:fishfood", "animalworld:ant", "animalworld:termite", "animalworld:bugice", "animalworld:termitequeen", "animalworld:notoptera", "animalworld:anteggs_raw", "group:grass", "group:normal_grass"
 	},
 	view_range = 6,
 	drops = {
@@ -54,11 +57,9 @@ mobs:register_mob("nativevillages:tamecatfish", {
 		fly_end = 100,
 		fly2_start = 100,
 		fly2_end = 200,
-
-
-		die_start = 1, -- we dont have a specific death animation so we will
-		die_end = 2, --   re-use 2 standing frames at a speed of 1 fps and
-		die_speed = 1, -- have mob rotate when dying.
+		die_start = 0,
+		die_end = 100,
+		die_speed = 50,
 		die_loop = false,
 		die_rotate = true,
 	},
@@ -66,13 +67,13 @@ mobs:register_mob("nativevillages:tamecatfish", {
 
 		if mobs:feed_tame(self, clicker, 8, true, true) then return end
 		if mobs:protect(self, clicker) then return end
-		if mobs:capture_mob(self, clicker, 0, 5, 50, false, nil) then return end
+		if mobs:capture_mob(self, clicker, 15, 25, 0, false, nil) then return end
 	end,
 })
 
 
 
-mobs:register_egg("nativevillages:tamecatfish", ("Domesticated Catfish"), "alakecatfish.png")
+mobs:register_egg("nativevillages:tamecatfish", S("Domesticated Catfish"), "alakecatfish.png")
 
 
 mobs:alias_mob("nativevillages:tamecatfish", "nativevillages:tamecatfish") -- compatibility
@@ -80,7 +81,7 @@ mobs:alias_mob("nativevillages:tamecatfish", "nativevillages:tamecatfish") -- co
 
 -- raw catfish
 minetest.register_craftitem(":nativevillages:catfish_raw", {
-	description = ("Raw Catfish"),
+	description = S("Raw Catfish"),
 	inventory_image = "nativevillages_catfish_raw.png",
 	on_use = minetest.item_eat(4),
 	groups = {food_meat_raw = 1, flammable = 2},
@@ -88,7 +89,7 @@ minetest.register_craftitem(":nativevillages:catfish_raw", {
 
 -- cooked catfish
 minetest.register_craftitem(":nativevillages:catfish_cooked", {
-	description = ("Cooked Catfish"),
+	description = S("Cooked Catfish"),
 	inventory_image = "nativevillages_catfish_cooked.png",
 	on_use = minetest.item_eat(8),
 	groups = {food_meat = 1, flammable = 2},
@@ -137,6 +138,7 @@ mobs:register_mob("nativevillages:zombietame", {
 	jump = true,
 	drops = {		
 	},
+        stay_near = {{"nativevillages:cannibalshrine", "nativevillages:driedpeople"}, 5},
 	water_damage = 0,
 	lava_damage = 2,
 	light_damage = 0,
@@ -156,6 +158,11 @@ mobs:register_mob("nativevillages:zombietame", {
 		walk2_end = 300,
 		punch_start = 0,
 		punch_end = 100,
+		die_start = 0,
+		die_end = 100,
+		die_speed = 50,
+		die_loop = false,
+		die_rotate = true,
 	},
 
 	on_rightclick = function(self, clicker)
@@ -164,7 +171,7 @@ mobs:register_mob("nativevillages:zombietame", {
 		if mobs:feed_tame(self, clicker, 8, true, true) then return end
 
 		-- capture npc with net or lasso
-		if mobs:capture_mob(self, clicker, nil, 5, 80, false, nil) then return end
+		if mobs:capture_mob(self, clicker, 15, 25, 0, false, nil) then return end
 
 		-- protect npc with mobs:protector
 		if mobs:protect(self, clicker) then return end
@@ -216,6 +223,10 @@ mobs:register_mob("nativevillages:domesticcow", {
 		{"texturegrasslandcow.png"},
 		{"texturegrasslandcow2.png"},
 		{"texturegrasslandcow3.png"},
+		{"texturegrasslandcow4.png"},
+		{"texturegrasslandcow5.png"},
+		{"texturegrasslandcow6.png"},
+		{"texturegrasslandcow7.png"},
 	},
 	makes_footstep_sound = true,
 	sounds = {
@@ -225,9 +236,13 @@ mobs:register_mob("nativevillages:domesticcow", {
 	},
 	walk_velocity = 1,
 	run_velocity = 2,
-	jump = true,
+	jump = false,
 	jump_height = 6,
+        stay_near = {{"people:feeder", "marinara:reed_bundle", "naturalbiomes:reed_bundle", "farming:straw"}, 5},
+	stepheight = 1,
+	fear_height = 2,
 	pushable = true,
+        knock_back = false,
 	drops = {
 		{name = "mobs:meat_raw", chance = 1, min = 1, max = 3},
 		{name = "mobs:leather", chance = 1, min = 0, max = 2},
@@ -245,17 +260,15 @@ mobs:register_mob("nativevillages:domesticcow", {
 		walk_end = 300,
 		punch_start = 300,
 		punch_end = 400,
-
-
-		die_start = 1, -- we dont have a specific death animation so we will
-		die_end = 2, --   re-use 2 standing frames at a speed of 1 fps and
-		die_speed = 1, -- have mob rotate when dying.
+		die_start = 300,
+		die_end = 400,
+		die_speed = 50,
 		die_loop = false,
 		die_rotate = true,
 	},
 	follow = {
 		"farming:wheat", "default:grass_1", "farming:barley",
-		"farming:oat", "farming:rye", "farming:carrot", "farming:beans", "farming:lettuce"
+		"farming:oat", "farming:rye", "farming:carrot", "farming:beans", "farming:lettuce", "default:dry_grass_1", "default:dry_grass_2", "default:dry_grass_3", "default:grass_1", "default:grass_2", "default:grass_3", "default:grass_4", "default:grass_5", "default:marram_grass_1", "default:marram_grass_2", "default:marram_grass_3", "default:coldsteppe_grass_1", "default:coldsteppe_grass_2", "default:coldsteppe_grass_3", "default:coldsteppe_grass_4", "default:coldsteppe_grass_5", "default:coldsteppe_grass_6", "naturalbiomes:savanna_grass1", "naturalbiomes:savanna_grass2", "naturalbiomes:savanna_grass3", "naturalbiomes:outback_grass1", "naturalbiomes:outback_grass2", "naturalbiomes:outback_grass3", "naturalbiomes:outback_grass4", "naturalbiomes:outback_grass5", "naturalbiomes:outback_grass6", "naturalbiomes:med_grass1", "naturalbiomes:med_grass2", "naturalbiomes:heath_grass1", "naturalbiomes:heath_grass2", "naturalbiomes:heath_grass3", "naturalbiomes:alpine_grass1", "naturalbiomes:alpine_grass2", "naturalbiomes:heath_grass2", "naturalbiomes:heath_grass3", "naturalbiomes:", "naturalbiomes:", "naturalbiomes:bushland_grass", "naturalbiomes:bushland_grass2", "naturalbiomes:bushland_grass3", "naturalbiomes:bushland_grass4", "naturalbiomes:bushland_grass5", "naturalbiomes:bushland_grass6", "naturalbiomes:bushland_grass7", "group:grass", "group:normal_grass"
 	},
 	view_range = 8,
 	replace_rate = 10,
@@ -279,7 +292,7 @@ mobs:register_mob("nativevillages:domesticcow", {
 		end
 
 		if mobs:protect(self, clicker) then return end
-		if mobs:capture_mob(self, clicker, 0, 5, 60, false, nil) then return end
+		if mobs:capture_mob(self, clicker, 0, 0, 25, false, nil) then return end
 
 		local tool = clicker:get_wielded_item()
 		local name = clicker:get_player_name()
@@ -294,7 +307,7 @@ mobs:register_mob("nativevillages:domesticcow", {
 
 			if self.gotten == true then
 				minetest.chat_send_player(name,
-					("Cow already milked!"))
+					S("Cow already milked!"))
 				return
 			end
 
@@ -331,7 +344,7 @@ mobs:register_mob("nativevillages:domesticcow", {
 
 
 
-mobs:register_egg("nativevillages:domesticcow", ("Domesticated Cow"), "agrasslandcow.png")
+mobs:register_egg("nativevillages:domesticcow", S("Domesticated Cow"), "agrasslandcow.png")
 
 
 mobs:alias_mob("nativevillages:domesticcow", "nativevillages:domesticcow") -- compatibility
@@ -339,7 +352,7 @@ mobs:alias_mob("nativevillages:domesticcow", "nativevillages:domesticcow") -- co
 
 -- bucket of milk
 minetest.register_craftitem(":nativevillages:bucket_milk", {
-	description = ("Bucket of Milk"),
+	description = S("Bucket of Milk"),
 	inventory_image = "nativevillages_bucket_milk.png",
 	stack_max = 1,
 	on_use = minetest.item_eat(8, "bucket:bucket_empty"),
@@ -348,7 +361,7 @@ minetest.register_craftitem(":nativevillages:bucket_milk", {
 
 -- glass of milk
 minetest.register_craftitem(":mobs:glass_milk", {
-	description = ("Glass of Milk"),
+	description = S("Glass of Milk"),
 	inventory_image = "mobs_glass_milk.png",
 	on_use = minetest.item_eat(2, "vessels:drinking_glass"),
 	groups = {food_milk_glass = 1, flammable = 3, vessel = 1, drink = 1},
@@ -381,7 +394,7 @@ minetest.register_craft({
 
 -- butter
 minetest.register_craftitem(":nativevillages:butter", {
-	description = ("Butter"),
+	description = S("Butter"),
 	inventory_image = "nativevillages_butter.png",
 	on_use = minetest.item_eat(1),
 	groups = {food_butter = 1, flammable = 2},
@@ -405,7 +418,7 @@ end
 
 -- cheese wedge
 minetest.register_craftitem(":nativevillages:cheese", {
-	description = ("Mozzarella Cheese"),
+	description = S("Mozzarella Cheese"),
 	inventory_image = "nativevillages_cheese.png",
 	on_use = minetest.item_eat(4),
 	groups = {food_cheese = 1, flammable = 2},
@@ -421,7 +434,7 @@ minetest.register_craft({
 
 -- cheese block
 minetest.register_node(":nativevillages:cheeseblock", {
-	description = ("Mozzarella Cheese Block"),
+	description = S("Mozzarella Cheese Block"),
 	tiles = {"nativevillages_cheeseblock.png"},
 	is_ground_content = false,
 	groups = {crumbly = 3},
@@ -483,6 +496,7 @@ stepheight = 1,
 	drops = {
 		{name = "nativevillages:chicken_raw", chance = 1, min = 1, max = 1},
 	},
+        stay_near = {{"people:feeder", "marinara:reed_bundle", "naturalbiomes:reed_bundle", "farming:straw"}, 5},
 	water_damage = 1,
 	lava_damage = 5,
 	light_damage = 0,
@@ -495,11 +509,15 @@ stepheight = 1,
 		stand2_end = 200,
 		walk_start = 200,
 		walk_end = 300,
-
+		die_start = 200,
+		die_end = 300,
+		die_speed = 50,
+		die_loop = false,
+		die_rotate = true,
 	},
 	follow = {
 		"farming:seed_wheat", "farming:seed_cotton", "farming:seed_barley",
-		"farming:seed_oat", "farming:seed_rye"
+		"farming:seed_oat", "farming:seed_rye", "animalworld:cockroach", "bees:frame_full", "animalworld:fishfood", "animalworld:ant", "animalworld:termite", "animalworld:bugice", "animalworld:termitequeen", "animalworld:notoptera", "animalworld:anteggs_raw", "farming:corn_cob", "farming:seed_hemp", "farming:seed_barley", "farming:seed_oat", "farming:seed_cotton", "farming:seed_sunflower", "farming:seed_wheat", "farming:seed_rye", "naturalbiomes:coconut_slice", "naturalbiomes:hazelnut_cracked", "farming:sunflower_seeds_toasted", "livingfloatlands:roasted_pine_nuts", "livingfloatlands:coldsteppe_pine3_pinecone", "livingfloatlands:coldsteppe_pine_pinecone", "livingfloatlands:coldsteppe_pine2_pinecone"
 	},
 	view_range = 10,
 
@@ -507,7 +525,7 @@ stepheight = 1,
 
 		if mobs:feed_tame(self, clicker, 8, true, true) then return end
 		if mobs:protect(self, clicker) then return end
-		if mobs:capture_mob(self, clicker, 30, 50, 80, false, nil) then return end
+		if mobs:capture_mob(self, clicker, 15, 25, 0, false, nil) then return end
 	end,
 
 	do_custom = function(self, dtime)
@@ -536,7 +554,7 @@ stepheight = 1,
 })
 
 
-mobs:register_egg("nativevillages:desertchickentame", ("Domesticated Desert Chicken"), "adesertchicken.png", 0)
+mobs:register_egg("nativevillages:desertchickentame", S("Domesticated Desert Chicken"), "adesertchicken.png", 0)
 
 local S = mobs.intllib
 
@@ -571,6 +589,9 @@ mobs:register_mob("nativevillages:maleliontame", {
 	walk_velocity = 2,
 	run_velocity = 3,
 	jump = true,
+        stepheight = 2,
+        fear_height = 3,
+        stay_near = {{"nativevillages:savannacorpse", "mobs:meatblock"}, 5},
 	drops = {		
 	},
 	water_damage = 0,
@@ -578,7 +599,7 @@ mobs:register_mob("nativevillages:maleliontame", {
 	light_damage = 0,
 follow = {
 		"ethereal:fish_raw", "animalworld:rawfish", "mobs_fish:tropical",
-		"mobs:meat_raw", "animalworld:rabbit_raw", "animalworld:pork_raw", "water_life:meat_raw", "animalworld:chicken_raw", "nativevillages:chicken_raw"
+		"mobs:meat_raw", "animalworld:rabbit_raw", "animalworld:pork_raw", "water_life:meat_raw", "animalworld:chicken_raw", "nativevillages:chicken_raw", "mobs:meatblock_raw", "animalworld:chicken_raw", "livingfloatlands:ornithischiaraw", "livingfloatlands:largemammalraw", "livingfloatlands:theropodraw", "livingfloatlands:sauropodraw", "animalworld:raw_athropod", "animalworld:whalemeat_raw", "animalworld:rabbit_raw", "nativevillages:chicken_raw", "mobs:meat_raw", "animalworld:pork_raw", "people:mutton:raw"
 	},
 	view_range = 15,
 	owner = "",
@@ -595,15 +616,19 @@ speed_normal = 75,
                 punch_speed = 100,
 		punch_start = 300,
 		punch_end = 400,
+		die_start = 300,
+		die_end = 400,
+		die_speed = 50,
+		die_loop = false,
+		die_rotate = true,
 	},
-
 	on_rightclick = function(self, clicker)
 
 		-- feed to heal npc
 		if mobs:feed_tame(self, clicker, 8, true, true) then return end
 
 		-- capture npc with net or lasso
-		if mobs:capture_mob(self, clicker, nil, 5, 80, false, nil) then return end
+		if mobs:capture_mob(self, clicker, 0, 15, 25, false, nil) then return end
 
 		-- protect npc with mobs:protector
 		if mobs:protect(self, clicker) then return end
@@ -672,12 +697,15 @@ mobs:register_mob("nativevillages:femaleliontame", {
 	jump = true,
 	drops = {		
 	},
+        stay_near = {{"nativevillages:savannacorpse", "mobs:meatblock"}, 5},
 	water_damage = 0,
 	lava_damage = 2,
 	light_damage = 0,
+        stepheight = 2,
+        fear_height = 3,
 follow = {
 		"ethereal:fish_raw", "animalworld:rawfish", "mobs_fish:tropical",
-		"mobs:meat_raw", "animalworld:rabbit_raw", "animalworld:pork_raw", "water_life:meat_raw", "animalworld:chicken_raw", "nativevillages:chicken_raw"
+		"mobs:meat_raw", "animalworld:rabbit_raw", "animalworld:pork_raw", "water_life:meat_raw", "animalworld:chicken_raw", "nativevillages:chicken_raw", "mobs:meatblock_raw", "animalworld:chicken_raw", "livingfloatlands:ornithischiaraw", "livingfloatlands:largemammalraw", "livingfloatlands:theropodraw", "livingfloatlands:sauropodraw", "animalworld:raw_athropod", "animalworld:whalemeat_raw", "animalworld:rabbit_raw", "nativevillages:chicken_raw", "mobs:meat_raw", "animalworld:pork_raw", "people:mutton:raw"
 	},
 	view_range = 15,
 	owner = "",
@@ -694,6 +722,11 @@ speed_normal = 75,
                 punch_speed = 100,
 		punch_start = 300,
 		punch_end = 400,
+		die_start = 300,
+		die_end = 400,
+		die_speed = 50,
+		die_loop = false,
+		die_rotate = true,
 	},
 
 	on_rightclick = function(self, clicker)
@@ -702,7 +735,7 @@ speed_normal = 75,
 		if mobs:feed_tame(self, clicker, 8, true, true) then return end
 
 		-- capture npc with net or lasso
-		if mobs:capture_mob(self, clicker, nil, 5, 80, false, nil) then return end
+		if mobs:capture_mob(self, clicker, 0, 15, 25, false, nil) then return end
 
 		-- protect npc with mobs:protector
 		if mobs:protect(self, clicker) then return end
@@ -763,11 +796,9 @@ mobs:register_mob("nativevillages:grasslandcat", {
 		walk_end = 400,
 		punch_start = 400,
 		punch_end = 500,
-
-
-		die_start = 1, -- we dont have a specific death animation so we will
-		die_end = 2, --   re-use 2 standing frames at a speed of 1 fps and
-		die_speed = 1, -- have mob rotate when dying.
+		die_start = 400,
+		die_end = 500,
+		die_speed = 50,
 		die_loop = false,
 		die_rotate = true,
 	},
@@ -783,6 +814,7 @@ mobs:register_mob("nativevillages:grasslandcat", {
 	runaway = false,
 	jump = true,
 	jump_height = 8,
+        stay_near = {{"people:villagerbed", "mobs:meatblock", "animalworld:blackbirdpillow", "animalworld:hyenapillow", "animalworld:monitorstool", "animalworld:owltrophy", "animalworld:vulturepillow", "animalworld:snowleopardpillow", "animalworld:tigerpillow", "animalworld:tigerstool", "chair"}, 5},
 	fly = false,
 	walk_velocity = 2,
         walk_chance = 15,
@@ -813,11 +845,11 @@ mobs:register_mob("nativevillages:grasslandcat", {
 		distance = 10,
 	},
 	follow = {"ethereal:fish_raw", "animalworld:rawfish", "mobs_fish:tropical",
-		"mobs:meat_raw", "animalworld:rabbit_raw", "xocean:fish_edible", "fishing:fish_raw", "water_life:meat_raw", "fishing:carp_raw", "animalworld:chicken_raw", "nativevillages:chicken_raw", "nativevillages:chicken_cooked", "nativevillages:catfish_raw", "nativevillages:catfish_cooked"},
+		"mobs:meat_raw", "animalworld:rabbit_raw", "xocean:fish_edible", "fishing:fish_raw", "water_life:meat_raw", "fishing:carp_raw", "animalworld:chicken_raw", "nativevillages:chicken_raw", "nativevillages:chicken_cooked", "nativevillages:catfish_raw", "nativevillages:catfish_cooked", "fishing:fish_cooked", "marinaramobs:cooked_exotic_fish", "animalworld:cookedfish", "marinara:mussels", "nativevillages:catfish_cooked", "fishing:pike_cooked", "animalworld:cooked_athropod", "livingfloatlands:theropodcooked", "mobs:meatblock", "animalworld:whelaemeat_cooked", "animalworld:rat_cooked", "mobs:meat", "animalworld:chicken_cooked", "livingfloatlands:sauropodcooked", "livingfloatlands:ornithischiacooked", "nativevillages:driedhumanmeat", "livingfloatlands:largemammalcooked", "pie:meat"},
 	on_rightclick = function(self, clicker)
 		if mobs:feed_tame(self, clicker, 6, true, true) then return end
 		if mobs:protect(self, clicker) then return end
-		if mobs:capture_mob(self, clicker, 30, 50, 100, false, nil) then return end
+		if mobs:capture_mob(self, clicker, 0, 25, 0, false, nil) then return end
 
 		if clicker:get_wielded_item():is_empty() and clicker:get_player_name() == self.owner then
 			if clicker:get_player_control().sneak then
@@ -843,5 +875,5 @@ mobs:register_mob("nativevillages:grasslandcat", {
 	end
 })
 
-mobs:register_egg("nativevillages:grasslandcat", "Cat", "agrasslandcat.png")
+mobs:register_egg("nativevillages:grasslandcat", S"Cat", "agrasslandcat.png")
 

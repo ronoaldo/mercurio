@@ -194,14 +194,13 @@ function demoiselle.set_yaw_by_mouse(self, dir)
 
     if rot_y < 0 then rot_y = rot_y + (360*total) end
     if rot_y > 360 then rot_y = rot_y - (360*total) end
+    if rot_y >= 270 and dir <= 90 then dir = dir + 360 end
+    if rot_y <= 90 and dir >= 270 then dir = dir - 360 end
 
-    local command = rot_y - dir
-    if command < -180 then command = command + 360 
-    elseif command > 180 then command = command - 360 end
-    --minetest.chat_send_all("rotation y: "..rot_y.." - dir: "..dir.." - command: "..command)
-    
-    if command > 80 then command = 80 end
-    if command < -80 then command = -80 end
+    local command = (rot_y - dir)
+    if command < -90 then command = -90 
+    elseif command > 90 then command = 90 end
+    --minetest.chat_send_all("rotation y: "..rot_y.." - dir: "..dir.." - command: "..(rot_y - dir))
 
     --minetest.chat_send_all("rotation y: "..rot_y.." - dir: "..dir.." - command: "..command)
 

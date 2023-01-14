@@ -1,5 +1,7 @@
+local S = minetest.get_translator("nativevillages")
+
 minetest.register_node("nativevillages:savannathrone", {
-    description = "Savanna Throne",
+    description = S"Savanna Throne",
     visual_scale = 1,
     mesh = "Savannathrone.b3d",
     tiles = {"texturesavannathrone.png"},
@@ -7,6 +9,7 @@ minetest.register_node("nativevillages:savannathrone", {
     paramtype = "light",
     paramtype2 = "facedir",
     groups = {choppy = 3},
+    walkable = false,
     drawtype = "mesh",
     collision_box = {
         type = "fixed",
@@ -32,7 +35,7 @@ minetest.register_craft({
 })
 
 minetest.register_node("nativevillages:savannavessels", {
-    description = "Savanna Vessels",
+    description = S"Savanna Vessels",
     visual_scale = 1,
     mesh = "Savannavessels.b3d",
     tiles = {"texturesavannavessels.png"},
@@ -65,7 +68,7 @@ minetest.register_craft({
 })
 
 minetest.register_node("nativevillages:savannavshrine", {
-    description = "Savanna Shrine",
+    description = S"Savanna Shrine",
     visual_scale = 1,
     mesh = "Savannashrine.b3d",
     tiles = {"texturesavannashrine.png"},
@@ -73,6 +76,7 @@ minetest.register_node("nativevillages:savannavshrine", {
     paramtype = "light",
     paramtype2 = "facedir",
     groups = {choppy = 3},
+    walkable = false,
     drawtype = "mesh",
     collision_box = {
         type = "fixed",
@@ -98,13 +102,14 @@ minetest.register_craft({
 })
 
 minetest.register_node("nativevillages:savannacorpse", {
-    description = "Savanna Corpse",
+    description = S"Savanna Corpse",
     visual_scale = 1,
     mesh = "Savannacorpse.b3d",
     tiles = {"texturesavannacorpse.png"},
     inventory_image = "asavannacorpse.png",
     paramtype = "light",
     paramtype2 = "facedir",
+    walkable = false,
     groups = {choppy = 3},
     drawtype = "mesh",
     collision_box = {

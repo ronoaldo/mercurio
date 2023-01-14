@@ -1,3 +1,5 @@
+local S = minetest.get_translator("nativevillages")
+
 mobs:register_mob("nativevillages:toad", {
 stepheight = 3,
 	type = "monster",
@@ -62,7 +64,7 @@ sounds = {
 
 		if mobs:feed_tame(self, clicker, 8, true, true) then return end
 		if mobs:protect(self, clicker) then return end
-		if mobs:capture_mob(self, clicker, 0, 5, 50, false, nil) then return end
+		if mobs:capture_mob(self, clicker, 0, 25, 0, false, nil) then return end
 	end,
 })
 
@@ -86,7 +88,7 @@ mobs:spawn({
 end
 
 
-mobs:register_egg("nativevillages:toad", ("Toad"), "atoad.png", 0)
+mobs:register_egg("nativevillages:toad", S("Toad"), "atoad.png", 0)
 
 
 mobs:alias_mob("nativevillages:toad", "nativevillages:toad") -- compatibility
@@ -179,11 +181,11 @@ on_rightclick = function(self, clicker)
 				self:set_animation("stand")
 				self:set_velocity(0)
 
-				minetest.chat_send_player(name, ("Exploding Toad stands still."))
+				minetest.chat_send_player(name, S("Exploding Toad stands still."))
 			else
 				self.order = "follow"
 
-				minetest.chat_send_player(name, ("Exploding Toad will follow you."))
+				minetest.chat_send_player(name, S("Exploding Toad will follow you."))
 			end
 		end
 	end,
@@ -191,13 +193,13 @@ on_rightclick = function(self, clicker)
 
 
 
-mobs:register_egg("nativevillages:toadtamed", ("Tamed Exploding Toad"), "atoad.png", 0)
+mobs:register_egg("nativevillages:toadtamed", S("Tamed Exploding Toad"), "atoad.png", 0)
 
 
 mobs:alias_mob("nativevillages:toadtamed", "nativevillages:toadtamed") -- compatibility
 
 minetest.register_node("nativevillages:toadbag", {
-	description = "Bag full of toads!",
+	description = S"Bag full of toads!",
 	tiles = {
 		"nativevillages_toadbag_top.png",
 		"nativevillages_toadbag_bottom.png",

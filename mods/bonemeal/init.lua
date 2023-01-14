@@ -677,10 +677,13 @@ minetest.register_craft({
 })
 
 -- bonemeal (from player bones)
-minetest.register_craft({
-	output = "bonemeal:bonemeal 4",
-	recipe = {{"bones:bones"}}
-})
+if minetest.settings:get_bool("bonemeal.disable_deathbones_recipe") ~= true then
+
+	minetest.register_craft({
+		output = "bonemeal:bonemeal 4",
+		recipe = {{"bones:bones"}}
+	})
+end
 
 -- bonemeal (from coral skeleton)
 minetest.register_craft({
@@ -740,4 +743,4 @@ if minetest.get_modpath("lucky_block") then
 end
 
 
-print ("[MOD] bonemeal loaded")
+print ("[MOD] Bonemeal loaded")

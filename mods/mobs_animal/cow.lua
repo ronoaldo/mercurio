@@ -252,7 +252,7 @@ minetest.register_node(":mobs:cheeseblock", {
 	tiles = {"mobs_cheeseblock.png"},
 	is_ground_content = false,
 	groups = {oddly_breakable_by_hand = 3},
-	sounds = default.node_sound_dirt_defaults()
+	sounds = default and default.node_sound_dirt_defaults()
 })
 
 minetest.register_craft({

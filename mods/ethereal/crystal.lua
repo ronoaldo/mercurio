@@ -3,7 +3,6 @@ local S = ethereal.intllib
 
 
 -- Crystal Spike (Hurts if you touch it)
--- thanks to ZonerDarkRevention for his DokuCraft DeviantArt crystal texture
 minetest.register_node("ethereal:crystal_spike", {
 	description = S("Crystal Spike"),
 	drawtype = "plantlike",

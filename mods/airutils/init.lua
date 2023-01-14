@@ -382,4 +382,5 @@ end
 function airutils.sit(player)
     --set_animation(frame_range, frame_speed, frame_blend, frame_loop)
     player:set_animation({x =  81, y = 160},30, 0, true)
+    if emote then emote.start(player:get_player_name(), "sit") end
 end

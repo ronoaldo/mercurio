@@ -1,3 +1,5 @@
+local S = minetest.get_translator("nativevillages")
+
 mobs.desertvillagermale_drops = {
 	"farming:salt"
 }
@@ -37,19 +39,19 @@ sounds = {
         walk_chance = 15,
 	run_velocity = 3,
 	jump = true,
+        stay_near = {{"nativevillages:hookah", "nativevillages:desertcrpet"}, 5},
 	drops = {
 	},
 	water_damage = 0,
 	lava_damage = 2,
 	light_damage = 0,
 	follow = {},
-        stay_near = "nativevillages:desertcrpet",
 	view_range = 15,
 	owner = "",
 	order = "follow",
 	fear_height = 3,
 	animation = {
-		speed_normal = 50,
+		speed_normal = 75,
 		stand_start = 0,
 		stand_end = 100,
 		walk_start = 100,
@@ -57,6 +59,11 @@ sounds = {
                 punch_speed = 100,
 		punch_start = 200,
 		punch_end = 300,
+		die_start = 200,
+		die_end = 300,
+		die_speed = 50,
+		die_loop = false,
+		die_rotate = true,
 	},
 
 	on_rightclick = function(self, clicker)
@@ -65,7 +72,7 @@ sounds = {
 		if mobs:feed_tame(self, clicker, 8, true, true) then return end
 
 		-- capture npc with net or lasso
-		if mobs:capture_mob(self, clicker, nil, 5, 80, false, nil) then return end
+		if mobs:capture_mob(self, clicker, 0, 15, 25, false, nil) then return end
 
 		-- protect npc with mobs:protector
 		if mobs:protect(self, clicker) then return end
@@ -91,7 +98,7 @@ sounds = {
 				name = drops[math.random(1, #drops)]
 			})
 
-			minetest.chat_send_player(name, ("Desert Villager dropped you an item for a stick!"))
+			minetest.chat_send_player(name, S("Desert Villager dropped you an item for a stick!"))
 
 			return
 		end
@@ -107,11 +114,11 @@ sounds = {
 				self:set_animation("stand")
 				self:set_velocity(0)
 
-				minetest.chat_send_player(name, ("Desert Villager stands still."))
+				minetest.chat_send_player(name, S("Desert Villager stands still."))
 			else
 				self.order = "follow"
 
-				minetest.chat_send_player(name, ("Desert Villager will follow you."))
+				minetest.chat_send_player(name, S("Desert Villager will follow you."))
 			end
 		end
 	end,
@@ -131,7 +138,7 @@ mobs:spawn({
 })
 end
 
-mobs:register_egg("nativevillages:desertvillagermale", ("Male Desert Villager"), "adesertvillagermale.png")
+mobs:register_egg("nativevillages:desertvillagermale", S("Male Desert Villager"), "adesertvillagermale.png")
 
 mobs.desertvillagerfemale_drops = {
 	"farming:salt"
@@ -174,19 +181,19 @@ sounds = {
         walk_chance = 15,
 	run_velocity = 3,
 	jump = true,
+        stay_near = {{"nativevillages:hookah", "nativevillages:desertcrpet"}, 5},
 	drops = {
 	},
 	water_damage = 0,
 	lava_damage = 2,
 	light_damage = 0,
 	follow = {},
-        stay_near = "nativevillages:desertcrpet",
 	view_range = 15,
 	owner = "",
 	order = "follow",
 	fear_height = 3,
 	animation = {
-		speed_normal = 50,
+		speed_normal = 75,
 		stand_start = 0,
 		stand_end = 100,
 		walk_start = 100,
@@ -194,6 +201,11 @@ sounds = {
                 punch_speed = 100,
 		punch_start = 200,
 		punch_end = 300,
+		die_start = 200,
+		die_end = 300,
+		die_speed = 50,
+		die_loop = false,
+		die_rotate = true,
 	},
 
 	on_rightclick = function(self, clicker)
@@ -202,7 +214,7 @@ sounds = {
 		if mobs:feed_tame(self, clicker, 8, true, true) then return end
 
 		-- capture npc with net or lasso
-		if mobs:capture_mob(self, clicker, nil, 5, 80, false, nil) then return end
+		if mobs:capture_mob(self, clicker, 0, 15, 25, false, nil) then return end
 
 		-- protect npc with mobs:protector
 		if mobs:protect(self, clicker) then return end
@@ -228,7 +240,7 @@ sounds = {
 				name = drops[math.random(1, #drops)]
 			})
 
-			minetest.chat_send_player(name, ("Desert Villager dropped you an item for a stick!"))
+			minetest.chat_send_player(name, S("Desert Villager dropped you an item for a stick!"))
 
 			return
 		end
@@ -244,11 +256,11 @@ sounds = {
 				self:set_animation("stand")
 				self:set_velocity(0)
 
-				minetest.chat_send_player(name, ("Desert Villager stands still."))
+				minetest.chat_send_player(name, S("Desert Villager stands still."))
 			else
 				self.order = "follow"
 
-				minetest.chat_send_player(name, ("Desert will follow you."))
+				minetest.chat_send_player(name, S("Desert will follow you."))
 			end
 		end
 	end,
@@ -268,7 +280,7 @@ mobs:spawn({
 })
 end
 
-mobs:register_egg("nativevillages:desertvillagerfemale", ("Female Desert Villager"), "adesertvillagerfemale.png")
+mobs:register_egg("nativevillages:desertvillagerfemale", S("Female Desert Villager"), "adesertvillagerfemale.png")
 
 mobs.desertslavetrader_drops = {
 	"nativevillages:slavechickenbreeder", "nativevillages:slavecowherder", "nativevillages:slaveliontrainer",
@@ -313,13 +325,13 @@ sounds = {
 	lava_damage = 2,
 	light_damage = 0,
 	follow = {},
-        stay_near = "nativevillages:desertcage",
 	view_range = 15,
+        stay_near = {{"nativevillages:desertcage"}, 4},
 	owner = "",
 	order = "follow",
 	fear_height = 3,
 	animation = {
-		speed_normal = 50,
+		speed_normal = 75,
 		stand_start = 0,
 		stand_end = 100,
 		walk_start = 100,
@@ -327,6 +339,11 @@ sounds = {
                 punch_speed = 100,
 		punch_start = 200,
 		punch_end = 300,
+		die_start = 200,
+		die_end = 300,
+		die_speed = 50,
+		die_loop = false,
+		die_rotate = true,
 	},
 
 	on_rightclick = function(self, clicker)
@@ -335,7 +352,7 @@ sounds = {
 		if mobs:feed_tame(self, clicker, 8, true, true) then return end
 
 		-- capture npc with net or lasso
-		if mobs:capture_mob(self, clicker, nil, 5, 80, false, nil) then return end
+		if mobs:capture_mob(self, clicker, 0, 15, 25, false, nil) then return end
 
 		-- protect npc with mobs:protector
 		if mobs:protect(self, clicker) then return end
@@ -361,7 +378,7 @@ sounds = {
 				name = drops[math.random(1, #drops)]
 			})
 
-			minetest.chat_send_player(name, ("Slave delivered!"))
+			minetest.chat_send_player(name, S("Slave delivered!"))
 
 			return
 		end
@@ -377,11 +394,11 @@ sounds = {
 				self:set_animation("stand")
 				self:set_velocity(0)
 
-				minetest.chat_send_player(name, ("Slavetrader stands still."))
+				minetest.chat_send_player(name, S("Slavetrader stands still."))
 			else
 				self.order = "follow"
 
-				minetest.chat_send_player(name, ("Slavetrader will follow you."))
+				minetest.chat_send_player(name, S("Slavetrader will follow you."))
 			end
 		end
 	end,
@@ -401,7 +418,7 @@ mobs:spawn({
 })
 end
 
-mobs:register_egg("nativevillages:desertslavetrader", ("Slave Trader"), "adesertslavetrader.png")
+mobs:register_egg("nativevillages:desertslavetrader", S("Slave Trader"), "adesertslavetrader.png")
 
 mobs:register_mob("nativevillages:desertranger", {
 	type = "monster",
@@ -445,7 +462,6 @@ sounds = {
 	lava_damage = 2,
 	light_damage = 0,
 	follow = {},
-        stay_near = "nativevillages:hookah",
 	view_range = 15,
 	owner = "",
 	order = "follow",
@@ -459,12 +475,17 @@ sounds = {
                 punch_speed = 100,
 		punch_start = 200,
 		punch_end = 300,
+		die_start = 200,
+		die_end = 300,
+		die_speed = 50,
+		die_loop = false,
+		die_rotate = true,
 	},
 	on_rightclick = function(self, clicker)
 
 		if mobs:feed_tame(self, clicker, 8, true, true) then return end
 		if mobs:protect(self, clicker) then return end
-		if mobs:capture_mob(self, clicker, 0, 5, 50, false, nil) then return end
+		if mobs:capture_mob(self, clicker, 0, 15, 25, false, nil) then return end
 	end,
 })
 
@@ -482,7 +503,7 @@ mobs:spawn({
 })
 end
 
-mobs:register_egg("nativevillages:desertranger", ("Desert Ranger"), "adesertranger.png")
+mobs:register_egg("nativevillages:desertranger", S("Desert Ranger"), "adesertranger.png")
 
 
 mobs:register_mob("nativevillages:desertraider", {
@@ -525,7 +546,6 @@ sounds = {
 	lava_damage = 2,
 	light_damage = 0,
 	follow = {},
-        stay_near = "nativevillages:hookah",
 	view_range = 15,
 	owner = "",
 	order = "follow",
@@ -539,12 +559,17 @@ sounds = {
                 punch_speed = 100,
 		punch_start = 200,
 		punch_end = 300,
+		die_start = 200,
+		die_end = 300,
+		die_speed = 50,
+		die_loop = false,
+		die_rotate = true,
 	},
 on_rightclick = function(self, clicker)
 
 		if mobs:feed_tame(self, clicker, 8, true, true) then return end
 		if mobs:protect(self, clicker) then return end
-		if mobs:capture_mob(self, clicker, 0, 5, 50, false, nil) then return end
+		if mobs:capture_mob(self, clicker, 0, 15, 25, false, nil) then return end
 	end,
 })
 
@@ -562,7 +587,7 @@ mobs:spawn({
 })
 end
 
-mobs:register_egg("nativevillages:desertraider", ("Desert Raider"), "adesertraider.png")
+mobs:register_egg("nativevillages:desertraider", S("Desert Raider"), "adesertraider.png")
 
 mobs:register_mob("nativevillages:desertchicken", {
 stepheight = 1,
@@ -595,6 +620,7 @@ stepheight = 1,
 	},
 	walk_velocity = 1,
 	run_velocity = 3,
+        stay_near = {{"nativevillages:desertseeds"}, 4},
 	runaway = true,
         runaway_from = {"animalworld:bear", "animalworld:crocodile", "animalworld:tiger", "animalworld:spider", "animalworld:spidermale", "animalworld:shark", "animalworld:hyena", "animalworld:kobra", "animalworld:monitor", "animalworld:snowleopard", "animalworld:volverine", "livingfloatlands:deinotherium", "livingfloatlands:carnotaurus", "livingfloatlands:lycaenops", "livingfloatlands:smilodon", "livingfloatlands:tyrannosaurus", "livingfloatlands:velociraptor", "animalworld:divingbeetle", "animalworld:scorpion"},
 	drops = {
@@ -611,7 +637,11 @@ stepheight = 1,
 		stand2_end = 200,
 		walk_start = 200,
 		walk_end = 300,
-
+		die_start = 200,
+		die_end = 300,
+		die_speed = 50,
+		die_loop = false,
+		die_rotate = true,
 	},
 	follow = {},
 	view_range = 10,
@@ -620,7 +650,7 @@ stepheight = 1,
 
 		if mobs:feed_tame(self, clicker, 8, true, true) then return end
 		if mobs:protect(self, clicker) then return end
-		if mobs:capture_mob(self, clicker, 30, 50, 80, false, nil) then return end
+		if mobs:capture_mob(self, clicker, 15, 25, 0, false, nil) then return end
 	end,
 
 	do_custom = function(self, dtime)
@@ -664,7 +694,7 @@ mobs:spawn({
 end
 
 
-mobs:register_egg("nativevillages:desertchicken", ("Desert Chicken"), "adesertchicken.png", 0)
+mobs:register_egg("nativevillages:desertchicken", S("Desert Chicken"), "adesertchicken.png", 0)
 
 
 
@@ -785,7 +815,7 @@ end
 
 -- egg
 minetest.register_node(":nativevillages:egg", {
-	description = ("Bird Egg"),
+	description = S("Bird Egg"),
 	tiles = {"mobs_chicken_egg.png"},
 	inventory_image  = "mobs_chicken_egg.png",
 	visual_scale = 0.7,
@@ -811,7 +841,7 @@ minetest.register_node(":nativevillages:egg", {
 
 -- fried egg
 minetest.register_craftitem(":nativevillages:chicken_egg_fried", {
-	description = ("Fried Desert Chicken Egg"),
+	description = S("Fried Desert Chicken Egg"),
 	inventory_image = "nativevillages_chicken_egg_fried.png",
 	on_use = minetest.item_eat(2),
 	groups = {food_egg_fried = 1, flammable = 2},
@@ -825,7 +855,7 @@ minetest.register_craft({
 
 -- raw chicken
 minetest.register_craftitem(":nativevillages:chicken_raw", {
-description = ("Raw Desert Chicken meat"),
+description = S("Raw Desert Chicken meat"),
 	inventory_image = "nativevillages_chicken_raw.png",
 	on_use = minetest.item_eat(2),
 	groups = {food_meat_raw = 1, food_chicken_raw = 1, flammable = 2},
@@ -833,7 +863,7 @@ description = ("Raw Desert Chicken meat"),
 
 -- cooked chicken
 minetest.register_craftitem(":nativevillages:chicken_cooked", {
-description = ("Cooked Desert Chicken"),
+description = S("Cooked Desert Chicken"),
 	inventory_image = "nativevillages_chicken_cooked.png",
 	on_use = minetest.item_eat(6),
 	groups = {food_meat = 1, food_chicken = 1, flammable = 2},

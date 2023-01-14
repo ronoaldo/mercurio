@@ -1,5 +1,7 @@
+local S = minetest.get_translator("nativevillages")
+
 minetest.register_node("nativevillages:sledge", {
-    description = "Sledge",
+    description = S"Sledge",
     visual_scale = 1,
     mesh = "Sledge.b3d",
     tiles = {"texturesledge.png"},
@@ -32,7 +34,7 @@ minetest.register_craft({
 })
 
 minetest.register_node("nativevillages:blanket", {
-    description = "Blanket",
+    description = S"Blanket",
     visual_scale = 1,
     mesh = "Blanket.b3d",
     tiles = {"textureblanket.png"},

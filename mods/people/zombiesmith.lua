@@ -1,3 +1,5 @@
+local S = minetest.get_translator("people")
+
 mobs:register_mob("people:zombiesmith", {
 	type = "monster",
 	passive = false,
@@ -46,7 +48,11 @@ mobs:register_mob("people:zombiesmith", {
 		walk2_end = 300,
 		punch_start = 0,
 		punch_end = 100,
-		-- 50-70 is slide/water idle
+		die_start = 0,
+		die_end = 100,
+		die_speed = 50,
+		die_loop = false,
+		die_rotate = true,
 	},
 	view_range = 150,
 
@@ -55,11 +61,11 @@ mobs:register_mob("people:zombiesmith", {
 		-- feed or tame
 		if mobs:feed_tame(self, clicker, 4, false, true) then return end
 		if mobs:protect(self, clicker) then return end
-		if mobs:capture_mob(self, clicker, 5, 50, 80, false, nil) then return end
+		if mobs:capture_mob(self, clicker, 0, 15, 25, false, nil) then return end
 	end,
 })
 
-if not mobs.custom_spawn_animal then
+if not mobs.custom_spawn_people then
 mobs:spawn({
 	name = "people:zombiesmith",
 	nodes = {"default:cobble", "default:mossycobble", "default:sandstonebrick", "default:dirt_with_snow", "default:dry_dirt", "default:dry_dirt_with_dry_grass", "default:permafrost", "default:permafrost", "default:sand", "default:desert_sand", "default:silver_sand", "default:gravel", "default:snowblock", "default:ice", "default:cave:ice", "default:desert_stone", "default:sandstone", "default:silver_sandstone"},
@@ -74,4 +80,4 @@ mobs:spawn({
 })
 end
 
-mobs:register_egg("people:zombiesmith", ("Zombie"), "azombie.png")
+mobs:register_egg("people:zombiesmith", S("Zombie"), "azombie.png")

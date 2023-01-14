@@ -57,7 +57,7 @@ end)
 local function apply_new_filter(player, search_text, new_dir)
 	local player_name = player:get_player_name()
 
-	minetest.sound_play("click", {to_player=player_name, gain = 0.1})
+	minetest.sound_play("ui_click", {to_player=player_name, gain = 0.1})
 	ui.apply_filter(player, search_text, new_dir)
 	ui.current_searchbox[player_name] = search_text
 	ui.set_inventory_formspec(player, ui.current_page[player_name])
@@ -114,7 +114,7 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 	for i, def in pairs(unified_inventory.buttons) do
 		if fields[def.name] then
 			def.action(player)
-			minetest.sound_play("click",
+			minetest.sound_play("ui_click",
 					{to_player=player_name, gain = 0.1})
 			return
 		end
@@ -179,7 +179,7 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 		end
 	end
 	if clicked_item then
-		minetest.sound_play("click",
+		minetest.sound_play("ui_click",
 				{to_player=player_name, gain = 0.1})
 		local page = unified_inventory.current_page[player_name]
 		local player_creative = unified_inventory.is_creative(player_name)
@@ -219,7 +219,7 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 	if not (fields.alternate or fields.alternate_prev) then
 		return
 	end
-	minetest.sound_play("click",
+	minetest.sound_play("ui_click",
 			{to_player=player_name, gain = 0.1})
 	local item_name = unified_inventory.current_item[player_name]
 	if not item_name then

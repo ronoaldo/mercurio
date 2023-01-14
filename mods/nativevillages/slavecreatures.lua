@@ -1,3 +1,5 @@
+local S = minetest.get_translator("nativevillages")
+
 mobs.slavechickenbreeder_drops = {
 	"nativevillages:desertchickentame"
 }
@@ -38,6 +40,7 @@ sounds = {
 	jump = true,
 	drops = {
 	},
+        stay_near = {{"people:feeder", "people:villagerbed", "marinara:reed_bundle", "naturalbiomes:reed_bundle", "farming:straw", "xdecor:empty_shelf", "xdecor:intemframe", "xdecor:lantern", "xdecor:candle", "xdecor:multishelf", "xdecor:tv", "default:bookshelf", "vessels:shelf", "livingcaves:root_lamp", "default:chest", "default:mese_post_light_pine_wood", "default:meselamp", "default:mese_post_light_pine_wood", "default:mese_post_light", "default:mese_post_light_acacia_wood", "default:mese_post_light_aspen_wood", "default:mese_post_light_junglewood", "animalworld:crocodilestool", "animalworld:elephantstool", "animalworld:bearstool", "animalworld:gnustool", "animalworld:hippostool", "animalworld:monitorstool", "animalworld:ivorychair", "animalworld:sealstool", "animalworld:yakstool", "animalworld:tigerstool", "animalworld:muskoxstool"}, 5},
 	water_damage = 0,
 	lava_damage = 2,
 	light_damage = 0,
@@ -55,6 +58,11 @@ sounds = {
                 punch_speed = 100,
 		punch_start = 200,
 		punch_end = 300,
+		die_start = 200,
+		die_end = 300,
+		die_speed = 50,
+		die_loop = false,
+		die_rotate = true,
 	},
 
 	on_rightclick = function(self, clicker)
@@ -63,7 +71,7 @@ sounds = {
 		if mobs:feed_tame(self, clicker, 8, true, true) then return end
 
 		-- capture npc with net or lasso
-		if mobs:capture_mob(self, clicker, nil, 5, 80, false, nil) then return end
+		if mobs:capture_mob(self, clicker, 0, 15, 25, false, nil) then return end
 
 		-- protect npc with mobs:protector
 		if mobs:protect(self, clicker) then return end
@@ -89,7 +97,7 @@ sounds = {
 				name = drops[math.random(1, #drops)]
 			})
 
-			minetest.chat_send_player(name, ("Chicken hatched!"))
+			minetest.chat_send_player(name, S("Chicken hatched!"))
 
 			return
 		end
@@ -105,18 +113,18 @@ sounds = {
 				self:set_animation("stand")
 				self:set_velocity(0)
 
-				minetest.chat_send_player(name, ("Chicken Breeder stands still."))
+				minetest.chat_send_player(name, S("Chicken Breeder stands still."))
 			else
 				self.order = "follow"
 
-				minetest.chat_send_player(name, ("Chicken Breeder will follow you."))
+				minetest.chat_send_player(name, S("Chicken Breeder will follow you."))
 			end
 		end
 	end,
 })
 
 
-mobs:register_egg("nativevillages:slavechickenbreeder", ("Chicken Breeder"), "aslavechickenbreeder.png")
+mobs:register_egg("nativevillages:slavechickenbreeder", S("Chicken Breeder"), "aslavechickenbreeder.png")
 
 mobs.slavecowherder_drops = {
 	"nativevillages:domesticcow"
@@ -157,6 +165,7 @@ sounds = {
 	jump = true,
 	drops = {
 	},
+        stay_near = {{"people:feeder", "people:villagerbed", "marinara:reed_bundle", "naturalbiomes:reed_bundle", "farming:straw", "xdecor:empty_shelf", "xdecor:intemframe", "xdecor:lantern", "xdecor:candle", "xdecor:multishelf", "xdecor:tv", "default:bookshelf", "vessels:shelf", "livingcaves:root_lamp", "default:chest", "default:mese_post_light_pine_wood", "default:meselamp", "default:mese_post_light_pine_wood", "default:mese_post_light", "default:mese_post_light_acacia_wood", "default:mese_post_light_aspen_wood", "default:mese_post_light_junglewood", "animalworld:crocodilestool", "animalworld:elephantstool", "animalworld:bearstool", "animalworld:gnustool", "animalworld:hippostool", "animalworld:monitorstool", "animalworld:ivorychair", "animalworld:sealstool", "animalworld:yakstool", "animalworld:tigerstool", "animalworld:muskoxstool"}, 5},
 	water_damage = 0,
 	lava_damage = 2,
 	light_damage = 0,
@@ -174,6 +183,11 @@ sounds = {
                 punch_speed = 100,
 		punch_start = 200,
 		punch_end = 300,
+		die_start = 200,
+		die_end = 300,
+		die_speed = 50,
+		die_loop = false,
+		die_rotate = true,
 	},
 
 	on_rightclick = function(self, clicker)
@@ -182,7 +196,7 @@ sounds = {
 		if mobs:feed_tame(self, clicker, 8, true, true) then return end
 
 		-- capture npc with net or lasso
-		if mobs:capture_mob(self, clicker, nil, 5, 80, false, nil) then return end
+		if mobs:capture_mob(self, clicker, 0, 15, 25, false, nil) then return end
 
 		-- protect npc with mobs:protector
 		if mobs:protect(self, clicker) then return end
@@ -208,7 +222,7 @@ sounds = {
 				name = drops[math.random(1, #drops)]
 			})
 
-			minetest.chat_send_player(name, ("Cow has been raised!"))
+			minetest.chat_send_player(name, S("Cow has been raised!"))
 
 			return
 		end
@@ -224,18 +238,18 @@ sounds = {
 				self:set_animation("stand")
 				self:set_velocity(0)
 
-				minetest.chat_send_player(name, ("Cow Herder stands still."))
+				minetest.chat_send_player(name, S("Cow Herder stands still."))
 			else
 				self.order = "follow"
 
-				minetest.chat_send_player(name, ("Cow Herder will follow you."))
+				minetest.chat_send_player(name, S("Cow Herder will follow you."))
 			end
 		end
 	end,
 })
 
 
-mobs:register_egg("nativevillages:slavecowherder", ("Cow Herder"), "aslavecowherder.png")
+mobs:register_egg("nativevillages:slavecowherder", S("Cow Herder"), "aslavecowherder.png")
 
 mobs.slaveliontrainer_drops = {
 	"nativevillages:femaleliontame", "nativevillages:maleliontame"
@@ -284,6 +298,7 @@ sounds = {
 	owner = "singleplayer",
 	order = "follow",
 	fear_height = 3,
+        stay_near = {{"nativevillages:savannacorpse", "marinara:reed_bundle", "naturalbiomes:reed_bundle", "farming:straw", "xdecor:empty_shelf", "xdecor:intemframe", "xdecor:lantern", "xdecor:candle", "xdecor:multishelf", "xdecor:tv", "default:bookshelf", "vessels:shelf", "livingcaves:root_lamp", "default:chest", "default:mese_post_light_pine_wood", "default:meselamp", "default:mese_post_light_pine_wood", "default:mese_post_light", "default:mese_post_light_acacia_wood", "default:mese_post_light_aspen_wood", "default:mese_post_light_junglewood", "animalworld:crocodilestool", "animalworld:elephantstool", "animalworld:bearstool", "animalworld:gnustool", "animalworld:hippostool", "animalworld:monitorstool", "animalworld:ivorychair", "animalworld:sealstool", "animalworld:yakstool", "animalworld:tigerstool", "animalworld:muskoxstool"}, 5},
 	animation = {
 		speed_normal = 50,
 		stand_start = 0,
@@ -293,6 +308,11 @@ sounds = {
                 punch_speed = 100,
 		punch_start = 200,
 		punch_end = 300,
+		die_start = 200,
+		die_end = 300,
+		die_speed = 50,
+		die_loop = false,
+		die_rotate = true,
 	},
 
 	on_rightclick = function(self, clicker)
@@ -301,7 +321,7 @@ sounds = {
 		if mobs:feed_tame(self, clicker, 8, true, true) then return end
 
 		-- capture npc with net or lasso
-		if mobs:capture_mob(self, clicker, nil, 5, 80, false, nil) then return end
+		if mobs:capture_mob(self, clicker, 0, 15, 25, false, nil) then return end
 
 		-- protect npc with mobs:protector
 		if mobs:protect(self, clicker) then return end
@@ -327,7 +347,7 @@ sounds = {
 				name = drops[math.random(1, #drops)]
 			})
 
-			minetest.chat_send_player(name, ("Lion has been raised!"))
+			minetest.chat_send_player(name, S("Lion has been raised!"))
 
 			return
 		end
@@ -343,18 +363,18 @@ sounds = {
 				self:set_animation("stand")
 				self:set_velocity(0)
 
-				minetest.chat_send_player(name, ("Lion Trainer stands still."))
+				minetest.chat_send_player(name, S("Lion Trainer stands still."))
 			else
 				self.order = "follow"
 
-				minetest.chat_send_player(name, ("Lion Trainer will follow you."))
+				minetest.chat_send_player(name, S("Lion Trainer will follow you."))
 			end
 		end
 	end,
 })
 
 
-mobs:register_egg("nativevillages:slaveliontrainer", ("Lion Trainer"), "aslaveliontrainer.png")
+mobs:register_egg("nativevillages:slaveliontrainer", S("Lion Trainer"), "aslaveliontrainer.png")
 
 
 
@@ -403,6 +423,7 @@ sounds = {
 	owner = "singleplayer",
 	order = "follow",
 	fear_height = 3,
+        stay_near = {{"people:villagerbed", "xdecor:empty_shelf", "xdecor:intemframe", "xdecor:lantern", "xdecor:candle", "xdecor:multishelf", "xdecor:tv", "default:bookshelf", "vessels:shelf", "livingcaves:root_lamp", "default:chest", "default:mese_post_light_pine_wood", "default:meselamp", "default:mese_post_light_pine_wood", "default:mese_post_light", "default:mese_post_light_acacia_wood", "default:mese_post_light_aspen_wood", "default:mese_post_light_junglewood", "animalworld:crocodilestool", "animalworld:elephantstool", "animalworld:bearstool", "animalworld:gnustool", "animalworld:hippostool", "animalworld:monitorstool", "animalworld:ivorychair", "animalworld:sealstool", "animalworld:yakstool", "animalworld:tigerstool", "animalworld:muskoxstool"}, 5},
 	animation = {
 		speed_normal = 50,
 		stand_start = 0,
@@ -416,6 +437,11 @@ sounds = {
                 punch_speed = 100,
 		punch_start = 400,
 		punch_end = 500,
+		die_start = 400,
+		die_end = 500,
+		die_speed = 50,
+		die_loop = false,
+		die_rotate = true,
 	},
 
 	on_rightclick = function(self, clicker)
@@ -424,7 +450,7 @@ sounds = {
 		if mobs:feed_tame(self, clicker, 8, true, true) then return end
 
 		-- capture npc with net or lasso
-		if mobs:capture_mob(self, clicker, nil, 5, 80, false, nil) then return end
+		if mobs:capture_mob(self, clicker, 0, 15, 25, false, nil) then return end
 
 		-- protect npc with mobs:protector
 		if mobs:protect(self, clicker) then return end
@@ -450,7 +476,7 @@ sounds = {
 				name = drops[math.random(1, #drops)]
 			})
 
-			minetest.chat_send_player(name, ("NPC dropped you an item for gold!"))
+			minetest.chat_send_player(name, S("NPC dropped you an item for gold!"))
 
 			return
 		end
@@ -466,18 +492,18 @@ sounds = {
 				self:set_animation("stand")
 				self:set_velocity(0)
 
-				minetest.chat_send_player(name, ("Dancer will dance!."))
+				minetest.chat_send_player(name, S("Dancer will dance!"))
 			else
 				self.order = "follow"
 
-				minetest.chat_send_player(name, ("Dancer will follow you."))
+				minetest.chat_send_player(name, S("Dancer will follow you."))
 			end
 		end
 	end,
 })
 
 
-mobs:register_egg("nativevillages:slavefemaledancer", ("Female Dancer"), "aslavefemaledancer.png")
+mobs:register_egg("nativevillages:slavefemaledancer", S("Female Dancer"), "aslavefemaledancer.png")
 
 
 mobs:register_mob("nativevillages:slaveloyalcannibal", {
@@ -485,6 +511,7 @@ mobs:register_mob("nativevillages:slaveloyalcannibal", {
 	passive = false,
 	damage = 6,
         reach = 4,
+	group_attack = true,
 	attack_type = "dogfight",
 	attacks_monsters = true,
 	attack_npcs = false,
@@ -523,6 +550,7 @@ mobs:register_mob("nativevillages:slaveloyalcannibal", {
 	owner = "singleplayer",
 	order = "follow",
 	fear_height = 3,
+        stay_near = {{"nativevillages:driedpeople", "people:villagerbed", "xdecor:empty_shelf", "xdecor:intemframe", "xdecor:lantern", "xdecor:candle", "xdecor:multishelf", "xdecor:tv", "default:bookshelf", "vessels:shelf", "livingcaves:root_lamp", "default:chest", "default:mese_post_light_pine_wood", "default:meselamp", "default:mese_post_light_pine_wood", "default:mese_post_light", "default:mese_post_light_acacia_wood", "default:mese_post_light_aspen_wood", "default:mese_post_light_junglewood", "animalworld:crocodilestool", "animalworld:elephantstool", "animalworld:bearstool", "animalworld:gnustool", "animalworld:hippostool", "animalworld:monitorstool", "animalworld:ivorychair", "animalworld:sealstool", "animalworld:yakstool", "animalworld:tigerstool", "animalworld:muskoxstool"}, 5},
 	animation = {
 		speed_normal = 100,
 		stand_start = 0,
@@ -532,6 +560,11 @@ mobs:register_mob("nativevillages:slaveloyalcannibal", {
                 punch_speed = 100,
 		punch_start = 200,
 		punch_end = 300,
+		die_start = 200,
+		die_end = 300,
+		die_speed = 50,
+		die_loop = false,
+		die_rotate = true,
 	},
 
 on_rightclick = function(self, clicker)
@@ -540,7 +573,7 @@ on_rightclick = function(self, clicker)
 		if mobs:feed_tame(self, clicker, 8, true, true) then return end
 
 		-- capture npc with net or lasso
-		if mobs:capture_mob(self, clicker, nil, 5, 80, false, nil) then return end
+		if mobs:capture_mob(self, clicker, 0, 15, 25, false, nil) then return end
 
 		-- protect npc with mobs:protector
 		if mobs:protect(self, clicker) then return end
@@ -562,18 +595,18 @@ on_rightclick = function(self, clicker)
 				self:set_animation("stand")
 				self:set_velocity(0)
 
-				minetest.chat_send_player(name, ("Cannibal stands still."))
+				minetest.chat_send_player(name, S("Cannibal stands still."))
 			else
 				self.order = "follow"
 
-				minetest.chat_send_player(name, ("Cannibal will follow you."))
+				minetest.chat_send_player(name, S("Cannibal will follow you."))
 			end
 		end
 	end,
 })
 
 
-mobs:register_egg("nativevillages:slaveloyalcannibal", ("Loyal Cannibal"), "aslaveloyalcannibal.png")
+mobs:register_egg("nativevillages:slaveloyalcannibal", S("Loyal Cannibal"), "aslaveloyalcannibal.png")
 
 
 mobs:register_mob("nativevillages:slavemaledancer", {
@@ -612,6 +645,7 @@ mobs:register_mob("nativevillages:slavemaledancer", {
 	jump = true,
 	drops = {
 	},
+        stay_near = {{"people:villagerbed", "xdecor:empty_shelf", "xdecor:intemframe", "xdecor:lantern", "xdecor:candle", "xdecor:multishelf", "xdecor:tv", "default:bookshelf", "vessels:shelf", "livingcaves:root_lamp", "default:chest", "default:mese_post_light_pine_wood", "default:meselamp", "default:mese_post_light_pine_wood", "default:mese_post_light", "default:mese_post_light_acacia_wood", "default:mese_post_light_aspen_wood", "default:mese_post_light_junglewood", "animalworld:crocodilestool", "animalworld:elephantstool", "animalworld:bearstool", "animalworld:gnustool", "animalworld:hippostool", "animalworld:monitorstool", "animalworld:ivorychair", "animalworld:sealstool", "animalworld:yakstool", "animalworld:tigerstool", "animalworld:muskoxstool"}, 5},
 	water_damage = 0,
 	lava_damage = 2,
 	light_damage = 0,
@@ -633,6 +667,11 @@ mobs:register_mob("nativevillages:slavemaledancer", {
                 punch_speed = 100,
 		punch_start = 400,
 		punch_end = 500,
+		die_start = 400,
+		die_end = 500,
+		die_speed = 50,
+		die_loop = false,
+		die_rotate = true,
 	},
 
 	on_rightclick = function(self, clicker)
@@ -641,7 +680,7 @@ mobs:register_mob("nativevillages:slavemaledancer", {
 		if mobs:feed_tame(self, clicker, 8, true, true) then return end
 
 		-- capture npc with net or lasso
-		if mobs:capture_mob(self, clicker, nil, 5, 80, false, nil) then return end
+		if mobs:capture_mob(self, clicker, 0, 15, 25, false, nil) then return end
 
 		-- protect npc with mobs:protector
 		if mobs:protect(self, clicker) then return end
@@ -667,7 +706,7 @@ mobs:register_mob("nativevillages:slavemaledancer", {
 				name = drops[math.random(1, #drops)]
 			})
 
-			minetest.chat_send_player(name, ("NPC dropped you an item for gold!"))
+			minetest.chat_send_player(name, S("NPC dropped you an item for gold!"))
 
 			return
 		end
@@ -683,15 +722,15 @@ mobs:register_mob("nativevillages:slavemaledancer", {
 				self:set_animation("stand")
 				self:set_velocity(0)
 
-				minetest.chat_send_player(name, ("Dancer will dance!."))
+				minetest.chat_send_player(name, S("Dancer will dance!"))
 			else
 				self.order = "follow"
 
-				minetest.chat_send_player(name, ("Dancer will follow you."))
+				minetest.chat_send_player(name, S("Dancer will follow you."))
 			end
 		end
 	end,
 })
 
 
-mobs:register_egg("nativevillages:slavemaledancer", ("Male Dancer"), "aslavemaledancer.png")
+mobs:register_egg("nativevillages:slavemaledancer", S("Male Dancer"), "aslavemaledancer.png")

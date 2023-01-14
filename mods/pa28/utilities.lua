@@ -25,6 +25,7 @@ function pa28.get_gauge_angle(value, initial_angle)
 	return angle
 end
 
+
 -- attach player
 function pa28.attach(self, player, instructor_mode)
     instructor_mode = instructor_mode or false
@@ -169,20 +170,20 @@ end
 function pa28.dettachPlayer(self, player)
     local name = self.driver_name
     airutils.setText(self, pa28.plane_text)
-
-    pa28.remove_hud(player)
-
-    --self._engine_running = false
-
     -- driver clicked the object => driver gets off the vehicle
     self.driver_name = nil
+    --self._engine_running = false
 
-    -- detach the player
-    --player:set_physics_override({speed = 1, jump = 1, gravity = 1, sneak = true})
-    player:set_detach()
-    player_api.player_attached[name] = nil
-    player:set_eye_offset({x=0,y=0,z=0},{x=0,y=0,z=0})
-    player_api.set_animation(player, "stand")
+    if player then
+        pa28.remove_hud(player)
+
+        -- detach the player
+        --player:set_physics_override({speed = 1, jump = 1, gravity = 1, sneak = true})
+        player:set_detach()
+        player_api.player_attached[name] = nil
+        player:set_eye_offset({x=0,y=0,z=0},{x=0,y=0,z=0})
+        player_api.set_animation(player, "stand")
+    end
     self.driver = nil
     --remove_physics_override(player, {speed=1,gravity=1,jump=1})
 end
@@ -794,9 +795,13 @@ function pa28.flightstep(self)
     end
 
     --is an stall, force a recover
-    if longit_speed < (pa28.min_speed) and climb_rate < -3 and is_flying then
+    --minetest.chat_send_all("speed: "..longit_speed.." - min: "..pa28.min_speed.." - climb: "..climb_rate)
+    if longit_speed < (pa28.min_speed+1) and climb_rate < -1.5 and is_flying then
+        if player and self.driver_name then
+            minetest.chat_send_player(self.driver_name,core.colorize('#ff0000', " >>> STALL"))
+        end
         self._elevator_angle = 0
-        self._angle_of_attack = -2
+        self._angle_of_attack = -1
         newpitch = math.rad(self._angle_of_attack)
     end
 

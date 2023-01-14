@@ -91,14 +91,15 @@ minetest.register_node(":mobs:beehive", {
 	sunlight_propagates = true,
 	walkable = true,
 	groups = {oddly_breakable_by_hand = 3, flammable = 1, disable_suffocation = 1},
-	sounds = default.node_sound_defaults(),
+	sounds = default and default.node_sound_defaults(),
 
 	on_construct = function(pos)
 
 		local meta = minetest.get_meta(pos)
+		local gui_bg = default and default.gui_bg .. default.gui_bg_img .. default.gui_slots or ""
 
 		meta:set_string("formspec", "size[8,6]"
-			..default.gui_bg..default.gui_bg_img..default.gui_slots
+			.. gui_bg
 			.. "image[3,0.8;0.8,0.8;mobs_bee_inv.png]"
 			.. "list[current_name;beehive;4,0.5;1,1;]"
 			.. "list[current_player;main;0,2.35;8,4;]"
@@ -156,7 +157,7 @@ minetest.register_node(":mobs:honey_block", {
 	description = S("Honey Block"),
 	tiles = {"mobs_honey_block.png"},
 	groups = {snappy = 3, flammable = 2},
-	sounds = default.node_sound_dirt_defaults()
+	sounds = default and default.node_sound_dirt_defaults()
 })
 
 -- recipe

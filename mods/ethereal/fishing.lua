@@ -504,7 +504,7 @@ minetest.register_craft({
 	cooktime = 8
 })
 
--- Sashimi (Thanks to Natalia Grosner for letting me use the sashimi image)
+-- Sashimi
 minetest.register_craftitem("ethereal:sashimi", {
 	description = S("Sashimi"),
 	inventory_image = "ethereal_sashimi.png",

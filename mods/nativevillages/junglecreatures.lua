@@ -1,3 +1,5 @@
+local S = minetest.get_translator("nativevillages")
+
 mobs:register_mob("nativevillages:cannibalking", {
 	type = "monster",
 	passive = false,
@@ -31,6 +33,7 @@ sounds = {
         jump_height = 2,
         stepheight = 2,
         fear_height = 3,
+        stay_near = {{"nativevillages:cannibalshrine", "nativevillages:driedpeople"}, 5},
 	drops = {
 		{name = "default:copper_lump", chance = 1, min = 1, max = 1},
 	},
@@ -47,6 +50,11 @@ sounds = {
 		shoot_speed = 100,
 		shoot_start = 200,
 		shoot_end = 300,
+		die_start = 200,
+		die_end = 300,
+		die_speed = 50,
+		die_loop = false,
+		die_rotate = true,
 	},
 	view_range = 15,
 
@@ -55,7 +63,7 @@ sounds = {
 		-- feed or tame
 		if mobs:feed_tame(self, clicker, 4, false, true) then return end
 		if mobs:protect(self, clicker) then return end
-		if mobs:capture_mob(self, clicker, 5, 50, 80, false, nil) then return end
+		if mobs:capture_mob(self, clicker, 0, 15, 25, false, nil) then return end
 	end,
 })
 
@@ -98,7 +106,7 @@ mobs:register_arrow("nativevillages:fireball", {
 })
 
 
-mobs:register_egg("nativevillages:cannibalking", ("Cannibal King"), "acannibalking.png")
+mobs:register_egg("nativevillages:cannibalking", S("Cannibal King"), "acannibalking.png")
 
 mobs:register_mob("nativevillages:cannibalarcher", {
 	type = "monster",
@@ -133,6 +141,7 @@ sounds = {
         jump_height = 2,
         stepheight = 2,
         fear_height = 3,
+        stay_near = {{"nativevillages:cannibalshrine", "nativevillages:driedpeople"}, 5},
 	drops = {
 		{name = "default:tin_lump", chance = 1, min = 1, max = 1},
 	},
@@ -149,6 +158,11 @@ sounds = {
 		shoot_speed = 50,
 		shoot_start = 200,
 		shoot_end = 300,
+		die_start = 200,
+		die_end = 300,
+		die_speed = 50,
+		die_loop = false,
+		die_rotate = true,
 	},
 	view_range = 15,
 
@@ -157,7 +171,7 @@ sounds = {
 		-- feed or tame
 		if mobs:feed_tame(self, clicker, 4, false, true) then return end
 		if mobs:protect(self, clicker) then return end
-		if mobs:capture_mob(self, clicker, 5, 50, 80, false, nil) then return end
+		if mobs:capture_mob(self, clicker, 0, 15, 25, false, nil) then return end
 	end,
 })
 
@@ -175,7 +189,7 @@ mobs:spawn({
 })
 end
 
-mobs:register_egg("nativevillages:cannibalarcher", ("Cannibal Hunter"), "acannibalarcher.png")
+mobs:register_egg("nativevillages:cannibalarcher", S("Cannibal Hunter"), "acannibalarcher.png")
 
 mobs:register_mob("nativevillages:cannibalmurderer", {
 	type = "monster",
@@ -208,6 +222,7 @@ sounds = {
         jump_height = 2,
         stepheight = 2,
         fear_height = 3,
+        stay_near = {{"nativevillages:cannibalshrine", "nativevillages:driedpeople"}, 5},
 	drops = {
 		{name = "default:copper_lump", chance = 1, min = 1, max = 1},
 	},
@@ -224,6 +239,11 @@ sounds = {
 		punch_speed = 100,
 		punch_start = 200,
 		punch_end = 300,
+		die_start = 200,
+		die_end = 300,
+		die_speed = 50,
+		die_loop = false,
+		die_rotate = true,
 	},
 	view_range = 15,
 
@@ -232,7 +252,7 @@ sounds = {
 		-- feed or tame
 		if mobs:feed_tame(self, clicker, 4, false, true) then return end
 		if mobs:protect(self, clicker) then return end
-		if mobs:capture_mob(self, clicker, 5, 50, 80, false, nil) then return end
+		if mobs:capture_mob(self, clicker, 0, 15, 25, false, nil) then return end
 	end,
 })
 
@@ -250,7 +270,7 @@ mobs:spawn({
 })
 end
 
-mobs:register_egg("nativevillages:cannibalmurderer", ("Cannibal Murderer"), "acannibalmurderer.png")
+mobs:register_egg("nativevillages:cannibalmurderer", S("Cannibal Murderer"), "acannibalmurderer.png")
 
 mobs:register_mob("nativevillages:cannibalchild", {
 	type = "monster",
@@ -284,6 +304,7 @@ sounds = {
         jump_height = 4,
         stepheight = 2,
         fear_height = 5,
+        stay_near = {{"nativevillages:cannibalshrine", "nativevillages:driedpeople"}, 5},
 	drops = {
 		{name = "default:iron_lump", chance = 1, min = 1, max = 1},
 	},
@@ -300,6 +321,11 @@ sounds = {
 		punch_speed = 100,
 		punch_start = 200,
 		punch_end = 300,
+		die_start = 200,
+		die_end = 300,
+		die_speed = 50,
+		die_loop = false,
+		die_rotate = true,
 	},
 	view_range = 15,
 
@@ -308,7 +334,7 @@ sounds = {
 		-- feed or tame
 		if mobs:feed_tame(self, clicker, 4, false, true) then return end
 		if mobs:protect(self, clicker) then return end
-		if mobs:capture_mob(self, clicker, 5, 50, 80, false, nil) then return end
+		if mobs:capture_mob(self, clicker, 0, 15, 25, false, nil) then return end
 	end,
 })
 
@@ -326,4 +352,4 @@ mobs:spawn({
 })
 end
 
-mobs:register_egg("nativevillages:cannibalchild", ("Cannibal Child"), "acannibalchild.png")
+mobs:register_egg("nativevillages:cannibalchild", S("Cannibal Child"), "acannibalchild.png")

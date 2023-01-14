@@ -1,3 +1,5 @@
+local S = minetest.get_translator("nativevillages")
+
 mobs:register_mob("nativevillages:grasslandcow", {
 	stepheight = 1,
 	type = "animal",
@@ -33,6 +35,7 @@ mobs:register_mob("nativevillages:grasslandcow", {
 	pushable = true,
 	follow = {},
 	view_range = 10,
+        stay_near = {{"nativevillages:cowdropping"}, 5},
 	drops = {
 	},
 	water_damage = 0,
@@ -49,10 +52,9 @@ mobs:register_mob("nativevillages:grasslandcow", {
 		walk_end = 300,
 		punch_start = 300,
 		punch_end = 400,
-
-		die_start = 1, -- we dont have a specific death animation so we will
-		die_end = 2, --   re-use 2 standing frames at a speed of 1 fps and
-		die_speed = 1, -- have mob rotate when dying.
+		die_start = 300,
+		die_end = 400,
+		die_speed = 50,
 		die_loop = false,
 		die_rotate = true,
 	},
@@ -79,7 +81,7 @@ mobs:spawn({
 })
 end
 
-mobs:register_egg("nativevillages:grasslandcow", ("Grassland Cow"), "agrasslandcow.png")
+mobs:register_egg("nativevillages:grasslandcow", S("Grassland Cow"), "agrasslandcow.png")
 
 
 mobs:alias_mob("nativevillages:grasslandcow", "nativevillages:grasslandcow") -- compatibility
@@ -137,7 +139,7 @@ sounds = {
 	lava_damage = 2,
 	light_damage = 0,
 	follow = {},
-        stay_near = "nativevillages:grasslandbarrel",
+        stay_near = {{"nativevillages:grasslandbarrel"}, 5},
 	view_range = 15,
 	owner = "",
 	order = "follow",
@@ -151,6 +153,11 @@ sounds = {
                 punch_speed = 100,
 		punch_start = 200,
 		punch_end = 300,
+		die_start = 200,
+		die_end = 300,
+		die_speed = 50,
+		die_loop = false,
+		die_rotate = true,
 	},
 
 	on_rightclick = function(self, clicker)
@@ -159,7 +166,7 @@ sounds = {
 		if mobs:feed_tame(self, clicker, 8, true, true) then return end
 
 		-- capture npc with net or lasso
-		if mobs:capture_mob(self, clicker, nil, 5, 80, false, nil) then return end
+		if mobs:capture_mob(self, clicker, 0, 15, 25, false, nil) then return end
 
 		-- protect npc with mobs:protector
 		if mobs:protect(self, clicker) then return end
@@ -185,7 +192,7 @@ sounds = {
 				name = drops[math.random(1, #drops)]
 			})
 
-			minetest.chat_send_player(name, ("Grasslander dropped you an item for bread!"))
+			minetest.chat_send_player(name, S("Grasslander dropped you an item for bread!"))
 
 			return
 		end
@@ -201,11 +208,11 @@ sounds = {
 				self:set_animation("stand")
 				self:set_velocity(0)
 
-				minetest.chat_send_player(name, ("Grasslander stands still."))
+				minetest.chat_send_player(name, S("Grasslander stands still."))
 			else
 				self.order = "follow"
 
-				minetest.chat_send_player(name, ("Grasslander will follow you."))
+				minetest.chat_send_player(name, S("Grasslander will follow you."))
 			end
 		end
 	end,
@@ -225,7 +232,7 @@ mobs:spawn({
 })
 end
 
-mobs:register_egg("nativevillages:grasslandfemale", ("Female Grasslander"), "agrasslandfemale.png")
+mobs:register_egg("nativevillages:grasslandfemale", S("Female Grasslander"), "agrasslandfemale.png")
 
 -- compatibility
 mobs:alias_mob("nativevillages:grasslandfemale", "nativevillages:grasslandfemale")
@@ -279,7 +286,7 @@ sounds = {
 	lava_damage = 2,
 	light_damage = 0,
 	follow = {},
-        stay_near = "nativevillages:grasslandbarrel",
+        stay_near = {{"nativevillages:grasslandbarrel"}, 5},
 	view_range = 15,
 	owner = "",
 	order = "follow",
@@ -293,6 +300,11 @@ sounds = {
                 punch_speed = 100,
 		punch_start = 200,
 		punch_end = 300,
+		die_start = 200,
+		die_end = 300,
+		die_speed = 50,
+		die_loop = false,
+		die_rotate = true,
 	},
 
 	on_rightclick = function(self, clicker)
@@ -301,7 +313,7 @@ sounds = {
 		if mobs:feed_tame(self, clicker, 8, true, true) then return end
 
 		-- capture npc with net or lasso
-		if mobs:capture_mob(self, clicker, nil, 5, 80, false, nil) then return end
+		if mobs:capture_mob(self, clicker, 0, 15, 25, false, nil) then return end
 
 		-- protect npc with mobs:protector
 		if mobs:protect(self, clicker) then return end
@@ -327,7 +339,7 @@ sounds = {
 				name = drops[math.random(1, #drops)]
 			})
 
-			minetest.chat_send_player(name, ("Grasslander dropped you an item for bread!"))
+			minetest.chat_send_player(name, S("Grasslander dropped you an item for bread!"))
 
 			return
 		end
@@ -343,11 +355,11 @@ sounds = {
 				self:set_animation("stand")
 				self:set_velocity(0)
 
-				minetest.chat_send_player(name, ("Grasslander stands still."))
+				minetest.chat_send_player(name, S("Grasslander stands still."))
 			else
 				self.order = "follow"
 
-				minetest.chat_send_player(name, ("Grasslander will follow you."))
+				minetest.chat_send_player(name, S("Grasslander will follow you."))
 			end
 		end
 	end,
@@ -367,7 +379,7 @@ mobs:spawn({
 })
 end
 
-mobs:register_egg("nativevillages:grasslandmale", ("Male Grasslander"), "agrasslandmale.png")
+mobs:register_egg("nativevillages:grasslandmale", S("Male Grasslander"), "agrasslandmale.png")
 
 -- compatibility
 mobs:alias_mob("nativevillages:grasslandmale", "nativevillages:grasslandmale")
@@ -422,7 +434,7 @@ sounds = {
 	lava_damage = 2,
 	light_damage = 0,
 	follow = {},
-        stay_near = "nativevillages:grasslandaltar",
+        stay_near = {{"nativevillages:grasslandalta"}, 4},
 	view_range = 15,
 	owner = "",
 	order = "follow",
@@ -436,6 +448,11 @@ sounds = {
                 shoot_speed = 100,
 		shoot_start = 200,
 		shoot_end = 300,
+		die_start = 200,
+		die_end = 300,
+		die_speed = 50,
+		die_loop = false,
+		die_rotate = true,
 	},
 
 	on_rightclick = function(self, clicker)
@@ -444,7 +461,7 @@ sounds = {
 		if mobs:feed_tame(self, clicker, 8, true, true) then return end
 
 		-- capture npc with net or lasso
-		if mobs:capture_mob(self, clicker, nil, 5, 80, false, nil) then return end
+		if mobs:capture_mob(self, clicker, 0, 15, 25, false, nil) then return end
 
 		-- protect npc with mobs:protector
 		if mobs:protect(self, clicker) then return end
@@ -470,7 +487,7 @@ sounds = {
 				name = drops[math.random(1, #drops)]
 			})
 
-			minetest.chat_send_player(name, ("Witch dropped you an item for diamond!"))
+			minetest.chat_send_player(name, S("Witch dropped you an item for diamond!"))
 
 			return
 		end
@@ -486,11 +503,11 @@ sounds = {
 				self:set_animation("stand")
 				self:set_velocity(0)
 
-				minetest.chat_send_player(name, ("Witch stands still."))
+				minetest.chat_send_player(name, S("Witch stands still."))
 			else
 				self.order = "follow"
 
-				minetest.chat_send_player(name, ("Witch will follow you."))
+				minetest.chat_send_player(name, S("Witch will follow you."))
 			end
 		end
 	end,
@@ -510,7 +527,7 @@ mobs:spawn({
 })
 end
 
-mobs:register_egg("nativevillages:grasslandwitch", ("Grassland Witch"), "agrasslandwitch.png")
+mobs:register_egg("nativevillages:grasslandwitch", S("Grassland Witch"), "agrasslandwitch.png")
 
 -- compatibility
 mobs:alias_mob("nativevillages:grasslandwitch", "nativevillages:grasslandwitch")
