@@ -23,12 +23,12 @@ submodules:
 	git submodule update
 
 rm-submodule:
-	@if [ x"" == x"$(M)" ]; then \
+	@if [ x"" = x"$(M)" ]; then \
 		echo "Pass the M= parameter with the submodule path to remove."; \
 		exit 1; \
 	fi
+	@echo "*** Removing submodule '$(M)' ***"
 	git rm $(M)
-	git commit
 	rm -rvf .git/modules/$(M)
 	git config --remove-section submodule.$(M)
 	git commit
