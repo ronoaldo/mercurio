@@ -11,7 +11,7 @@ local function to_json(val)
         return "null"
     end
     return str
-end   
+end
 
 -- To help beta testers, always grant some usefull privs
 local function auto_grant_privs(player, last_login)
