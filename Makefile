@@ -20,6 +20,7 @@ build:
 volumes: .minetest/world .minetest/logs
 
 submodules:
+	git submodule init
 	git submodule update
 
 rm-submodule:
@@ -47,11 +48,19 @@ run: volumes submodules
 	@echo "Server is running in background"
 	if [ x"$(INTERACTIVE)" = x"true" ] ; then docker-compose logs -f ; fi
 
+run-client:
+	minetest --address jupiter.ronoaldo.dev.br --port 30000 \
+		--name ronoaldo --password-file ~/.config/mercurio-dev.pwd \
+		--go
+
 stop:
 	docker-compose down || true
 
 backup:
-	./backup.sh
+	./scripts/backup.sh
+
+restore:
+	./scripts/restore.sh latest
 
 shell:
 	docker-compose exec --user 0 game bash

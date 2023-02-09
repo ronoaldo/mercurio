@@ -5,7 +5,7 @@ set -o pipefail
 [ x"$DEBUG" == x"true" ] && set -x
 
 # Config
-BASEDIR=`readlink -f $(dirname $0)`
+BASEDIR=`readlink -f $(dirname $0)/..`
 BASENAME=`basename $BASEDIR`
 BACKUP_DIR=$HOME/backups/$(date +'%Y%m')
 BACKUP_FILE_NAME=$BASENAME-$(date +'%Y%m%d-%H%M%S').tar
