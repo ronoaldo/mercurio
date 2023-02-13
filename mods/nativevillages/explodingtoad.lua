@@ -77,9 +77,10 @@ if not mobs.custom_spawn_nativevillages then
 mobs:spawn({
 	name = "nativevillages:toad",
 	nodes = {"default:dirt_with_grass"}, {"default:dirt_with_rainforest_litter"}, {"default:dry_dirt_with_dry_grass"},
+	neighbors = {"group:grass", "group:normal_grass"},
 	min_light = 0,
 	interval = 60,
-	chance = 8000, -- 15000
+	chance = 2000, -- 15000
 	active_object_count = 1,
 	min_height = 1,
 	max_height = 15,

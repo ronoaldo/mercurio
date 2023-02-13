@@ -1,7 +1,7 @@
 local S = minetest.get_translator("people")
 
 mobs:register_mob("people:papvillager", {
-	stepheight = 2,
+	stepheight = 1,
 	type = "animal",
 	passive = true,
 	attack_type = "dogfight",
@@ -13,9 +13,10 @@ mobs:register_mob("people:papvillager", {
 	hp_min = 30,
 	hp_max = 60,
 	armor = 100,
-	collisionbox = {-0.35,-1.0,-0.35, 0.35,0.8,0.35},
+	collisionbox = {-0.35,-0.7,-0.35, 0.35,0.8,0.35},
 	visual = "mesh",
 	mesh = "Villager.b3d",
+	visual_size = {x = 0.7, y = 0.7},
 	textures = {
 		{"texturepapvillager.png"},
 	},
@@ -32,7 +33,7 @@ mobs:register_mob("people:papvillager", {
 	runaway = true,
         runaway_from = {"animalworld:bear", "animalworld:crocodile", "animalworld:tiger", "animalworld:spider", "animalworld:spidermale", "animalworld:shark", "animalworld:hyena", "animalworld:kobra", "animalworld:monitor", "animalworld:snowleopard", "animalworld:volverine", "livingfloatlands:deinotherium", "livingfloatlands:carnotaurus", "livingfloatlands:lycaenops", "livingfloatlands:smilodon", "livingfloatlands:tyrannosaurus", "livingfloatlands:velociraptor", "people:pirate", "people:evilminer", "people:jealousminer", "people:hatefulminer", "people:plunderercrossbow", "people:plundererflask", "people:plundererstick"},
 	jump = true,
-	jump_height = 3,
+	jump_height = 6,
 	pushable = true,
 	follow = {"farming:baked_potato", "farming:sunflower_bread", "farming:pumpkin_bread", "farming:garlic_bread", "farming:tomato_soup", "pie:brpd_0", "farming:bread", "farming:bread_multigrain", "farming:spanish_potatoes", "farming:beetroot_soup", "farming:blueberry_pie", "farming:porridge", "farming:bibimbap", "farming:burger", "farming:paella", "farming:mac_and_cheese", "livingcaves:healingsoup", "farming:spaghetti", "animalworld:escargots", "farming:rhubarb_pie", "farming:potato_omlet", "farming:potato_salad"},
 	view_range = 10,
@@ -42,7 +43,7 @@ mobs:register_mob("people:papvillager", {
 	water_damage = 0,
 	lava_damage = 5,
 	light_damage = 0,
-	fear_height = 3,
+	fear_height = 2,
 	animation = {
 		speed_normal = 50,
 		stand_start = 0,

@@ -23,7 +23,7 @@ and minetest.settings:get_bool("protector_pvp") then
 
 			if not player
 			or not hitter then
-				print("[Protector] on_punchplayer called with nil objects")
+				print("[MOD] Protector - on_punchplayer called with nil objects")
 			end
 
 			if not hitter:is_player() then
@@ -64,9 +64,9 @@ and minetest.settings:get_bool("protector_pvp") then
 
 		end)
 	else
-		print("[Protector] pvp_protect not active, update your version of Minetest")
+		print("[MOD] Protector - pvp_protect not active, update your version of Minetest")
 
 	end
 else
-	print("[Protector] pvp_protect is disabled")
+	print("[MOD] Protector - pvp_protect is disabled")
 end

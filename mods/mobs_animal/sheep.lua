@@ -62,7 +62,7 @@ for _, col in ipairs(all_colours) do
 		jump_height = 6,
 		pushable = true,
 		drops = drops_normal,
-		water_damage = 0,
+		water_damage = 0.01,
 		lava_damage = 5,
 		light_damage = 0,
 		animation = {

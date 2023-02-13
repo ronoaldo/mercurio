@@ -63,24 +63,41 @@ local function apply_new_filter(player, search_text, new_dir)
 	ui.set_inventory_formspec(player, ui.current_page[player_name])
 end
 
-minetest.register_on_player_receive_fields(function(player, formname, fields)
+-- Search box handling
+local function receive_fields_searchbox(player, formname, fields)
 	local player_name = player:get_player_name()
 
-	local ui_peruser,draw_lite_mode = unified_inventory.get_per_player_formspec(player_name)
+	-- always take new search text, even if not searching on it yet
+	if fields.searchbox and fields.searchbox ~= ui.current_searchbox[player_name] then
+		ui.current_searchbox[player_name] = fields.searchbox
+	end
 
+	if fields.searchbutton
+			or fields.key_enter_field == "searchbox" then
+
+		if ui.current_searchbox[player_name] ~= ui.activefilter[player_name] then
+			ui.apply_filter(player, ui.current_searchbox[player_name], "nochange")
+			ui.set_inventory_formspec(player, ui.current_page[player_name])
+			minetest.sound_play("paperflip2",
+					{to_player=player_name, gain = 1.0})
+		end
+	elseif fields.searchresetbutton then
+		if ui.activefilter[player_name] ~= "" then
+			apply_new_filter(player, "", "nochange")
+		end
+	end
+end
+
+minetest.register_on_player_receive_fields(function(player, formname, fields)
 	if formname ~= "" then
 		return
 	end
 
-	-- always take new search text, even if not searching on it yet
-	local dirty_search_filter = false
+	receive_fields_searchbox(player, formname, fields)
 
-	if fields.searchbox
-	and fields.searchbox ~= unified_inventory.current_searchbox[player_name] then
-		unified_inventory.current_searchbox[player_name] = fields.searchbox
-		dirty_search_filter = true
-	end
+	local player_name = player:get_player_name()
 
+	local ui_peruser,draw_lite_mode = unified_inventory.get_per_player_formspec(player_name)
 
 	local clicked_category
 	for name, value in pairs(fields) do
@@ -198,20 +215,6 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 			if inv:room_for_item("main", stack) then
 				inv:add_item("main", stack)
 			end
-		end
-	end
-
-	if fields.searchbutton
-			or fields.key_enter_field == "searchbox" then
-		if dirty_search_filter then
-			ui.apply_filter(player, ui.current_searchbox[player_name], "nochange")
-			ui.set_inventory_formspec(player, ui.current_page[player_name])
-			minetest.sound_play("paperflip2",
-					{to_player=player_name, gain = 1.0})
-		end
-	elseif fields.searchresetbutton then
-		if ui.activefilter[player_name] ~= "" then
-			apply_new_filter(player, "", "nochange")
 		end
 	end
 

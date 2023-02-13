@@ -121,7 +121,7 @@ add_node({"default:sand"}, 0.015, {"deciduous_forest_ocean"}, 1, 100,
 add_node({"default:desert_sand"}, 0.015, {"desert"}, 1, 100,
 	{"default:dry_shrub"}, nil, nil, nil, ethereal.desert)
 
-add_node({"default:sandstone"}, 0.015, {"sandstone"}, 1, 100,
+add_node({"default:sandstone"}, 0.015, {"sandstone_desert"}, 1, 100,
 	{"default:dry_shrub"}, nil, nil, nil, ethereal.sandstone)
 
 add_node({"bakedclay:red", "bakedclay:orange"}, 0.015, {"mesa"}, 1, 100,
@@ -179,7 +179,7 @@ add_node({"ethereal:cold_dirt", "default:dirt_with_coniferous_litter"}, 0.05,
 	{"coniferous_forest"}, 1, 100, {"ethereal:snowygrass"}, nil, nil, nil, ethereal.snowy)
 
 -- cactus
-add_node({"default:sandstone"}, 0.0025, {"sandstone"}, 1, 100,
+add_node({"default:sandstone"}, 0.002, {"sandstone_desert"}, 1, 100,
 	{"default:cactus"}, 3, nil, nil, ethereal.sandstone)
 
 add_node({"default:desert_sand"}, 0.005, {"desert"}, 1, 100,

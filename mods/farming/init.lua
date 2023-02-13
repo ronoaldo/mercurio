@@ -7,7 +7,7 @@
 
 farming = {
 	mod = "redo",
-	version = "20221028",
+	version = "20230122",
 	path = minetest.get_modpath("farming"),
 	select = {
 		type = "fixed",
@@ -307,6 +307,7 @@ end)
 -- Just in case a growing type or added node is missed (also catches existing
 -- nodes added to map before timers were incorporated).
 minetest.register_abm({
+	label = "Start crop timer",
 	nodenames = {"group:growing"},
 	interval = 300,
 	chance = 1,

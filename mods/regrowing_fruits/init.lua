@@ -46,14 +46,15 @@ local add_fruit_regrowable = function(fruit, node, leaves)
 		end)
 	end
 
-	local groups = minetest.registered_nodes[node]["groups"]
+	-- make sure (moretrees) fruits don't fall on dig
+	local groups = minetest.registered_nodes[node].groups
 	groups.attached_node = 0
 
 	-- wait until mods are loaded to ensure that other mods do not override overrides
 	minetest.after(0.1, function()
 		-- override fruit
 		minetest.override_item(node, {
-			groups = groups, -- make sure (moretrees) fruits don't fall on dig
+			--groups = groups,
 			after_place_node = function(pos, placer) -- make sure (moretrees and plumtree) fruits aren't placed by player
 				if placer:is_player() and node == "plumtree:plum" then
 					minetest.set_node(pos, {name = node, param2 = 0})

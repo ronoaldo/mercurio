@@ -67,6 +67,9 @@ add_biome("mountain", 140, 31000, 50, 50, 1,
 add_biome("grassland", 3, 71, 45, 65, 1,
 	nil, "default:dirt_with_grass", 1, "default:dirt", 3)
 
+add_biome("grassland_ocean", -192, 1, 45, 65, 1,
+	nil, "default:sand", 1, "default:sand", 3)
+
 add_biome("underground", -31000, -192, 50, 50, 1,
 	nil, nil, nil, nil, nil)
 
@@ -110,8 +113,14 @@ end
 add_biome("coniferous_forest", 4, 40, 10, 40, ethereal.snowy,
 	nil, tmp, 1, "default:dirt", 2)
 
+add_biome("coniferous_forest_ocean", -192, 1, 10, 40, ethereal.snowy,
+	nil, "default:sand", 1, "default:sand", 2)
+
 add_biome("taiga", 40, 140, 10, 40, ethereal.alpine,
 	nil, "default:dirt_with_snow", 1, "default:dirt", 2)
+
+add_biome("taiga_ocean", -192, 1, 10, 40, ethereal.alpine,
+	nil, "default:sand", 1, "default:sand", 2)
 
 
 add_biome("frost_floatland", 1025, 1750, 10, 40, ethereal.frost,
@@ -199,11 +208,11 @@ add_biome("mushroom_ocean", -192, 2, 45, 55, ethereal.mushroom,
 	nil, "default:sand", 1, "default:sand", 2)
 
 
-add_biome("sandstone", 3, 23, 50, 20, ethereal.sandstone,
+add_biome("sandstone_desert", 3, 23, 50, 20, ethereal.sandstone,
 	nil, "default:sandstone", 1, "default:sandstone", 1, "default:sandstone",
 	"default:sandstone", nil, "stairs:stair_sandstone")
 
-add_biome("sandstone_ocean", -192, 2, 50, 20, ethereal.sandstone,
+add_biome("sandstone_desert_ocean", -192, 2, 50, 20, ethereal.sandstone,
 	nil, "default:sand", 1, "default:sand", 2, "default:sandstone",
 	"default:sandstone", nil, "stairs:stair_sandstone")
 

@@ -230,7 +230,7 @@ minetest.register_node("ethereal:golden_apple", {
 
 	on_use = function(itemstack, user, pointed_thing)
 
-		if user then
+		if user and pointed_thing and pointed_thing.type ~= "object" then
 
 			user:set_hp(20)
 

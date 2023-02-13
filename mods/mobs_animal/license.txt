@@ -34,8 +34,8 @@ mobs_panda_viking.png by Zlo under CC0
 Models/Textures/Media by Krupnov Pavel (WTFPL)
   mobs_rat.b3d
   mobs_rat.png
-  mobs_sheep.b3d
-  mobs_sheep_shaved.b3d
+  mobs_sheep.b3d (converted to .b3d by sirrobzerrone)
+  mobs_sheep_shaved.b3d (converted to .b3d by sirrobzerrone)
   mobs_stone_monster.b3d
   mobs_stone_monster.png
   mobs_dirt_monster.png

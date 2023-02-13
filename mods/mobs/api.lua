@@ -25,7 +25,7 @@ local use_cmi = minetest.global_exists("cmi")
 
 mobs = {
 	mod = "redo",
-	version = "20221222",
+	version = "20230208",
 	intllib = S,
 	invis = minetest.global_exists("invisibility") and invisibility or {}
 }
@@ -2225,6 +2225,56 @@ function mob_class:do_states(dtime)
 
 	local yaw = self.object:get_yaw() ; if not yaw then return end
 
+	-- are we standing in something that hurts ?  Try to get out
+	if is_node_dangerous(self, self.standing_in) then
+
+		local s = self.object:get_pos()
+		local lp
+
+		-- is there something I need to avoid?
+		if self.water_damage > 0
+		and self.lava_damage > 0 then
+
+			lp = minetest.find_node_near(s, 1, {"group:water", "group:igniter"})
+
+		elseif self.water_damage > 0 then
+
+			lp = minetest.find_node_near(s, 1, {"group:water"})
+
+		elseif self.lava_damage > 0 then
+
+			lp = minetest.find_node_near(s, 1, {"group:igniter"})
+		end
+
+		if lp then
+
+			if self.pause_timer <= 0 then
+
+				lp = minetest.find_nodes_in_area_under_air(
+					{x = s.x - 5, y = s.y , z = s.z - 5},
+					{x = s.x + 5, y = s.y + 2, z = s.z + 5},
+					{"group:soil", "group:stone", "group:sand", node_ice, node_snowblock})
+
+				-- did we find land?
+				if lp and #lp > 0 then
+
+					-- select position of random block to climb onto
+					lp = lp[random(#lp)]
+
+					yaw = yaw_to_pos(self, lp)
+				end
+
+				self.pause_timer = 3
+				self.following = nil
+
+				self:set_velocity(self.run_velocity)
+				self:set_animation("walk")
+
+				return
+			end
+		end
+	end
+
 	if self.state == "stand" and not self.follow_stop then
 
 		if self.randomly_turn and random(4) == 1 then
@@ -2268,54 +2318,7 @@ function mob_class:do_states(dtime)
 
 	elseif self.state == "walk" then
 
-		local s = self.object:get_pos()
-		local lp
-
-		-- is there something I need to avoid?
-		if self.water_damage > 0
-		and self.lava_damage > 0 then
-
-			lp = minetest.find_node_near(s, 1, {"group:water", "group:igniter"})
-
-		elseif self.water_damage > 0 then
-
-			lp = minetest.find_node_near(s, 1, {"group:water"})
-
-		elseif self.lava_damage > 0 then
-
-			lp = minetest.find_node_near(s, 1, {"group:igniter"})
-		end
-
-		if lp then
-
-			-- if mob in dangerous node then look for land
-			if not is_node_dangerous(self, self.standing_in) then
-
-				lp = minetest.find_nodes_in_area_under_air(
-					{s.x - 5, s.y - 1, s.z - 5},
-					{s.x + 5, s.y + 2, s.z + 5},
-					{"group:soil", "group:stone", "group:sand",
-							node_ice, node_snowblock})
-
-				-- select position of random block to climb onto
-				lp = #lp > 0 and lp[random(#lp)]
-
-				-- did we find land?
-				if lp then
-
-					yaw = yaw_to_pos(self, lp)
-
-					self:do_jump()
-					self:set_velocity(self.walk_velocity)
-				else
-					yaw = yaw + random(-0.5, 0.5)
-				end
-			end
-
-			self:set_yaw(yaw, 8)
-
-		-- otherwise randomly turn
-		elseif self.randomly_turn and random(100) <= 30 then
+		if self.randomly_turn and random(100) <= 30 then
 
 			yaw = yaw + random(-0.5, 0.5)
 
@@ -2997,7 +3000,8 @@ function mob_class:on_punch(hitter, tflp, tool_capabilities, dir, damage)
 	and self.order ~= "stand" then
 
 		local lp = hitter:get_pos()
-		yaw = yaw_to_pos(self, lp, 3)
+
+		yaw_to_pos(self, lp, 3)
 
 		self.state = "runaway"
 		self.runaway_timer = 0
@@ -3377,7 +3381,7 @@ function mob_class:on_step(dtime, moveresult)
 		-- check and stop if standing at cliff and fear of heights
 		self.at_cliff = self:is_at_cliff()
 
-		if self.at_cliff then
+		if self.pause_timer <= 0 and self.at_cliff then
 			self:set_velocity(0)
 		end
 
