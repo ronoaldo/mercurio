@@ -16,11 +16,11 @@ ui.style_full = {
 	searchwidth = 8.4,
 	-- Crafting grid positions
 	craft_x = 2.8,
-	craft_y = 1.15,
+	craft_y = 1.6,
 	craftresult_x = 7.8,
 	craft_arrow_x = 6.55,
 	craft_guide_x = 2.8,
-	craft_guide_y = 1.8,
+	craft_guide_y = 1.6,
 	craft_guide_arrow_x = 6.55,
 	craft_guide_result_x = 7.8,
 	craft_guide_resultstr_x = 0.3,

@@ -32,6 +32,10 @@ We also have activated the new vehicle from the latest update: the Vespa
 motorcycle!  Ride this motorcycle around the server and help us build some new
 road blocks connecting all world areas.
 
+This update also includes a new mod to help builders: `school_forniture`, by our
+community member José Anastácio! This new mod will add several new forniture to
+build our virtual class room, providing a more immersive experience.
+
 A final change: wasps from `dmobs` will no longer spawn so we only need to deal
 with the remaining ones that were already spawned. Wasp bosses will still spawn
 so watch out for them!

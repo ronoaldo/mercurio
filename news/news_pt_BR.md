@@ -33,6 +33,11 @@ Também ativamos o novo veículo da última atualização: a motocicleta  Vespa!
 de moto pelo servidor e nos ajude a construir uma nova estrada blocos
 conectando todas as áreas do mundo.
 
+Esta atualização também inclui um novo mod para ajudar os construtores:
+`school_forniture`, pelo nosso membro da comunidade José Anastácio! Este novo
+mod vai adicionar diversas mobílias novas para construir nossas salas de aula
+virtuais, oferecendo uma experiência mais imersiva.
+
 Uma mudança final: as vespas (abelhas?) de `dmobs` não aparecerão mais, então só
 precisamos lidar com as que já foram geradas. Chefes de vespas ainda aparecerão
 então cuidado com eles!
