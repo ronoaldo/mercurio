@@ -13,6 +13,28 @@ The server is designed to be friendly and enjoyable! Please:
 ```
 
 -------------------------------
+![1,1](halo)
+
+![0,0,r](item:///animalia:crate)
+
+# **Server Update, February 14, 2023**
+
+New mobs in the wild! We added the `animalia` mod to the server, by the same
+creator of `draconis`: ElCeejo.
+
+Animalia brings a new set of wild life to the server, with very nice textures
+and interesting mechanics. Explore the world to figure out what new creatures
+you will discover!
+
+![0,0,r](item:///automobiles_motorcycle:motorcycle)
+
+We also have activated the new vehicle from the latest update: the Vespa
+motorcycle!  Ride this motorcycle around the server and help us build some new
+road blocks connecting all world areas.
+
+A final change: wasps from `dmobs` will no longer spawn so we only need to deal
+with the remaining ones that were already spawned. Wasp bosses will still spawn
+so watch out for them!
 
 ![1,1](halo)
 
