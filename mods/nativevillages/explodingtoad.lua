@@ -1,3 +1,5 @@
+local S = minetest.get_translator("nativevillages")
+
 mobs:register_mob("nativevillages:toad", {
 stepheight = 3,
 	type = "monster",
@@ -62,7 +64,7 @@ sounds = {
 
 		if mobs:feed_tame(self, clicker, 8, true, true) then return end
 		if mobs:protect(self, clicker) then return end
-		if mobs:capture_mob(self, clicker, 0, 5, 50, false, nil) then return end
+		if mobs:capture_mob(self, clicker, 0, 25, 0, false, nil) then return end
 	end,
 })
 
@@ -75,9 +77,10 @@ if not mobs.custom_spawn_nativevillages then
 mobs:spawn({
 	name = "nativevillages:toad",
 	nodes = {"default:dirt_with_grass"}, {"default:dirt_with_rainforest_litter"}, {"default:dry_dirt_with_dry_grass"},
+	neighbors = {"group:grass", "group:normal_grass"},
 	min_light = 0,
 	interval = 60,
-	chance = 8000, -- 15000
+	chance = 2000, -- 15000
 	active_object_count = 1,
 	min_height = 1,
 	max_height = 15,
@@ -86,7 +89,7 @@ mobs:spawn({
 end
 
 
-mobs:register_egg("nativevillages:toad", ("Toad"), "atoad.png", 0)
+mobs:register_egg("nativevillages:toad", S("Toad"), "atoad.png", 0)
 
 
 mobs:alias_mob("nativevillages:toad", "nativevillages:toad") -- compatibility
@@ -179,11 +182,11 @@ on_rightclick = function(self, clicker)
 				self:set_animation("stand")
 				self:set_velocity(0)
 
-				minetest.chat_send_player(name, ("Exploding Toad stands still."))
+				minetest.chat_send_player(name, S("Exploding Toad stands still."))
 			else
 				self.order = "follow"
 
-				minetest.chat_send_player(name, ("Exploding Toad will follow you."))
+				minetest.chat_send_player(name, S("Exploding Toad will follow you."))
 			end
 		end
 	end,
@@ -191,13 +194,13 @@ on_rightclick = function(self, clicker)
 
 
 
-mobs:register_egg("nativevillages:toadtamed", ("Tamed Exploding Toad"), "atoad.png", 0)
+mobs:register_egg("nativevillages:toadtamed", S("Tamed Exploding Toad"), "atoad.png", 0)
 
 
 mobs:alias_mob("nativevillages:toadtamed", "nativevillages:toadtamed") -- compatibility
 
 minetest.register_node("nativevillages:toadbag", {
-	description = "Bag full of toads!",
+	description = S"Bag full of toads!",
 	tiles = {
 		"nativevillages_toadbag_top.png",
 		"nativevillages_toadbag_bottom.png",

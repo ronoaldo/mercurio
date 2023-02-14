@@ -41,7 +41,7 @@ mobs:register_mob("mobs_animal:kitten", {
 	drops = {
 		{name = "farming:string", chance = 1, min = 0, max = 1}
 	},
-	water_damage = 0,
+	water_damage = 0.01,
 	lava_damage = 5,
 	fear_height = 3,
 	animation = {

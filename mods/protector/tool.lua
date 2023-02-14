@@ -11,7 +11,7 @@ if r > 22 then r = 22 end
 
 minetest.register_craftitem("protector:tool", {
 	description = S("Protector Placer Tool (stand near protector, face direction and use)"),
-	inventory_image = "protector_display.png^protector_logo.png",
+	inventory_image = "protector_tool.png",
 	stack_max = 1,
 
 	on_use = function(itemstack, user, pointed_thing)

@@ -1,3 +1,5 @@
+local S = minetest.get_translator("nativevillages")
+
 mobs:register_mob("nativevillages:lakecatfish", {
 stepheight = 0.0,
 	type = "animal",
@@ -42,6 +44,11 @@ stepheight = 0.0,
 		fly_end = 100,
 		fly2_start = 100, 
 		fly2_end = 200,
+		die_start = 200,
+		die_end = 300,
+		die_speed = 50,
+		die_loop = false,
+		die_rotate = true,
 	},
 	fly_in = {"default:water_source", "default:river_water_source", "default:water_flowing", "default:river_water_flowing"},
 	floats = 0,
@@ -53,7 +60,7 @@ stepheight = 0.0,
 		-- feed or tame
 		if mobs:feed_tame(self, clicker, 4, false, true) then return end
 		if mobs:protect(self, clicker) then return end
-		if mobs:capture_mob(self, clicker, 5, 50, 80, false, nil) then return end
+		if mobs:capture_mob(self, clicker, 15, 25, 0, false, nil) then return end
 	end,
 })
 
@@ -71,7 +78,7 @@ mobs:spawn({
 })
 end
 
-mobs:register_egg("nativevillages:lakecatfish", ("Catfish"), "alakecatfish.png")
+mobs:register_egg("nativevillages:lakecatfish", S("Catfish"), "alakecatfish.png")
 
 mobs.lakevillagerfemale_drops = {
 	"nativevillages:catfish_cooked", "farming:string", "bucket:bucket_water", "farming:salt", "nativevillages:pearl"
@@ -113,13 +120,13 @@ sounds = {
         jump_height = 1,
         stepheight = 0,
         fear_height = 1,
+        stay_near = {{"nativevillages:hangingfish"}, 5},
 	drops = {
 	},
 	water_damage = 200,
 	lava_damage = 2,
 	light_damage = 0,
 	follow = {},
-        stay_near = "nativevillages:hangingfish",
 	view_range = 15,
 	owner = "",
 	order = "follow",
@@ -132,6 +139,11 @@ sounds = {
                 punch_speed = 100,
 		punch_start = 200,
 		punch_end = 300,
+		die_start = 200,
+		die_end = 300,
+		die_speed = 50,
+		die_loop = false,
+		die_rotate = true,
 	},
 
 	on_rightclick = function(self, clicker)
@@ -140,7 +152,7 @@ sounds = {
 		if mobs:feed_tame(self, clicker, 8, true, true) then return end
 
 		-- capture npc with net or lasso
-		if mobs:capture_mob(self, clicker, nil, 5, 80, false, nil) then return end
+		if mobs:capture_mob(self, clicker, 0, 15, 25, false, nil) then return end
 
 		-- protect npc with mobs:protector
 		if mobs:protect(self, clicker) then return end
@@ -166,7 +178,7 @@ sounds = {
 				name = drops[math.random(1, #drops)]
 			})
 
-			minetest.chat_send_player(name, ("Lake Villager dropped you an item for fruit!"))
+			minetest.chat_send_player(name, S("Lake Villager dropped you an item for fruit!"))
 
 			return
 		end
@@ -182,11 +194,11 @@ sounds = {
 				self:set_animation("stand")
 				self:set_velocity(0)
 
-				minetest.chat_send_player(name, ("Lake Villager stands still."))
+				minetest.chat_send_player(name, S("Lake Villager stands still."))
 			else
 				self.order = "follow"
 
-				minetest.chat_send_player(name, ("Lake Villager will follow you."))
+				minetest.chat_send_player(name, S("Lake Villager will follow you."))
 			end
 		end
 	end,
@@ -206,7 +218,7 @@ mobs:spawn({
 })
 end
 
-mobs:register_egg("nativevillages:lakevillagerfemale", ("Female Lake Villager"), "alakevillagerfemale.png")
+mobs:register_egg("nativevillages:lakevillagerfemale", S("Female Lake Villager"), "alakevillagerfemale.png")
 
 mobs.lakevillagerfisher_drops = {
 	"nativevillages:tamecatfish", "nativevillages:pearl"
@@ -246,13 +258,13 @@ sounds = {
         jump_height = 1,
         stepheight = 0,
         fear_height = 1,
+        stay_near = {{"nativevillages:fishtrap"}, 5},
 	drops = {
 	},
 	water_damage = 200,
 	lava_damage = 2,
 	light_damage = 0,
 	follow = {},
-        stay_near = "nativevillages:fishtrap",
 	view_range = 15,
 	owner = "",
 	order = "follow",
@@ -265,6 +277,11 @@ sounds = {
                 punch_speed = 100,
 		punch_start = 200,
 		punch_end = 300,
+		die_start = 200,
+		die_end = 300,
+		die_speed = 50,
+		die_loop = false,
+		die_rotate = true,
 	},
 
 	on_rightclick = function(self, clicker)
@@ -273,7 +290,7 @@ sounds = {
 		if mobs:feed_tame(self, clicker, 8, true, true) then return end
 
 		-- capture npc with net or lasso
-		if mobs:capture_mob(self, clicker, nil, 5, 80, false, nil) then return end
+		if mobs:capture_mob(self, clicker, 0, 15, 25, false, nil) then return end
 
 		-- protect npc with mobs:protector
 		if mobs:protect(self, clicker) then return end
@@ -299,7 +316,7 @@ sounds = {
 				name = drops[math.random(1, #drops)]
 			})
 
-			minetest.chat_send_player(name, ("Fisher bred you a catfish for gold!"))
+			minetest.chat_send_player(name, S("Fisher bred you a catfish for gold!"))
 
 			return
 		end
@@ -315,11 +332,11 @@ sounds = {
 				self:set_animation("stand")
 				self:set_velocity(0)
 
-				minetest.chat_send_player(name, ("Fisher stands still."))
+				minetest.chat_send_player(name, S("Fisher stands still."))
 			else
 				self.order = "follow"
 
-				minetest.chat_send_player(name, ("Fisher will follow you."))
+				minetest.chat_send_player(name, S("Fisher will follow you."))
 			end
 		end
 	end,
@@ -339,7 +356,7 @@ mobs:spawn({
 })
 end
 
-mobs:register_egg("nativevillages:lakevillagerfisher", ("Fisher"), "alakevillagerfisher.png")
+mobs:register_egg("nativevillages:lakevillagerfisher", S("Fisher"), "alakevillagerfisher.png")
 
 
 mobs.lakevillagermale_drops = {
@@ -382,13 +399,13 @@ sounds = {
         jump_height = 1,
         stepheight = 0,
         fear_height = 1,
+        stay_near = {{"nativevillages:hangingfish"}, 5},
 	drops = {
 	},
 	water_damage = 200,
 	lava_damage = 2,
 	light_damage = 0,
 	follow = {},
-        stay_near = "nativevillages:fishtrap",
 	view_range = 15,
 	owner = "",
 	order = "follow",
@@ -401,6 +418,11 @@ sounds = {
                 punch_speed = 100,
 		punch_start = 200,
 		punch_end = 300,
+		die_start = 200,
+		die_end = 300,
+		die_speed = 50,
+		die_loop = false,
+		die_rotate = true,
 	},
 
 	on_rightclick = function(self, clicker)
@@ -409,7 +431,7 @@ sounds = {
 		if mobs:feed_tame(self, clicker, 8, true, true) then return end
 
 		-- capture npc with net or lasso
-		if mobs:capture_mob(self, clicker, nil, 5, 80, false, nil) then return end
+		if mobs:capture_mob(self, clicker, 0, 15, 25, false, nil) then return end
 
 		-- protect npc with mobs:protector
 		if mobs:protect(self, clicker) then return end
@@ -435,7 +457,7 @@ sounds = {
 				name = drops[math.random(1, #drops)]
 			})
 
-			minetest.chat_send_player(name, ("Lake Villager dropped you an item for fruit!"))
+			minetest.chat_send_player(name, S("Lake Villager dropped you an item for fruit!"))
 
 			return
 		end
@@ -451,11 +473,11 @@ sounds = {
 				self:set_animation("stand")
 				self:set_velocity(0)
 
-				minetest.chat_send_player(name, ("NPC stands still."))
+				minetest.chat_send_player(name, S("NPC stands still."))
 			else
 				self.order = "follow"
 
-				minetest.chat_send_player(name, ("NPC will follow you."))
+				minetest.chat_send_player(name, S("NPC will follow you."))
 			end
 		end
 	end,
@@ -475,5 +497,5 @@ mobs:spawn({
 })
 end
 
-mobs:register_egg("nativevillages:lakevillagermale", ("Male Lake Villager"), "alakevillagermale.png")
+mobs:register_egg("nativevillages:lakevillagermale", S("Male Lake Villager"), "alakevillagermale.png")
 

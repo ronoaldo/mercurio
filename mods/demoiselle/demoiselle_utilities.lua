@@ -139,12 +139,14 @@ function demoiselle.testImpact(self, velocity, position)
     if self._last_vel == nil then return end
     --lets calculate the vertical speed, to avoid the bug on colliding on floor with hard lag
     if abs(velocity.y - self._last_vel.y) > 2 then
-		local noded = airutils.nodeatpos(airutils.pos_shift(p,{y=-2.8}))
+        local low_node_pos = -0.2
+		local noded = airutils.nodeatpos(airutils.pos_shift(p,{y=low_node_pos}))
 	    if (noded and noded.drawtype ~= 'airlike') then
 		    collision = true
 	    else
             self.object:set_velocity(self._last_vel)
-            self.object:set_acceleration(self._last_accell)
+            self.object:set_velocity(vector.add(velocity, vector.multiply(self._last_accell, self.dtime/8)))
+            --self.object:set_acceleration(self._last_accell)
         end
     end
     local impact = abs(demoiselle.get_hipotenuse_value(velocity, self._last_vel))
@@ -183,14 +185,6 @@ function demoiselle.testImpact(self, velocity, position)
 		        if player:get_hp() > 0 then
 			        player:set_hp(player:get_hp()-(damage/2))
 		        end
-            end
-            if self._passenger ~= nil then
-                local passenger = minetest.get_player_by_name(self._passenger)
-                if passenger then
-		            if passenger:get_hp() > 0 then
-			            passenger:set_hp(passenger:get_hp()-(damage/2))
-		            end
-                end
             end
         end
 

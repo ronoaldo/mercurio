@@ -1,5 +1,7 @@
+local S = minetest.get_translator("nativevillages")
+
 minetest.register_node("nativevillages:driedpeople", {
-	description = "Dried Human Remains",
+	description = S"Dried Human Remains",
 	tiles = {
 		"nativevillages_driedpeople_top.png",
 		"nativevillages_driedpeople_bottom.png",
@@ -24,7 +26,7 @@ minetest.register_craft({
 
 
 minetest.register_craftitem(":nativevillages:driedhumanmeat", {
-	description = ("Dried Human Meat"),
+	description = S("Dried Human Meat"),
 	inventory_image = "nativevillages_driedhumanmeat.png",
 	on_use = minetest.item_eat(2),
 	groups = {mushroom = 1, snappy = 3, attached_node = 1, flammable = 1},
@@ -32,7 +34,7 @@ minetest.register_craftitem(":nativevillages:driedhumanmeat", {
 
 
 minetest.register_node("nativevillages:cannibalshrine", {
-    description = "Cannibal Shrine",
+    description = S"Cannibal Shrine",
     visual_scale = 1,
     mesh = "Cannibalshrine.b3d",
     tiles = {"texturecannibalshrine.png"},
@@ -40,6 +42,7 @@ minetest.register_node("nativevillages:cannibalshrine", {
     paramtype = "light",
     paramtype2 = "facedir",
     groups = {choppy = 3},
+    walkable = false,
     drawtype = "mesh",
     collision_box = {
         type = "fixed",

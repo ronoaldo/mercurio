@@ -6,7 +6,7 @@ globals = {
     "mercurio",
 
     -- Mods
-    "respawn", "mobs"
+    "respawn", "mobs", "unified_inventory"
 }
 
 read_globals = {

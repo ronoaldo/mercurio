@@ -230,7 +230,7 @@ minetest.register_node("ethereal:golden_apple", {
 
 	on_use = function(itemstack, user, pointed_thing)
 
-		if user then
+		if user and pointed_thing and pointed_thing.type ~= "object" then
 
 			user:set_hp(20)
 
@@ -247,7 +247,6 @@ minetest.register_node("ethereal:golden_apple", {
 })
 
 -- Hearty Stew (Heals 5 hearts)
--- thanks to ZonerDarkRevention for his DokuCraft DeviantArt bowl texture)
 minetest.register_craftitem("ethereal:hearty_stew", {
 	description = S("Hearty Stew"),
 	inventory_image = "ethereal_hearty_stew.png",

@@ -1,5 +1,7 @@
+local S = minetest.get_translator("nativevillages")
+
 minetest.register_node("nativevillages:fishtrap", {
-    description = "Fish Trap",
+    description = S"Fish Trap",
     visual_scale = 1,
     mesh = "Fishtrap.b3d",
     tiles = {"texturefishtrap.png"},
@@ -32,7 +34,7 @@ minetest.register_craft({
 })
 
 minetest.register_node("nativevillages:hangingfish", {
-    description = "Hangning Fish",
+    description = S"Hangning Fish",
     visual_scale = 1,
     mesh = "Hangingfish.b3d",
     tiles = {"texturehangingfish.png"},
@@ -65,6 +67,6 @@ minetest.register_craft({
 })
 
 minetest.register_craftitem("nativevillages:pearl", {
-	description = ("Pearl"),
+	description = S("Pearl"),
 	inventory_image = "nativevillages_pearl.png",
 })

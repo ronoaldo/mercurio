@@ -1,3 +1,5 @@
+local S = minetest.get_translator("nativevillages")
+
 minetest.register_decoration({
     name = "nativevillages:icehouse1",
     deco_type = "schematic",

@@ -91,9 +91,10 @@ local function formspec_tab_buttons(player, formspec, style)
 	end
 	formspec[n] = "scroll_container_end[]"
 	if needs_scrollbar then
+		local total_rows = math.ceil(#filtered_inv_buttons / style.main_button_cols)
 		formspec[n+1] = ("scrollbaroptions[max=%i;arrows=hide]"):format(
 			-- This calculation is not 100% accurate but "good enough"
-			math.ceil((#filtered_inv_buttons - 1) / style.main_button_cols) * style.btn_spc * 5
+			(total_rows - style.main_button_rows) * style.btn_spc * 10
 		)
 		formspec[n+2] = ("scrollbar[%g,%g;0.4,%g;vertical;tabbtnscroll;0]"):format(
 			style.main_button_x + style.main_button_cols * style.btn_spc - 0.1, -- x pos
@@ -273,9 +274,11 @@ local function formspec_add_item_browser(player, formspec, ui_peruser)
 			end
 		end
 	end
-	formspec[n] = string.format("label[%f,%f;%s: %s]",
-		ui_peruser.page_buttons_x + ui_peruser.btn_spc * (ui_peruser.is_lite_mode and 1 or 2),
-		ui_peruser.page_buttons_y + 0.1 + ui_peruser.btn_spc * 2,
+	formspec[n] = "style[page_number;content_offset=0]"
+	formspec[n + 1] = string.format("image_button[%f,%f;%f,0.4;;page_number;%s: %s;false;false;]",
+		ui_peruser.page_buttons_x,
+		ui_peruser.page_buttons_y + ui_peruser.btn_spc * 2 - 0.1,
+		ui_peruser.btn_spc * (bn - 1) + ui_peruser.btn_size,
 		F(S("Page")), S("@1 of @2",page2,pagemax))
 end
 

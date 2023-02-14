@@ -167,7 +167,7 @@ function pa28.set_pitch(self, dir, dtime)
 		self._elevator_angle = math.max(self._elevator_angle-pitch_factor*time_factor,-pa28.elevator_limit)
 	elseif dir == 1 then
         --minetest.chat_send_all("picando")
-        if self._angle_of_attack < 2 then pitch_factor = 0.2 end --lets reduce the command power to avoid accidents
+        --if self._angle_of_attack < 2 then pitch_factor = 0.6 end --lets reduce the command power to avoid accidents
         --minetest.chat_send_all("picando: "..pitch_factor)
 		self._elevator_angle = math.min(self._elevator_angle+pitch_factor*time_factor,pa28.elevator_limit)
 	end

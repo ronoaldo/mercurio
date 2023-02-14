@@ -4,9 +4,6 @@
 [submodule "mods/filler"]
 	path = mods/filler
 	url = https://github.com/ronoaldo/filler
-[submodule "mods/patron"]
-	path = mods/patron
-	url = https://github.com/ronoaldo/patron
 [submodule "mods/extra_doors"]
 	path = mods/extra_doors
 	url = https://github.com/ronoaldo/extra_doors

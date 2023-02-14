@@ -283,7 +283,8 @@ minetest.register_node("ethereal:quicksand", {
 	walkable = false,
 	climbable = false,
 	post_effect_color = {r = 230, g = 210, b = 160, a = 245},
-	groups = {crumbly = 3, sand = 1, liquid = 3, disable_jump = 1},
+	groups = {crumbly = 3, sand = 1, liquid = 3, disable_jump = 1,
+			not_in_creative_inventory = 1},
 	sounds = default.node_sound_sand_defaults()
 })
 

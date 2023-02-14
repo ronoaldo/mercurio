@@ -28,3 +28,6 @@ Textures by TenPlus1 (CC0) unless mentioned below
 Textures from original Minetest doors mod (CC-BY-SA 3.0)
   doors_*.png
 ..default_chest*.png
+
+Textures by Sirrobzeroone (CC0)
+  protector_tool.png

@@ -1,0 +1,91 @@
+People Mod stellt NPCs zur Verfügung, die in Ihr eigenes Dorf integriert werden können, Ihnen folgen und viele Handelsgegenstände bereitstellen.
+Native Villages konzentriert sich auf das Ambiente. Die Dorfbewohner dieser Mod(nativevillages) sind in den spezifischen Biomen zu finden,
+werden dir nicht folgen und einige sind sogar von Natur aus aggressiv.
+Als zusätzliche Herausforderung, ähnlich wie bei Minecraft Creepers, findet ihr nun nachts explodierende Kröten in der Nähe der Küstenregionen
+von Dschungel, Savannen und Waldbiomen.
+
+Dieser Leitfaden wird Sie kurz in die Handelsoptionen jedes spezifischen Stammes einführen, der von der Mod bereitgestellt wird.
+Alle Trading-Drops sind zufällig (wie in People Mod)
+
+Arktischer/Eisländer Stamm:
+
+Schlittenhändler
+Verkauft Eishunde und Hundeschlitten für Stahlbarren.
+
+Eisländer
+Verkauft braune und weiße Wolle, Leder und Fleisch für Eisenklumpen.
+
+Schlitten mit Hund
+Kann mit Fleisch (Mod Mobs Redo), Hundefutter oder gekochtem Hundefutter gefüttert werden.
+
+Wüsten-Stamm:
+
+Wüstendorfbewohner, Wüstenplünderer und Wüstenwächter sind aggressiv und handeln nicht gerne mit dir.
+
+Sklavenhändler
+Verkauft Hühnerzüchterin, Kuhzüchterin, Löwentrainer, Tänzer und Loyale Kannibalen für Goldbarren.
+
+Graslandbewohner Stamm:
+
+Graslandbewohner
+Verkauft Milcheimer, Mozzarella-Käse, Eisenklumpen, Kupferklumpen, Zinnklumpen und Fleisch für Brot, Knoblauchbrot und etheral Bananenbrot.
+
+Wiesenhexe
+Verkauft Katzen und Säcke mit explodierenden Kröten für Diamanten.
+
+Seebewohner Stamm:
+
+Seebewohner
+Verkauft gekochten Wels, Schnüre, Wassereimer, Salz und Perlen für ethereal Bananen, Zucker, Kakao und Bananen (Farming mod).
+
+Angler
+Verkauft domestizierten Wels (kann gezüchtet werden) und Perlen für Goldklumpen.
+
+Savannenbewohner Stamm:
+
+Hexendoktor
+Verkauft gezähmte Zombies für alle Gräber, die in People Mod gefunden werden.
+
+Savannenkönigin + Savennenkönig
+Verkauft Goldblock für Diamant.
+
+Savannenbewohner
+Verkauft Kürbis, Vanille, Kartoffeln, Ananas, Paprika, Zwiebeln, Erbsen, Melonen, Gurken und Kaffeebohnen für Perlen.
+
+Diverse Kreaturen:
+
+Domestizierter Wels
+Kann mit Wurm, Algen, Gras, Gurken, Kohl, Ameisen, Termiten, Fischfutter gezüchtet werden.
+
+Gezähmter Zombie
+Kann mit getrocknetem Menschenfleisch gezüchtet werden (Kann in Dschungel-/Kannibalensiedlungen gefunden werden).
+
+Kuhzüchterin
+Verkauft Domestizierte Kühe für verschiedene bäuerliche Gerichte.
+
+Domestizierte Kuh
+Kann mit einem Eimer gemolken werden, kann mit Weizen, Gras, Gerste, Hafer, Roggen, Karotten, Bohnen und Salat gezüchtet werden.
+
+Hühnerzüchterin
+Verkauft gezähmte Wüstenhühner für verschiedene landwirtschaftliche Gerichte.
+
+Domestiziertes Wüstenhuhn
+Kann mit Weizensamen, Baumwollsamen, Gerstensamen, Hafersamen und Roggensamen gezüchtet werden.
+
+Löwentrainer
+Verkauft gezähmte Löwen für Goldklumpen.
+
+Gezähmte Löwen
+Kann mit vielen Arten von rohem Fleisch und Fisch gefüttert werden.
+
+Katze
+Kann mit vielen Arten von rohem Fleisch und Fisch gefüttert werden.
+
+Tänzer
+Kann mit verschiedenen bäuerlichen Gerichten gefüttert werden.
+
+Loyaler Kannibale
+Kann mit getrocknetem Menschenfleisch gefüttert werden (Kann in Dschungel-/Kannibalensiedlungen gefunden werden).
+
+
+Es ist sinnlos, Tiere zu töten, die in den Dörfern zu finden sind, sie lassen nichts fallen(Keine Drops) und werden nicht zahm, um Betrug/Farming zu verhindern.

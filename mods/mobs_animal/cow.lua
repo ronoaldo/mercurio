@@ -34,7 +34,7 @@ mobs:register_mob("mobs_animal:cow", {
 		{name = "mobs:meat_raw", chance = 1, min = 1, max = 3},
 		{name = "mobs:leather", chance = 1, min = 0, max = 2}
 	},
-	water_damage = 0,
+	water_damage = 0.01,
 	lava_damage = 5,
 	light_damage = 0,
 	animation = {
@@ -252,7 +252,7 @@ minetest.register_node(":mobs:cheeseblock", {
 	tiles = {"mobs_cheeseblock.png"},
 	is_ground_content = false,
 	groups = {oddly_breakable_by_hand = 3},
-	sounds = default.node_sound_dirt_defaults()
+	sounds = default and default.node_sound_dirt_defaults()
 })
 
 minetest.register_craft({

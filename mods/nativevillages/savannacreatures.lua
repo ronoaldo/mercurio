@@ -1,3 +1,5 @@
+local S = minetest.get_translator("nativevillages")
+
 mobs:register_mob("nativevillages:malelion", {
 stepheight = 1,
 	type = "monster",
@@ -36,6 +38,7 @@ sounds = {
 	runaway = false,
 	jump = false,
         jump_height = 2,
+        stay_near = {{"nativevillages:savannacorpse"}, 4},
 	drops = {
 	},
 	water_damage = 0,
@@ -53,6 +56,11 @@ sounds = {
                 punch_speed = 100,
 		punch_start = 300,
 		punch_end = 400,
+		die_start = 300,
+		die_end = 400,
+		die_speed = 50,
+		die_loop = false,
+		die_rotate = true,
 	},
 
 	follow = {
@@ -64,7 +72,7 @@ sounds = {
 		-- feed or tame
 		if mobs:feed_tame(self, clicker, 4, false, true) then return end
 		if mobs:protect(self, clicker) then return end
-		if mobs:capture_mob(self, clicker, 5, 50, 80, false, nil) then return end
+		if mobs:capture_mob(self, clicker, 0, 15, 25, false, nil) then return end
 	end,
 })
 
@@ -84,7 +92,7 @@ mobs:spawn({
 })
 end
 
-mobs:register_egg("nativevillages:malelion", ("Male Lion"), "amalelion.png")
+mobs:register_egg("nativevillages:malelion", S("Male Lion"), "amalelion.png")
 
 mobs:register_mob("nativevillages:femalelion", {
 stepheight = 1,
@@ -117,6 +125,7 @@ stepheight = 1,
 	runaway = false,
 	jump = false,
         jump_height = 2,
+        stay_near = {{"nativevillages:savannacorpse"}, 4},
 	drops = {
 	},
 	water_damage = 0,
@@ -134,6 +143,11 @@ stepheight = 1,
                 punch_speed = 100,
 		punch_start = 300,
 		punch_end = 400,
+		die_start = 300,
+		die_end = 400,
+		die_speed = 50,
+		die_loop = false,
+		die_rotate = true,
 	},
 
 	follow = {
@@ -145,7 +159,7 @@ stepheight = 1,
 		-- feed or tame
 		if mobs:feed_tame(self, clicker, 4, false, true) then return end
 		if mobs:protect(self, clicker) then return end
-		if mobs:capture_mob(self, clicker, 5, 50, 80, false, nil) then return end
+		if mobs:capture_mob(self, clicker, 0, 15, 25, false, nil) then return end
 	end,
 })
 
@@ -165,7 +179,7 @@ mobs:spawn({
 })
 end
 
-mobs:register_egg("nativevillages:femalelion", ("Female Lion"), "afemalelion.png")
+mobs:register_egg("nativevillages:femalelion", S("Female Lion"), "afemalelion.png")
 
 mobs.savannadoctor_drops = {
 	"nativevillages:zombietame"
@@ -202,13 +216,13 @@ sounds = {
         walk_chance = 15,
 	run_velocity = 3,
 	jump = true,
+        stay_near = {{"nativevillages:savannavshrine"}, 4},
 	drops = {
 	},
 	water_damage = 0,
 	lava_damage = 2,
 	light_damage = 0,
 	follow = {},
-        stay_near = "nativevillages:savannavshrine",
 	view_range = 15,
 	owner = "",
 	order = "follow",
@@ -222,6 +236,11 @@ sounds = {
                 punch_speed = 100,
 		punch_start = 200,
 		punch_end = 300,
+		die_start = 300,
+		die_end = 400,
+		die_speed = 50,
+		die_loop = false,
+		die_rotate = true,
 	},
 
 	on_rightclick = function(self, clicker)
@@ -230,7 +249,7 @@ sounds = {
 		if mobs:feed_tame(self, clicker, 8, true, true) then return end
 
 		-- capture npc with net or lasso
-		if mobs:capture_mob(self, clicker, nil, 5, 80, false, nil) then return end
+		if mobs:capture_mob(self, clicker, 0, 15, 25, false, nil) then return end
 
 		-- protect npc with mobs:protector
 		if mobs:protect(self, clicker) then return end
@@ -256,7 +275,7 @@ sounds = {
 				name = drops[math.random(1, #drops)]
 			})
 
-			minetest.chat_send_player(name, ("Witch Doctor created a tame Zombie!"))
+			minetest.chat_send_player(name, S("Witch Doctor created a tame Zombie!"))
 
 			return
 		end
@@ -272,11 +291,11 @@ sounds = {
 				self:set_animation("stand")
 				self:set_velocity(0)
 
-				minetest.chat_send_player(name, ("Witch Doctor stands still."))
+				minetest.chat_send_player(name, S("Witch Doctor stands still."))
 			else
 				self.order = "follow"
 
-				minetest.chat_send_player(name, ("Witch Doctor will follow you."))
+				minetest.chat_send_player(name, S("Witch Doctor will follow you."))
 			end
 		end
 	end,
@@ -296,7 +315,7 @@ mobs:spawn({
 })
 end
 
-mobs:register_egg("nativevillages:savannadoctor", ("Witch Doctor"), "asavannadoctor.png")
+mobs:register_egg("nativevillages:savannadoctor", S("Witch Doctor"), "asavannadoctor.png")
 
 mobs.savannaqueen_drops = {
 	"default:goldblock"
@@ -333,13 +352,13 @@ sounds = {
         walk_chance = 15,
 	run_velocity = 3,
 	jump = true,
+        stay_near = {{"nativevillages:savannavshrine", "nativevillages:savannathrone", "nativevillages:savannavessels"}, 5},
 	drops = {
 	},
 	water_damage = 0,
 	lava_damage = 2,
 	light_damage = 0,
 	follow = {},
-        stay_near = "nativevillages:savannashrine",
 	view_range = 15,
 	owner = "",
 	order = "follow",
@@ -353,6 +372,11 @@ sounds = {
                 punch_speed = 100,
 		punch_start = 200,
 		punch_end = 300,
+		die_start = 200,
+		die_end = 300,
+		die_speed = 50,
+		die_loop = false,
+		die_rotate = true,
 	},
 
 	on_rightclick = function(self, clicker)
@@ -361,7 +385,7 @@ sounds = {
 		if mobs:feed_tame(self, clicker, 8, true, true) then return end
 
 		-- capture npc with net or lasso
-		if mobs:capture_mob(self, clicker, nil, 5, 80, false, nil) then return end
+		if mobs:capture_mob(self, clicker, 0, 15, 25, false, nil) then return end
 
 		-- protect npc with mobs:protector
 		if mobs:protect(self, clicker) then return end
@@ -387,7 +411,7 @@ sounds = {
 				name = drops[math.random(1, #drops)]
 			})
 
-			minetest.chat_send_player(name, ("Royalty dropped you an item for gold!"))
+			minetest.chat_send_player(name, S("Royalty dropped you an item for gold!"))
 
 			return
 		end
@@ -403,11 +427,11 @@ sounds = {
 				self:set_animation("stand")
 				self:set_velocity(0)
 
-				minetest.chat_send_player(name, ("Royalty stands still."))
+				minetest.chat_send_player(name, S("Royalty stands still."))
 			else
 				self.order = "follow"
 
-				minetest.chat_send_player(name, ("Royalty will follow you."))
+				minetest.chat_send_player(name, S("Royalty will follow you."))
 			end
 		end
 	end,
@@ -427,7 +451,7 @@ mobs:spawn({
 })
 end
 
-mobs:register_egg("nativevillages:savannaqueen", ("Savanna Queen"), "asavannaqueen.png")
+mobs:register_egg("nativevillages:savannaqueen", S("Savanna Queen"), "asavannaqueen.png")
 
 mobs.savannamale_drops = {
 	"farming:vanilla", "farming:pumpkin", "farming:potato", "farming:pineapple", "farming:pepper", "farming:onion", "farming:peas", "farming:melon", "farming:cucumber", "farming:coffee_beans"
@@ -467,13 +491,13 @@ sounds = {
         walk_chance = 15,
 	run_velocity = 3,
 	jump = true,
+        stay_near = {{"nativevillages:savannavshrine", "nativevillages:savannathrone", "nativevillages:savannavessels"}, 5},
 	drops = {
 	},
 	water_damage = 0,
 	lava_damage = 2,
 	light_damage = 0,
 	follow = {},
-        stay_near = "nativevillages:savannavessels",
 	view_range = 15,
 	owner = "",
 	order = "follow",
@@ -487,6 +511,11 @@ sounds = {
                 punch_speed = 100,
 		punch_start = 200,
 		punch_end = 300,
+		die_start = 200,
+		die_end = 300,
+		die_speed = 50,
+		die_loop = false,
+		die_rotate = true,
 	},
 
 	on_rightclick = function(self, clicker)
@@ -495,7 +524,7 @@ sounds = {
 		if mobs:feed_tame(self, clicker, 8, true, true) then return end
 
 		-- capture npc with net or lasso
-		if mobs:capture_mob(self, clicker, nil, 5, 80, false, nil) then return end
+		if mobs:capture_mob(self, clicker, 0, 15, 25, false, nil) then return end
 
 		-- protect npc with mobs:protector
 		if mobs:protect(self, clicker) then return end
@@ -521,7 +550,7 @@ sounds = {
 				name = drops[math.random(1, #drops)]
 			})
 
-			minetest.chat_send_player(name, ("Savanna Villager dropped you an item for a pearl!"))
+			minetest.chat_send_player(name, S("Savanna Villager dropped you an item for a pearl!"))
 
 			return
 		end
@@ -537,11 +566,11 @@ sounds = {
 				self:set_animation("stand")
 				self:set_velocity(0)
 
-				minetest.chat_send_player(name, ("Savanna Villager stands still."))
+				minetest.chat_send_player(name, S("Savanna Villager stands still."))
 			else
 				self.order = "follow"
 
-				minetest.chat_send_player(name, ("Savanna Villager will follow you."))
+				minetest.chat_send_player(name, S("Savanna Villager will follow you."))
 			end
 		end
 	end,
@@ -561,7 +590,7 @@ mobs:spawn({
 })
 end
 
-mobs:register_egg("nativevillages:savannamale", ("Male Savanna Villager"), "asavannamale.png")
+mobs:register_egg("nativevillages:savannamale", S("Male Savanna Villager"), "asavannamale.png")
 
 mobs.savannaking_drops = {
 	"default:goldblock"
@@ -598,13 +627,13 @@ sounds = {
         walk_chance = 15,
 	run_velocity = 3,
 	jump = true,
+        stay_near = {{"nativevillages:savannavshrine", "nativevillages:savannathrone", "nativevillages:savannavessels"}, 5},
 	drops = {
 	},
 	water_damage = 0,
 	lava_damage = 2,
 	light_damage = 0,
 	follow = {},
-        stay_near = "nativevillages:savannathrone",
 	view_range = 15,
 	owner = "",
 	order = "follow",
@@ -618,6 +647,11 @@ sounds = {
                 punch_speed = 100,
 		punch_start = 200,
 		punch_end = 300,
+		die_start = 200,
+		die_end = 300,
+		die_speed = 50,
+		die_loop = false,
+		die_rotate = true,
 	},
 
 	on_rightclick = function(self, clicker)
@@ -626,7 +660,7 @@ sounds = {
 		if mobs:feed_tame(self, clicker, 8, true, true) then return end
 
 		-- capture npc with net or lasso
-		if mobs:capture_mob(self, clicker, nil, 5, 80, false, nil) then return end
+		if mobs:capture_mob(self, clicker, 0, 15, 25, false, nil) then return end
 
 		-- protect npc with mobs:protector
 		if mobs:protect(self, clicker) then return end
@@ -652,7 +686,7 @@ sounds = {
 				name = drops[math.random(1, #drops)]
 			})
 
-			minetest.chat_send_player(name, ("Royalty dropped you an item for gold!"))
+			minetest.chat_send_player(name, S("Royalty dropped you an item for gold!"))
 
 			return
 		end
@@ -668,11 +702,11 @@ sounds = {
 				self:set_animation("stand")
 				self:set_velocity(0)
 
-				minetest.chat_send_player(name, ("Royalty stands still."))
+				minetest.chat_send_player(name, S("Royalty stands still."))
 			else
 				self.order = "follow"
 
-				minetest.chat_send_player(name, ("Royalty will follow you."))
+				minetest.chat_send_player(name, S("Royalty will follow you."))
 			end
 		end
 	end,
@@ -692,7 +726,7 @@ mobs:spawn({
 })
 end
 
-mobs:register_egg("nativevillages:savannaking", ("Savanna King"), "asavannaking.png")
+mobs:register_egg("nativevillages:savannaking", S("Savanna King"), "asavannaking.png")
 
 mobs.savannafemale_drops = {
 	"farming:vanilla", "farming:pumpkin", "farming:potato", "farming:pineapple", "farming:pepper", "farming:onion", "farming:peas", "farming:melon", "farming:cucumber", "farming:coffee_beans"
@@ -731,13 +765,13 @@ sounds = {
         walk_chance = 15,
 	run_velocity = 3,
 	jump = true,
+        stay_near = {{"nativevillages:savannavshrine", "nativevillages:savannathrone", "nativevillages:savannavessels"}, 5},
 	drops = {
 	},
 	water_damage = 0,
 	lava_damage = 2,
 	light_damage = 0,
 	follow = {},
-        stay_near = "nativevillages:savannavessels",
 	view_range = 15,
 	owner = "",
 	order = "follow",
@@ -751,6 +785,11 @@ sounds = {
                 punch_speed = 100,
 		punch_start = 200,
 		punch_end = 300,
+		die_start = 200,
+		die_end = 300,
+		die_speed = 50,
+		die_loop = false,
+		die_rotate = true,
 	},
 
 	on_rightclick = function(self, clicker)
@@ -759,7 +798,7 @@ sounds = {
 		if mobs:feed_tame(self, clicker, 8, true, true) then return end
 
 		-- capture npc with net or lasso
-		if mobs:capture_mob(self, clicker, nil, 5, 80, false, nil) then return end
+		if mobs:capture_mob(self, clicker, 0, 15, 25, false, nil) then return end
 
 		-- protect npc with mobs:protector
 		if mobs:protect(self, clicker) then return end
@@ -785,7 +824,7 @@ sounds = {
 				name = drops[math.random(1, #drops)]
 			})
 
-			minetest.chat_send_player(name, ("Savanna Villager dropped you an item for a pearl!"))
+			minetest.chat_send_player(name, S("Savanna Villager dropped you an item for a pearl!"))
 
 			return
 		end
@@ -801,11 +840,11 @@ sounds = {
 				self:set_animation("stand")
 				self:set_velocity(0)
 
-				minetest.chat_send_player(name, ("Savanna Villager stands still."))
+				minetest.chat_send_player(name, S("Savanna Villager stands still."))
 			else
 				self.order = "follow"
 
-				minetest.chat_send_player(name, ("Savanna Villager will follow you."))
+				minetest.chat_send_player(name, S("Savanna Villager will follow you."))
 			end
 		end
 	end,
@@ -825,5 +864,5 @@ mobs:spawn({
 })
 end
 
-mobs:register_egg("nativevillages:savannafemale", ("Female Savanna Villager"), "asavannafemale.png")
+mobs:register_egg("nativevillages:savannafemale", S("Female Savanna Villager"), "asavannafemale.png")
 

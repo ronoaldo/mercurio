@@ -2,7 +2,7 @@
 
 pa28={}
 pa28.gravity = tonumber(minetest.settings:get("movement_gravity")) or 9.8
-pa28.wing_angle_of_attack = 1.2
+pa28.wing_angle_of_attack = 3 --1.2
 pa28.min_speed = 4
 pa28.max_speed = 9
 pa28.max_engine_acc = 8.5
