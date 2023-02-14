@@ -1,0 +1,13 @@
+# Blender MTL File: 'bebedouro.blend'
+# Material Count: 1
+
+newmtl Material
+Ns 699.842977
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 1
+map_Kd /home/josea/Downloads/Minetest_progetos/0_minetest/Desenvovelndo/minetest-5.4.0_compilado_jose/mods/jose_pacote_decor/josedecor_pacoteescolar/textures/bebedouro.png

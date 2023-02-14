@@ -1,0 +1,13 @@
+# Blender MTL File: 'armario_escolar.blend'
+# Material Count: 1
+
+newmtl Material.002
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd /home/josea/Downloads/Minetest_progetos/0_minetest/Desenvovelndo/minetest-5.4.0_Projeto MODS/mods/jose_pacote_decor/josedecor_pacoteescolar/textures/armario_escolar.png
