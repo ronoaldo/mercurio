@@ -16,6 +16,29 @@ O servidor foi projetado para ser amigável e agradável! Por favor:
 
 ![1,1](halo)
 
+![0,0,r](item:///animalia:crate)
+
+# **Atualização do servidor, 14 de fevereiro de 2023**
+
+Novos mobs na natureza! Adicionamos o mod `animalia` ao servidor, pelo mesmo
+criador de `draconis`: ElCeejo.
+
+Animalia traz um novo conjunto de vida selvagem para o servidor, com texturas
+muito legais e mecânica interessante. Explore o mundo para descobrir quais novas
+criaturas você vai encontrar!
+
+![0,0,r](item:///automobiles_motorcycle:motorcycle)
+
+Também ativamos o novo veículo da última atualização: a motocicleta  Vespa! Ande
+de moto pelo servidor e nos ajude a construir uma nova estrada blocos
+conectando todas as áreas do mundo.
+
+Uma mudança final: as vespas (abelhas?) de `dmobs` não aparecerão mais, então só
+precisamos lidar com as que já foram geradas. Chefes de vespas ainda aparecerão
+então cuidado com eles!
+
+![1,1](halo)
+
 ![0,0,r](item:///default:pick_diamond)
 
 # **Atualização do servidor, 13 de fevereiro de 2023**
