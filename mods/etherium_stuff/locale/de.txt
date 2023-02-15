@@ -1,0 +1,11 @@
+
+#todo add other files
+
+#nodes.lua
+Etherium Sand = Etherium Sand
+Etherium Sandstone = Etherium Sandstein
+Etherium Sandstone Brick = Etherium Sandstein-Stein
+Etherium Sandstone Block = Etherium Sandstein Block
+Etherium Glass = Etherium Glas
+Etherium Crystal Glass = Etherium Kristallglas 
+Etherium Sandstone Light Block = Etherium Sandstein-Lichtblock

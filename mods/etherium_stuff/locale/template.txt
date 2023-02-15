@@ -1,0 +1,13 @@
+# Template for translations of etherium_stuff mod
+# last update: 2020/May/18
+
+#todo add other files
+
+#nodes.lua
+Etherium Sand = 
+Etherium Sandstone = 
+Etherium Sandstone Brick = 
+Etherium Sandstone Block = 
+Etherium Glass = 
+Etherium Crystal Glass = 
+Etherium Sandstone Light Block =

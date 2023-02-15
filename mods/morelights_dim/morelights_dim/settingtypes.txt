@@ -1,0 +1,11 @@
+# SPDX-FileCopyrightText: 2021 David Hurka <doxydoxy@mailbox.org>
+#
+# SPDX-License-Identifier: CC0-1.0 OR MIT
+
+# The light level of light nodes can be changed by right-clicking them with a certain tool.
+# Enable this option to also use the empty hand instead.
+morelights_dim_change_light_level_with_hand (Change light levels with empty hand) bool false
+
+# These tools can change the light level of light nodes at right-click.
+# Comma or space separated list.
+morelights_dim_light_level_tools (Tools to change light levels) string morelights:bulb
