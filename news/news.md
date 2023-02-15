@@ -15,39 +15,62 @@ The server is designed to be friendly and enjoyable! Please:
 -------------------------------
 ![1,1](halo)
 
-![0,0,r](item:///animalia:crate)
+# **Server Updates February 2023**
 
-# **Server Update, February 14, 2023**
+![0,0,l](item:///animalia:crate)
 
 New mobs in the wild! We added the `animalia` mod to the server, by the same
-creator of `draconis`: ElCeejo.
+creator of `draconis`: ElCeejo. This was suggested by the Minetest forum user
+`KingBull`, as a way to fix an issue while tamming Wyverns and possibly feeding
+Draconis dragons.
 
-Animalia brings a new set of wild life to the server, with very nice textures
-and interesting mechanics. Explore the world to figure out what new creatures
-you will discover!
+Animalia brings a **new set of wild life to the server**, with beautiful 
+textures and interesting mechanics. Explore the world to figure out what new
+creatures you will discover!
 
 ![0,0,r](item:///automobiles_motorcycle:motorcycle)
 
-We also have activated the new vehicle from the latest update: the Vespa
-motorcycle!  Ride this motorcycle around the server and help us build some new
-road blocks connecting all world areas.
+We also have activated the new vehicles from the latest `automobiles_pck`
+update: the Vespa motorcycle and Delorian car! Ride this motorcycle around the
+server and help us build some new roads connecting all world areas.
 
 This update also includes a new mod to help builders: `school_furniture`, by our
-community member José Anastácio! This new mod will add several new furniture to
-build our virtual class room, providing a more immersive experience.
+community member **José Anastácio**! This new mod will add several new furniture
+to build our virtual class room, providing a more immersive experience. Also
+added in this update, the mod pack `morelights` and `morelights_dim`, as well as
+the `ethereal_stuff` will help you get new and interesting elements to your
+regular builds.  Let's build amazing things around the world!
 
-A final change: wasps from `dmobs` will no longer spawn so we only need to deal
-with the remaining ones that were already spawned. Wasp bosses will still spawn
-so watch out for them!
+![0,0,r](item:///crystals:ghost_crystal_2)
 
-![1,1](halo)
+Tired to see the same lands over and over? No more places do dig as you reached
+the final Xtraores level? Fear not: you can now try to **explore the space!**.
+We added the mod `other_worlds` to the server, to allow players to have new
+exploration adventures! You will need to use the vehicles to travel up, managing
+the fuel usage and potentially creating some Travelnet checkpoints along the
+way: space starts at 5000 blocks in height. In space, you will start to discover
+a new and interesting portion of the server filled with asteroids and unique
+crystals.
 
-![0,0,r](item:///default:pick_diamond)
+We also attempted to change some behavior of existing mods to improve the
+gameplay:
 
-# **Server Update, February 13, 2023**
+1. Wasps from `dmobs` will no longer spawn so we only need to deal with the remaining ones that were already spawned. Wasp bosses will still spawn so watch out for them!
+2. Dragons from `dmobs` mod will no longer spawn. Take care of the ones you have tammed. If you have these dragon eggs, you can also still hatch them and get these ancient and unique creatures.
+3. We also have an **updated inventory interface**. The goal fot this was to make the inventory interface easier to use on Android. Let us know what you think about it on Discord!
 
-Happy New Year! This is the first update of 2023, with new versions of the
-following mods:
+## New mods
+
+```
+animalia by ElCeejo
+other_worlds by TenPlus1
+morelights by random_geek
+morelights_dim by doxygen_spammer
+etherium_stuff by alerikaisattera
+school_furniture by joseanastacio
+```
+
+## Updated mods
 
 ```
 3d_armor
@@ -74,9 +97,6 @@ skinsdb
 techpack
 unified_inventory
 ```
-
-We also have an updated inventory interface. Let us know what you think about it
-on Discord!
 
 ![1,1](halo)
 

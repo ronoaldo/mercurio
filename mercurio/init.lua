@@ -169,15 +169,15 @@ remove_entity(":loot_crates:rare")
 -- Spawn overrides
 local _orig_spawn_check = mobs.spawn_abm_check
 local function mercurio_spawn_abm_check(self, pos, node, name)
-    log_action("Checking for spawn of "..name.." via ABM check from 'mobs' mod...")
     if name == "nether_mobs:netherman" then
         if pos.y >= -3000 then
-            log_action("Preventing netherman from spawning at "..pos.y)
             return true
         end
     end
     if name == "dmobs:wasp" then
-        log_action("Preventing anoying wasps ..")
+        return true
+    end
+    if name ~= "dmobs" and name ~= "dragon" then
         return true
     end
     return _orig_spawn_check(pos, node, name)
