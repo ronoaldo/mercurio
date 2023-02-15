@@ -27,14 +27,16 @@ possivelmente ao alimentar dragões Draconis.
 
 Animalia traz um **novo conjunto de vida selvagem para o servidor**, com belas
 texturas e mecânicas interessantes. Explore o mundo para descobrir o que há de
-novo criaturas que você descobrirá!
+novo e quais criaturas que você encontrará!
 
-![0,0,r](item:///automobiles_motorcycle:motorcycle)
+![0,0,r](item:///automobiles_delorean:delorean)
 
 Também ativamos os novos veículos da última atualização de `automobiles_pck`, de
 **APercy**: a motocicleta Vespa e o carro Delorian! Pilote esta motocicleta ao
 redor do servidor e nos ajude a construir alguns novas estradas conectando todas
-as áreas do mundo.
+as áreas do mundo. Uma versão especial do **Delorean** do filme De Volta para o
+Futuro está disponível como item exclusivo, que iremos conceder apenas a jogadores
+selecionados.
 
 Esta atualização também inclui um novo mod para ajudar os construtores:
 `school_furniture`, do nosso membro da comunidade **José Anastácio**! Este novo
@@ -61,15 +63,9 @@ sugerido pelo usuário `livespectare` pelo nosso Github.
 Também tentamos mudar alguns comportamentos dos mods existentes para melhorar o
 jogabilidade:
 
-1. Vespas de `dmobs` não aparecerão mais, então só precisamos lidar com o
-restantes que já foram gerados. Chefes de vespas ainda aparecerão, então assista
-fora para eles!
-2. Os dragões do mod `dmobs` não aparecerão mais. Cuide dos que você tem
-domesticado. Se você tiver esses ovos de dragão, também poderá chocá-los e obter
-essas criaturas antigas e únicas.
-3. Também temos uma **interface de inventário atualizada**. O objetivo disso era
-tornar a interface de inventário mais fácil de usar no Android. Deixe-nos saber
-o que você pense nisso no Discord!
+1. Vespas de `dmobs` não aparecerão mais, então só precisamos lidar com o  restantes que já foram gerados. Chefes de vespas ainda aparecerão, então assista fora para eles!
+2. Os dragões do mod `dmobs` não aparecerão mais. Cuide dos que você tem domesticado. Se você tiver esses ovos de dragão, também poderá chocá-los e obter essas criaturas antigas e únicas.
+3. Também temos uma **interface de inventário atualizada**. O objetivo disso era tornar a interface de inventário mais fácil de usar no Android. Deixe-nos saber o que você pense nisso no Discord!
 
 ## New mods
 

@@ -55,15 +55,9 @@ crystals.
 We also attempted to change some behavior of existing mods to improve the
 gameplay:
 
-1. Wasps from `dmobs` will no longer spawn so we only need to deal with the
-remaining ones that were already spawned. Wasp bosses will still spawn so watch
-out for them!
-2. Dragons from `dmobs` mod will no longer spawn. Take care of the ones you have
-tammed. If you have these dragon eggs, you can also still hatch them and get
-these ancient and unique creatures.
-3. We also have an **updated inventory interface**. The goal fot this was to
-make the inventory interface easier to use on Android. Let us know what you
-think about it on Discord!
+1. Wasps from `dmobs` will no longer spawn so we only need to deal with the remaining ones that were already spawned. Wasp bosses will still spawn so watch out for them!
+2. Dragons from `dmobs` mod will no longer spawn. Take care of the ones you have tammed. If you have these dragon eggs, you can also still hatch them and get these ancient and unique creatures.
+3. We also have an **updated inventory interface**. The goal fot this was to make the inventory interface easier to use on Android. Let us know what you think about it on Discord!
 
 ## New mods
 
