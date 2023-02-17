@@ -197,6 +197,7 @@ load_mod_nether_mobs = true
 load_mod_other_worlds = true
 load_mod_pa28 = true
 load_mod_people = true
+load_mod_pipeworks = true
 load_mod_protector = true
 load_mod_regrowing_fruits = true
 load_mod_replacer = true
