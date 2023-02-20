@@ -9,10 +9,17 @@ minetest.register_chatcommand("server_metadata", {
             "size[20,14]"..
             "button_exit[16.6,12.8;3,0.9;exit;OK]"..
             "textarea[0.5,0.5;19.1,12.1;server_metadata;;"
+        local meta = minetest[param]
 
-        local txt
-        if minetest[param] then
-            txt = to_json(minetest[param], true)
+        local txt = "minetest."..param.." values (type= ".. type(meta) .."):\n\n"
+        if meta then
+            if type(meta) == "table" then
+                for k, v in pairs(meta) do
+                    txt = txt .. "".. k ..": ".. to_json(v) .. " \n"
+                end
+            else
+                txt = txt .. to_json(meta)
+            end
         else
             txt = "Not found: " .. param
         end

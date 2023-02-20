@@ -52,6 +52,16 @@ way: space starts at 5000 blocks in height. In space, you will start to discover
 a new and interesting portion of the server filled with asteroids and unique
 crystals.
 
+![0,0,r](item:///technic:cnc)
+
+Finally, we also added the `technic` and `pipeworks` mods, to automation  on
+steroids. Search for technic in the inventory UI to discover the new nodes, as
+well as browse over the new Automation Components inventory tab to learn how to
+craft some of the new items. These mods were recommended by our community
+members `farribeiro` and `JGoffredo`.
+
+## Gameplay Changes
+
 We also attempted to change some behavior of existing mods to improve the
 gameplay:
 
@@ -63,10 +73,12 @@ gameplay:
 
 ```
 animalia by ElCeejo
-other_worlds by TenPlus1
+etherium_stuff by alerikaisattera
 morelights by random_geek
 morelights_dim by doxygen_spammer
-etherium_stuff by alerikaisattera
+other_worlds by TenPlus1
+technic by minetest-mods
+pipeworks by mt-mods
 school_furniture by joseanastacio
 ```
 

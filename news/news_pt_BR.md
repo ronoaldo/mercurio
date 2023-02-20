@@ -60,6 +60,16 @@ começa em 5000 blocos de altura. No espaço, você começará a descobrir uma p
 nova e interessante do servidor cheia de asteroides e cristais. Esse mod foi
 sugerido pelo usuário `livespectare` pelo nosso Github.
 
+![0,0,r](item:///technic:cnc)
+
+Por fim, nós também adicionamos os mods `technic` e `pipeworks`, para automações
+em esteróides! Pesquise por technic na interface do inventário e descubra novos
+nodes, bem como navegue pela nova aba *Automation Components* do inventário para
+aprender como craftar os novos itens. Estes mods foram recomendados pelos nossos
+membros da comunidade `farribeiro` e `JGoffredo`.
+
+## Ajustes na Jogabilidade
+
 Também tentamos mudar alguns comportamentos dos mods existentes para melhorar o
 jogabilidade:
 
@@ -67,18 +77,20 @@ jogabilidade:
 2. Os dragões do mod `dmobs` não aparecerão mais. Cuide dos que você tem domesticado. Se você tiver esses ovos de dragão, também poderá chocá-los e obter essas criaturas antigas e únicas.
 3. Também temos uma **interface de inventário atualizada**. O objetivo disso era tornar a interface de inventário mais fácil de usar no Android. Deixe-nos saber o que você pense nisso no Discord!
 
-## New mods
+## Novos mods
 
 ```
 animalia by ElCeejo
-other_worlds by TenPlus1
+etherium_stuff by alerikaisattera
 morelights by random_geek
 morelights_dim by doxygen_spammer
-etherium_stuff by alerikaisattera
+other_worlds by TenPlus1
+technic by minetest-mods
+pipeworks by mt-mods
 school_furniture by joseanastacio
 ```
 
-## Updated mods
+## Mods Atualizados
 
 ```
 3d_armor
