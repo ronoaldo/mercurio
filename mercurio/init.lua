@@ -168,17 +168,48 @@ remove_entity(":loot_crates:uncommon")
 remove_entity(":loot_crates:rare")
 -- Spawn overrides
 local _orig_spawn_check = mobs.spawn_abm_check
+local do_not_spawn = {
+    -- Do not spawn some dmobs monsters, they're weird/annoying
+    "dmobs:nyan",
+    "dmobs:rat",
+    "dmobs:wasp",
+    "dmobs:wasp_leader",
+    -- Do not spawn dmobs dragons, using Draconis for them
+    "dmobs:dragon1",
+    "dmobs:dragon2",
+    "dmobs:dragon3",
+    "dmobs:dragon4",
+    "dmobs:dragon",
+    "dmobs:dragon1",
+    "dmobs:dragon2",
+    "dmobs:dragon3",
+    "dmobs:dragon4",
+    "dmobs:dragon_black",
+    "dmobs:dragon_blue",
+    "dmobs:dragon_great",
+    "dmobs:dragon_great_tame",
+    "dmobs:dragon_green",
+    "dmobs:dragon_red",
+    "dmobs:waterdragon",
+    "dmobs:waterdragon_2",
+    "dmobs:wyvern",
+    -- Do not spawn some of the animals, using Animalia for them
+    "mobs_animal:chicken",
+    "mobs_animal:cow",
+    "mobs_animal:kitten",
+    "mobs_animal:rat",
+    "mobs_animal:sheep_",
+}
 local function mercurio_spawn_abm_check(self, pos, node, name)
     if name == "nether_mobs:netherman" then
         if pos.y >= -3000 then
             return true
         end
     end
-    if name == "dmobs:wasp" then
-        return true
-    end
-    if name ~= "dmobs" and name ~= "dragon" then
-        return true
+    for _, s in ipairs(do_not_spawn) do
+        if name:find(s) then
+            return true
+        end
     end
     return _orig_spawn_check(pos, node, name)
 end
