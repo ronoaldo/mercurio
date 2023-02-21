@@ -12,6 +12,7 @@ gameid = minetest
 world_name = Mercurio
 
 load_mod_3d_armor = true
+load_mod_3d_armor_flyswim = true
 load_mod_3d_armor_ip = true
 load_mod_3d_armor_sfinv = true
 load_mod_3d_armor_stand = true
@@ -74,7 +75,6 @@ load_mod_hangglider = true
 load_mod_hbarmor = true
 load_mod_hbhunger = true
 load_mod_hbsprint = true
-load_mod_headanim = true
 load_mod_helicopter = true
 load_mod_hidroplane = true
 load_mod_home_vending_machines = true 
