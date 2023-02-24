@@ -1,0 +1,4 @@
+lr_default (default liquid_restriction priv) string spill
+lr_advanced (advanced liquid_restriction priv) string server
+lr_height (height for advanced priv use) int 30
+lr_renew (if liquids are renewable or not) bool false
