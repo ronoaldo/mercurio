@@ -8,6 +8,7 @@ https://forum.minetest.net/viewtopic.php?id=8890
 
 Changelog:
 
+- 1.2 - Add 'stairsplus_clay_compatibility' setting.
 - 1.1 - Remove 0.4.x compatibility to better support 5.x mods
 - 1.0 - Re-Added glazed terracotta blocks when you cook baked clay in furnace (thanks Amara2_MK), added support for sofar's flowerpot mod, missing glazed textures re-coloured by firefox.
 - 0.9 - Baked clay now works in the technic cnc machine
@@ -24,3 +25,5 @@ Lucky Blocks: 10
 
 
 Note: Under settings you will find 'colored_clay_compatibility' switch that when enabled will register aliases for the older colored clay mod and it's stairplus stairs.
+
+You will also find the 'stairsplus_clay_compatibility' setting that is enabled by default for older worlds that switched from default stairs mod to stairsplus.  It can be disabled for brand new worlds only using stairsplus mod though.
