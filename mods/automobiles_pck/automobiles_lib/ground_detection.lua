@@ -1,3 +1,31 @@
+function automobiles_lib.putAngleOnRange(angle)
+    local n_angle = angle/360
+    n_angle = (n_angle - math.floor(n_angle))*360
+    if n_angle < -180 then n_angle = n_angle + 360 end
+    if n_angle > 180 then n_angle = n_angle - 360 end
+    return n_angle
+end
+
+function automobiles_lib.pid_controller(current_value, setpoint, last_error, delta_t, kp, ki, kd)
+    kp = kp or 0
+    ki = ki or 0.00000000000001
+    kd = kd or 0.05
+    delta_t = delta_t or 0.100;
+
+    ti = kp/ki
+    td = kd/kp
+
+    local _error = setpoint - current_value
+    local derivative = _error - last_error
+    --local output = kpv*erro + (kpv/Tiv)*I + kpv*Tdv*((erro - erro_passado)/delta_t);
+    if integrative == nil then integrative = 0 end
+    integrative = integrative + (((_error + last_error)/delta_t)/2);
+    local output = kp*_error + (kp/ti)*integrative + kp * td*((_error - last_error)/delta_t)
+    last_error = _error
+    return output, last_error
+
+end
+
 --lets assume that the rear axis is at object center, so we will use the distance only for front wheels
 function automobiles_lib.ground_get_distances(self, radius, axis_distance)
     --local mid_axis = (axis_length / 2)/10
@@ -43,7 +71,7 @@ function automobiles_lib.ground_get_distances(self, radius, axis_distance)
         local m = (deltaY/deltaX)
         local new_pitch = math.atan(m) --math.atan2(deltaY, deltaX);
         --local deg_angle = math.deg(new_pitch)
-        
+
         --first test front wheels before
         if (front_obstacle_level.y-self._last_front_detection) <= self.initial_properties.stepheight then
             pitch = new_pitch --math.atan2(deltaY, deltaX);
@@ -52,6 +80,16 @@ function automobiles_lib.ground_get_distances(self, radius, axis_distance)
         else
             --until 20 deg, climb
             if math.deg(new_pitch - self._last_pitch) <= 20 then
+
+                --[[if self._last_error == nil then self._last_error = 0 end -- Último erro registrado
+                -- Estado atual do sistema
+                local output, last_error = automobiles_lib.pid_controller(self._last_pitch, new_pitch, self._last_error, self.dtime/2, 0.5)
+                self._last_error = last_error 
+                new_pitch = output
+                local conversion = automobiles_lib.putAngleOnRange(math.deg(new_pitch))
+                new_pitch = math.rad(conversion)
+                minetest.chat_send_all("last: "..self._last_pitch.." - new: "..new_pitch)]]--
+
                 pitch = new_pitch
                 self._last_pitch = new_pitch
                 self._last_front_detection = front_obstacle_level.y

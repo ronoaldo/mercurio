@@ -11,9 +11,10 @@ if not minetest.settings:get_bool('pa28.disable_craftitems') then
 	    inventory_image = "pa28_fuselage.png",
     })
 end
+
 -- pa28
 minetest.register_craftitem("pa28:pa28", {
-	description = pa28.plane_text,
+	description = "PA-28",
 	inventory_image = "pa28.png",
     liquids_pointable = true,
 
@@ -26,15 +27,17 @@ minetest.register_craftitem("pa28:pa28", {
         --local node_below = minetest.get_node(pointed_pos).name
         --local nodedef = minetest.registered_nodes[node_below]
         
-		pointed_pos.y=pointed_pos.y+2.5
+		pointed_pos.y=pointed_pos.y+2
 		local pa28_ent = minetest.add_entity(pointed_pos, "pa28:pa28")
 		if pa28_ent and placer then
             local ent = pa28_ent:get_luaentity()
-            local owner = placer:get_player_name()
-            ent.owner = owner
-			pa28_ent:set_yaw(placer:get_look_horizontal())
-			itemstack:take_item()
-            airutils.create_inventory(ent, pa28.trunk_slots, owner)
+            if ent then
+                local owner = placer:get_player_name()
+                ent.owner = owner
+			    pa28_ent:set_yaw(placer:get_look_horizontal())
+			    itemstack:take_item()
+                airutils.create_inventory(ent, ent._trunk_slots, owner)
+            end
 		end
 
 		return itemstack
@@ -71,3 +74,4 @@ if not minetest.settings:get_bool('pa28.disable_craftitems') and minetest.get_mo
 		}
 	})
 end
+

@@ -2,12 +2,14 @@ steampunk_blimp={}
 steampunk_blimp.gravity = tonumber(minetest.settings:get("movement_gravity")) or 9.8
 steampunk_blimp.trunk_slots = 50
 steampunk_blimp.fuel = {['default:coal_lump'] = {amount=1},['default:coalblock'] = {amount=10}}
-steampunk_blimp.water = {['default:water_source'] = {amount=1},['default:river_water_source'] = {amount=1}, ['bucket:bucket_water'] = {amount=1}, ['bucket:bucket_river_water'] = {amount=1}}  --bucket:bucket_empty
+steampunk_blimp.water = {['default:water_source'] = {amount=1},['default:river_water_source'] = {amount=1}, ['bucket:bucket_water'] = {amount=1},
+    ['bucket:bucket_river_water'] = {amount=1}, ['mcl_buckets:bucket_water'] = {amount=1}, ['mcl_buckets:bucket_river_water'] = {amount=1}}  --bucket:bucket_empty
 steampunk_blimp.ideal_step = 0.02
 steampunk_blimp.rudder_limit = 30
 steampunk_blimp.iddle_rotation = 0
 steampunk_blimp.max_engine_acc = 3
-steampunk_blimp.max_seats = 5
+steampunk_blimp.max_seats = 7
+steampunk_blimp.wind_enabled = false
 steampunk_blimp.pilot_base_pos = {x=0.0,y=20.821,z=-30}
 steampunk_blimp.passenger_pos = {
     [1] = {x=0.0,y=0,z=-15},
@@ -15,6 +17,8 @@ steampunk_blimp.passenger_pos = {
     [3] = {x=11,y=0,z=-12},
     [4] = {x=-11,y=0,z=14},
     [5] = {x=11,y=0,z=14},
+    [6] = {x=-11,y=0,z=13},
+    [7] = {x=11,y=0,z=13},
     }
 
 steampunk_blimp.canvas_texture = "wool_white.png^[colorize:#f4e7c1:128"
@@ -23,6 +27,8 @@ steampunk_blimp.black_texture = "default_clay.png^[colorize:#030303:200"
 steampunk_blimp.wood_texture = "default_clay.png^[colorize:#3a270d:230"
 steampunk_blimp.forno_texture = steampunk_blimp.black_texture.."^[mask:steampunk_blimp_forno_mask.png"
 steampunk_blimp.rotor_texture = "("..steampunk_blimp.canvas_texture.."^[mask:steampunk_blimp_rotor_mask2.png)^(default_wood.png^[mask:steampunk_blimp_rotor_mask.png)"
+local ladder_texture = "default_ladder_wood.png"
+if airutils.is_mcl then ladder_texture = "default_ladder.png" end
 steampunk_blimp.textures = {
             steampunk_blimp.black_texture, --alimentacao balao
             "default_wood.png", --asa
@@ -40,7 +46,7 @@ steampunk_blimp.textures = {
             "default_junglewood.png", --leme
             steampunk_blimp.wood_texture, --timao
             "steampunk_blimp_compass.png",
-            "default_ladder_wood.png", --escada
+            ladder_texture, --escada
             "default_wood.png", --mureta
             steampunk_blimp.wood_texture, --mureta
             steampunk_blimp.black_texture, --nacele rotores
@@ -76,6 +82,7 @@ steampunk_blimp.colors ={
     yellow='yellow',
 }
 
+dofile(minetest.get_modpath("steampunk_blimp") .. DIR_DELIM .. "walk_map.lua")
 dofile(minetest.get_modpath("steampunk_blimp") .. DIR_DELIM .. "utilities.lua")
 dofile(minetest.get_modpath("steampunk_blimp") .. DIR_DELIM .. "control.lua")
 dofile(minetest.get_modpath("steampunk_blimp") .. DIR_DELIM .. "fuel_management.lua")
@@ -120,16 +127,16 @@ minetest.register_craftitem("steampunk_blimp:blimp", {
 		if pointed_thing.type ~= "node" then
 			return
 		end
-        
+
         local pointed_pos = pointed_thing.under
         --local node_below = minetest.get_node(pointed_pos).name
         --local nodedef = minetest.registered_nodes[node_below]
-        
+
 		pointed_pos.y=pointed_pos.y+3
 		local blimp = minetest.add_entity(pointed_pos, "steampunk_blimp:blimp")
 		if blimp and placer then
             local ent = blimp:get_luaentity()
-            ent._passengers = steampunk_blimp.copy_vector({[1]=nil, [2]=nil, [3]=nil, [4]=nil, [5]=nil,})
+            ent._passengers = steampunk_blimp.copy_vector({[1]=nil, [2]=nil, [3]=nil, [4]=nil, [5]=nil, [6]=nil, [7]=nil})
             --minetest.chat_send_all('passengers: '.. dump(ent._passengers))
             local owner = placer:get_player_name()
             ent.owner = owner
@@ -147,20 +154,38 @@ minetest.register_craftitem("steampunk_blimp:blimp", {
 	end,
 })
 
+if minetest.settings:get_bool('steampunk_blimp.enable_wind') then
+    steampunk_blimp.wind_enabled = true
+else
+    steampunk_blimp.wind_enabled = false
+end
 
 --
 -- crafting
 --
 
 if not minetest.settings:get_bool('steampunk_blimp.disable_craftitems') then
-    minetest.register_craft({
-	    output = "steampunk_blimp:cylinder_part",
-	    recipe = {
-		    {"default:stick", "wool:white", "default:stick"},
-		    {"wool:white", "group:wood", "wool:white"},
-            {"default:stick", "wool:white", "default:stick"},
-	    }
-    })
+
+    local item_name = "steampunk_blimp:cylinder_part"
+    if not airutils.is_mcl then
+        minetest.register_craft({
+	        output = item_name,
+	        recipe = {
+		        {"default:stick", "wool:white", "default:stick"},
+		        {"wool:white", "group:wood", "wool:white"},
+                {"default:stick", "wool:white", "default:stick"},
+	        }
+        })
+    else
+        minetest.register_craft({
+	        output = item_name,
+	        recipe = {
+		        {"mcl_core:stick", "mcl_wool:white", "mcl_core:stick"},
+		        {"mcl_wool:white", "mcl_core:wood", "mcl_wool:white"},
+                {"mcl_core:stick", "mcl_wool:white", "mcl_core:stick"},
+	        }
+        })
+    end
 
     minetest.register_craft({
 	    output = "steampunk_blimp:cylinder",
@@ -169,23 +194,47 @@ if not minetest.settings:get_bool('steampunk_blimp.disable_craftitems') then
 	    }
     })
 
-    minetest.register_craft({
-	    output = "steampunk_blimp:rotor",
-	    recipe = {
-		    {"wool:white", "default:stick", ""},
-		    {"wool:white", "default:stick", "default:steelblock"},
-		    {"wool:white", "default:stick", ""},
-	    }
-    })
+    item_name = "steampunk_blimp:rotor"
+    if not airutils.is_mcl then
+        minetest.register_craft({
+	        output = item_name,
+	        recipe = {
+		        {"wool:white", "default:stick", ""},
+		        {"wool:white", "default:stick", "default:steelblock"},
+		        {"wool:white", "default:stick", ""},
+	        }
+        })
+    else
+        minetest.register_craft({
+	        output = item_name,
+	        recipe = {
+		        {"mcl_wool:white", "mcl_core:stick", ""},
+		        {"mcl_wool:white", "mcl_core:stick", "mcl_core:ironblock"},
+		        {"mcl_wool:white", "mcl_core:stick", ""},
+	        }
+        })
+    end
 
-    minetest.register_craft({
-	    output = "steampunk_blimp:boiler",
-	    recipe = {
-		    {"default:steel_ingot","default:steel_ingot"},
-		    {"default:steelblock","default:steel_ingot",},
-		    {"default:steelblock","default:steel_ingot"},
-	    }
-    })
+    item_name = "steampunk_blimp:boiler"
+    if not airutils.is_mcl then
+        minetest.register_craft({
+	        output = item_name,
+	        recipe = {
+		        {"default:steel_ingot","default:steel_ingot"},
+		        {"default:steelblock","default:steel_ingot",},
+		        {"default:steelblock","default:steel_ingot"},
+	        }
+        })
+    else
+        minetest.register_craft({
+	        output = item_name,
+	        recipe = {
+		        {"mcl_core:iron_ingot","mcl_core:iron_ingot"},
+		        {"mcl_core:ironblock","mcl_core:iron_ingot",},
+		        {"mcl_core:ironblock","mcl_core:iron_ingot"},
+	        }
+        })
+    end
 
     minetest.register_craft({
 	    output = "steampunk_blimp:boat",

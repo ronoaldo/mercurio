@@ -51,7 +51,7 @@ function steampunk_blimp.load_fuel(self, player)
 
             --local energy_indicator_angle = steampunk_blimp.get_pointer_angle(self._energy, steampunk_blimp.MAX_FUEL)
         end
-        
+
         return true
     end
 
@@ -59,7 +59,7 @@ function steampunk_blimp.load_fuel(self, player)
 end
 
 function steampunk_blimp.load_water(self, player)
-    local inv = player:get_inventory()
+    --local inv = player:get_inventory()
 
     local itmstck=player:get_wielded_item()
     local item_name = ""
@@ -69,20 +69,26 @@ function steampunk_blimp.load_water(self, player)
     local water = steampunk_blimp.contains(steampunk_blimp.water, item_name)
     if water then
         if self._water_level < steampunk_blimp.MAX_WATER then
-            local itemstack = ItemStack(item_name .. " 1")
-            --inv:remove_item("main", itemstack)
+            local itemstack
+            --itmstck:set_count(1)
+            --inv:remove_item("main", itmstck)
 
-            local indx = item_name:find('bucket:bucket')
+            local bucket_name = 'bucket:bucket'
+            if airutils.is_mcl then bucket_name = "mcl_buckets:bucket" end
+            local indx = item_name:find(bucket_name)
             if indx then
-                itemstack = ItemStack("bucket:bucket_empty")
+                itemstack = ItemStack(bucket_name.."_empty")
                 --inv:add_item("main", itemstack)
                 player:set_wielded_item(itemstack)
+            end
+            if not itemstack then
+                itemstack = ItemStack(item_name .. " 1")
             end
 
             self._water_level = self._water_level + water.amount
             if self._water_level > steampunk_blimp.MAX_WATER then self._water_level = steampunk_blimp.MAX_WATER end
         end
-        
+
         return true
     end
 
