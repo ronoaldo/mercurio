@@ -6,7 +6,7 @@ dmobs.dragon.step_custom = function(self, dtime)
 
 	if self.driver then
 
-		object_fly(self, dtime, 10, true, "dmobs:fire_plyr", "walk", "stand")
+		dmobs.object_fly(self, dtime, 10, true, "dmobs:fire_plyr", "walk", "stand")
 
 		if self.state == "attack" then
 			self.state = nil
@@ -27,7 +27,7 @@ dmobs.dragon.ride = function(self, clicker)
 
 		if self.driver and clicker == self.driver then
 
-			object_detach(self, clicker, {x = 1, y = 0, z = 1})
+			dmobs.object_detach(self, clicker, {x = 1, y = 0, z = 1})
 
 			if inv:room_for_item("main", "mobs:saddle") then
 				inv:add_item("main", "mobs:saddle")
@@ -39,7 +39,7 @@ dmobs.dragon.ride = function(self, clicker)
 
 			if clicker:get_wielded_item():get_name() == "mobs:saddle" then
 
-				object_attach(self, clicker, {x = 0, y = 12, z = 4}, {x = 0, y = 0, z = 4})
+				dmobs.object_attach(self, clicker, {x = 0, y = 12, z = 4}, {x = 0, y = 0, z = 4})
 
 				inv:remove_item("main", "mobs:saddle")
 			end
@@ -66,7 +66,7 @@ dmobs.dragon.do_custom = function(self, dtime)
 
 	if self.driver then
 
-		object_fly(self, dtime, 10, true, "dmobs:fire_plyr", "walk", "stand")
+		dmobs.object_fly(self, dtime, 10, true, "dmobs:fire_plyr", "walk", "stand")
 
 		if self.state == "attack" then
 			self.state = "idle"

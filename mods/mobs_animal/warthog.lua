@@ -1,6 +1,5 @@
-
-local S = mobs.intllib_animal
-
+-- Translation support
+local S = minetest.get_translator("mobs_animal")
 
 -- Warthog originally by KrupnoPavel, B3D model by sirrobzeroone
 

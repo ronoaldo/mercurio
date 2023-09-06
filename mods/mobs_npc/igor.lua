@@ -1,15 +1,30 @@
+-- Translation support
+local S = minetest.get_translator("mobs_npc")
 
-local S = mobs_npc.S
+local mcl = minetest.get_modpath("mcl_core") ~= nil
+
 
 -- Igor by TenPlus1
 
 mobs_npc.igor_drops = {
-	"vessels:glass_bottle", "mobs:meat_raw", {"default:sword_steel", 2},
-	"farming:bread", {"bucket:bucket_water", 2}, "flowers:mushroom_red",
-	"default:jungletree", {"fire:flint_and_steel", 3}, "mobs:leather",
-	"default:acacia_sapling", {"fireflies:bug_net", 3}, "default:clay_lump",
-	"default:ice", "default:coral_brown", "default:iron_lump",
-	"default:obsidian_shard", "default:mossycobble", {"default:obsidian", 2}
+	mcl and "mcl_potions:glass_bottle" or "vessels:glass_bottle",
+	mcl and "mcl_mobitems:beef" or "mobs:meat_raw",
+	{mcl and "mcl_tools:sword_iron" or "default:sword_steel", 2},
+	mcl and "mcl_farming:bread" or "farming:bread",
+	{mcl and "mcl_buckets:bucket_water" or "bucket:bucket_water", 2},
+	mcl and "mcl_mushrooms:mushroom_red" or "flowers:mushroom_red",
+	mcl and "mcl_core:jungletree" or "default:jungletree",
+	{mcl and "mcl_fire:flint_and_steel" or "fire:flint_and_steel", 3},
+	mcl and "mcl_mobitems:leather" or "mobs:leather",
+	mcl and "mcl_core:acaciasapling" or "default:acacia_sapling",
+	{mcl and "mcl_beds:bed_red" or "fireflies:bug_net", 3},
+	mcl and "mcl_core:clay_lump" or "default:clay_lump",
+	mcl and "mcl_core:ice" or "default:ice",
+	mcl and "mcl_ocean:bubble_coral" or "default:coral_brown",
+	mcl and "mcl_raw_ores:raw_iron" or "default:iron_lump",
+	mcl and "mcl_amethyst:amethyst_block" or "default:obsidian_shard",
+	mcl and "mcl_core:mossycobble" or "default:mossycobble",
+	mcl and "mcl_core:obsidian" or {"default:obsidian", 2}
 }
 
 
@@ -46,16 +61,21 @@ mobs:register_mob("mobs_npc:igor", {
 	fear_height = 2,
 	jump = true,
 	drops = {
-		{name = "mobs:meat_raw", chance = 1, min = 1, max = 2},
-		{name = "default:gold_lump", chance = 3, min = 1, max = 1}
+		{name = mcl and "mcl_mobitems:beef" or "mobs:meat_raw",
+				chance = 1, min = 1, max = 2},
+		{name = mcl and "mcl_raw_ores:raw_gold" or "default:gold_lump",
+				chance = 3, min = 1, max = 1}
 	},
 	water_damage = 1,
 	lava_damage = 3,
 	light_damage = 0,
-	follow = {"mobs:meat_raw", "default:diamond"},
+	follow = {
+		mcl and "mcl_mobitems:beef" or "mobs:meat_raw",
+		mcl and "mcl_core:diamond" or "default:diamond"
+	},
 	view_range = 15,
 	owner = "",
-	order = "follow",
+	order = "wander",
 	animation = {
 		speed_normal = 30,
 		speed_run = 30,
@@ -65,8 +85,8 @@ mobs:register_mob("mobs_npc:igor", {
 		walk_end = 187,
 		run_start = 168,
 		run_end = 187,
-		punch_start = 200,
-		punch_end = 219
+		punch_start = 189, --200
+		punch_end = 198 --219
 	},
 
 	on_rightclick = function(self, clicker)
@@ -80,13 +100,13 @@ mobs:register_mob("mobs_npc:igor", {
 		local name = clicker:get_player_name()
 
 		-- right clicking with gold lump drops random item from list
-		if 	mobs_npc.drop_trade(self, clicker, "default:gold_lump",
-				self.npc_drops or mobs_npc.igor_drops) then
+		if 	mobs_npc.drop_trade(self, clicker,  mcl and "mcl_raw_ores:raw_gold"
+				or "default:gold_lump", self.npc_drops or mobs_npc.igor_drops) then
 			return
 		end
 
 		-- owner can right-click with stick to show control formspec
-		if item:get_name() == "default:stick"
+		if item:get_name() == (mcl and "mcl_core:stick" or "default:stick")
 		and self.owner == name then
 
 			minetest.show_formspec(name, "mobs_npc:controls",
@@ -111,7 +131,8 @@ mobs:register_mob("mobs_npc:igor", {
 
 
 -- register spawn egg
-mobs:register_egg("mobs_npc:igor", S("Igor"), "mobs_meat_raw.png", 1)
+mobs:register_egg("mobs_npc:igor", S("Igor"),
+		mcl and "mcl_mobitems_beef_raw.png" or "mobs_meat_raw.png", 1)
 
 
 -- this is only required for servers that used the old mobs mod
@@ -123,8 +144,8 @@ if not mobs.custom_spawn_npc then
 
 	mobs:spawn({
 		name = "mobs_npc:igor",
-		nodes = {"mobs:meatblock"},
-		neighbors = {"default:brick"},
+		nodes = {mcl and "mcl_farming:pumpkin" or "mobs:meatblock"},
+		neighbors = {mcl and "mcl_core:stonebrick" or "default:brick"},
 		min_light = 10,
 		chance = 10000,
 		active_object_count = 1,

@@ -35,7 +35,6 @@ Models/Textures/Media by Krupnov Pavel (WTFPL)
   mobs_rat.b3d
   mobs_rat.png
   mobs_sheep.b3d (converted to .b3d by sirrobzerrone)
-  mobs_sheep_shaved.b3d (converted to .b3d by sirrobzerrone)
   mobs_stone_monster.b3d
   mobs_stone_monster.png
   mobs_dirt_monster.png
@@ -92,8 +91,9 @@ Models/Textures by D00Med (CC BY-SA 3.0)
 
 Textures by LithiumSound's Summer Field Texture Pack (CC BY-SA 4.0 NC ShareAlike International)
   mobs_sheep_base.png
+  mobs_sheep_horns.png
   mobs_sheep_shaved.png
-  mobs_sheep_wool.png
+  mobs_sheep_wool.png [all edited by sirrobzeroone]
 
 Sounds by Cyberpangolin (WTFPL) https://forum.minetest.net/viewtopic.php?t=10798
   mobs_bee.ogg

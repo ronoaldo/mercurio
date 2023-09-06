@@ -1,4 +1,8 @@
-local S = mobs_npc.S
+-- Translation support
+local S = minetest.get_translator("mobs_npc")
+
+local mcl = minetest.get_modpath("mcl_core") ~= nil
+local def = minetest.get_modpath("default") ~= nil
 
 
 -- show random message from list
@@ -42,7 +46,7 @@ mobs_npc.drop_trade = function(self, player, item, item_list)
 
 	if not minetest.registered_items[drop]
 	or math.random(chance) > 1 then
-		drop = "default:clay_lump"
+		drop = mcl and "mcl_core:clay_lump" or "default:clay_lump"
 	end
 
 	local obj = minetest.add_item(pos, {name = drop})
@@ -342,10 +346,10 @@ function mobs_npc.shop_trade(self, clicker, race)
 		if self.trades[i] and self.trades[i] ~= "" then
 
 			if i < 6 then
-				x = 0.5
+				x = mcl and 1 or 0.5
 				y = i - 0.5
 			else
-				x = 4.5
+				x = mcl and 5 or 4.5
 				y = i - 5.5
 			end
 
@@ -358,12 +362,17 @@ function mobs_npc.shop_trade(self, clicker, race)
 		end
 	end
 
-	minetest.show_formspec(player, "mobs_npc:trade", "size[8,10]"
-		.. default.gui_bg_img
-		.. default.gui_slots
+	local bg = mcl and mcl_vars.gui_bg_img or default.gui_bg_img or ""
+	local sl = mcl and mcl_vars.gui_slots or default.gui_slots or ""
+	local lc = mcl and "listcolors[#9d9d9d;#FFF7;#474747]" or ""
+
+	minetest.show_formspec(player, "mobs_npc:trade", "size[" .. (mcl and 9 or 8) .. ",10]"
+		.. bg
+		.. sl
 		.. "label[0.5,-0.1;" .. S("Trader @1's stock:", self.game_name) .. "]"
 		.. formspec_trade_list
-		.. "list[current_player;main;0,6;8,4;]"
+		.. lc
+		.. "list[current_player;main;0,6;" .. (mcl and 9 or 8) .. ",4;]"
 	)
 end
 

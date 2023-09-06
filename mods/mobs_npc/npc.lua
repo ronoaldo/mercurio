@@ -1,14 +1,29 @@
-local S = mobs_npc.S
+-- Translation support
+local S = minetest.get_translator("mobs_npc")
+
+local mcl = minetest.get_modpath("mcl_core") ~= nil
 
 -- Npc by TenPlus1
 
 mobs_npc.npc_drops = {
-	{"default:pick_steel", 2}, "mobs:meat", {"default:sword_steel", 2},
-	{"default:shovel_steel", 2}, "farming:bread", "bucket:bucket_water",
-	"default:sapling", "default:tree", "mobs:leather", "default:coral_orange",
-	{"default:mese_crystal_fragment", 3}, "default:clay", {"default:sign_wall", 2},
-	"default:ladder", "default:copper_lump", "default:blueberries",
-	"default:aspen_sapling", "default:permafrost_with_moss"
+	{mcl and "mcl_tools:pick_iron" or "default:pick_steel", 2},
+	mcl and "mcl_mobitems:cooked_beef" or "mobs:meat",
+	{mcl and "mcl_tools:sword_iron" or "default:sword_steel", 2},
+	{mcl and "mcl_tools:shovel_iron" or "default:shovel_steel", 2},
+	mcl and "mcl_farming:bread" or "farming:bread",
+	mcl and "mcl_buckets:bucket_water" or "bucket:bucket_water",
+	mcl and "mcl_core:sapling" or "default:sapling",
+	mcl and "mcl_core:tree" or "default:tree",
+	mcl and "mcl_mobitems:leather" or "mobs:leather",
+	mcl and "mcl_ocean:brain_coral" or "default:coral_orange",
+	{mcl and "mcl_core:diamond" or "default:mese_crystal_fragment", 3},
+	mcl and "mcl_core:clay" or "default:clay",
+	{mcl and "mcl_signs:wall_sign" or "default:sign_wall", 2},
+	mcl and "mcl_core:ladder" or "default:ladder",
+	mcl and "mcl_copper:raw_copper" or "default:copper_lump",
+	mcl and "mcl_farming:carrot" or "default:blueberries",
+	mcl and "mcl_core:birchsapling" or "default:aspen_sapling",
+	mcl and "mcl_core:frosted_ice" or "default:permafrost_with_moss"
 }
 
 
@@ -45,14 +60,18 @@ mobs:register_mob("mobs_npc:npc", {
 	run_velocity = 3,
 	jump = true,
 	drops = {
-		{name = "default:wood", chance = 1, min = 1, max = 3},
-		{name = "default:apple", chance = 2, min = 1, max = 2},
-		{name = "default:axe_stone", chance = 5, min = 1, max = 1}
+		{name = mcl and "mcl_core:wood" or "default:wood", chance = 1, min = 1, max = 3},
+		{name = mcl and "mcl_core:apple" or "default:apple", chance = 2, min = 1, max = 2},
+		{name = mcl and "mcl_tools:axe_stone" or "default:axe_stone", chance = 5, min = 1, max = 1}
 	},
 	water_damage = 0,
 	lava_damage = 2,
 	light_damage = 0,
-	follow = {"farming:bread", "mobs:meat", "default:diamond"},
+	follow = {
+		mcl and "mcl_farming:bread" or "farming:bread",
+		mcl and "mcl_mobitems:cooked_beef"or "mobs:meat",
+		mcl and "mcl_core:diamond" or "default:diamond"
+	},
 	view_range = 15,
 	owner = "",
 	order = "wander",
@@ -66,8 +85,8 @@ mobs:register_mob("mobs_npc:npc", {
 		walk_end = 187,
 		run_start = 168,
 		run_end = 187,
-		punch_start = 200,
-		punch_end = 219
+		punch_start = 189, --200
+		punch_end = 198 --219
 	},
 
 	on_rightclick = function(self, clicker)
@@ -85,13 +104,13 @@ mobs:register_mob("mobs_npc:npc", {
 		local name = clicker:get_player_name()
 
 		-- right clicking with gold lump drops random item from list
-		if 	mobs_npc.drop_trade(self, clicker, "default:gold_lump",
-				self.npc_drops or mobs_npc.npc_drops) then
+		if 	mobs_npc.drop_trade(self, clicker, mcl and "mcl_raw_ores:raw_gold"
+				or "default:gold_lump", self.npc_drops or mobs_npc.npc_drops) then
 			return
 		end
 
 		-- owner can right-click with stick to show control formspec
-		if item:get_name() == "default:stick"
+		if item:get_name() == (mcl and "mcl_core:stick" or "default:stick")
 		and (self.owner == name or
 		minetest.check_player_privs(clicker, {protection_bypass = true}) )then
 
@@ -106,7 +125,7 @@ mobs:register_mob("mobs_npc:npc", {
 			simple_dialogs.show_dialog_formspec(name, self)
 		else
 			if self.state == "attack" then
-				mobs_npc.npc_talk(self, clicker, {"Grr!"})
+				mobs_npc.npc_talk(self, clicker, {"Grr!", "I'm kinda busy!"})
 			else
 				mobs_npc.npc_talk(self, clicker, {
 					"Hello", "Hi there", "What a lovely day"})
@@ -117,7 +136,8 @@ mobs:register_mob("mobs_npc:npc", {
 
 
 -- register spawn egg
-mobs:register_egg("mobs_npc:npc", S("Npc"), "default_brick.png", 1)
+mobs:register_egg("mobs_npc:npc", S("Npc"),
+		mcl and "default_stone_brick.png" or "default_brick.png", 1)
 
 
 -- this is only needed for servers that used the old mobs mod
@@ -129,8 +149,8 @@ if not mobs.custom_spawn_npc then
 
 	mobs:spawn({
 		name = "mobs_npc:npc",
-		nodes = {"default:brick"},
-		neighbors = {"default:grass_3"},
+		nodes = {mcl and "mcl_core:stonebrick" or "default:brick"},
+		neighbors = {mcl and "mcl_flowers:tallgrass" or "default:grass_3"},
 		min_light = 10,
 		chance = 10000,
 		active_object_count = 1,
