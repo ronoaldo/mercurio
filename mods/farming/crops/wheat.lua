@@ -1,5 +1,6 @@
 
-local S = farming.intllib
+local S = farming.translate
+local a = farming.recipe_items
 
 -- wheat seeds
 minetest.register_node("farming:seed_wheat", {
@@ -8,14 +9,15 @@ minetest.register_node("farming:seed_wheat", {
 	inventory_image = "farming_wheat_seed.png",
 	wield_image = "farming_wheat_seed.png",
 	drawtype = "signlike",
-	groups = {seed = 1, snappy = 3, attached_node = 1, flammable = 4},
+	groups = {seed = 1, snappy = 3, attached_node = 1, flammable = 4, growing = 1},
 	paramtype = "light",
 	paramtype2 = "wallmounted",
 	walkable = false,
 	sunlight_propagates = true,
 	selection_box = farming.select,
+	next_plant = "farming:wheat_1",
 	on_place = function(itemstack, placer, pointed_thing)
-		return farming.place_seed(itemstack, placer, pointed_thing, "farming:wheat_1")
+		return farming.place_seed(itemstack, placer, pointed_thing, "farming:seed_wheat")
 	end
 })
 
@@ -32,7 +34,7 @@ minetest.register_node("farming:straw", {
 	tiles = {"farming_straw.png"},
 	is_ground_content = false,
 	groups = {snappy = 3, flammable = 4, fall_damage_add_percent = -30},
-	sounds = default.node_sound_leaves_defaults()
+	sounds = farming.sounds.node_sound_leaves_defaults()
 })
 
 minetest.register_craft({
@@ -58,7 +60,7 @@ if minetest.global_exists("stairs") then
 			{snappy = 3, flammable = 4},
 			{"farming_straw.png"},
 			"Straw",
-			default.node_sound_leaves_defaults())
+			farming.sounds.node_sound_leaves_defaults())
 	else
 
 		stairs.register_stair_and_slab("straw", "farming:straw",
@@ -66,7 +68,7 @@ if minetest.global_exists("stairs") then
 			{"farming_straw.png"},
 			"Straw Stair",
 			"Straw Slab",
-			default.node_sound_leaves_defaults())
+			farming.sounds.node_sound_leaves_defaults())
 	end
 end
 
@@ -81,7 +83,7 @@ minetest.register_craft({
 	output = "farming:flour",
 	recipe = {
 		{"farming:wheat", "farming:wheat", "farming:wheat"},
-		{"farming:wheat", "farming:mortar_pestle", ""}
+		{"farming:wheat", a.mortar_pestle, ""}
 	},
 	replacements = {{"group:food_mortar_pestle", "farming:mortar_pestle"}}
 })
@@ -101,52 +103,6 @@ minetest.register_craft({
 	recipe = "farming:flour"
 })
 
--- sliced bread
-minetest.register_craftitem("farming:bread_slice", {
-	description = S("Sliced Bread"),
-	inventory_image = "farming_bread_slice.png",
-	on_use = minetest.item_eat(1),
-	groups = {food_bread_slice = 1, flammable = 2}
-})
-
-minetest.register_craft({
-	output = "farming:bread_slice 5",
-	recipe = {{"group:food_cutting_board", "farming:bread"}},
-	replacements = {{"group:food_cutting_board", "farming:cutting_board"}}
-})
-
--- toast
-minetest.register_craftitem("farming:toast", {
-	description = S("Toast"),
-	inventory_image = "farming_toast.png",
-	on_use = minetest.item_eat(1),
-	groups = {food_toast = 1, flammable = 2}
-})
-
-minetest.register_craft({
-	type = "cooking",
-	cooktime = 3,
-	output = "farming:toast",
-	recipe = "farming:bread_slice"
-})
-
--- toast sandwich
-minetest.register_craftitem("farming:toast_sandwich", {
-	description = S("Toast Sandwich"),
-	inventory_image = "farming_toast_sandwich.png",
-	on_use = minetest.item_eat(4),
-	groups = {flammable = 2}
-})
-
-minetest.register_craft({
-	output = "farming:toast_sandwich",
-	recipe = {
-		{"farming:bread_slice"},
-		{"farming:toast"},
-		{"farming:bread_slice"}
-	}
-})
-
 -- wheat definition
 local def = {
 	drawtype = "plantlike",
@@ -158,12 +114,13 @@ local def = {
 	walkable = false,
 	buildable_to = true,
 	drop = "",
+	waving = 1,
 	selection_box = farming.select,
 	groups = {
 		snappy = 3, flammable = 4, plant = 1, attached_node = 1,
 		not_in_creative_inventory = 1, growing = 1
 	},
-	sounds = default.node_sound_leaves_defaults()
+	sounds = farming.sounds.node_sound_leaves_defaults()
 }
 
 -- stage 1

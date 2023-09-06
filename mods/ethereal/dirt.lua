@@ -1,5 +1,5 @@
 
-local S = ethereal.intllib
+local S = ethereal.translate
 
 
 -- override default dirt (to stop caves cutting away dirt)
@@ -201,41 +201,46 @@ local grow_papyrus = function(pos, node)
 
 end
 
+-- override abm function
+local function override_abm(name, redef)
 
--- loop through active abm's
-for _, ab in pairs(minetest.registered_abms) do
+	if not name or not redef then
+		return
+	end
 
-	local label = ab.label or ""
-	local node1 = ab.nodenames and ab.nodenames[1] or ""
-	local node2 = ab.nodenames and ab.nodenames[2] or ""
-	local neigh = ab.neighbors and ab.neighbors[1] or ""
+	for _, ab in pairs(minetest.registered_abms) do
 
-	if label == "Flower spread"
-	or node1 == "group:flora" then
+		if name == ab.label then
 
-		--ab.interval = 1
-		ab.chance = 96 -- back to original chance from 300
-		ab.nodenames = {"group:flora"}
-		ab.neighbors = {"group:soil"}
-		ab.action = flower_spread
+			for k, v in pairs(redef) do
+				ab[k] = v
+			end
 
-	-- find grow papyrus abm and change to grow_papyrus function
-	elseif label == "Grow papyrus"
-	or node1 == "default:papyrus" then
-
-		--ab.interval = 2
-		--ab.chance = 1
-		ab.nodenames = {"default:papyrus", "ethereal:bamboo"}
-		ab.neighbors = {"group:soil"}
-		ab.action = grow_papyrus
-
-	elseif label == "Mushroom spread" then
-
-		--ab.interval = 1
-		ab.chance = 50 -- back to original chance from 150
-		ab.nodenames = {"group:mushroom"}
+			return ab
+		end
 	end
 end
+
+override_abm("Flower spread", {
+--interval = 1, chance = 1, -- testing only
+	chance = 96, -- moved back to original chance from 300
+	nodenames = {"group:flora"},
+	neighbors = {"group:soil"},
+	action = flower_spread
+})
+
+override_abm("Grow papyrus", {
+--interval = 2, chance = 1, -- testing only
+	nodenames = {"default:papyrus", "ethereal:bamboo"},
+	neighbors = {"group:soil"},
+	action = grow_papyrus
+})
+
+override_abm("Mushroom spread", {
+--interval = 1, chance = 1, -- testing only
+	chance = 50, -- moved back to original chance from 150
+	nodenames = {"group:mushroom"}
+})
 
 
 -- If Baked Clay mod not active, make Red, Orange and Grey nodes

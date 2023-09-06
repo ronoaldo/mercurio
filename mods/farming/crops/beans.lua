@@ -4,7 +4,8 @@
 	CC-BY-SA-3.0
 ]]
 
-local S = farming.intllib
+local S = farming.translate
+local a = farming.recipe_items
 
 -- place beans
 local function place_beans(itemstack, placer, pointed_thing, plantname)
@@ -71,7 +72,7 @@ end
 minetest.register_craftitem("farming:beans", {
 	description = S("Green Beans"),
 	inventory_image = "farming_beans.png",
-	groups = {seed = 2, food_beans = 1, flammable = 2},
+	groups = {compostability = 48, seed = 2, food_beans = 1, flammable = 2},
 	on_use = minetest.item_eat(1),
 	on_place = function(itemstack, placer, pointed_thing)
 		return place_beans(itemstack, placer, pointed_thing, "farming:beanpole_1")
@@ -80,7 +81,7 @@ minetest.register_craftitem("farming:beans", {
 
 -- beans can be used for green dye
 minetest.register_craft({
-	output = "dye:green",
+	output = a.dye_green,
 	recipe = {{"farming:beans"}}
 })
 
@@ -97,8 +98,8 @@ minetest.register_node("farming:beanpole", {
 	sunlight_propagates = true,
 	drop = "farming:beanpole",
 	selection_box = farming.select,
-	groups = {snappy = 3, flammable = 2, attached_node = 1},
-	sounds = default.node_sound_leaves_defaults(),
+	groups = {handy = 1, snappy = 3, flammable = 2, attached_node = 1},
+	sounds = farming.sounds.node_sound_leaves_defaults(),
 
 	on_place = function(itemstack, placer, pointed_thing)
 
@@ -159,8 +160,8 @@ minetest.register_craft({
 	output = "farming:beanpole",
 	recipe = {
 		{"", "", ""},
-		{"default:stick", "", "default:stick"},
-		{"default:stick", "", "default:stick"}
+		{"group:stick", "", "group:stick"},
+		{"group:stick", "", "group:stick"}
 	}
 })
 
@@ -186,10 +187,10 @@ local def = {
 	},
 	selection_box = farming.select,
 	groups = {
-		snappy = 3, flammable = 3, not_in_creative_inventory = 1,
+		handy = 1, snappy = 3, flammable = 3, not_in_creative_inventory = 1,
 		attached_node = 1, growing = 1, plant = 1
 	},
-	sounds = default.node_sound_leaves_defaults()
+	sounds = farming.sounds.node_sound_leaves_defaults()
 }
 
 -- stage 1
@@ -249,16 +250,16 @@ minetest.register_node("farming:beanbush", {
 	},
 	selection_box = farming.select,
 	groups = {
-		snappy = 3, flammable = 2, plant = 1, attached_node = 1,
-		not_in_creative_inventory = 1
+		handy = 1, snappy = 3, flammable = 2, plant = 1, attached_node = 1,
+		compostability = 35, not_in_creative_inventory = 1
 	},
-	sounds = default.node_sound_leaves_defaults()
+	sounds = farming.sounds.node_sound_leaves_defaults()
 })
 
 -- mapgen
 minetest.register_decoration({
 	deco_type = "simple",
-	place_on = {"default:dirt_with_grass"},
+	place_on = {"default:dirt_with_grass", "mcl_core:dirt_with_grass"},
 	sidelen = 16,
 	noise_params = {
 		offset = 0,

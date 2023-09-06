@@ -1,5 +1,5 @@
 
-local S = ethereal.intllib
+local S = ethereal.translate
 
 
 -- Crystal Spike (Hurts if you touch it)
@@ -48,7 +48,7 @@ if minetest.get_modpath("builtin_item") then
 				return
 			end
 
-			local objs = core.get_objects_inside_radius(pos, 0.8)
+			local objs = minetest.get_objects_inside_radius(pos, 0.8)
 
 			if not objs or #objs ~= 2 then return end
 
@@ -78,7 +78,7 @@ if minetest.get_modpath("builtin_item") then
 				mese:remove()
 				crystal:remove()
 
-				core.add_item(pos, "ethereal:crystal_ingot")
+				minetest.add_item(pos, "ethereal:crystal_ingot")
 
 				return false
 			end
@@ -290,12 +290,11 @@ minetest.register_tool("ethereal:crystal_gilly_staff", {
 })
 
 minetest.register_craft({
-	type = "shapeless",
 	output = "ethereal:crystal_gilly_staff",
 	recipe = {
-		"ethereal:green_moss", "ethereal:gray_moss", "ethereal:fiery_moss",
-		"ethereal:crystal_moss", "ethereal:crystal_ingot", "ethereal:mushroom_moss",
-		"ethereal:crystal_ingot"
+		{"ethereal:green_moss", "ethereal:gray_moss", "ethereal:fiery_moss"},
+		{"ethereal:crystal_moss", "ethereal:crystal_ingot", "ethereal:mushroom_moss"},
+		{"", "ethereal:crystal_ingot", ""}
 	},
 })
 

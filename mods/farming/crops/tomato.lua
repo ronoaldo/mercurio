@@ -4,13 +4,13 @@
 	http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/1288375-food-plus-mod-more-food-than-you-can-imagine-v2-9)
 ]]
 
-local S = farming.intllib
+local S = farming.translate
 
 -- tomato
 minetest.register_craftitem("farming:tomato", {
 	description = S("Tomato"),
 	inventory_image = "farming_tomato.png",
-	groups = {seed = 2, food_tomato = 1, flammable = 2},
+	groups = {compostability = 45, seed = 2, food_tomato = 1, flammable = 2},
 	on_place = function(itemstack, placer, pointed_thing)
 		return farming.place_seed(itemstack, placer, pointed_thing, "farming:tomato_1")
 	end,
@@ -21,7 +21,7 @@ minetest.register_craftitem("farming:tomato", {
 minetest.register_craftitem("farming:tomato_soup", {
 	description = S("Tomato Soup"),
 	inventory_image = "farming_tomato_soup.png",
-	groups = {flammable = 2},
+	groups = {flammable = 2, compostability = 65},
 	on_use = minetest.item_eat(8, "farming:bowl")
 })
 
@@ -43,12 +43,13 @@ local def = {
 	walkable = false,
 	buildable_to = true,
 	drop = "",
+	waving = 1,
 	selection_box = farming.select,
 	groups = {
-		snappy = 3, flammable = 2, plant = 1, attached_node = 1,
+		handy = 1, snappy = 3, flammable = 2, plant = 1, attached_node = 1,
 		not_in_creative_inventory = 1, growing = 1
 	},
-	sounds = default.node_sound_leaves_defaults()
+	sounds = farming.sounds.node_sound_leaves_defaults()
 }
 
 -- stage 1
@@ -109,7 +110,7 @@ farming.registered_plants["farming:tomato"] = {
 -- mapgen
 minetest.register_decoration({
 	deco_type = "simple",
-	place_on = {"default:dirt_with_grass"},
+	place_on = {"default:dirt_with_grass", "mcl_core:dirt_with_grass"},
 	sidelen = 16,
 	noise_params = {
 		offset = 0,

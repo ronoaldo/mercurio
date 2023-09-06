@@ -1,10 +1,11 @@
-local S = farming.intllib
+
+local S = farming.translate
 
 -- item definition
 minetest.register_craftitem("farming:artichoke", {
 	description = S("Artichoke"),
 	inventory_image = "farming_artichoke.png",
-	groups = {seed = 2, food_artichoke = 1, flammable = 2},
+	groups = {compostability = 48, seed = 2, food_artichoke = 1, flammable = 2},
 	on_place = function(itemstack, placer, pointed_thing)
 		return farming.place_seed(itemstack, placer, pointed_thing, "farming:artichoke_1")
 	end,
@@ -20,12 +21,13 @@ local def = {
 	walkable = false,
 	buildable_to = true,
 	drop = "",
+	waving = 1,
 	selection_box = farming.select,
 	groups = {
-		snappy = 3, flammable = 2, plant = 1, attached_node = 1,
+		handy = 1, snappy = 3, flammable = 2, plant = 1, attached_node = 1,
 		not_in_creative_inventory = 1, growing = 1
 	},
-	sounds = default.node_sound_leaves_defaults()
+	sounds = farming.sounds.node_sound_leaves_defaults()
 }
 
 -- stage 1
@@ -67,7 +69,7 @@ farming.registered_plants["farming:artichoke"] = {
 -- mapgen
 minetest.register_decoration({
 	deco_type = "simple",
-	place_on = {"default:dirt_with_grass"},
+	place_on = {"default:dirt_with_grass", "mcl_core:dirt_with_grass"},
 	sidelen = 16,
 	noise_params = {
 		offset = 0,

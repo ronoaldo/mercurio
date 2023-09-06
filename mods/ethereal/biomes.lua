@@ -1,5 +1,5 @@
 
-local S = ethereal.intllib
+local S = ethereal.translate
 
 
 -- Blue Marble Nodes
@@ -70,8 +70,20 @@ add_biome("grassland", 3, 71, 45, 65, 1,
 add_biome("grassland_ocean", -192, 1, 45, 65, 1,
 	nil, "default:sand", 1, "default:sand", 3)
 
-add_biome("underground", -31000, -192, 50, 50, 1,
-	nil, nil, nil, nil, nil)
+minetest.register_biome({
+	name = "grassland_under",
+	node_cave_liquid = {"default:water_source", "default:lava_source"},
+	node_dungeon = "default:cobble",
+	node_dungeon_alt = "default:mossycobble",
+	node_dungeon_stair = "stairs:stair_cobble",
+	y_max = -256,
+	y_min = -31000,
+	heat_point = 45,
+	humidity_point = 65
+})
+
+--add_biome("underground", -31000, -192, 50, 50, 1,
+--	nil, nil, nil, nil, nil)
 
 
 -- biomes with disable setting
@@ -85,6 +97,19 @@ add_biome("desert_ocean", -192, 3, 35, 20, ethereal.desert,
 	nil, "default:sand", 1, "default:sand", 2, tmp,
 	"default:desert_stone", nil, "stairs:stair_desert_stone")
 
+if ethereal.desert then
+	minetest.register_biome({
+		name = "desert_under",
+		node_cave_liquid = {"default:water_source", "default:lava_source"},
+		node_dungeon = "default:cobble",
+		node_dungeon_alt = "default:mossycobble",
+		node_dungeon_stair = "stairs:stair_cobble",
+		y_max = -256,
+		y_min = -31000,
+		heat_point = 35,
+		humidity_point = 20
+	})
+end
 
 add_biome("bamboo", 25, 70, 45, 75, ethereal.bamboo,
 	nil, "ethereal:bamboo_dirt", 1, "default:dirt", 3)
@@ -116,12 +141,39 @@ add_biome("coniferous_forest", 4, 40, 10, 40, ethereal.snowy,
 add_biome("coniferous_forest_ocean", -192, 1, 10, 40, ethereal.snowy,
 	nil, "default:sand", 1, "default:sand", 2)
 
+if ethereal.snowy then
+	minetest.register_biome({
+		name = "coniferous_forest_under",
+		node_cave_liquid = {"default:water_source", "default:lava_source"},
+		node_dungeon = "default:cobble",
+		node_dungeon_alt = "default:mossycobble",
+		node_dungeon_stair = "stairs:stair_cobble",
+		y_max = -256,
+		y_min = -31000,
+		heat_point = 10,
+		humidity_point = 40
+	})
+end
+
 add_biome("taiga", 40, 140, 10, 40, ethereal.alpine,
 	nil, "default:dirt_with_snow", 1, "default:dirt", 2)
 
 add_biome("taiga_ocean", -192, 1, 10, 40, ethereal.alpine,
 	nil, "default:sand", 1, "default:sand", 2)
 
+if ethereal.alpine then
+	minetest.register_biome({
+		name = "taiga_under",
+		node_cave_liquid = {"default:water_source", "default:lava_source"},
+		node_dungeon = "default:cobble",
+		node_dungeon_alt = "default:mossycobble",
+		node_dungeon_stair = "stairs:stair_cobble",
+		y_max = -256,
+		y_min = -31000,
+		heat_point = 10,
+		humidity_point = 40
+	})
+end
 
 add_biome("frost_floatland", 1025, 1750, 10, 40, ethereal.frost,
 	nil, "ethereal:crystal_dirt", 1, "default:dirt", 1)
@@ -139,6 +191,19 @@ add_biome("deciduous_forest", 3, 91, 13, 40, ethereal.grassy,
 add_biome("deciduous_forest_ocean", -31000, 3, 13, 40, ethereal.grassy,
 	nil, "default:sand", 2, "default:gravel", 1)
 
+if ethereal.grassy then
+	minetest.register_biome({
+		name = "deciduous_forest_under",
+		node_cave_liquid = {"default:water_source", "default:lava_source"},
+		node_dungeon = "default:cobble",
+		node_dungeon_alt = "default:mossycobble",
+		node_dungeon_stair = "stairs:stair_cobble",
+		y_max = -256,
+		y_min = -31000,
+		heat_point = 13,
+		humidity_point = 40
+	})
+end
 
 add_biome("caves", 4, 41, 15, 25, ethereal.caves,
 	nil, "default:desert_stone", 3, "air", 8)
@@ -156,6 +221,19 @@ add_biome("grayness", 2, 41, 15, 30, ethereal.grayness,
 add_biome("grayness_ocean", -18, 1, 15, 30, ethereal.grayness,
 	nil, tmp, 2, "default:sand", 2, "ethereal:blue_marble")
 
+if ethereal.grayness then
+	minetest.register_biome({
+		name = "grayness_under",
+		node_cave_liquid = {"default:water_source", "default:lava_source"},
+		node_dungeon = "default:cobble",
+		node_dungeon_alt = "default:mossycobble",
+		node_dungeon_stair = "stairs:stair_cobble",
+		y_max = -256,
+		y_min = -31000,
+		heat_point = 15,
+		humidity_point = 30
+	})
+end
 
 add_biome("grassytwo", 1, 91, 15, 40, ethereal.grassytwo,
 	nil, "default:dirt_with_grass", 1, "default:dirt", 3)
@@ -189,6 +267,19 @@ add_biome("junglee", 1, 71, 30, 60, ethereal.junglee,
 add_biome("junglee_ocean", -192, 1, 30, 60, ethereal.junglee,
 	nil, "default:sand", 1, "default:sand", 2)
 
+if ethereal.junglee then
+	minetest.register_biome({
+		name = "junglee_under",
+		node_cave_liquid = {"default:water_source", "default:lava_source"},
+		node_dungeon = "default:cobble",
+		node_dungeon_alt = "default:mossycobble",
+		node_dungeon_stair = "stairs:stair_cobble",
+		y_max = -256,
+		y_min = -31000,
+		heat_point = 30,
+		humidity_point = 60
+	})
+end
 
 add_biome("grove", 3, 23, 45, 35, ethereal.grove,
 	nil, "ethereal:grove_dirt", 1, "default:dirt", 3)
@@ -216,6 +307,19 @@ add_biome("sandstone_desert_ocean", -192, 2, 50, 20, ethereal.sandstone,
 	nil, "default:sand", 1, "default:sand", 2, "default:sandstone",
 	"default:sandstone", nil, "stairs:stair_sandstone")
 
+if ethereal.sandstone then
+	minetest.register_biome({
+		name = "sandstone_desert_under",
+		node_cave_liquid = {"default:water_source", "default:lava_source"},
+		node_dungeon = "default:cobble",
+		node_dungeon_alt = "default:mossycobble",
+		node_dungeon_stair = "stairs:stair_cobble",
+		y_max = -256,
+		y_min = -31000,
+		heat_point = 50,
+		humidity_point = 20
+	})
+end
 
 add_biome("quicksand", 1, 1, 50, 38, ethereal.quicksand,
 	nil, "ethereal:quicksand2", 3, "default:gravel", 1)
@@ -241,6 +345,20 @@ add_biome("savanna", 3, 50, 55, 25, ethereal.savanna,
 add_biome("savanna_ocean", -192, 1, 55, 25, ethereal.savanna,
 	nil, "default:sand", 1, "default:sand", 2)
 
+if ethereal.savanna then
+	minetest.register_biome({
+		name = "savanna_under",
+		node_cave_liquid = {"default:water_source", "default:lava_source"},
+		node_dungeon = "default:cobble",
+		node_dungeon_alt = "default:mossycobble",
+		node_dungeon_stair = "stairs:stair_cobble",
+		y_max = -256,
+		y_min = -31000,
+		heat_point = 55,
+		humidity_point = 25
+	})
+end
+
 add_biome("fiery", 5, 20, 75, 10, ethereal.fiery,
 	nil, "ethereal:fiery_dirt", 1, "default:dirt", 3)
 
@@ -250,6 +368,19 @@ add_biome("fiery_beach", 1, 4, 75, 10, ethereal.fiery,
 add_biome("fiery_ocean", -192, 0, 75, 10, ethereal.fiery,
 	nil, "default:sand", 1, "default:sand", 2)
 
+if ethereal.fiery then
+	minetest.register_biome({
+		name = "fiery_under",
+		node_cave_liquid = {"default:lava_source"},
+		node_dungeon = "default:cobble",
+		node_dungeon_alt = "default:mossycobble",
+		node_dungeon_stair = "stairs:stair_cobble",
+		y_max = -256,
+		y_min = -31000,
+		heat_point = 75,
+		humidity_point = 10
+	})
+end
 
 add_biome("sandclay", 1, 11, 65, 2, ethereal.sandclay,
 	nil, "default:sand", 3, "default:clay", 2)
@@ -294,6 +425,18 @@ if ethereal.glacier == 1 then
 		depth_filler = 3,
 		y_min = -112,
 		y_max = -9,
+		heat_point = 0,
+		humidity_point = 50
+	})
+
+	minetest.register_biome({
+		name = "glacier_under",
+		node_cave_liquid = {"default:water_source", "default:lava_source"},
+		node_dungeon = "default:cobble",
+		node_dungeon_alt = "default:mossycobble",
+		node_dungeon_stair = "stairs:stair_cobble",
+		y_max = -256,
+		y_min = -31000,
 		heat_point = 0,
 		humidity_point = 50
 	})
@@ -354,6 +497,18 @@ if ethereal.tundra == 1 and minetest.registered_nodes["default:permafrost"] then
 		vertical_blend = 1,
 		y_max = -4,
 		y_min = -112,
+		heat_point = 0,
+		humidity_point = 40
+	})
+
+	minetest.register_biome({
+		name = "tundra_under",
+		node_cave_liquid = {"default:water_source", "default:lava_source"},
+		node_dungeon = "default:cobble",
+		node_dungeon_alt = "default:mossycobble",
+		node_dungeon_stair = "stairs:stair_cobble",
+		y_max = -256,
+		y_min = -31000,
 		heat_point = 0,
 		humidity_point = 40
 	})

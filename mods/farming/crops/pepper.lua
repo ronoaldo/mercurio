@@ -5,13 +5,14 @@
 	https://forum.minetest.net/viewtopic.php?f=9&t=19488
 ]]
 
-local S = farming.intllib
+local S = farming.translate
+local a = farming.recipe_items
 
 -- peppercorn (seed)
 minetest.register_craftitem("farming:peppercorn", {
 	description = S("Peppercorn"),
 	inventory_image = "crops_peppercorn.png",
-	groups = {seed = 1, food_peppercorn = 1, flammable = 3},
+	groups = {compostability = 48, seed = 1, food_peppercorn = 1, flammable = 3},
 	on_place = function(itemstack, placer, pointed_thing)
 		return farming.place_seed(itemstack, placer, pointed_thing, "farming:pepper_1")
 	end
@@ -22,7 +23,7 @@ minetest.register_craftitem("farming:pepper", {
 	description = S("Green Pepper"),
 	inventory_image = "crops_pepper.png",
 	on_use = minetest.item_eat(2),
-	groups = {food_pepper = 1, flammable = 3}
+	groups = {food_pepper = 1, flammable = 3, compostability = 55}
 })
 
 -- yellow pepper
@@ -30,7 +31,7 @@ minetest.register_craftitem("farming:pepper_yellow", {
 	description = S("Yellow Pepper"),
 	inventory_image = "crops_pepper_yellow.png",
 	on_use = minetest.item_eat(3),
-	groups = {food_pepper = 1, flammable = 3}
+	groups = {food_pepper = 1, flammable = 3, compostability = 55}
 })
 
 -- red pepper
@@ -38,7 +39,7 @@ minetest.register_craftitem("farming:pepper_red", {
 	description = S("Red Pepper"),
 	inventory_image = "crops_pepper_red.png",
 	on_use = minetest.item_eat(4),
-	groups = {food_pepper = 1, flammable = 3}
+	groups = {food_pepper = 1, flammable = 3, compostability = 55}
 })
 
 minetest.register_craft({
@@ -57,9 +58,9 @@ minetest.register_node("farming:pepper_ground", {
 	tiles = {"crops_pepper_ground.png"},
 	groups = {
 		vessel = 1, food_pepper_ground = 1,
-		dig_immediate = 3, attached_node = 1
+		dig_immediate = 3, attached_node = 1, compostability = 30
 	},
-	sounds = default.node_sound_defaults(),
+	sounds = farming.sounds.node_sound_defaults(),
 	selection_box = {
 		type = "fixed",
 		fixed = {-0.25, -0.5, -0.25, 0.25, 0.3, 0.25}
@@ -70,8 +71,8 @@ minetest.register_craft( {
 	output = "farming:pepper_ground",
 	recipe = {
 		{"group:food_peppercorn"},
-		{"farming:mortar_pestle"},
-		{"vessels:glass_bottle"}
+		{a.glass_bottle},
+		{a.mortar_pestle}
 	},
 	replacements = {{"group:food_mortar_pestle", "farming:mortar_pestle"}}
 })
@@ -90,10 +91,10 @@ local def = {
 	drop = "",
 	selection_box = farming.select,
 	groups = {
-		snappy = 3, flammable = 3, plant = 1, attached_node = 1,
+		handy = 1, snappy = 3, flammable = 3, plant = 1, attached_node = 1,
 		not_in_creative_inventory = 1, growing = 1
 	},
-	sounds = default.node_sound_leaves_defaults()
+	sounds = farming.sounds.node_sound_leaves_defaults()
 }
 
 -- stage 1
@@ -159,7 +160,8 @@ farming.registered_plants["farming:pepper"] = {
 local mg = farming.mapgen == "v6"
 
 def = {
-	grow_on = mg and {"default:dirt_with_grass"} or {"default:dirt_with_rainforest_litter"}
+	grow_on = mg and {"default:dirt_with_grass"} or {
+			"default:dirt_with_rainforest_litter", "mcl_core:dirt_with_grass"}
 }
 
 minetest.register_decoration({

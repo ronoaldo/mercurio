@@ -1,5 +1,5 @@
 
-local S = farming.intllib
+local S = farming.translate
 
 
 -- default dry soil node
@@ -165,30 +165,34 @@ minetest.register_abm({
 		-- what's on top of soil, if solid/not plant change soil to dirt
 		if minetest.registered_nodes[nn]
 		and minetest.registered_nodes[nn].walkable
-		and minetest.get_item_group(nn, "plant") == 0 then
+		and minetest.get_item_group(nn, "plant") == 0
+		and minetest.get_item_group(nn, "growing") == 0 then
+
 			minetest.set_node(pos, {name = ndef.soil.base})
+
 			return
 		end
 
-		-- if map around soil not loaded then skip until loaded
-		if minetest.find_node_near(pos, 3, {"ignore"}) then
-			return
-		end
+		-- check if water is within 3 nodes
+		if minetest.find_node_near(pos, 3, {"group:water"}) then
 
-		-- check if water is within 3 nodes horizontally and 1 below
-		if #minetest.find_nodes_in_area(
-				{x = pos.x + 3, y = pos.y - 1, z = pos.z + 3},
-				{x = pos.x - 3, y = pos.y    , z = pos.z - 3},
-				{"group:water"}) > 0 then
+			-- only change if it's not already wet soil
+			if node.name ~= ndef.soil.wet then
+				minetest.set_node(pos, {name = ndef.soil.wet})
+			end
 
-			minetest.set_node(pos, {name = ndef.soil.wet})
+		-- only dry out soil if no unloaded blocks nearby, just incase
+		elseif not minetest.find_node_near(pos, 3, {"ignore"}) then
 
-		elseif node.name == ndef.soil.wet then
-			minetest.set_node(pos, {name = ndef.soil.dry})
+			if node.name == ndef.soil.wet then
+				minetest.set_node(pos, {name = ndef.soil.dry})
 
-		elseif node.name == ndef.soil.dry
-		and minetest.get_item_group(nn, "plant") == 0 then
-			minetest.set_node(pos, {name = ndef.soil.base})
+			-- if crop or seed found don't turn to dry soil
+			elseif node.name == ndef.soil.dry
+			and minetest.get_item_group(nn, "plant") == 0
+			and minetest.get_item_group(nn, "growing") == 0 then
+				minetest.set_node(pos, {name = ndef.soil.base})
+			end
 		end
 	end
 })

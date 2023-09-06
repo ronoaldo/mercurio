@@ -1,6 +1,6 @@
 
 -- language support
-local S = ethereal.intllib
+local S = ethereal.translate
 
 -- stair mods active
 local stairs_mod = minetest.get_modpath("stairs")

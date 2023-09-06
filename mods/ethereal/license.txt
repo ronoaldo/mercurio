@@ -22,6 +22,55 @@ THE SOFTWARE.
 
 Textures by TenPlus1 (CC0) unless listed below...
 
+Based on default_leaves.png (Attribution-ShareAlike 3.0 Unported (CC BY-SA 3.0)
+  ethereal_frost_leaves.png [edited by TenPlus1]
+  ethereal_yellow_leaves.png [edited by TenPlus1]
+  ethereal_basandra_leaves.png [edited by TenPlus1]
+
+Textures by BlueTangs Rock (CC BY-SA 3.0):
+  ethereal_seaweed.png
+  ethereal_fish_angler.png
+  ethereal_fish_bluefin.png
+  ethereal_fish_blueram.png
+  ethereal_fish_carp.png
+  ethereal_fish_catfish.png
+  ethereal_fish_chichlid.png
+  ethereal_fish_clownfish.png
+  ethereal_fish_cod.png
+  ethereal_fish_flathead.png
+  ethereal_fish_flounder.png
+  ethereal_fish_jellyfish.png
+  ethereal_fish_mackerel.png
+  ethereal_fish_parrot.png
+  ethereal_fish_pike.png
+  ethereal_fish_piranha.png
+  ethereal_fish_plaice.png
+  ethereal_fish_pufferfish.png
+  ethereal_fish_redsnapper.png
+  ethereal_fish_salmon.png
+  ethereal_fish_shrimp.png
+  ethereal_fish_shrimp_cooked.png
+  ethereal_fish_squid.png
+  ethereal_fish_tetra.png
+  ethereal_fish_tilapia.png
+  ethereal_fish_trevally.png
+  ethereal_fish_tuna.png
+  ethereal_fish_trout.png
+  ethereal_sashimi.png
+  ethereal_fugu.png
+  ethereal_fish_chips.png
+  ethereal_calamari_raw.png
+  ethereal_calamari_cooked.png
+  ethereal_garlic_butter_shrimp.png
+
+Texture by Sirrobzeroone (CC0)
+  ethereal_fish_seahorse*.png
+  ethereal_fish_coy.png
+  ethereal_fish_cooked.png
+
+Textures by Epoxum (CC0)
+  ethereal_sushi_*.png
+
 Based on candle textures and coloured by wRothbard (CC0):
   ethereal_candle_black*.png
   ethereal_candle_blue*.png
@@ -37,7 +86,7 @@ Based on candle textures and coloured by wRothbard (CC0):
   ethereal_candle_violet*.png
   ethereal_candle_yellow*.png
 
-Based on default tools in Minetest (CC BY-SA 3.0):
+Based on default tool textures by BlockMen in Minetest (CC BY-SA 3.0):
   ethereal_crystal_pick.png
   ethereal_crystal_shovel.png
   ethereal_crystal_axe.png
@@ -48,15 +97,15 @@ Based on texture by ElementW (CC BY-SA 3.0):
 
 Based on tree textures by ElementW (CC BY-SA 3.0):
   ethereal_yellow_tree.png
-  ethereal_yellow_tree_top.png
+  ethereal_yellow_tree_top.pngethereal_fish_plaice.png
   ethereal_frost_tree.png
   ethereal_frost_tree_top.png
   ethereal_scorched_tree.png
   ethereal_scorched_tree_top.png
 
 Based on wood texture by BlockMen (CC BY-SA 3.0):
-  ethereal_yellow_wood.png
-  ethereal_frost_wood.png
+  ethereal_yellow_wood.png [edited by alerikaisattera]
+  ethereal_frost_wood.png [edited by alerikaisattera]
 
 Based on bottle texture by Thomas-S (CC BY-SA 3.0):
   ethereal_flight_potion.png
@@ -73,6 +122,7 @@ Textures based on default_grass.png and default_grass_side.png by TumeniNodes (C
 Texture by ZonerDarkRevention (CC0)
   ethereal_crystal_spike.png [edited by TenPlus1]
   ethereal_bowl.png [edited by TenPlus1]
+  ethereal_teriyaki_beef.png [edited by TenPlus1]
   ethereal_hearty_stew.png
 
 Textures by VanessaE (CC-BY-SA 4.0)
@@ -80,11 +130,11 @@ Textures by VanessaE (CC-BY-SA 4.0)
   ethereal_banana_wood.png (edited)
   ethereal_olive_wood.png (edited)
 
-asl97 (CC BY-SA 3.0):
-  ethereal_brick_ice.png [edited by TenPlus1]
+Based on default ice texture by asl97 (CC BY-SA 3.0):
+  ethereal_brick_ice.png [edited by philipmi]
 
-Gambit (CC BY-SA 3.0):
-  ethereal_brick_snow.png [edited by TenPlus1]
+Based on default snow texture by Gambit (CC BY-SA 3.0):
+  ethereal_brick_snow.png [edited by philipmi]
 
 Textures by Felfa (CC0)
   olive*.png
@@ -93,29 +143,6 @@ Textures by Felfa (CC0)
 Textures by Isaiah658 (CC0)
    ethereal_lemonade.png
    ethereal_bamboo.png
-
-Textures by SaKeL (CC-BY-SA-4.0)
-  ethereal_fish_bluefin.png
-  ethereal_fish_blueram.png
-  ethereal_fish_catfish.png
-  ethereal_fish_clownfish.png
-  ethereal_fish_flathead.png
-  ethereal_fish_pike.png
-  ethereal_fish_plaice.png
-  ethereal_fish_pufferfish.png
-  ethereal_fish_redsnapper.png
-  ethereal_fish_salmon.png
-  ethereal_fish_trout.png
-  ethereal_fish_piranha.png
-  ethereal_fish_angler.png
-  ethereal_fish_jellyfish.png
-  ethereal_fish_chichlid.png
-  ethereal_fish_cooked.png
-
-  ethereal_fish_seahorse.png (by TenPlus1 CC0)
-
-Textures by Epoxum (CC0)
-  ethereal_sushi_*.png
 
 Created by XSSheep (CC BY-SA 4.0 - https://minecraft.curseforge.com/projects/pixel-perfection-freshly-updated)
   default_apple_gold.png

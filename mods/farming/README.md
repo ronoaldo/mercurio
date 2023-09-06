@@ -7,7 +7,8 @@ Information
 This mod replaces the default `farming` mod with a fully compatible API that allows
 players to grow crops even when they are not nearby.  It also includes many new foods
 and crops which can be planted directly onto tilled soil without seeds.  Crops that do
-require seeds like wheat and cotton are found when digging in long grasses.
+require seeds like wheat and cotton are found when digging in long grasses, and will
+require player to stay nearby until they germinate before growing normally.
 
 ![screenshot.png](screenshot.png)
 
@@ -25,14 +26,11 @@ https://forum.minetest.net/viewtopic.php?id=9019
 Farming Redo also works with Bonemeal mod for quick growing crops and saplings which can
 be found at https://notabug.org/TenPlus1/bonemeal
 
-#### Dependencies
+#### Optional dependences:
 
 * default
-
-Optional dependences:
-
+* mcl_core, mcl_sounds, mcl_farming, mcl_stairs
 * stairs
-* intllib (only for older engines)
 * lucky_block (adds 47 lucky blocks)
 * toolranks
 
@@ -47,6 +45,7 @@ farming mod folder or the world folder.  Also `minetest.conf` contains a setting
 | farming_stage_length | float |  160.0  | minetest.conf | Contains a value used for speed of crop growth in seconds |
 | farming.min_light    |  int  |    12   | farming.conf | default minimum light levels crops need to grow |
 | farming.max_light    |  int  |    15   | farming.conf | default maximum light levels crops need to grow |
+| farming_use_utensils | bool  |  True   | farming.conf | When True uses utensils in craft recipes |
 | farming.carrot       | float |  0.001  | farming.conf | rarety value to enable crop/food in-game, false to disable |
 | farming.potato       | float |  0.001  | farming.conf | rarety value to enable crop/food in-game, false to disable |
 | farming.tomato       | float |  0.001  | farming.conf | rarety value to enable crop/food in-game, false to disable |
@@ -218,6 +217,7 @@ on an older map are enabled and growing properly.
 
 ### Changelog:
 
+- 1.48 - added 'farming_use_utensils' setting to enable/disable utensils in recipes, added mayonnaise (thx felfa), added gingerbread man, Added MineClone2 compatibility
 - 1.47 - Now blueberries can make blue dye, tweak soil types to work better with older 0.4.x clients and add spanish translation (thx mckaygerhard), add trellis setting to registered_crops and fix pea and soy crop names (thx nixnoxus), add strawberries if ethereal mod not active, added asparagus; spinach; eggplant (thx Atlante for new textures), Sugar Cube
 - 1.46 - Added min/max default light settings, added lettuce and blackberries with food items (thanks OgelGames), added soya, vanilla and sunflowers (thanks Felfa), added tofu, added salt crystals (thanks gorlock)
 - 1.45 - Dirt and Hoes are more in line with default by using dry/wet/base, added cactus juice, added pasta, spaghetti, cabbage, korean bibimbap, code tidy

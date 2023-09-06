@@ -1,11 +1,11 @@
 
-local S = farming.intllib
+local S = farming.translate
 
 -- ginger
 minetest.register_craftitem("farming:ginger", {
 	description = S("Ginger"),
 	inventory_image = "farming_ginger.png",
-	groups = {seed = 2, food_ginger = 1, flammable = 2},
+	groups = {compostability = 48, seed = 2, food_ginger = 1, flammable = 2},
 	on_place = function(itemstack, placer, pointed_thing)
 		return farming.place_seed(itemstack, placer, pointed_thing, "farming:ginger_1")
 	end,
@@ -21,12 +21,13 @@ local def = {
 	walkable = false,
 	buildable_to = true,
 	drop = "",
+	waving = 1,
 	selection_box = farming.select,
 	groups = {
-		snappy = 3, flammable = 2, plant = 1, attached_node = 1,
+		handy = 1, snappy = 3, flammable = 2, plant = 1, attached_node = 1,
 		not_in_creative_inventory = 1, growing = 1
 	},
-	sounds = default.node_sound_leaves_defaults()
+	sounds = farming.sounds.node_sound_leaves_defaults()
 }
 
 -- stage 1
@@ -63,7 +64,7 @@ farming.registered_plants["farming:ginger"] = {
 	crop = "farming:ginger",
 	seed = "farming:ginger",
 	minlight = 5,
-	maxlight = default.LIGHT_MAX,
+	maxlight = minetest.LIGHT_MAX,
 	steps = 4
 }
 
@@ -71,7 +72,7 @@ farming.registered_plants["farming:ginger"] = {
 minetest.register_decoration({
 	name = "farming:ginger_4",
 	deco_type = "simple",
-	place_on = {"default:dirt_with_rainforest_litter"},
+	place_on = {"default:dirt_with_rainforest_litter", "mcl_core:dirt_with_grass"},
 	sidelen = 16,
 	noise_params = {
 		offset = 0,

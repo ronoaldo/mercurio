@@ -1,17 +1,11 @@
 
---[[
-	Original textures from Crops Plus mod
-	Copyright (C) 2018 Grizzly Adam
-	https://forum.minetest.net/viewtopic.php?f=9&t=19488
-]]
+local S = farming.translate
 
-local S = farming.intllib
-
--- potato
+-- garlic clove
 minetest.register_craftitem("farming:garlic_clove", {
 	description = S("Garlic clove"),
 	inventory_image = "crops_garlic_clove.png",
-	groups = {seed = 2, food_garlic_clove = 1, flammable = 3},
+	groups = {compostability = 35, seed = 2, food_garlic_clove = 1, flammable = 3},
 	on_place = function(itemstack, placer, pointed_thing)
 		return farming.place_seed(itemstack, placer, pointed_thing, "farming:garlic_1")
 	end
@@ -22,7 +16,7 @@ minetest.register_craftitem("farming:garlic", {
 	description = S("Garlic"),
 	inventory_image = "crops_garlic.png",
 	on_use = minetest.item_eat(1),
-	groups = {food_garlic = 1, flammable = 3}
+	groups = {food_garlic = 1, flammable = 3, compostability = 55}
 })
 
 minetest.register_craft({
@@ -49,16 +43,19 @@ minetest.register_node("farming:garlic_braid", {
 	paramtype = "light",
 	paramtype2 = "facedir",
 	tiles = {
-		"crops_garlic_braid_side.png","crops_garlic_braid.png",
-		"crops_garlic_braid_side.png^[transformFx","crops_garlic_braid_side.png",
-		"crops_garlic_braid.png","crops_garlic_braid.png"
+		"crops_garlic_braid_top.png",
+		"crops_garlic_braid.png",
+		"crops_garlic_braid_side.png^[transformFx",
+		"crops_garlic_braid_side.png",
+		"crops_garlic_braid.png",
+		"crops_garlic_braid.png"
 	},
-	groups = {vessel = 1, dig_immediate = 3, flammable = 3},
-	sounds = default.node_sound_leaves_defaults(),
+	groups = {vessel = 1, dig_immediate = 3, flammable = 3, compostability = 65},
+	sounds = farming.sounds.node_sound_leaves_defaults(),
 	node_box = {
 		type = "fixed",
 		fixed = {
-				{-0.13, -0.45, 0.5, 0.13, 0.45, 0.24}
+			{-0.1875, -0.5, 0.5, 0.1875, 0.5, 0.125}
 		}
 	}
 })
@@ -92,10 +89,10 @@ local def = {
 	drop = "",
 	selection_box = farming.select,
 	groups = {
-		snappy = 3, flammable = 3, plant = 1, attached_node = 1,
+		handy = 1, snappy = 3, flammable = 3, plant = 1, attached_node = 1,
 		not_in_creative_inventory = 1, growing = 1
 	},
-	sounds = default.node_sound_leaves_defaults()
+	sounds = farming.sounds.node_sound_leaves_defaults()
 }
 
 -- stage 1
@@ -138,7 +135,7 @@ farming.registered_plants["farming:garlic"] = {
 -- mapgen
 minetest.register_decoration({
 	deco_type = "simple",
-	place_on = {"default:dirt_with_grass"},
+	place_on = {"default:dirt_with_grass", "mcl_core:dirt_with_grass"},
 	sidelen = 16,
 	noise_params = {
 		offset = 0,

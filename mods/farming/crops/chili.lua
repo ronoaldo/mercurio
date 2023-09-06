@@ -1,11 +1,12 @@
 
-local S = farming.intllib
+local S = farming.translate
+local a = farming.recipe_items
 
 -- chili pepper
 minetest.register_craftitem("farming:chili_pepper", {
 	description = S("Chili Pepper"),
 	inventory_image = "farming_chili_pepper.png",
-	groups = {seed = 2, food_chili_pepper = 1, flammable = 4},
+	groups = {compostability = 48, seed = 2, food_chili_pepper = 1, flammable = 4},
 	on_place = function(itemstack, placer, pointed_thing)
 		return farming.place_seed(itemstack, placer, pointed_thing, "farming:chili_1")
 	end,
@@ -16,7 +17,8 @@ minetest.register_craftitem("farming:chili_pepper", {
 minetest.register_craftitem("farming:chili_bowl", {
 	description = S("Bowl of Chili"),
 	inventory_image = "farming_chili_bowl.png",
-	on_use = minetest.item_eat(8, "farming:bowl")
+	on_use = minetest.item_eat(8, a.bowl),
+	groups = {compostability = 65}
 })
 
 minetest.register_craft({
@@ -29,7 +31,7 @@ minetest.register_craft({
 
 -- chili can be used for red dye
 minetest.register_craft({
-	output = "dye:red",
+	output = a.dye_red,
 	recipe = {{"farming:chili_pepper"}}
 })
 
@@ -37,13 +39,14 @@ minetest.register_craft({
 minetest.register_craftitem("farming:chili_powder", {
 	description = S("Chili Powder"),
 	on_use = minetest.item_eat(-1),
-	inventory_image = "farming_chili_powder.png"
+	inventory_image = "farming_chili_powder.png",
+	groups = {compostability = 45}
 })
 
 minetest.register_craft({
 	output = "farming:chili_powder",
 	recipe = {
-		{"farming:chili_pepper", "farming:mortar_pestle"}
+		{"farming:chili_pepper", a.mortar_pestle}
 	},
 	replacements = {{"farming:mortar_pestle", "farming:mortar_pestle"}}
 })
@@ -58,12 +61,13 @@ local def = {
 	walkable = false,
 	buildable_to = true,
 	drop = "",
+	waving = 1,
 	selection_box = farming.select,
 	groups = {
-		snappy = 3, flammable = 4, plant = 1, attached_node = 1,
+		handy = 1, snappy = 3, flammable = 4, plant = 1, attached_node = 1,
 		not_in_creative_inventory = 1, growing = 1
 	},
-	sounds = default.node_sound_leaves_defaults()
+	sounds = farming.sounds.node_sound_leaves_defaults()
 }
 
 -- stage 1
@@ -117,7 +121,10 @@ farming.registered_plants["farming:chili_pepper"] = {
 -- mapgen
 minetest.register_decoration({
 	deco_type = "simple",
-	place_on = {"default:dirt_with_grass", "default:dirt_with_rainforest_litter"},
+	place_on = {
+		"default:dirt_with_grass", "default:dirt_with_rainforest_litter",
+		"mcl_core:dirt_with_grass"
+	},
 	sidelen = 16,
 	noise_params = {
 		offset = 0,
