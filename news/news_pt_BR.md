@@ -16,7 +16,7 @@ O servidor foi projetado para ser amigável e agradável! Por favor:
 
 ![1,1](halo)
 
-![0,0,r](item:///default:diamond_block)
+![0,0,r](item:///default:diamondblock)
 
 # **Atualização do servidor, Setembro de 2023**
 
