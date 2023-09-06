@@ -1,6 +1,6 @@
 --[[
     X Bows. Adds bow and arrows with API.
-    Copyright (C) 2022 SaKeL <juraj.vajda@gmail.com>
+    Copyright (C) 2023 SaKeL <juraj.vajda@gmail.com>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Lesser General Public
@@ -428,6 +428,7 @@ function XBows.register_quiver(self, name, def)
         inventory_image = def.inventory_image or 'x_bows_quiver.png',
         wield_image = def.wield_image or 'x_bows_quiver.png',
         groups = def.groups,
+        wield_scale = { x = 2, y = 2, z = 1 },
         ---@param itemstack ItemStack
         ---@param user ObjectRef|nil
         ---@param pointed_thing PointedThingDef
@@ -462,6 +463,7 @@ function XBows.register_quiver(self, name, def)
         inventory_image = def.custom.inventory_image_open or 'x_bows_quiver_open.png',
         wield_image = def.custom.wield_image_open or 'x_bows_quiver_open.png',
         groups = def.custom.groups_charged,
+        wield_scale = { x = 2, y = 2, z = 1 },
         ---@param itemstack ItemStack
         ---@param dropper ObjectRef|nil
         ---@param pos Vector
@@ -649,6 +651,11 @@ function XBows.shoot(self, itemstack, user, pointed_thing)
     local tflp = (time_shoot - time_load) / 1000000
     ---@type ItemStack
     local arrow_itemstack = ItemStack(minetest.deserialize(meta:get_string('arrow_itemstack_string')))
+
+    if arrow_itemstack:is_empty() then
+        return itemstack
+    end
+
     local arrow_itemstack_meta = arrow_itemstack:get_meta()
     local arrow_name = arrow_itemstack:get_name()
     local is_arrow_from_quiver = arrow_itemstack_meta:get_int('is_arrow_from_quiver')
@@ -738,6 +745,9 @@ function XBows.shoot(self, itemstack, user, pointed_thing)
     if staticdata._is_critical_hit then
         sound_name = x_bows_registered_bow_charged_def.custom.sound_shoot_crit
     end
+
+    -- remove arrow meta to prevent multiple shots while waiting for async `after`
+    meta:set_string('arrow_itemstack_string', '')
 
     ---stop punching close objects/nodes when shooting
     minetest.after(0.2, function()
@@ -914,6 +924,9 @@ function XBowsEntityDef.on_activate(self, selfObj, staticdata, dtime_s)
     selfObj._arrow_particle_effect = x_bows_registered_arrow_def.custom.particle_effect
     selfObj._arrow_particle_effect_crit = x_bows_registered_arrow_def.custom.particle_effect_crit
     selfObj._arrow_particle_effect_fast = x_bows_registered_arrow_def.custom.particle_effect_fast
+    selfObj._flyby_sound_played = {
+        ['player_name'] = true
+    }
 
     ---Bow Def
     local x_bows_registered_bow_def = self.registered_bows[selfObj._bow_name]
@@ -930,7 +943,7 @@ function XBowsEntityDef.on_activate(self, selfObj, staticdata, dtime_s)
     local bow_strength_max = x_bows_registered_bow_def.custom.strength_max
 
     ---X Enchanting
-    selfObj._x_enchanting = _staticdata._x_enchanting
+    selfObj._x_enchanting = _staticdata._x_enchanting or {}
 
     ---acceleration
     selfObj._player_look_dir = selfObj._user:get_look_dir()
@@ -984,7 +997,7 @@ function XBowsEntityDef.on_activate(self, selfObj, staticdata, dtime_s)
 
     ---idle animation
     if x_bows_registered_entity_def and x_bows_registered_entity_def._custom.animations.idle then
-        selfObj.object:set_animation(unpack(x_bows_registered_entity_def._custom.animations.idle)--[[@as table]] )
+        selfObj.object:set_animation(unpack(x_bows_registered_entity_def._custom.animations.idle)--[[@as table]])
     end
 
     ---counter, e.g. for initial values set `on_step`
@@ -1108,6 +1121,28 @@ function XBowsEntityDef.on_step(self, selfObj, dtime)
         local ip_pos = pointed_thing.intersection_point
         local in_pos = pointed_thing.intersection_normal
         selfObj.pointed_thing = pointed_thing
+
+        if not selfObj._attached then
+            for _, object in ipairs(minetest.get_objects_inside_radius(selfObj.object:get_pos(), 5)) do
+                if object:is_player()
+                    and object:get_hp() > 0
+                    and object:get_player_name() ~= selfObj._user:get_player_name()
+                    and not selfObj._flyby_sound_played[object:get_player_name()]
+                then
+                    selfObj._flyby_sound_played[object:get_player_name()] = true
+
+                    local p1 = selfObj.object:get_pos()
+                    local p2 = object:get_pos()
+                    local distance = math.round(vector.distance(p1, p2))
+                    local gain = 1 / distance
+
+                    minetest.sound_play('x_bows_arrow_flyby', {
+                        to_player = object:get_player_name(),
+                        gain = gain
+                    }, true)
+                end
+            end
+        end
 
         if pointed_thing.type == 'object'
             and pointed_thing.ref ~= selfObj.object
@@ -2213,7 +2248,7 @@ function XBowsQuiver.sfinv_register_page(self)
                 ---arrow
                 'label[0,0;' .. minetest.formspec_escape(S('Arrows')) .. ':]',
                 'list[current_player;x_bows:arrow_inv;0,0.5;1,1;]',
-                'image[0,0.5;1,1;x_bows_arrow_slot.png;]',
+                'image[0,0.5;1,1;x_bows_arrow_slot.png]',
                 'listring[current_player;x_bows:arrow_inv]',
                 'listring[current_player;main]',
                 ---quiver
@@ -2263,8 +2298,9 @@ end
 
 ---Register i3 page
 function XBowsQuiver.i3_register_page(self)
-    i3.new_tab('x_bows:quiver_page', {
+    i3.new_tab('x_bows_quiver_page', {
         description = 'X Bows',
+        slots = true,
         formspec = function(player, data, fs)
             local formspec = {
                 ---arrow
@@ -2276,26 +2312,7 @@ function XBowsQuiver.i3_register_page(self)
                 'label[5,1;' .. minetest.formspec_escape(S('Quiver')) .. ':]',
                 'list[current_player;x_bows:quiver_inv;5,1.5;1,1;]',
                 'listring[current_player;x_bows:quiver_inv]',
-                'listring[current_player;main]',
-                ---main
-                'background9[0,0;10.23,12;i3_bg_full.png;false;12]',
-                'listcolors[#bababa50;#bababa99]',
-                'style_type[box;colors=#77777710,#77777710,#777,#777]',
-                'box[0.22,6.9;1,1;]',
-                'box[1.32,6.9;1,1;]',
-                'box[2.42,6.9;1,1;]',
-                'box[3.52,6.9;1,1;]',
-                'box[4.62,6.9;1,1;]',
-                'box[5.72,6.9;1,1;]',
-                'box[6.82,6.9;1,1;]',
-                'box[7.92,6.9;1,1;]',
-                'box[9.02,6.9;1,1;]',
-                'style_type[list;size=1;spacing=0.1]',
-                'list[current_player;main;0.22,6.9;9,1;]',
-                'style_type[list;size=1;spacing=0.1,0.1]',
-                'list[current_player;main;0.22,8.05;9,4;9]',
-                'style_type[list;size=1;spacing=0.15]',
-                'listring[current_player;craft]listring[current_player;main]'
+                'listring[current_player;main]'
             }
 
             local context = {}
@@ -2312,7 +2329,6 @@ function XBowsQuiver.i3_register_page(self)
                         minetest.formspec_escape(x_bows_registered_arrow_def.custom.description_abilities) .. ']'
                 end
             end
-
 
             if context._itemstack_quiver and not context._itemstack_quiver:is_empty() then
                 local st_meta = context._itemstack_quiver:get_meta()

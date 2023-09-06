@@ -22,7 +22,7 @@
 lumberjack = {}
 
 -- Test MT 5.4 new string mode
-local CLIP = minetest.features.use_texture_alpha_string_modes and "clip" or true
+local CLIP = minetest.features.use_texture_alpha_string_modes and "blend" or true
 local S = minetest.get_translator("lumberjack")
 
 local MY_PARAM1_VAL = 7  -- to identify placed nodes
@@ -421,7 +421,7 @@ minetest.register_chatcommand("set_lumberjack_points", {
 if  minetest.global_exists("default") then
 	lumberjack.register_tree("default:tree", "default:sapling", 1, 2)
 	lumberjack.register_tree("default:jungletree", "default:junglesapling", 1, 5)
-	lumberjack.register_tree("default:acacia_tree", "default:acacia_sapling", 2, 3)
+	lumberjack.register_tree("default:acacia_tree", "default:acacia_sapling", 2, 2)
 	lumberjack.register_tree("default:aspen_tree", "default:aspen_sapling", 0, 5)
 	lumberjack.register_tree("default:pine_tree", "default:pine_sapling", 0, 3)
 end

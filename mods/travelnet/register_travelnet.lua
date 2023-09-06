@@ -9,6 +9,17 @@ local S = minetest.get_translator("travelnet")
 
 local travelnet_dyes = {}
 
+local function on_interact(pos, _, player)
+	local meta = minetest.get_meta(pos)
+	local legacy_formspec = meta:get_string("formspec")
+	if not travelnet.is_falsey_string(legacy_formspec) then
+		meta:set_string("formspec", "")
+	end
+
+	local player_name = player:get_player_name()
+	travelnet.show_current_formspec(pos, meta, player_name)
+end
+
 -- travelnet box register function
 function travelnet.register_travelnet_box(cfg)
 	minetest.register_node(cfg.nodename, {
@@ -19,23 +30,8 @@ function travelnet.register_travelnet_box(cfg)
 		paramtype = "light",
 		paramtype2 = "facedir",
 		wield_scale = { x=0.6, y=0.6, z=0.6 },
-		selection_box = {
-			type = "fixed",
-			fixed = { -0.5, -0.5, -0.5, 0.5, 1.5, 0.5 }
-		},
-
-		collision_box = {
-			type = "fixed",
-			fixed = {
-				{ 0.45,  -0.5, -0.5,   0.5, 1.45, 0.5 },
-				{ -0.5 , -0.5, 0.45,  0.45, 1.45, 0.5 },
-				{ -0.5,  -0.5, -0.5, -0.45, 1.45, 0.5 },
-				--groundplate to stand on
-				{ -0.5,  -0.5, -0.5,  0.5, -0.45, 0.5 },
-				--roof
-				{ -0.5,  1.45, -0.5,  0.5,   1.5, 0.5 },
-			},
-		},
+		selection_box = travelnet.node_box,
+		collision_box = travelnet.node_box,
 
 		tiles = {
 			"(travelnet_travelnet_front_color.png^[multiply:" .. cfg.color .. ")^travelnet_travelnet_front.png", -- backward view
@@ -53,12 +49,15 @@ function travelnet.register_travelnet_box(cfg)
 		light_source = cfg.light_source or 10,
 		after_place_node = function(pos, placer)
 			local meta = minetest.get_meta(pos)
-			travelnet.reset_formspec(meta)
+			meta:set_string("infotext",       S("Travelnet-Box (unconfigured)"))
+			meta:set_string("station_name",   "")
+			meta:set_string("station_network","")
 			meta:set_string("owner", placer:get_player_name())
 			minetest.set_node(vector.add(pos, { x=0, y=1, z=0 }), { name="travelnet:hidden_top" })
 		end,
 
 		on_receive_fields = travelnet.on_receive_fields,
+		on_rightclick = on_interact,
 		on_punch = function(pos, node, puncher)
 			local item = puncher:get_wielded_item()
 			local item_name = item:get_name()
@@ -74,7 +73,7 @@ function travelnet.register_travelnet_box(cfg)
 				puncher:set_wielded_item(item)
 				return
 			end
-			travelnet.update_formspec(pos, player_name, nil)
+			on_interact(pos, nil, puncher)
 		end,
 
 		can_dig = function(pos, player)
@@ -104,7 +103,10 @@ function travelnet.register_travelnet_box(cfg)
 		end,
 
 		on_destruct = function(pos)
-			minetest.remove_node(vector.add(pos, { x=0, y=1, z=0 }))
+			local above = vector.add(pos, vector.new(0, 1, 0))
+			if minetest.get_node(above).name == "travelnet:hidden_top" then
+				minetest.remove_node(above)
+			end
 		end
 	})
 

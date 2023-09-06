@@ -1,22 +1,26 @@
 
-travelnet.MAX_STATIONS_PER_NETWORK = 24
+-- set this to 0 if you want no limit
+travelnet.MAX_STATIONS_PER_NETWORK = tonumber(minetest.settings:get("travelnet.MAX_STATIONS_PER_NETWORK")) or 24
 
 -- set this to true if you want a simulated beam effect
-travelnet.travelnet_effect_enabled = false
+travelnet.travelnet_effect_enabled = minetest.settings:get_bool("travelnet.travelnet_effect_enabled", false)
 -- set this to true if you want a sound to be played when the travelnet is used
-travelnet.travelnet_sound_enabled  = false
+travelnet.travelnet_sound_enabled  = minetest.settings:get_bool("travelnet.travelnet_sound_enabled", true)
 
 -- if you set this to false, travelnets cannot be created
 -- (this may be useful if you want nothing but the elevators on your server)
-travelnet.travelnet_enabled        = true
+travelnet.travelnet_enabled        = minetest.settings:get_bool("travelnet.travelnet_enabled", true)
+
+travelnet.travelnet_cleanup_lbm = minetest.settings:get_bool("travelnet.travelnet_cleanup_lbm", false)
+
 -- if you set travelnet.elevator_enabled to false, you will not be able to
 -- craft, place or use elevators
-travelnet.elevator_enabled         = true
+travelnet.elevator_enabled         = minetest.settings:get_bool("travelnet.elevator_enabled", true)
 -- if you set this to false, doors will be disabled
-travelnet.doors_enabled            = true
+travelnet.doors_enabled            = minetest.settings:get_bool("travelnet.doors_enabled", true)
 
 -- starts an abm which re-adds travelnet stations to networks in case the savefile got lost
-travelnet.abm_enabled              = false
+travelnet.abm_enabled              = minetest.settings:get_bool("travelnet.abm_enabled", false)
 
 -- change these if you want other receipes for travelnet or elevator
 travelnet.travelnet_recipe = {
@@ -35,37 +39,33 @@ travelnet.tiles_elevator = {
 	"travelnet_elevator_sides_outside.png",
 	"travelnet_elevator_inside_ceiling.png",
 	"travelnet_elevator_inside_floor.png",
-	"default_steel_block.png"
+	"travelnet_top.png"
 }
 travelnet.elevator_inventory_image  = "travelnet_elevator_inv.png"
 
 if minetest.registered_nodes["mcl_core:wood"] then
 	travelnet.travelnet_recipe = {
-		{ "mcl_stairs:slab_wood",            "mcl_stairs:slab_wood", "mcl_stairs:slab_wood" },
-		{ "mesecons_torch:mesecon_torch_on", "mcl_chests:chest",     "mesecons_torch:mesecon_torch_on" },
-		{ "mesecons_torch:mesecon_torch_on", "mcl_chests:chest",     "mesecons_torch:mesecon_torch_on" },
-		-- { "core:glass",     "mcl_core:iron_ingot",          "mcl_core:glass" },
-		-- { "mcl_core:glass", "mesecons_torch:redstoneblock", "mcl_core:glass" },
-		-- { "mcl_core:glass", "mcl_core:iron_ingot",          "mcl_core:glass" }
+		{ "mcl_core:glass", "mcl_core:iron_ingot",          "mcl_core:glass" },
+		{ "mcl_core:glass", "mesecons_torch:redstoneblock", "mcl_core:glass" },
+		{ "mcl_core:glass", "mcl_core:iron_ingot",          "mcl_core:glass" }
 	}
 	travelnet.elevator_recipe = {
-		{ "mcl_stairs:slab_wood", "mcl_stairs:slab_wood", "mcl_stairs:slab_wood" },
-		{ "mesecons_torch:mesecon_torch_on", "", "mesecons_torch:mesecon_torch_on" },
-		{ "mesecons_torch:mesecon_torch_on", "", "mesecons_torch:mesecon_torch_on" },
-		-- { "mcl_core:iron_ingot", "mcl_core:glass", "mcl_core:iron_ingot" },
-		-- { "mcl_core:iron_ingot", "",               "mcl_core:iron_ingot" },
-		-- { "mcl_core:iron_ingot", "mcl_core:glass", "mcl_core:iron_ingot" }
+		{ "mcl_core:iron_ingot", "mcl_core:glass", "mcl_core:iron_ingot" },
+		{ "mcl_core:iron_ingot", "",               "mcl_core:iron_ingot" },
+		{ "mcl_core:iron_ingot", "mcl_core:glass", "mcl_core:iron_ingot" }
 	}
-	travelnet.tiles_elevator = {
-		"mcl_core_planks_big_oak.png^[transformR90", -- front
-		"mcl_core_planks_big_oak.png^[transformR90", -- inside
-		"mcl_core_planks_big_oak.png^[transformR90", -- sides outside
-		"mcl_core_planks_big_oak.png^[transformR90", -- inside ceiling
-		"mcl_core_planks_big_oak.png^[transformR90", -- inside floor
-		"mcl_core_planks_big_oak.png^[transformR90", -- top
-	}
-	travelnet.elevator_inventory_image = nil
 end
+
+travelnet.node_box = {
+	type = "fixed",
+	fixed = {
+		{-0.5, -0.5, 0.4375, 0.5, 1.5, 0.5},  -- Back
+		{-0.5, -0.5, -0.5, -0.4375, 1.5, 0.5},  -- Right
+		{0.4375, -0.5, -0.5, 0.5, 1.5, 0.5},  -- Left
+		{-0.5, -0.5, -0.5, 0.5, -0.4375, 0.5},  -- Floor
+		{-0.5, 1.4375, -0.5, 0.5, 1.5, 0.5},  -- Roof
+	}
+}
 
 -- if this function returns true, the player with the name player_name is
 -- allowed to add a box to the network named network_name, which is owned
@@ -76,7 +76,7 @@ end
 -- can still add stations to that network
 -- params: player_name, owner_name, network_name
 travelnet.allow_attach = function()
-	return false
+	return minetest.settings:get_bool("travelnet.allow_attach", false)
 end
 
 
@@ -85,7 +85,7 @@ end
 -- has the travelnet_remove priv
 -- params: player_name, owner_name, network_name, pos
 travelnet.allow_dig = function()
-	return false
+	return minetest.settings:get_bool("travelnet.allow_dig", false)
 end
 
 
@@ -97,7 +97,11 @@ end
 -- usage of stations to players in the same fraction on PvP servers
 -- params: player_name, owner_name, network_name, station_name_start, station_name_target
 travelnet.allow_travel = function()
-	return true
+	return minetest.settings:get_bool("travelnet.allow_travel", true)
 end
 
-travelnet.travelnet_sound_enabled = true
+-- allows an custom attach priv
+travelnet.attach_priv = minetest.settings:get("travelnet.attach_priv") or "travelnet_attach"
+
+-- allows an custom remove priv
+travelnet.remove_priv = minetest.settings:get("travelnet.remove_priv") or "travelnet_remove"

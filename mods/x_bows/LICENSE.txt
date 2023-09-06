@@ -1,7 +1,7 @@
                   GNU LESSER GENERAL PUBLIC LICENSE
                        Version 2.1, February 1999
 
- Copyright (C) 2022 SaKeL <juraj.vajda@gmail.com>
+ Copyright (C) 2023 SaKeL <juraj.vajda@gmail.com>
  Everyone is permitted to copy and distribute verbatim copies
  of this license document, but changing it is not allowed.
 
@@ -453,3 +453,115 @@ RENDERED INACCURATE OR LOSSES SUSTAINED BY YOU OR THIRD PARTIES OR A
 FAILURE OF THE LIBRARY TO OPERATE WITH ANY OTHER SOFTWARE), EVEN IF
 SUCH HOLDER OR OTHER PARTY HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH
 DAMAGES.
+
+### Code
+
+GNU Lesser General Public License v2.1 or later
+
+### Textures
+
+**CC-BY-SA-4.0, Pixel Perfection by XSSheep**, https://minecraft.curseforge.com/projects/pixel-perfection-freshly-updated
+
+- x_bows_arrow_particle.png
+- x_bows_bubble.png
+
+**CC-BY-SA-3.0, by paramat**
+
+- x_bows_hotbar_selected.png
+- x_bows_quiver_hotbar.png
+- x_bows_single_hotbar.png
+
+**CC-BY-SA-4.0, by SaKeL**
+
+- x_bows_quiver.png
+- x_bows_quiver_open.png
+- x_bows_arrow_slot.png
+- x_bows_arrow_mesh.png
+- x_bows_quiver_mesh.png
+- x_bows_quiver_empty_mesh.png
+- x_bows_quiver_blank_mesh.png
+- x_bows_quiver_slot.png
+- x_bows_dmg_0.png
+- x_bows_dmg_1.png
+- x_bows_dmg_2.png
+- x_bows_dmg_3.png
+- x_bows_dmg_4.png
+- x_bows_dmg_5.png
+- x_bows_dmg_6.png
+- x_bows_dmg_7.png
+- x_bows_dmg_8.png
+- x_bows_dmg_9.png
+- x_bows_bow_wood.png
+- x_bows_bow_wood_charged.png
+- x_bows_arrow_wood.png
+- x_bows_arrow_stone.png
+- x_bows_arrow_bronze.png
+- x_bows_arrow_steel.png
+- x_bows_arrow_mese.png
+- x_bows_arrow_diamond.png
+- x_bows_target.png
+
+### Sounds
+
+**Creative Commons License, EminYILDIRIM**, https://freesound.org
+
+- x_bows_bow_load.1.ogg
+- x_bows_bow_load.2.ogg
+- x_bows_bow_load.3.ogg
+
+**Creative Commons License, bay_area_bob**, https://freesound.org
+
+- x_bows_bow_loaded.ogg
+
+**Creative Commons License**, https://freesound.org
+
+- x_bows_bow_shoot_crit.ogg
+
+**Creative Commons License, robinhood76**, https://freesound.org
+
+- x_bows_arrow_hit.1.ogg
+- x_bows_arrow_hit.2.ogg
+- x_bows_arrow_hit.3.ogg
+
+**Creative Commons License, brendan89**, https://freesound.org
+
+- x_bows_bow_shoot.1.ogg
+
+**Creative Commons License, natty23**, https://freesound.org
+
+- x_bows_arrow_successful_hit.ogg
+
+**Creative Commons License, Shamewap**, https://freesound.org
+
+- x_bows_quiver.1.ogg
+- x_bows_quiver.2.ogg
+- x_bows_quiver.3.ogg
+- x_bows_quiver.4.ogg
+- x_bows_quiver.5.ogg
+- x_bows_quiver.6.ogg
+- x_bows_quiver.7.ogg
+- x_bows_quiver.8.ogg
+- x_bows_quiver.9.ogg
+
+**CC0-1.0, Kinoton**, https://freesound.org/people/Kinoton/sounds/427979/
+
+- x_bows_arrow_flyby.1.ogg
+- x_bows_arrow_flyby.2.ogg
+- x_bows_arrow_flyby.3.ogg
+
+### Models
+
+**CC-BY-SA-4.0, by SaKeL**
+
+- x_bows_arrow.obj
+- x_bows_arrow.blend
+
+**Original model by MirceaKitsune (CC BY-SA 3.0).**
+**Various alterations and fixes by kilbith, sofar, xunto, Rogier-5, TeTpaAka, Desour, stujones11, An0n3m0us (CC BY-SA 3.0):**
+
+Modified by SaKeL (added quiver):
+
+- x_bows_3d_armor_character.b3d
+- x_bows_3d_armor_character.blend
+- x_bows_character.b3d
+- x_bows_character.blend

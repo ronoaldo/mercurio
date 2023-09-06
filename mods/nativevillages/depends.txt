@@ -2,6 +2,7 @@ mobs
 default
 people
 farming
+bucket
 animalworld?
 ethereal?
 xocean?

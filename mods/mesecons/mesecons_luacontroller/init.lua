@@ -203,11 +203,13 @@ end
 -------------------------
 
 local function safe_print(param)
-	local string_meta = getmetatable("")
-	local sandbox = string_meta.__index
-	string_meta.__index = string -- Leave string sandbox temporarily
-	print(dump(param))
-	string_meta.__index = sandbox -- Restore string sandbox
+	if mesecon.setting("luacontroller_print_behavior", "log") == "log" then
+		local string_meta = getmetatable("")
+		local sandbox = string_meta.__index
+		string_meta.__index = string -- Leave string sandbox temporarily
+		minetest.log("action", string.format("[mesecons_luacontroller] print(%s)", dump(param)))
+		string_meta.__index = sandbox -- Restore string sandbox
+	end
 end
 
 local function safe_date()
@@ -234,6 +236,16 @@ local function safe_string_find(...)
 	end
 
 	return string.find(...)
+end
+
+-- do not allow pattern matching in string.split (see string.find for details)
+local function safe_string_split(...)
+	if select(5, ...) then
+		debug.sethook() -- Clear hook
+		error("string.split: 'sep_is_pattern' (fifth parameter) may not be used in a Luacontroller")
+	end
+
+	return string.split(...)
 end
 
 local function remove_functions(x)
@@ -505,6 +517,7 @@ local function create_environment(pos, mem, event, itbl, send_warning)
 			reverse = string.reverse,
 			sub = string.sub,
 			find = safe_string_find,
+			split = safe_string_split,
 		},
 		math = {
 			abs = math.abs,

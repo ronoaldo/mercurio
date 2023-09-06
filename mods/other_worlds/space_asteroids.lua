@@ -19,5 +19,5 @@ minetest.register_on_generated(
 	c_meseore = minetest.get_content_id("default:stone_with_mese"),
 	c_waterice = minetest.get_content_id("default:ice"),
 	c_atmos = minetest.get_content_id("asteroid:atmos"),
-	c_snowblock = minetest.get_content_id("default:snowblock"),
+	c_snowblock = minetest.get_content_id("default:snowblock")
 }))

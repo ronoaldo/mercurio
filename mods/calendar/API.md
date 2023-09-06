@@ -192,8 +192,8 @@ get a tooltip.
 
 Example for `caption_format`:
 
-    { N("@1, year @2"), "mymod", "%b", "%Y" }
+    { NS("@1, year @2"), "mymod", "%b", "%Y" }
 
 Will resolve to e.g. "January, Year 1".
-`N` is a dummy function `function(s) return s end` that is used for the translation collector
+`NS` is a dummy function `function(s) return s end` that is used for the translation collector
 script.

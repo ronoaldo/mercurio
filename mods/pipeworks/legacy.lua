@@ -26,8 +26,11 @@ if not minetest.get_modpath("auto_tree_tap") and
 			"pipeworks_nodebreaker_back.png","pipeworks_nodebreaker_front_off.png"},
 		is_ground_content = true,
 		paramtype2 = "facedir",
-		groups = {snappy=2,choppy=2,oddly_breakable_by_hand=2, mesecon = 2,tubedevice=1, not_in_creative_inventory=1 },
-		sounds = default.node_sound_stone_defaults(),
+		groups = {snappy=2,choppy=2,oddly_breakable_by_hand=2, mesecon = 2,tubedevice=1, not_in_creative_inventory=1, axey=1, handy=1, pickaxey=1},
+		_mcl_hardness=0.8,
+		_sound_def = {
+			key = "node_sound_stone_defaults",
+		},
 		tube = {connect_sides={back=1}},
 		on_construct = function(pos)
 			local meta = minetest.get_meta(pos)
@@ -52,7 +55,6 @@ if not minetest.get_modpath("auto_tree_tap") and
 				local node = minetest.get_node(pos)
 				node.param2 = minetest.dir_to_facedir(dir, true)
 				minetest.set_node(pos, node)
-				minetest.log("action", "real (6d) facedir: " .. node.param2)
 			end
 		end,
 		after_dig_node = pipeworks.scan_for_tube_objects,

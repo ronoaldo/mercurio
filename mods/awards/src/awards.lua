@@ -1,6 +1,6 @@
 -- Copyright (c) 2013-18 rubenwardy and Wuzzy. MIT.
 
-local S = awards.gettext
+local S = awards.translator
 
 
 -- Saint-Maclou
@@ -291,19 +291,6 @@ if minetest.get_modpath("default") then
 		return nil
 	end)
 
-	-- On the way
-	awards.register_award("award_on_the_way", {
-		title = S("On The Way"),
-		description = S("Place 100 rails."),
-		icon = "awards_on_the_way.png",
-		difficulty = 0.1,
-		trigger = {
-			type = "place",
-			node = "default:rail",
-			target = 100
-		}
-	})
-
 	awards.register_award("award_lumberjack_firstday", {
 		title = S("First Day in the Woods"),
 		description = S("Dig 6 tree blocks."),
@@ -311,7 +298,7 @@ if minetest.get_modpath("default") then
 		difficulty = 0.03,
 		trigger = {
 			type = "dig",
-			node = "default:tree",
+			node = "group:tree",
 			target = 6
 		}
 	})
@@ -324,7 +311,7 @@ if minetest.get_modpath("default") then
 		difficulty = 0.03,
 		trigger = {
 			type = "dig",
-			node = "default:tree",
+			node = "group:tree",
 			target = 36
 		}
 	})
@@ -337,7 +324,7 @@ if minetest.get_modpath("default") then
 		difficulty = 0.03,
 		trigger = {
 			type = "dig",
-			node = "default:tree",
+			node = "group:tree",
 			target = 216
 		}
 	})
@@ -350,7 +337,7 @@ if minetest.get_modpath("default") then
 		difficulty = 0.03,
 		trigger = {
 			type = "dig",
-			node = "default:tree",
+			node = "group:tree",
 			target = 1296
 		}
 	})
@@ -790,6 +777,21 @@ if minetest.get_modpath("default") then
 	end)
 end
 
+if minetest.get_modpath("carts") then
+	-- On the way
+	awards.register_award("award_on_the_way", {
+		title = S("On The Way"),
+		description = S("Place 100 rails."),
+		icon = "awards_on_the_way.png",
+		difficulty = 0.1,
+		trigger = {
+			type = "place",
+			node = "group:rail",
+			target = 100
+		}
+	})
+end
+
 if minetest.get_modpath("bones") then
 	-- Die near bones
 	awards.register_award("award_the_stack", {
@@ -1098,7 +1100,7 @@ end
 
 if minetest.get_modpath("basic_materials") then
 	awards.register_award("awards_oil", {
-		title = S("Oil Typhoon"),
+		title = S("Oil Tycoon"),
 		description = S("Craft 500 times oil extract."),
 
 		trigger = {

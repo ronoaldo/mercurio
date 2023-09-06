@@ -1,3 +1,2 @@
-# Shows number of occupied (@1) vs number of total inventory slots (@2).
-# Try to keep the translation short.
-@1/@2 =
+# textdomain: inventory_icon
+@1/@2=
