@@ -112,6 +112,7 @@ function creatura.get_boid_dir(self)
 		if object then
 			boid_pos, vel = object:get_pos(), object:get_velocity()
 			if boid_pos then
+				vel = vec_normal(vel)
 				local obj_yaw = object:get_yaw()
 				pos_no, pos_sum = pos_no + 1, vec_add(pos_sum, boid_pos)
 				sum_sin, sum_cos = sum_sin + sin(obj_yaw), sum_cos + cos(obj_yaw)

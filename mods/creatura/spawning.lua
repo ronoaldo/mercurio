@@ -74,9 +74,12 @@ end
 function creatura.register_spawn_item(name, def)
 	local inventory_image
 	if not def.inventory_image
-	and def.col1 and def.col2 then
-		local base = "(creatura_spawning_crystal_primary.png^[multiply:#" .. def.col1 .. ")"
-		local spots = "(creatura_spawning_crystal_secondary.png^[multiply:#" .. def.col2 .. ")"
+	and ((def.col1 and def.col2)
+	or (def.hex_primary and def.hex_secondary)) then
+		local primary = def.col1 or def.hex_primary
+		local secondary = def.col2 or def.hex_secondary
+		local base = "(creatura_spawning_crystal_primary.png^[multiply:#" .. primary .. ")"
+		local spots = "(creatura_spawning_crystal_secondary.png^[multiply:#" .. secondary .. ")"
 		inventory_image = base .. "^" .. spots
 	end
 	local mod_name = name:split(":")[1]
@@ -103,6 +106,9 @@ function creatura.register_spawn_item(name, def)
 		if object then
 			object:set_yaw(random(0, pi * 2))
 			object:get_luaentity().last_yaw = object:get_yaw()
+			if def.on_spawn then
+				def.on_spawn(object:get_luaentity(), player)
+			end
 		end
 		if not minetest.is_creative_enabled(player:get_player_name())
 		or def.consume_in_creative then
@@ -110,7 +116,7 @@ function creatura.register_spawn_item(name, def)
 			return itemstack
 		end
 	end
-	minetest.register_craftitem(mod_name .. ":spawn_" .. mob_name, def)
+	minetest.register_craftitem(def.itemstring or (mod_name .. ":spawn_" .. mob_name), def)
 end
 
 function creatura.register_mob_spawn(name, def)
@@ -495,7 +501,7 @@ local protected_spawn = minetest.settings:get_bool("creatura_protected_spawn", t
 local abr = (tonumber(minetest.get_mapgen_setting("active_block_range")) or 4) * 16
 local max_per_block = tonumber(minetest.settings:get("creatura_mapblock_limit")) or 12
 local max_in_abr = tonumber(minetest.settings:get("creatura_abr_limit")) or 24
-local min_abm_dist = tonumber(minetest.settings:get("creatura_min_abm_dist")) or 32
+local min_abm_dist = min(abr / 2, tonumber(minetest.settings:get("creatura_min_abm_dist")) or 32)
 
 local function can_spawn(pos, width, height)
 	local pos2

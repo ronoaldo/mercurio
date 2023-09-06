@@ -31,6 +31,66 @@ end
 
 is_day()
 
+-- Player Effects
+
+animalia.player_effects = {}
+
+local function player_effect_step()
+	for player, data in pairs(animalia.player_effects) do
+		if player then
+			local timer = data.timer - 1
+			animalia.player_effects[player].timer = timer
+			local func = data.func
+			func(minetest.get_player_by_name(player))
+			if timer <= 0 then
+				animalia.player_effects[player] = nil
+			end
+		end
+	end
+	minetest.after(1, player_effect_step)
+end
+
+player_effect_step()
+
+function animalia.set_player_effect(player_name, effect, timer)
+	animalia.player_effects[player_name] = {
+		func = effect,
+		timer = timer or 5
+	}
+end
+
+-- Create lists of items for reuse
+
+animalia.food_wheat = {}
+animalia.food_seeds = {}
+animalia.food_crops = {}
+
+minetest.register_on_mods_loaded(function()
+	if minetest.get_modpath("farming")
+	and farming.registered_plants then
+		for _, def in pairs(farming.registered_plants) do
+			if def.crop then
+				table.insert(animalia.food_crops, def.crop)
+			end
+		end
+	end
+	for name in pairs(minetest.registered_items) do
+		if (name:match(":wheat")
+		or minetest.get_item_group(name, "food_wheat") > 0)
+		and not name:find("seed") then
+			table.insert(animalia.food_wheat, name)
+			return
+		end
+		if name:match(":seed_")
+		or name:match("_seed") then
+			table.insert(animalia.food_seeds, name)
+			return
+		end
+	end
+end)
+
+-- Load Files
+
 dofile(path.."/api/api.lua")
 dofile(path.."/api/behaviors.lua")
 dofile(path.."/api/lasso.lua")
@@ -38,7 +98,7 @@ dofile(path.."/craftitems.lua")
 
 animalia.animals = {
 	"animalia:bat",
-	"animalia:bird",
+	"animalia:song_bird",
 	"animalia:cat",
 	"animalia:chicken",
 	"animalia:cow",
@@ -79,18 +139,14 @@ minetest.register_on_mods_loaded(function()
 			local on_punch = function(self, puncher, time_from_last_punch, tool_capabilities, dir, damage)
 				old_punch(self, puncher, time_from_last_punch, tool_capabilities, dir, damage)
 				local pos = self.object:get_pos()
-				if not pos then
-					return
-				end
-				if puncher:is_player()
-				and animalia.pets[puncher:get_player_name()] then
-					local pets = animalia.pets[puncher:get_player_name()]
-					if #pets < 1 then return end
-					for i = 1, #pets do
-						local ent = pets[i]:get_luaentity()
-						if ent.assist_owner then
-							ent.owner_target = self
-						end
+				if not pos then return end
+				local plyr_name = puncher:is_player() and puncher:get_player_name()
+				local pets = (plyr_name and animalia.pets[plyr_name]) or {}
+				for _, obj in ipairs(pets) do
+					local ent = obj and obj:get_luaentity()
+					if ent
+					and ent.assist_owner then
+						ent.owner_target = self
 					end
 				end
 			end
@@ -113,4 +169,4 @@ if convert_mobs_redo then
 	minetest.register_alias_force("mobs:nametag", "animalia:nametag")
 end
 
-minetest.log("action", "[MOD] Animalia [0.4] loaded")
+minetest.log("action", "[MOD] Animalia [0.6] loaded")
