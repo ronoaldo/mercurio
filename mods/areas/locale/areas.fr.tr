@@ -45,7 +45,7 @@ Protect your own area=Protège votre zone.
 Recursively remove areas using an ID=Supprime les zones récursivement en utilisant un ID.
 Remove an area using an ID=Supprime une zone en utilisant son ID.
 Removed area @1=Zone @1 supprimée.
-Removed area @1 and it's sub areas.=Zone @1 et ses sous-zones supprimées.
+Removed area @1 and its sub areas.=Zone @1 et ses sous-zones supprimées.
 Removes all ownerless areas=Supprime toutes les zones sans propriétaire
 Rename an area that you own=Renomme une zone qui vous appartient.
 Self protection is disabled.=L’autoprotection est désactivée.
@@ -123,7 +123,7 @@ Area position @1 set to @2=Position @1 de la zone définie à @2.
 Position @1 set to @2=Position @1 définie à @2.
 Position @1: =Position @1 :
 Select an area by ID.=Sélectionnez une zone par son ID.
-Select position @1 by punching a node.=Sélectionnez une position en frappant un bloc.
+Select position @1 by punching a node.=Sélectionnez une position @1 en frappant un bloc.
 Select positions by punching two nodes.=Sélectionnez une position en frappant deux blocs.
 
 Set area protection region position @1 to your location or the one specified=Définit la position @1 de la région de protection de zone à votre position ou à celle spécifiée.

@@ -8,11 +8,25 @@ default = default or {
 	gui_slots = ""
 }
 
--- Load support for intllib.
 local MP = minetest.get_modpath(minetest.get_current_modname())
 local F = minetest.formspec_escape
-local S = minetest.get_translator and minetest.get_translator("protector") or
-		dofile(MP .. "/intllib.lua")
+
+-- Translation support
+local S
+
+if minetest.get_translator then
+	S = minetest.get_translator("protector")
+else
+	S = function(str, ...)
+
+		local args = {...}
+
+		return str:gsub("@%d+", function(match)
+			return args[tonumber(match:sub(2))]
+		end)
+	end
+end
+
 
 -- Load support for factions
 local factions_available = minetest.global_exists("factions")
@@ -493,7 +507,7 @@ minetest.register_node("protector:protect", {
 	node_box = {
 		type = "fixed",
 		fixed = {
-			{-0.5 ,-0.5, -0.5, 0.5, 0.5, 0.5}
+			{-0.499 ,-0.499, -0.499, 0.499, 0.499, 0.499}
 		}
 	},
 
@@ -802,7 +816,10 @@ dofile(MP .. "/pvp.lua")
 dofile(MP .. "/admin.lua")
 dofile(MP .. "/tool.lua")
 dofile(MP .. "/hud.lua")
-dofile(MP .. "/lucky_block.lua")
+
+if minetest.get_modpath("lucky_block") then
+	dofile(MP .. "/lucky_block.lua")
+end
 
 
 -- stop mesecon pistons from pushing protectors
