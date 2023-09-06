@@ -57,11 +57,13 @@ end
 function plate.register(material, desc, def)
 	xdecor.register("pressure_" .. material .. "_off", {
 		description = def.description or (desc .. " Pressure Plate"),
+		_tt_help = S("Opens doors when stepped on"),
 		tiles = {"xdecor_pressure_" .. material .. ".png"},
 		use_texture_alpha = ALPHA_OPAQUE,
 		drawtype = "nodebox",
 		node_box = xdecor.pixelbox(16, {{1, 0, 1, 14, 1, 14}}),
 		groups = def.groups,
+		is_ground_content = false,
 		sounds = def.sounds,
 		sunlight_propagates = true,
 		on_rotate = screwdriver.rotate_simple,
@@ -74,6 +76,7 @@ function plate.register(material, desc, def)
 		drawtype = "nodebox",
 		node_box = xdecor.pixelbox(16, {{1, 0, 1, 14, 0.4, 14}}),
 		groups = def.groups,
+		is_ground_content = false,
 		sounds = def.sounds,
 		drop = "xdecor:pressure_" .. material .. "_off",
 		sunlight_propagates = true,
@@ -95,11 +98,13 @@ plate.register("stone", "Stone", {
 
 xdecor.register("lever_off", {
 	description = S("Lever"),
+	_tt_help = S("Opens doors when pulled"),
 	tiles = {"xdecor_lever_off.png"},
 	use_texture_alpha = ALPHA_OPAQUE,
 	drawtype = "nodebox",
 	node_box = xdecor.pixelbox(16, {{2, 1, 15, 12, 14, 1}}),
 	groups = {cracky = 3, oddly_breakable_by_hand = 2},
+	is_ground_content = false,
 	sounds = default.node_sound_stone_defaults(),
 	sunlight_propagates = true,
 	on_rotate = screwdriver.rotate_simple,
@@ -115,7 +120,8 @@ xdecor.register("lever_off", {
 		end
 
 		return itemstack
-	end
+	end,
+	_xdecor_itemframe_offset = -3.5,
 })
 
 xdecor.register("lever_on", {
@@ -124,6 +130,7 @@ xdecor.register("lever_on", {
 	drawtype = "nodebox",
 	node_box = xdecor.pixelbox(16, {{2, 1, 15, 12, 14, 1}}),
 	groups = {cracky = 3, oddly_breakable_by_hand = 2, not_in_creative_inventory = 1},
+	is_ground_content = false,
 	sounds = default.node_sound_stone_defaults(),
 	sunlight_propagates = true,
 	on_rotate = screwdriver.rotate_simple,

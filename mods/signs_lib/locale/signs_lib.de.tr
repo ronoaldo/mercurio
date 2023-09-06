@@ -1,27 +1,12 @@
 # textdomain: signs_lib
-Locked sign, owned by @1@n=gesperrter Schild, gehört @1@n
-Write=schreiben
-@1 wrote "@2" to sign at @3=
-@1 flipped the wide-font switch to "@2" at @3=
-@1 flipped the unicode-font switch to "@2" at @3=
-
-
-##### not used anymore #####
-
-locked =gesperrt 
-@1 wrote "@2" to @3sign at @4=@1 schrieb "@2" auf das @3Schild bei @4
-Sign=Schild
-Can edit all locked signs=Kann alle gesperrte Schilder bearbeiten
-Locked Sign=gesperrter Schild
-green=grün
-yellow=gelb
-red=rot
-white_red=weißrot
-white_black=schwarzweiß
-orange=orange
-blue=blau
-brown=braun
-Sign (@1, metal)=Schild (@1, Metall)
-Attempt to register unknown node as fence=Versuch ein unbekanntes Element als Zaun zu registrieren
-Registered @1 and @2=Registrierte @1 und @2
-[MOD] signs loaded=[MOD] Schilder-Mod geladen
+Locked sign, owned by @1@n=Abgeschlossenes Schild, gehört @1@n
+Skims through all currently-loaded sign-bearing mapblocks, clears away any entities within each sign's node space, and regenerates their text entities, if any.=Iteriert durch alle derzeit geladenen Kartenblöcke, die Schilder enthalten, löscht alle Entities innerhalb des Node-Raums eines jeden Schildes und erzeugt ihre Text-Entities, falls vorhanden, neu.
+There are no signs in the currently-loaded terrain.=Im derzeit geladenen Gelände befinden sich keine Schilder.
+Found a total of @1 sign nodes across @2 blocks.=Insgesamt wurden @1 Schild-Nodes über @2 Kartenblöcke gefunden.
+Regenerating sign entities ...=Schild-Entities werden neu erzeugt ...
+Finished.=Fertig.
+Write=Schreiben
+Unicode font=Unicode-Schrift
+Wide font=Weite Schrift
+Wooden Wall Sign=Holzwandschild
+Steel Wall Sign=Stahlwandschild

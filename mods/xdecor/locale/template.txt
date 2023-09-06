@@ -1,155 +1,223 @@
 # textdomain: xdecor
-
-
-### chess.lua ###
-
-Black Bishop=
-Black King=
-Black Knight=
-Black Pawn=
-Black Queen=
-Black Rook=
+Weak Computer=
+Weak Computer 1=
+Weak Computer 2=
 Chess=
+Chess Debug=
+check=
+checkmate=
+resigned=
+winner=
+loser=
+draw=
+You have checkmated @1. You win!=
+You were checkmated by @1. You lose!=
+The game ended up in a stalemate! It's a draw!=
+The game ended up in a dead position! It's a draw!=
+No piece was captured and no pawn was moved for 75 consecutive moves of each player. It's a draw!=
+You have drawn the game by invoking the 50-move rule.=
+@1 has drawn the game by invoking the 50-move rule.=
+You have failed to make a game-drawing move. The game continues.=
+@1 made a draw claim using the 50-move rule but it was false. The game continues.=
+The exact same position has occured 5 times. It's a draw!=
+You have drawn the game by invoking the threefold repetition rule.=
+@1 has drawn the game by invoking the threefold repetition rule.=
+@1 made a draw claim using the threefold repetition rule but it was false. The game continues.=
 Chess Board=
-Dumb AI=
-Multiplayer=
-New game=
+Someone else plays white pieces!=
+It's not your turn!=
+Someone else plays black pieces!=
+Black cannot move first!=
+@1 s=
+@1 min @2 s=
+You can't reset the chessboard, a game has been started. Try again in @1.=
+Resigning is not possible yet.=
+You have resigned.=
+@1 has resigned. You win!=
+You can't resign, you're not playing in this game.=
+You can't claim a draw, it's not your turn!=
+You're only a spectator in this game of Chess.=
+This isn't the time for promotion.=
+It's not your turn! This promotion is meant for the other player.=
+You can't dig the chessboard, a game has been started. Reset it first or dig it again in @1.=
+You can't dig the chessboard, a game has been started. Try it again in @1.=
+Play a game of Chess against another player or the computer=
+White Pawn=
+Black Pawn=
+White Rook=
+Black Rook=
+White Knight=
+Black Knight=
+White Bishop=
+Black Bishop=
+White Queen=
+Black Queen=
+White King=
+Black King=
+Select a game mode=
 Select a mode:=
 Singleplayer=
-Someone else plays black pieces!=
-Someone else plays white pieces!=
-White Bishop=
-White King=
-White Knight=
-White Pawn=
-White Queen=
-White Rook=
-
-You can't dig the chessboard, a game has been started. Reset it first if you're a current player, or dig it again in @1=
-
-You can't reset the chessboard, a game has been started. If you aren't a current player, try again in @1=
-
-check=
-
-### cooking.lua ###
-
+Multiplayer=
+Bot vs Bot=
+PROMOTION@nFOR BLACK!=
+Promote pawn to:=
+PROMOTION@nFOR WHITE!=
+DRAW CLAIM@nBY WHITE!=
+DRAW CLAIM@nBY BLACK!=
+The player has invoked the 50-move rule for the next move. The next move might draw the game.=
+The player has invoked the threefold-repetition rule for the next move. The next move might draw the game.=
+New game=
+Resign=
+Select a color:=
+White=
+Black=
+Invoke the 50-move rule for your next move=
+Invoke the 50-move rule and draw the game=
+Invoke the threefold repetition rule and draw the game=
+Invoke the threefold repetition rule for your next move=
+Light a fire below to heat it up=
+Use a bowl to eat the soup=
+Drop foods inside to make a soup=
+Cauldron (empty)=
+Cauldron (cold water)=
+Cauldron (cold river water)=
+Cauldron (cold soup)=
+Cauldron (boiling water)=
+Cauldron (boiling river water)=
+Cauldron (boiling soup)=
+No room in your inventory to add a bucket of water.=
+No room in your inventory to add a bowl of soup.=
+Cauldron=
+For storing water and cooking soup=
+Cauldron with Water (cold)=
+Cauldron with River Water (cold)=
+Cauldron with Soup (cold)=
+Cauldron with Water (boiling)=
+Cauldron with River Water (boiling)=
+Cauldron with Soup (boiling)=
 Bowl=
 Bowl of soup=
-Cauldron=
-Cauldron (active)=
-Cauldron (active) - Drop foods inside to make a soup=
-Cauldron (active) - Use a bowl to eat the soup=
-Cauldron (empty)=
-Cauldron (idle)=
-No room in your inventory to add a bowl of soup.=
-No room in your inventory to add a bucket of water.=
-
-### enchanting.lua ###
-
-Axe=
-Bronze=
-Diamond=
-Durability=
 Efficiency=
-Enchanted @1 @2 @3=
-Enchantment Table=
-Mese=
-Pickaxe=
+Durability=
 Sharpness=
-Shovel=
+Enchantment Table=
+Enchant your tools with mese crystals=
+Enchanted @1 @2@n@3=
+Enchanted @1 @2=
 Steel=
+Bronze=
+Mese=
+Diamond=
+Axe=
+Pickaxe=
+Shovel=
 Sword=
-Your tool digs faster=
-Your tool last longer=
 Your weapon inflicts more damages=
-
-### hive.lua ###
-
+Your tool last longer=
+Your tool digs faster=
 Artificial Hive=
-Bees are busy making honey…=
+Bees live here and produce honey=
 Honey=
-
-### itemframe.lua ###
-
+Made by bees=
+The bees are busy making honey.=
+The bees are looking for flowers.=
+The bees want to pollinate more flowers.=
+The bees are idle.=
+The bees are resting.=
 @1 (owned by @2)=
 Item Frame=
-
-### mailbox.lua ###
-
+For presenting a single item=
 @1's Mailbox=
-Last donators=
-Mailbox=
-Send your goods to@n@1=
 The mailbox is full.=
-
-### mechanisms.lua ###
-
-Lever=
-Stone Pressure Plate=
+Mailbox=
+Lets other players give you things=
+× @1=
+Last donators=
+Send your goods to@n@1=
+Opens doors when stepped on=
 Wooden Pressure Plate=
-
-### nodes.lua ###
-
+Stone Pressure Plate=
+Lever=
+Opens doors when pulled=
 Bamboo Frame=
-Baricade=
-Barrel=
-Cactus Brick=
-Candle=
 Chainlink=
+Rusty Iron Bars=
+Wood Frame=
+Barricade=
+Barrel=
+Wooden Cabinet=
+24 inventory slots=
+Half Wooden Cabinet=
+8 inventory slots=
+Plain Shelf=
+Multi Shelf=
+Candle=
 Chair=
-Coal Stone Tile=
 Cobweb=
+Red Curtain=
 Cushion=
 Cushion Block=
-Desert Stone Tile=
-Empty Shelf=
-Ender Chest=
-Garden Stone Path=
-Half Wooden Cabinet=
-Hardened Clay=
-Iron Light Box=
-Ivy=
 Japanese Door=
+Prison Door=
+Rusty Prison Door=
+Screen Door=
+Paper Door=
+Woodglass Door=
+Ender Chest=
+Interdimensional inventory=
+Ivy=
+Weathercock=
 Lantern=
-Moon Brick=
-Multi Shelf=
-Packed Ice=
-Painting=
+Hanging Lantern=
+Steel Lattice Light Box=
+Wooden Cross Light Box=
+Wooden Rhombus Light Box=
+Potted White Dandelion=
+Potted Yellow Dandelion=
 Potted Geranium=
 Potted Rose=
 Potted Tulip=
 Potted Viola=
-Potted White Dandelion=
-Potted Yellow Dandelion=
-Prison Door=
-Red Curtain=
+Painting=
+Garden Stone Path=
+Cactus Brick=
+Coal Stone Tile=
+Polished Desert Stone Block=
+Hardened Clay=
+Moon Brick=
 Runestone=
-Rusty Iron Bars=
-Rusty Prison Door=
-Screen Door=
-Slide Door=
-Stone Tile=
+Polished Stone Block=
+Packed Ice=
+Wooden Tile=
 Table=
 Tatami=
-Television=
 Trampoline=
-Wood Frame=
+Television=
 Wood Framed Glass=
-Wooden Cabinet=
-Wooden Light Box=
-Wooden Tile=
-Woodglass Door=
-
-### rope.lua ###
-
+Radio=
+Speaker=
+@1 Stair=
+Inner @1 Stair=
+Outer @1 Stair=
+@1 Slab=
 Rope=
-
-### workbench.lua ###
-
-Back=
-Crafting=
-Cut=
-Hammer=
-Repair=
-Storage=
+Nanoslab=
+Micropanel=
+Microslab=
+Thin Stair=
+Cube=
+Panel=
+Slab=
+Double Panel=
+Half-Stair=
+Stair=
 Work Bench=
+For cutting blocks, repairing tools with a hammer, crafting and storing items=
+@1 @2=
+Hammer=
+Repairs tools at the work bench=
+Cut=
+Repair=
+Crafting=
+Storage=
+Back=

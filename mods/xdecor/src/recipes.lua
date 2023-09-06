@@ -90,8 +90,7 @@ minetest.register_craft({
 minetest.register_craft({
 	output = "xdecor:desertstone_tile",
 	recipe = {
-		{"default:desert_cobble", "default:desert_cobble"},
-		{"default:desert_cobble", "default:desert_cobble"}
+		{"default:desert_stone_block"},
 	}
 })
 
@@ -168,8 +167,9 @@ minetest.register_craft({
 minetest.register_craft({
 	output = "xdecor:packed_ice",
 	recipe = {
-		{"default:ice", "default:ice"},
-		{"default:ice", "default:ice"}
+		{"", "default:ice", ""},
+		{"default:ice", "", "default:ice"},
+		{"", "default:ice", ""},
 	}
 })
 
@@ -205,19 +205,18 @@ minetest.register_craft({
 })
 
 minetest.register_craft({
-	output = "xdecor:stone_tile 2",
+	output = "xdecor:stone_tile_x",
 	recipe = {
-		{"default:cobble", "default:cobble"},
-		{"default:cobble", "default:cobble"}
+		{"default:stone_block"},
 	}
 })
 
 minetest.register_craft({
 	output = "xdecor:stone_rune 4",
 	recipe = {
-		{"default:stone", "default:stone", "default:stone"},
-		{"default:stone", "", "default:stone"},
-		{"default:stone", "default:stone", "default:stone"}
+		{"default:stone_block", "default:stone_block", "default:stone_block"},
+		{"default:stone_block", "", "default:stone_block"},
+		{"default:stone_block", "default:stone_block", "default:stone_block"}
 	}
 })
 
@@ -274,7 +273,7 @@ minetest.register_craft({
 })
 
 minetest.register_craft({
-	output = "xdecor:wood_tile 2",
+	output = "xdecor:wood_tile_x 2",
 	recipe = {
 		{"", "group:wood", ""},
 		{"group:wood", "", "group:wood"},
@@ -293,7 +292,112 @@ minetest.register_craft({
 
 minetest.register_craft({
 	output = "xdecor:wooden2_lightbox",
-	type = "shapeless",
-	recipe = {"xdecor:wooden_lightbox"},
+	recipe = {
+		{"group:stick", "group:stick", "group:stick"},
+		{"default:torch", "default:glass", "default:torch"},
+		{"group:stick", "group:stick", "group:stick"}
+	},
+})
+
+
+minetest.register_craft({
+	type = "fuel",
+	recipe = "xdecor:empty_shelf",
+	burntime = 30,
+})
+minetest.register_craft({
+	type = "fuel",
+	recipe = "xdecor:multishelf",
+	burntime = 30,
+})
+minetest.register_craft({
+	type = "fuel",
+	recipe = "xdecor:cabinet",
+	burntime = 30,
+})
+minetest.register_craft({
+	type = "fuel",
+	recipe = "xdecor:barrel",
+	burntime = 30,
+})
+minetest.register_craft({
+	type = "fuel",
+	recipe = "xdecor:cabinet_half",
+	burntime = 15,
+})
+minetest.register_craft({
+	type = "fuel",
+	recipe = "xdecor:workbench",
+	burntime = 15,
+})
+minetest.register_craft({
+	type = "fuel",
+	recipe = "xdecor:table",
+	burntime = 12,
+})
+minetest.register_craft({
+	type = "fuel",
+	recipe = "doors:woodglass_door",
+	burntime = 13,
+})
+minetest.register_craft({
+	type = "fuel",
+	recipe = "doors:screen_door",
+	burntime = 10,
+})
+minetest.register_craft({
+	type = "fuel",
+	recipe = "doors:slide_door",
+	burntime = 8,
+})
+minetest.register_craft({
+	type = "fuel",
+	recipe = "xpanes:wood_frame_flat",
+	burntime = 5,
+})
+minetest.register_craft({
+	type = "fuel",
+	recipe = "xpanes:bamboo_frame_flat",
+	burntime = 3,
+})
+minetest.register_craft({
+	type = "fuel",
+	recipe = "doors:japanese_door",
+	burntime = 8,
+})
+minetest.register_craft({
+	type = "fuel",
+	recipe = "xdecor:chair",
+	burntime = 6,
+})
+minetest.register_craft({
+	type = "fuel",
+	recipe = "xdecor:baricade",
+	burntime = 6,
+})
+minetest.register_craft({
+	type = "fuel",
+	recipe = "xdecor:wood_tile_x",
+	burntime = 10,
+})
+minetest.register_craft({
+	type = "fuel",
+	recipe = "realchess:chessboard",
+	burntime = 4,
+})
+minetest.register_craft({
+	type = "fuel",
+	recipe = "xdecor:painting_1",
+	burntime = 3,
+})
+minetest.register_craft({
+	type = "fuel",
+	recipe = "xdecor:tatami",
+	burntime = 1,
+})
+minetest.register_craft({
+	type = "fuel",
+	recipe = "xdecor:ivy",
+	burntime = 1,
 })
 

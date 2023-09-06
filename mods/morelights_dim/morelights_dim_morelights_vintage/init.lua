@@ -3,6 +3,8 @@
 -- SPDX-License-Identifier: CC0-1.0 OR MIT
 --
 morelights_dim.register_texture_for_dimming("morelights_vintage_block.png");
+morelights_dim.register_texture_for_dimming("morelights_vintage_block_bg.png");
+morelights_dim.register_texture_for_dimming("morelights_vintage_block_glass.png");
 morelights_dim.register_texture_for_dimming(
         "morelights_vintage_lantern_foreground.png");
 morelights_dim.register_texture_for_dimming("morelights_vintage_hangingbulb.png");

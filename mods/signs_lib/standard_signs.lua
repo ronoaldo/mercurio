@@ -1,8 +1,10 @@
 -- Definitions for standard minetest_game wooden and steel wall signs
 
+local S = signs_lib.S
+
 if minetest.get_modpath("default") then
 	signs_lib.register_sign("default:sign_wall_wood", {
-		description = "Wooden wall sign",
+		description = S("Wooden Wall Sign"),
 		inventory_image = "signs_lib_sign_wall_wooden_inv.png",
 		tiles = {
 			"signs_lib_sign_wall_wooden.png",
@@ -20,7 +22,7 @@ if minetest.get_modpath("default") then
 	})
 
 	signs_lib.register_sign("default:sign_wall_steel", {
-		description = "Steel wall sign",
+		description = S("Steel Wall Sign"),
 		inventory_image = "signs_lib_sign_wall_steel_inv.png",
 		tiles = {
 			"signs_lib_sign_wall_steel.png",

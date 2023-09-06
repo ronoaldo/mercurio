@@ -58,3 +58,11 @@ function xdecor.stairs_valid_def(def)
 		def.description ~= "" and
 		def.light_source == 0
 end
+
+function xdecor.get_inventory_drops(pos, listnames)
+	local drops = {}
+	for l=1, #listnames do
+		default.get_inventory_drops(pos, listnames[l], drops)
+	end
+	return drops
+end

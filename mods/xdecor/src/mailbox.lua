@@ -3,6 +3,9 @@ screwdriver = screwdriver or {}
 local S = minetest.get_translator("xdecor")
 local FS = function(...) return minetest.formspec_escape(S(...)) end
 
+-- Max. length of the list of givers in mailbox formspec
+local GIVER_LIST_LENGTH = 7
+
 local function get_img(img)
 	if not img then return end
 	local img_name = img:match("(.*)%.png")
@@ -47,7 +50,7 @@ function mailbox:formspec(pos, owner, is_owner)
 	local giver, img = "", ""
 
 	if is_owner then
-		for i = 1, 7 do
+		for i = 1, GIVER_LIST_LENGTH do
 			local giving = meta:get_string("giver" .. i)
 			if giving ~= "" then
 				local stack = meta:get_string("stack" .. i)
@@ -55,8 +58,11 @@ function mailbox:formspec(pos, owner, is_owner)
 				local stack_name = stack:match("[%w_:]+")
 				local stack_count = stack:match("%s(%d+)") or 1
 
+				-- List of donors. A line looks like this:
+				--    <donor name> <item icon> × <item count>
 				giver = giver .. "#FFFF00," .. giver_name .. "," .. i ..
-					",#FFFFFF,x " .. stack_count .. ","
+					-- Times a certain item count; used for the mailbox donor list
+					",#FFFFFF," .. FS("× @1", stack_count) .. ","
 
 				img = img .. i .. "=" ..
 					img_col(stack_name) .. "^\\[resize:16x16,"
@@ -66,7 +72,7 @@ function mailbox:formspec(pos, owner, is_owner)
 		return "size[9.5,9]"
 			.."label[0,0;"..FS("Mailbox").."]"
 			.."label[6,0;"..FS("Last donators").."]"
-			..[[ box[6,0.72;3.3,3.5;#555555]
+			..[[ box[6,0.72;3.3,3.9;#555555]
 			listring[current_player;main]
 			list[current_player;main;0.75,5.25;8,4;]
 			tableoptions[background=#00000000;highlight=#00000000;border=false] ]] ..
@@ -74,7 +80,7 @@ function mailbox:formspec(pos, owner, is_owner)
 			"table[6,0.75;3.3,4;givers;" .. giver .. "]" ..
 			"list[nodemeta:" .. spos .. ";mailbox;0,0.75;6,4;]" ..
 			"listring[nodemeta:" .. spos .. ";mailbox]" ..
-			xbg .. default.get_hotbar_bg(0.75, 5.25)
+			xdecor.xbg .. default.get_hotbar_bg(0.75, 5.25)
 	end
 
 	return  "size[8,5]" ..
@@ -83,7 +89,8 @@ function mailbox:formspec(pos, owner, is_owner)
 		(minetest.colorize and
 			minetest.colorize("#FFFF00", owner) or owner)) .. "]" ..
 		"list[nodemeta:" .. spos .. ";drop;3.5,0;1,1;]" ..
-		xbg .. default.get_hotbar_bg(0, 1.25)
+		"listring[]" ..
+		xdecor.xbg .. default.get_hotbar_bg(0, 1.25)
 end
 
 function mailbox.dig(pos, player)
@@ -93,6 +100,10 @@ function mailbox.dig(pos, player)
 	local inv = meta:get_inventory()
 
 	return inv:is_empty("mailbox") and player_name == owner
+end
+
+function mailbox.blast(pos)
+	return
 end
 
 function mailbox.after_place_node(pos, placer)
@@ -140,7 +151,7 @@ function mailbox.on_put(pos, listname, _, stack, player)
 		inv:set_list("drop", {})
 		inv:add_item("mailbox", stack)
 
-		for i = 7, 2, -1 do
+		for i = GIVER_LIST_LENGTH, 2, -1 do
 			meta:set_string("giver" .. i, meta:get_string("giver" .. (i - 1)))
 			meta:set_string("stack" .. i, meta:get_string("stack" .. (i - 1)))
 		end
@@ -151,6 +162,9 @@ function mailbox.on_put(pos, listname, _, stack, player)
 end
 
 function mailbox.allow_take(pos, listname, index, stack, player)
+	if listname == "drop" then
+		return 0
+	end
 	local meta = minetest.get_meta(pos)
 
 	if player:get_player_name() ~= meta:get_string("owner") then
@@ -166,12 +180,16 @@ end
 
 xdecor.register("mailbox", {
 	description = S("Mailbox"),
+	_tt_help = S("Lets other players give you things"),
 	tiles = {"xdecor_mailbox_top.png", "xdecor_mailbox_bottom.png",
 		 "xdecor_mailbox_side.png", "xdecor_mailbox_side.png",
 		 "xdecor_mailbox.png", "xdecor_mailbox.png"},
 	groups = {cracky = 3, oddly_breakable_by_hand = 1},
+	is_ground_content = false,
+	sounds = default.node_sound_metal_defaults(),
 	on_rotate = screwdriver.rotate_simple,
 	can_dig = mailbox.dig,
+	on_blast = mailbox.blast,
 	on_rightclick = mailbox.rightclick,
 	allow_metadata_inventory_take = mailbox.allow_take,
 	allow_metadata_inventory_move = mailbox.allow_move,

@@ -1,8 +1,4 @@
 # textdomain: itemframes
-
-
-### init.lua ###
-
 Item frame=Ausstellrahmen
 Item frame (owned by @1)=Ausstellrahmen (gehört @1)
 Pedestal=Podest
