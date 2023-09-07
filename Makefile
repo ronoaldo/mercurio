@@ -21,7 +21,7 @@ volumes: .minetest/world .minetest/logs
 
 submodules:
 	git submodule init
-	git submodule update
+	git submodule update --init --recursive
 
 rm-submodule:
 	@if [ x"" = x"$(M)" ]; then \
