@@ -32,3 +32,23 @@ local function auto_grant_privs(player, last_login)
 end
 
 minetest.register_on_joinplayer(auto_grant_privs)
+
+minetest.register_on_mods_loaded(function()
+    log_action("Saving registered names")
+
+    local content = ""
+
+    for name, def in pairs(minetest.registered_nodes) do
+        content = content .. "node=" .. name .. "\n"
+    end
+
+    for name, def in pairs(minetest.registered_items) do
+        content = content .. "item=" .. name .. "\n"
+    end
+
+    local wp = minetest.get_worldpath()
+    local filename = wp .. "/mercurio_registered_names.txt"
+    minetest.safe_file_write(filename, content)
+
+    log_action("Registered names saved to " .. filename)
+end)
