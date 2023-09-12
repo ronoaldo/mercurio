@@ -34,6 +34,7 @@ end
 minetest.register_on_joinplayer(auto_grant_privs)
 
 minetest.register_on_mods_loaded(function()
+    -- Create a log of registered nodes and item names
     log_action("Saving registered names")
 
     local content = ""
@@ -51,4 +52,15 @@ minetest.register_on_mods_loaded(function()
     minetest.safe_file_write(filename, content)
 
     log_action("Registered names saved to " .. filename)
+
+    -- Auto-shutdown hook - for testing basic server startup/shutdown
+    local auto_shutdown = minetest.settings:get("mercurio_auto_shutdown") or "false"
+    log_action("mercurio_auto_shutdown => " .. auto_shutdown)
+    if auto_shutdown == "true" then
+        log_action("Auto shutdown is enabled. Turning server off after 15s.")
+        minetest.after(15, function()
+            log_action("Requesting shutdown...")
+            minetest.request_shutdown("", false, 1)
+        end)
+    end
 end)

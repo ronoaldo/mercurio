@@ -63,7 +63,6 @@ while true ; do
         rm -vf core          # Remove any previous core dumps
         /usr/bin/env -i HOME=/var/lib/minetest \
             minetestserver \
-            --quiet \
             --logfile ${MINETEST_DEBUG_FILE} \
             --world /var/lib/mercurio \
             --config /etc/minetest/minetest.conf
