@@ -8,6 +8,10 @@ services:
       driver: "json-file"
     volumes:
       - /tmp/minetest/db:/var/lib/postgresql/data
+    deploy:
+      resources:
+        limits:
+          memory: 3G
   game:
     restart: "no"
     logging:
@@ -18,3 +22,7 @@ services:
       - "30000:30000/tcp"
     volumes:
       - /tmp/minetest/world:/var/lib/mercurio
+    deploy:
+      resources:
+        limits:
+          memory: 3G

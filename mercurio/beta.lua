@@ -37,21 +37,25 @@ minetest.register_on_mods_loaded(function()
     -- Create a log of registered nodes and item names
     log_action("Saving registered names")
 
-    local content = ""
+    local buff = {}
+    local count = 0
 
     for name, def in pairs(minetest.registered_nodes) do
-        content = content .. "node=" .. name .. "\n"
+        table.insert(buff, "node=" .. name)
+        count = count+1
     end
 
     for name, def in pairs(minetest.registered_items) do
-        content = content .. "item=" .. name .. "\n"
+        table.insert(buff, "item=" .. name)
+        count = count+1
     end
 
     local wp = minetest.get_worldpath()
     local filename = wp .. "/mercurio_registered_names.txt"
-    minetest.safe_file_write(filename, content)
+    table.sort(buff)
+    minetest.safe_file_write(filename, table.concat(buff, "\n"))
 
-    log_action("Registered names saved to " .. filename)
+    log_action(tostring(count) .. " registered names saved to " .. filename)
 
     -- Auto-shutdown hook - for testing basic server startup/shutdown
     local auto_shutdown = minetest.settings:get("mercurio_auto_shutdown") or "false"

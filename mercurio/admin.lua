@@ -12,17 +12,20 @@ minetest.register_chatcommand("server_metadata", {
         local meta = minetest[param]
 
         local txt = "minetest."..param.." values (type= ".. type(meta) .."):\n\n"
+
+        local buff = {}
         if meta then
             if type(meta) == "table" then
                 for k, v in pairs(meta) do
-                    txt = txt .. "".. k ..": ".. to_json(v) .. " \n"
+                    table.insert(buff, k ..": ".. to_json(v))
                 end
             else
-                txt = txt .. to_json(meta)
+                table.insert(buff, to_json(meta))
             end
         else
             txt = "Not found: " .. param
         end
+        txt = txt .. table.concat(buff, "\n")
 
         f = f .. minetest.formspec_escape(txt) .. "]"
         minetest.show_formspec(name, "server_metadata", f)
