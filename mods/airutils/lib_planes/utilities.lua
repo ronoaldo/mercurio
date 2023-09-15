@@ -195,7 +195,8 @@ function airutils.attach_pax(self, player, is_copilot)
     end
 end
 
-function airutils.dettach_pax(self, player)
+function airutils.dettach_pax(self, player, is_flying)
+    is_flying = is_flying or false
     local name = player:get_player_name() --self._passenger
 
     -- passenger clicked the object => driver gets off the vehicle
@@ -215,7 +216,12 @@ function airutils.dettach_pax(self, player)
 
     -- detach the player
     if player then
+        local pos = player:get_pos()
         player:set_detach()
+        if is_flying then
+            pos.y = pos.y - self.initial_properties.collisionbox[2] - 2
+            player:set_pos(pos)
+        end
 
         if airutils.is_minetest then
             player_api.player_attached[name] = nil
@@ -939,6 +945,12 @@ function airutils.seats_destroy(self)
 end
 
 function airutils.flap_on(self)
+    if not self._wing_angle_extra_flaps then
+        self._flap = false
+        self._wing_configuration = self._wing_angle_of_attack
+        return
+    end
+
     if self._wing_angle_extra_flaps == nil then self._wing_angle_extra_flaps = 0 end --if not, just keep the same as normal angle of attack
     local flap_limit = 15
     if self._flap_limit then flap_limit = self._flap_limit end

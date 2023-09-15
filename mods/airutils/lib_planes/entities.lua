@@ -43,7 +43,7 @@ function airutils.on_activate(self, staticdata, dtime_s)
         self.driver_name = data.stored_driver_name
         self._last_accell = data.stored_last_accell
         self._inv_id = data.stored_inv_id
-        self._flap = data.stored_flap
+        if self._wing_angle_extra_flaps then self._flap = data.stored_flap end
         self._passengers = data.stored_passengers or {}
         self._adf_destiny = data.stored_adf_destiny or vector.new()
         self._skin = data.stored_skin
@@ -262,6 +262,11 @@ function airutils.logic(self)
         self._custom_step_additional_function(self)
     end
 
+    --fix old planes
+    if not self._flap then self._flap = false end
+    if not self._wing_configuration then self._wing_configuration = self._wing_angle_of_attack end
+
+
     if self._wing_configuration == self._wing_angle_of_attack and self._flap then
         airutils.flap_on(self)
     end
@@ -308,10 +313,7 @@ function airutils.logic(self)
     end
 
     -- pitch
-    local newpitch = math.rad(0)
-    if airutils.get_plane_pitch then
-        newpitch = airutils.get_plane_pitch(velocity, longit_speed, self._min_speed, self._angle_of_attack)
-    end
+    local newpitch = airutils.get_plane_pitch(velocity, longit_speed, self._min_speed, self._angle_of_attack)
 
     --for airplanes with cannard or pendulum wing
     local actuator_angle = self._elevator_angle
@@ -331,13 +333,11 @@ function airutils.logic(self)
         if longit_speed > self._min_speed then
             local percentage = math.abs(((longit_speed * 100)/(self._min_speed + 5))/100)
             if percentage > 1.5 then percentage = 1.5 end
+
             self._angle_of_attack = self._wing_angle_of_attack - ((actuator_angle / self._elevator_response_attenuation)*percentage)
 
-            --set the plane on level
-            if airutils.adjust_attack_angle_by_speed then
-                --airutils.adjust_attack_angle_by_speed(angle_of_attack, min_angle, max_angle, limit, longit_speed, ideal_step, dtime)
-                self._angle_of_attack = airutils.adjust_attack_angle_by_speed(self._angle_of_attack, self._min_attack_angle, self._max_attack_angle, 40, longit_speed, airutils.ideal_step, self.dtime)
-            end
+            --airutils.adjust_attack_angle_by_speed(angle_of_attack, min_angle, max_angle, limit, longit_speed, ideal_step, dtime)
+            self._angle_of_attack = airutils.adjust_attack_angle_by_speed(self._angle_of_attack, self._min_attack_angle, self._max_attack_angle, 40, longit_speed, airutils.ideal_step, self.dtime)
 
             if self._angle_of_attack < self._min_attack_angle then
                 self._angle_of_attack = self._min_attack_angle
@@ -488,6 +488,7 @@ function airutils.logic(self)
         airutils.set_acceleration(self.object, new_accel)
     else
         if stop == true then
+            self._last_accell = self.object:get_acceleration()
             self.object:set_acceleration({x=0,y=0,z=0})
             self.object:set_velocity({x=0,y=0,z=0})
         end

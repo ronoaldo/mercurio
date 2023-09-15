@@ -213,7 +213,7 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
         local ent = plane_obj:get_luaentity()
         if ent then
 		    if fields.yes then
-                airutils.dettach_pax(ent, player)
+                airutils.dettach_pax(ent, player, true)
 		    end
         end
         minetest.close_formspec(name, "lib_planes:go_out_confirmation_form")
