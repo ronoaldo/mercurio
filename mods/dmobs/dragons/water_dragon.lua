@@ -96,7 +96,7 @@ mobs:register_mob("dmobs:waterdragon_2", {
 	dogshoot_count_max = 5,
 	shoot_interval = 3,
 	arrow = "dmobs:ice",
-	shoot_offset = 0,
+	shoot_offset = -1,
 	pathfinding = false,
 	reach = 5,
 	damage = 2,

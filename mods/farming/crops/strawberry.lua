@@ -1,11 +1,13 @@
 
-local S = farming.intllib
+local S = farming.translate
 
 -- Strawberry (can also be planted as seed)
 minetest.register_craftitem(":ethereal:strawberry", {
 	description = S("Strawberry"),
 	inventory_image = "ethereal_strawberry.png",
-	groups = {seed = 2, food_strawberry = 1, food_berry = 1, flammable = 2},
+	groups = {
+		compostability = 48, seed = 2, food_strawberry = 1, food_berry = 1, flammable = 2
+	},
 	on_place = function(itemstack, placer, pointed_thing)
 		return farming.place_seed(itemstack, placer, pointed_thing, "ethereal:strawberry_1")
 	end,
@@ -27,10 +29,10 @@ local def = {
 		fixed = {-0.5, -0.5, -0.5, 0.5, -5/16, 0.5}
 	},
 	groups = {
-		snappy = 3, flammable = 2, plant = 1, attached_node = 1,
+		handy = 1, snappy = 3, flammable = 2, plant = 1, attached_node = 1,
 		not_in_creative_inventory = 1, growing = 1
 	},
-	sounds = default.node_sound_leaves_defaults()
+	sounds = farming.sounds.node_sound_leaves_defaults()
 }
 
 --stage 1
@@ -96,7 +98,7 @@ farming.registered_plants["ethereal:strawberry"] = {
 -- mapgen
 minetest.register_decoration({
 	deco_type = "simple",
-	place_on = {"default:dirt_with_grass"},
+	place_on = {"default:dirt_with_grass", "mcl_core:dirt_with_grass"},
 	sidelen = 16,
 	noise_params = {
 		offset = 0,

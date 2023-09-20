@@ -17,11 +17,6 @@
 
 --]]
 
--- integration test
-if minetest.settings:get_bool("travelnet.enable_travelnet_integration_test") then
-	dofile(minetest.get_modpath(minetest.get_current_modname()) .. "/integration_test.lua")
-end
-
 -- Required to save the travelnet data properly in all cases
 if not minetest.safe_file_write then
 	error("[Mod travelnet] Your Minetest version is no longer supported. (version < 0.4.17)")
@@ -29,7 +24,8 @@ end
 
 travelnet = {}
 
-travelnet.targets = {}
+travelnet.log = function(c, msg) minetest.log(c, "[travelnet] " .. msg) end
+travelnet.player_formspec_data = {}
 travelnet.path = minetest.get_modpath(minetest.get_current_modname())
 
 local function mod_dofile(filename)
@@ -47,9 +43,11 @@ mod_dofile("persistence")
 
 -- common functions
 mod_dofile("functions")
+mod_dofile("actions/main")
 
 -- formspec stuff
 mod_dofile("formspecs")
+mod_dofile("formspecs-legacy")
 
 -- travelnet / elevator update
 mod_dofile("update_formspec")
@@ -60,25 +58,21 @@ mod_dofile("add_target")
 -- receive fields handler
 mod_dofile("on_receive_fields")
 
+-- meta-formspec migration lbm
+if travelnet.travelnet_cleanup_lbm then
+	mod_dofile("migrate_formspecs_lbm")
+end
+
 -- invisible node to place inside top of travelnet box and elevator
 minetest.register_node("travelnet:hidden_top", {
-	drawtype = "nodebox",
+	drawtype = "airlike",
 	paramtype = "light",
 	sunlight_propagates = true,
+	walkable = false,
 	pointable = false,
 	diggable = false,
+	groups = {not_in_creative_inventory = 1},
 	drop = "",
-	groups = { not_in_creative_inventory=1 },
-	tiles = { "travelnet_blank.png" },
-	use_texture_alpha = "clip",
-	node_box = {
-		type = "fixed",
-		fixed = { -0.5, 0.45, -0.5, 0.5, 0.5, 0.5 },
-	},
-	collision_box = {
-		type = "fixed",
-		fixed = { -0.5, 0.45, -0.5, 0.5, 0.5, 0.5 },
-	},
 })
 
 
@@ -132,4 +126,9 @@ if travelnet.enable_abm then
 end
 
 -- upon server start, read the savefile
-travelnet.restore_data()
+travelnet.player_formspec_data = nil
+
+if minetest.get_modpath("mtt") and mtt.enabled then
+	mod_dofile("mtt")
+	mod_dofile("persistence.spec")
+end

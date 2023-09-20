@@ -3,18 +3,9 @@
 -----------
 
 local abs = math.abs
-local asin = math.asin
-local atan2 = math.atan2
-local cos = math.cos
-local deg = math.deg
-local sin = math.sin
-
-local function diff(a, b) -- Get difference between 2 angles
-	return atan2(sin(b - a), cos(b - a))
-end
 
 local vec_add, vec_dir, vec_dist, vec_len = vector.add, vector.direction, vector.distance, vector.length
-local dir2yaw, dir2rot = minetest.dir_to_yaw, vector.dir_to_rotation
+local dir2rot = vector.dir_to_rotation
 
 -- Entities --
 
@@ -29,13 +20,14 @@ minetest.register_entity("animalia:lasso_entity", {
 		self.object:set_armor_groups({immortal = 1})
 	end,
 	_scale = 1,
-	on_step = function(self, dtime)
+	on_step = function(self)
 		local pos, parent = self.object:get_pos(), (self.object:get_attach() or self._attached)
 		local pointed_ent = self._point_to and self._point_to:get_luaentity()
 		local point_to = self._point_to and self._point_to:get_pos()
 		if not pos or not parent or not point_to then self.object:remove() return end
 		if type(parent) == "string" then
 			parent = minetest.get_player_by_name(parent)
+			if not parent then self.object:remove() return end
 			local tgt_pos = parent:get_pos()
 			tgt_pos.y = tgt_pos.y + 1
 			point_to.y = point_to.y + pointed_ent.height * 0.5
@@ -125,10 +117,10 @@ local function add_lasso(self, origin)
 	if not ent then return end
 	-- Attachment point of entity
 	ent._attached = origin
-	if type(origin) == "string" then
-		local player = minetest.get_player_by_name(origin)
+	if type(origin) ~= "string" then
+		--local player = minetest.get_player_by_name(origin)
 		--object:set_attach(player)
-	else
+	--else
 		object:set_pos(origin)
 	end
 	self._lassod_to = origin
@@ -171,22 +163,24 @@ function animalia.update_lasso_effects(self)
 			using_lasso[lasso] = self
 			local name = lasso
 			lasso = minetest.get_player_by_name(lasso)
-			if lasso:get_wielded_item():get_name() ~= "animalia:lasso" then
-				using_lasso[name] = nil
-				self._lasso_ent:remove()
-				self._lasso_ent = nil
-				self._lassod_to = nil
-				self:forget("_lassod_to")
+			if lasso then
+				if lasso:get_wielded_item():get_name() ~= "animalia:lasso" then
+					using_lasso[name] = nil
+					self._lasso_ent:remove()
+					self._lasso_ent = nil
+					self._lassod_to = nil
+					self:forget("_lassod_to")
+					return
+				end
+				local lasso_pos = lasso:get_pos()
+				local dist = vec_dist(pos, lasso_pos)
+				local vel = self.object:get_velocity()
+				if not vel or dist < 8 and self.touching_ground then return end
+				if vec_len(vel) < 8 then
+					self.object:add_velocity(get_rope_velocity(pos, lasso_pos, dist))
+				end
 				return
 			end
-			local lasso_pos = lasso:get_pos()
-			local dist = vec_dist(pos, lasso_pos)
-			local vel = self.object:get_velocity()
-			if not vel or dist < 8 and self.touching_ground then return end
-			if vec_len(vel) < 8 then
-				self.object:add_velocity(get_rope_velocity(pos, lasso_pos, dist))
-			end
-			return
 		elseif type(lasso) == "table" then
 			local dist = vec_dist(pos, lasso)
 			local vel = self.object:get_velocity()

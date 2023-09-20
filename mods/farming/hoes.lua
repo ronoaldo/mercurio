@@ -1,5 +1,5 @@
 
-local S = farming.intllib
+local S = farming.translate
 local tr = minetest.get_modpath("toolranks")
 
 -- Hoe registration function

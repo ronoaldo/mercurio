@@ -45,14 +45,14 @@ local function chatcommand_handler(cmd_name, name, param)
 	if def.nodes_needed then
 		local count = def.nodes_needed(name, unpack(parsed))
 		safe_region(name, count, function()
-			local success, msg = def.func(name, unpack(parsed))
+			local _, msg = def.func(name, unpack(parsed))
 			if msg then
 				minetest.chat_send_player(name, msg)
 			end
 		end)
 	else
 		-- no "safe region" check
-		local success, msg = def.func(name, unpack(parsed))
+		local _, msg = def.func(name, unpack(parsed))
 		if msg then
 			minetest.chat_send_player(name, msg)
 		end
@@ -64,7 +64,7 @@ end
 -- def = {
 --     privs = {}, -- Privileges needed
 --     params = "", -- Human readable parameter list (optional)
---         -- setting params = "" will automatically provide a parse() if not given 
+--         -- setting params = "" will automatically provide a parse() if not given
 --     description = "", -- Description
 --     require_pos = 0, -- Number of positions required to be set (optional)
 --     parse = function(param)
@@ -226,6 +226,39 @@ local function check_filename(name)
 	return name:find("^[%w%s%^&'@{}%[%],%$=!%-#%(%)%%%.%+~_]+$") ~= nil
 end
 
+local function open_schematic(name, param)
+	-- find the file in the world path
+	local testpaths = {
+		minetest.get_worldpath() .. "/schems/" .. param,
+		minetest.get_worldpath() .. "/schems/" .. param .. ".we",
+		minetest.get_worldpath() .. "/schems/" .. param .. ".wem",
+	}
+	local file, err
+	for index, path in ipairs(testpaths) do
+		file, err = io.open(path, "rb")
+		if not err then
+			break
+		end
+	end
+	if err then
+		worldedit.player_notify(name, "Could not open file \"" .. param .. "\"")
+		return
+	end
+	local value = file:read("*a")
+	file:close()
+
+	local version = worldedit.read_header(value)
+	if version == nil or version == 0 then
+		worldedit.player_notify(name, "File is invalid!")
+		return
+	elseif version > worldedit.LATEST_SERIALIZATION_VERSION then
+		worldedit.player_notify(name, "Schematic was created with a newer version of WorldEdit.")
+		return
+	end
+
+	return value
+end
+
 
 worldedit.register_command("about", {
 	privs = {},
@@ -263,7 +296,6 @@ worldedit.register_command("help", {
 			return false, "You are not allowed to use any WorldEdit commands."
 		end
 		if param == "" then
-			local msg = ""
 			local cmds = {}
 			for cmd, def in pairs(worldedit.registered_commands) do
 				if minetest.check_player_privs(name, def.privs) then
@@ -455,7 +487,7 @@ worldedit.register_command("fixedpos", {
 		if found == nil then
 			return false
 		end
-		return true, flag, {x=tonumber(x), y=tonumber(y), z=tonumber(z)}
+		return true, flag, vector.new(tonumber(x), tonumber(y), tonumber(z))
 	end,
 	func = function(name, flag, pos)
 		if flag == "set1" then
@@ -490,7 +522,7 @@ minetest.register_on_punchnode(function(pos, node, puncher)
 			worldedit.player_notify(name, "position 2 set to " .. minetest.pos_to_string(pos))
 		elseif worldedit.set_pos[name] == "prob" then --setting Minetest schematic node probabilities
 			worldedit.prob_pos[name] = pos
-			minetest.show_formspec(puncher:get_player_name(), "prob_val_enter", "field[text;;]")
+			minetest.show_formspec(name, "prob_val_enter", "field[text;;]")
 		end
 	end
 end)
@@ -844,7 +876,7 @@ local check_pyramid = function(param)
 	end
 	return true, axis, tonumber(height), node
 end
-     
+
 worldedit.register_command("hollowpyramid", {
 	params = "x/y/z/? <height> <node>",
 	description = "Add hollow pyramid centered at WorldEdit position 1 along the given axis with height <height>, composed of <node>",
@@ -1014,7 +1046,7 @@ worldedit.register_command("stack2", {
 			return false, "invalid increments: " .. param
 		end
 
-		return true, tonumber(repetitions), {x=tonumber(x), y=tonumber(y), z=tonumber(z)}
+		return true, tonumber(repetitions), vector.new(tonumber(x), tonumber(y), tonumber(z))
 	end,
 	nodes_needed = function(name, repetitions, offset)
 		return check_region(name) * repetitions
@@ -1186,13 +1218,16 @@ worldedit.register_command("drain", {
 		-- TODO: make an API function for this
 		local count = 0
 		local pos1, pos2 = worldedit.sort_pos(worldedit.pos1[name], worldedit.pos2[name])
+
+		local get_node, remove_node = minetest.get_node, minetest.remove_node
 		for x = pos1.x, pos2.x do
 		for y = pos1.y, pos2.y do
 		for z = pos1.z, pos2.z do
-			local n = minetest.get_node({x=x, y=y, z=z}).name
+			local p = vector.new(x, y, z)
+			local n = get_node(p).name
 			local d = minetest.registered_nodes[n]
-			if d ~= nil and (d["drawtype"] == "liquid" or d["drawtype"] == "flowingliquid") then
-				minetest.remove_node({x=x, y=y, z=z})
+			if d ~= nil and (d.drawtype == "liquid" or d.drawtype == "flowingliquid") then
+				remove_node(p)
 				count = count + 1
 			end
 		end
@@ -1230,13 +1265,15 @@ local function clearcut(pos1, pos2)
 	local count = 0
 	local prev, any
 
+	local get_node, remove_node = minetest.get_node, minetest.remove_node
 	for x = pos1.x, pos2.x do
 	for z = pos1.z, pos2.z do
 		prev = false
 		any = false
 		-- first pass: remove floating nodes that would be left over
 		for y = pos1.y, pos2.y do
-			local n = minetest.get_node({x=x, y=y, z=z}).name
+			local pos = vector.new(x, y, z)
+			local n = get_node(pos).name
 			if plants[n] then
 				prev = true
 				any = true
@@ -1244,7 +1281,7 @@ local function clearcut(pos1, pos2)
 				local def = minetest.registered_nodes[n] or {}
 				local groups = def.groups or {}
 				if groups.attached_node or (def.buildable_to and groups.falling_node) then
-					minetest.remove_node({x=x, y=y, z=z})
+					remove_node(pos)
 					count = count + 1
 				else
 					prev = false
@@ -1255,9 +1292,10 @@ local function clearcut(pos1, pos2)
 		-- second pass: remove plants, top-to-bottom to avoid item drops
 		if any then
 			for y = pos2.y, pos1.y, -1 do
-				local n = minetest.get_node({x=x, y=y, z=z}).name
+				local pos = vector.new(x, y, z)
+				local n = get_node(pos).name
 				if plants[n] then
-					minetest.remove_node({x=x, y=y, z=z})
+					remove_node(pos)
 					count = count + 1
 				end
 			end
@@ -1344,7 +1382,7 @@ worldedit.register_command("restore", {
 })
 
 local function detect_misaligned_schematic(name, pos1, pos2)
-	pos1, pos2 = worldedit.sort_pos(pos1, pos2)
+	pos1 = worldedit.sort_pos(pos1, pos2)
 	-- Check that allocate/save can position the schematic correctly
 	-- The expected behaviour is that the (0,0,0) corner of the schematic stays
 	-- sat pos1, this only works when the minimum position is actually present
@@ -1415,28 +1453,15 @@ worldedit.register_command("allocate", {
 	func = function(name, param)
 		local pos = worldedit.pos1[name]
 
-		local filename = minetest.get_worldpath() .. "/schems/" .. param .. ".we"
-		local file, err = io.open(filename, "rb")
-		if err ~= nil then
-			worldedit.player_notify(name, "could not open file \"" .. filename .. "\"")
-			return
+		local value = open_schematic(name, param)
+		if not value then
+			return false
 		end
-		local value = file:read("*a")
-		file:close()
 
-		local version = worldedit.read_header(value)
-		if version == nil or version == 0 then
-			worldedit.player_notify(name, "File is invalid!")
-			return
-		elseif version > worldedit.LATEST_SERIALIZATION_VERSION then
-			worldedit.player_notify(name, "File was created with newer version of WorldEdit!")
-			return
-		end
 		local nodepos1, nodepos2, count = worldedit.allocate(pos, value)
-
 		if not nodepos1 then
 			worldedit.player_notify(name, "Schematic empty, nothing allocated")
-			return
+			return false
 		end
 
 		worldedit.pos1[name] = nodepos1
@@ -1464,46 +1489,16 @@ worldedit.register_command("load", {
 	func = function(name, param)
 		local pos = worldedit.pos1[name]
 
-		if param == "" then
-			worldedit.player_notify(name, "invalid usage: " .. param)
-			return
-		end
-		if not string.find(param, "^[%w \t.,+-_=!@#$%%^&*()%[%]{};'\"]+$") then
-			worldedit.player_notify(name, "invalid file name: " .. param)
-			return
-		end
-
-		--find the file in the world path
-		local testpaths = {
-			minetest.get_worldpath() .. "/schems/" .. param,
-			minetest.get_worldpath() .. "/schems/" .. param .. ".we",
-			minetest.get_worldpath() .. "/schems/" .. param .. ".wem",
-		}
-		local file, err
-		for index, path in ipairs(testpaths) do
-			file, err = io.open(path, "rb")
-			if not err then
-				break
-			end
-		end
-		if err then
-			worldedit.player_notify(name, "could not open file \"" .. param .. "\"")
-			return
-		end
-		local value = file:read("*a")
-		file:close()
-
-		local version = worldedit.read_header(value)
-		if version == nil or version == 0 then
-			worldedit.player_notify(name, "File is invalid!")
-			return
-		elseif version > worldedit.LATEST_SERIALIZATION_VERSION then
-			worldedit.player_notify(name, "File was created with newer version of WorldEdit!")
-			return
+		local value = open_schematic(name, param)
+		if not value then
+			return false
 		end
 
 		local count = worldedit.deserialize(pos, value)
-
+		if count == nil then
+			worldedit.player_notify(name, "Loading failed!")
+			return false
+		end
 		worldedit.player_notify(name, count .. " nodes loaded")
 	end,
 })
@@ -1644,11 +1639,18 @@ worldedit.register_command("mtschemprob", {
 })
 
 minetest.register_on_player_receive_fields(function(player, formname, fields)
-	if formname == "prob_val_enter" and not (fields.text == "" or fields.text == nil) then
+	if formname == "prob_val_enter" then
 		local name = player:get_player_name()
-		local prob_entry = {pos=worldedit.prob_pos[name], prob=tonumber(fields.text)}
-		local index = table.getn(worldedit.prob_list[name]) + 1
-		worldedit.prob_list[name][index] = prob_entry
+		local problist = worldedit.prob_list[name]
+		if problist == nil then
+			return
+		end
+		local e = {pos=worldedit.prob_pos[name], prob=tonumber(fields.text)}
+		if e.pos == nil or e.prob == nil or e.prob < 0 or e.prob > 256 then
+			worldedit.player_notify(name, "invalid node probability given, not saved")
+			return
+		end
+		problist[#problist+1] = e
 	end
 end)
 

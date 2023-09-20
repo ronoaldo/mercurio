@@ -1,12 +1,15 @@
 
-local S = farming.intllib
+local S = farming.translate
+local a = farming.recipe_items
 
 -- blueberries
 minetest.register_craftitem("farming:blueberries", {
 	description = S("Wild Blueberries"),
 	inventory_image = "farming_blueberries.png",
-	groups = {seed = 2, food_blueberries = 1, food_blueberry = 1,
-			food_berry = 1, flammable = 2},
+	groups = {
+		compostability = 48,seed = 2, food_blueberries = 1, food_blueberry = 1,
+		food_berry = 1, flammable = 2
+	},
 	on_place = function(itemstack, placer, pointed_thing)
 		return farming.place_seed(itemstack, placer, pointed_thing, "farming:blueberry_1")
 	end,
@@ -17,7 +20,8 @@ minetest.register_craftitem("farming:blueberries", {
 minetest.register_craftitem("farming:muffin_blueberry", {
 	description = S("Blueberry Muffin"),
 	inventory_image = "farming_blueberry_muffin.png",
-	on_use = minetest.item_eat(2)
+	on_use = minetest.item_eat(2),
+	groups = {compostability = 65}
 })
 
 minetest.register_craft({
@@ -31,21 +35,22 @@ minetest.register_craft({
 minetest.register_craftitem("farming:blueberry_pie", {
 	description = S("Blueberry Pie"),
 	inventory_image = "farming_blueberry_pie.png",
-	on_use = minetest.item_eat(6)
+	on_use = minetest.item_eat(6),
+	groups = {compostability = 75}
 })
 
 minetest.register_craft({
 	output = "farming:blueberry_pie",
 	recipe = {
 		{"group:food_flour", "group:food_sugar", "group:food_blueberries"},
-		{"group:food_baking_tray", "", ""}
+		{"", a.baking_tray, ""}
 	},
 	replacements = {{"group:food_baking_tray", "farming:baking_tray"}}
 })
 
 -- Blue Dye
 minetest.register_craft({
-	output = "dye:blue",
+	output = a.dye_blue,
 	recipe = {{"farming:blueberries"}}
 })
 
@@ -60,10 +65,10 @@ local def = {
 	drop = "",
 	selection_box = farming.select,
 	groups = {
-		snappy = 3, flammable = 2, plant = 1, attached_node = 1,
+		handy = 1, snappy = 3, flammable = 2, plant = 1, attached_node = 1,
 		not_in_creative_inventory = 1, growing = 1
 	},
-	sounds = default.node_sound_leaves_defaults()
+	sounds = farming.sounds.node_sound_leaves_defaults()
 }
 
 -- stage 1
@@ -102,7 +107,7 @@ farming.registered_plants["farming:blueberries"] = {
 -- mapgen
 minetest.register_decoration({
 	deco_type = "simple",
-	place_on = {"default:dirt_with_grass"},
+	place_on = {"default:dirt_with_grass", "mcl_core:dirt_with_grass"},
 	sidelen = 16,
 	noise_params = {
 		offset = 0,

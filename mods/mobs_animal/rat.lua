@@ -1,6 +1,5 @@
-
-local S = mobs.intllib_animal
-
+-- Translation support
+local S = minetest.get_translator("mobs_animal")
 
 -- Rat by KPavel and PilzAdam (B3D model by sirrobzeroone)
 

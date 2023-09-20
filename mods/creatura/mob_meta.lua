@@ -36,8 +36,8 @@ end
 local function get_sightline(pos1, pos2)
 	local dir = vec_dir(pos1, pos2)
 	local dist = vec_dist(pos1, pos2)
+	local pos
 	for i = 0, dist do
-		local pos
 		if dist > 0 then
 			pos = {
 				x = pos1.x + dir.x * (i / dist),
@@ -148,6 +148,7 @@ local function turn(self, tyaw, rate)
 	if not yaw then return end
 	local step = math.min(self.dtime * rate, abs(diff(yaw, tyaw)) % (pi2))
 	rot.y = interp_rad(yaw, tyaw, step)
+	if rot.y ~= rot.y then return end
 	self.object:set_rotation(rot)
 end
 
@@ -205,7 +206,7 @@ function mob:do_velocity()
 	local data = self._movement_data or {}
 	local vel = self.object:get_velocity()
 	local yaw = self.object:get_yaw()
-	if not yaw then return end
+	if not vel or not yaw then return end
 	local horz_vel = data.horz_vel --or (data.gravity >= 0 and 0)
 	local vert_vel = data.vert_vel --or (data.gravity >= 0 and 0)
 	vel.x = (horz_vel and (sin(yaw) * -horz_vel)) or vel.x
@@ -399,13 +400,10 @@ function mob:is_pos_safe(pos, ignore_liquid)
 	and (n_def.drawtype == "liquid"
 	or creatura.get_node_def(vec_raise(pos, -1)).drawtype == "liquid")) then return false end
 	local fall_safe = false
+	local fall_pos = {x = pos.x, y = floor(pos.y + 0.5), z = pos.z}
 	if self.max_fall ~= 0 then
-		for i = 1, self.max_fall or 3 do
-			local fall_pos = {
-				x = pos.x,
-				y = floor(pos.y + 0.5) - i,
-				z = pos.z
-			}
+		for _ = 1, self.max_fall or 3 do
+			fall_pos.y = fall_pos.y - 1
 			if creatura.get_node_def(fall_pos).walkable then
 				fall_safe = true
 				break
@@ -419,16 +417,51 @@ end
 
 -- Set mobs animation (if specified animation isn't already playing)
 
-function mob:animate(animation)
+function mob:animate(animation, transition)
 	if not animation
-	or not self.animations[animation] then return end
+	or not self.animations[animation] then
+		return
+	end
+
+	-- Handle Transition Data
+	local transition_data = self._anim_transition or {}
+	local parent_anim = transition_data.parent
+	local child_anim = transition_data.child
+	if child_anim
+	and animation == parent_anim
+	and transition == child_anim then
+		local timer = transition_data.timer
+		transition_data.timer = (timer > 0 and timer - self.dtime) or 0
+		if timer <= 0 then
+			animation = child_anim
+		end
+	else
+		transition_data = {}
+	end
+	self._anim_transition = transition_data
+
+	-- Set Animation
 	if not self._anim
-	or self._anim ~= animation then
+	or self._anim ~= animation
+	or (transition
+	and not transition_data.timer) then
 		local anim = self.animations[animation]
 		if anim[2] then anim = anim[random(#anim)] end
 		self.object:set_animation(anim.range, anim.speed, anim.frame_blend, anim.loop)
 		self._anim = animation
+		-- Set Transition Data
+		if transition
+		and (not transition_data.timer
+		or transition_data.timer > 0) then
+			local anim_length = (anim.range.y - anim.range.x) / anim.speed
+			self._anim_transition = {
+				parent = animation,
+				child = transition,
+				timer = anim_length
+			}
+		end
 	end
+	return animation
 end
 
 -- Set texture to variable at 'id' index in 'tbl' or 'textures'
@@ -453,6 +486,34 @@ function mob:set_texture(id, tbl)
 		})
 	end
 	return _table[id]
+end
+
+-- Set/reset mesh
+
+function mob:set_mesh(id)
+	local mesh = self.mesh
+	if mesh
+	and not self.meshes then
+		self.object:set_properties({
+			mesh = mesh
+		})
+		return mesh
+	end
+	local meshes = self.meshes or {}
+	if #meshes > 0 then
+		local mesh_no = id or self.mesh_no or random(#meshes)
+		self.object:set_properties({
+			mesh = meshes[mesh_no]
+		})
+		self:memorize("mesh_no", self.mesh_no)
+		if self.mesh_textures then
+			self.textures = self.mesh_textures[mesh_no]
+			self.texture_no = random(#self.textures)
+			self:set_texture(self.texture_no, self.textures)
+			self:memorize("texture_no", self.texture_no)
+		end
+		return meshes[mesh_no]
+	end
 end
 
 -- Set scale to base scale times 'x' and update bordering positions
@@ -762,6 +823,17 @@ function mob:activate(staticdata, dtime)
 		if textures then self.textures = textures end
 	end
 
+	if self.meshes then
+		local mesh_no = self.mesh_no or random(#self.meshes)
+		if self.mesh_textures then
+			self.textures = self.mesh_textures[mesh_no]
+		end
+		self.mesh_no = mesh_no
+		self.object:set_properties({
+			mesh = self.meshes[mesh_no]
+		})
+	end
+
 	if not self.perm_data then
 		if self.memory then
 			self.perm_data = self.memory
@@ -823,6 +895,7 @@ function mob:staticdata()
 	data.perm_data = self.perm_data
 	data.hp = self.hp or self.max_health
 	data.texture_no = self.texture_no or random(#self.textures)
+	data.mesh_no = self.mesh_no or (self.meshes and random(#self.meshes))
 	return minetest.serialize(data)
 end
 
@@ -904,28 +977,30 @@ end
 local function collision_detection(self)
 	if not creatura.is_alive(self)
 	or self.fancy_collide == false then return end
-	local pos = self.object:get_pos()
+	local pos = self.stand_pos
 	local width = self.width + 0.25
 	local objects = minetest.get_objects_in_area(vec_sub(pos, width), vec_add(pos, width))
 	if #objects < 2 then return end
+	local pos2
+	local dir
+	local vel, vel2
 	for i = 2, #objects do
 		local object = objects[i]
 		if creatura.is_alive(object)
 		and not self.object:get_attach()
 		and not object:get_attach() then
 			if i > 5 then break end
-			local pos2 = object:get_pos()
-			local dir = vec_dir(pos, pos2)
+			pos2 = object:get_pos()
+			dir = vec_dir(pos, pos2)
 			dir.y = 0
 			if dir.x == 0 and dir.z == 0 then
 				dir = vector.new(random(-1, 1) * random(), 0,
 								 random(-1, 1) * random())
 			end
-			local velocity = vec_multi(dir, 1.1)
-			local vel1 = vec_multi(velocity, -2) -- multiplying by -2 accounts for friction
-			local vel2 = velocity
-			self.object:add_velocity(vel1)
-			object:add_velocity(vel2)
+			vel = vec_multi(dir, 1.5)
+			vel2 = vec_multi(dir, -2) -- multiplying by -2 accounts for friction
+			self.object:add_velocity(vel2)
+			object:add_velocity(vel)
 		end
 	end
 end
@@ -1049,6 +1124,7 @@ function mob:_execute_utilities()
 			step_delay = nil,
 			score = 0
 		}
+		self._util_cooldown = {}
 	end
 	local loop_data = {
 		utility = nil,
@@ -1059,12 +1135,24 @@ function mob:_execute_utilities()
 	if (self:timer(self.util_timer or 1)
 	or not self._utility_data.func)
 	and is_alive then
-		for i = 1, #self.utility_stack do
-			local utility = self.utility_stack[i].utility
-			local util_data = self._utility_data
-			local get_score = self.utility_stack[i].get_score
-			local step_delay = self.utility_stack[i].step_delay
-			local score, args = get_score(self)
+		local util_data = self._utility_data
+		local util_stack = self.utility_stack
+		local utility
+		local get_score
+		local cooldown
+		local step_delay
+		local score, args
+		for i = 1, #util_stack do
+			utility = util_stack[i].utility
+			get_score = util_stack[i].get_score
+			cooldown = self._util_cooldown[i] or 0
+			step_delay = util_stack[i].step_delay
+			score, args = get_score(self)
+
+			if cooldown > 0 then
+				cooldown = cooldown - (self.util_timer or 1)
+			end
+
 			if util_data.utility
 			and utility == util_data.utility
 			and util_data.score > 0
@@ -1077,16 +1165,21 @@ function mob:_execute_utilities()
 				}
 				util_data = self._utility_data
 			end
+
 			if score > 0
 			and score >= util_data.score
-			and score >= loop_data.score then
+			and score >= loop_data.score
+			and cooldown <= 0 then
 				loop_data = {
 					utility = utility,
 					score = score,
+					util_no = i,
 					step_delay = step_delay,
 					args = args
 				}
 			end
+
+			self._util_cooldown[i] = cooldown
 		end
 	end
 	if loop_data.utility
@@ -1137,7 +1230,11 @@ function mob:_execute_utilities()
 		and self.vert_vel ~= 0 then
 			self:set_vertical_velocity(nil)
 		end
-		if func(self) then
+		local func_complete, func_cooldown = func(self)
+		if func_complete then
+			if util_data.util_no then
+				self._util_cooldown[util_data.util_no] = func_cooldown
+			end
 			self._utility_data = {
 				utility = nil,
 				func = nil,
@@ -1169,15 +1266,15 @@ function mob:_vitals()
 	if max_fall > 0
 	and not in_liquid then
 		local fall_start = self._fall_start or (not on_ground and pos.y)
-		if fall_start
-		and on_ground then
-			damage = fall_start - pos.y
-			if damage < max_fall then
-				damage = 0
-				fall_start = nil
-			else
-				local resist = self.fall_resistance or 0
-				damage = damage - damage * resist
+		if fall_start then
+			if on_ground then
+				damage = fall_start - pos.y
+				if damage < max_fall then
+					damage = 0
+				else
+					local resist = self.fall_resistance or 0
+					damage = damage - damage * resist
+				end
 				fall_start = nil
 			end
 		end
@@ -1185,22 +1282,24 @@ function mob:_vitals()
 	end
 	if self:timer(1) then
 		local stand_def = creatura.get_node_def(node.name)
-		if not self.max_breath
-		or self.max_breath > 0 then
+		local max_breath = self.max_breath
+		if not max_breath
+		or max_breath > 0 then
+			local breath = self._breath or max_breath
 			local head_pos = vec_raise(pos, self.height - 0.01)
-			local head_node = minetest.get_node(head_pos)
-			if minetest.get_item_group(head_node.name, "liquid") > 0
-			or creatura.get_node_def(head_node.name).walkable then
-				if self._breath <= 0 then
+			local head_def = creatura.get_node_def(head_pos)
+			if minetest.get_item_group(head_def.name, "liquid") > 0
+			or (head_def.walkable
+			and head_def.drawtype == "normal") then
+				if breath <= 0 then
 					damage = (damage or 0) + 1
 				else
-					self._breath = self._breath - 1
-					self:memorize("_breath", self._breath)
+					breath = breath - 1
 				end
 			else
-				self._breath = self._breath + 1
-				self:memorize("_breath", self._breath)
+				breath = (breath < max_breath and breath + 1) or max_breath
 			end
+			self._breath = self:memorize("_breath", breath)
 		end
 		if (not self.fire_resistance
 		or self.fire_resistance < 1)
@@ -1236,11 +1335,12 @@ function creatura.register_mob(name, def)
 	def.physical = def.physical or true
 	def.collide_with_objects = def.collide_with_objects or false
 	def.visual = "mesh"
+	def.mesh = def.mesh or (def.meshes and def.meshes[1])
 	def.makes_footstep_sound = def.makes_footstep_sound or false
 	if def.static_save ~= false then
 		def.static_save = true
 	end
-	def.collisionbox = hitbox
+	def.collisionbox = def.collisionbox or hitbox
 	def._creatura_mob = true
 
 	def.sounds = def.sounds or {}

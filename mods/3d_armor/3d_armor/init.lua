@@ -224,6 +224,11 @@ local function init_player_armor(initplayer)
 			if player:get_player_name() ~= name then
 				return 0
 			end
+			--cursed items cannot be unequiped by the player
+			local is_cursed = minetest.get_item_group(stack:get_name(), "cursed") ~= 0
+			if not minetest.is_creative_enabled(player) and is_cursed then
+				return 0
+			end
 			return stack:get_count()
 		end,
 		allow_move = function(inv, from_list, from_index, to_list, to_index, count, player)
@@ -355,9 +360,12 @@ if armor.config.drop == true or armor.config.destroy == true then
 		for i=1, armor_inv:get_size("armor") do
 			local stack = armor_inv:get_stack("armor", i)
 			if stack:get_count() > 0 then
-				table.insert(drop, stack)
-				armor:run_callbacks("on_unequip", player, i, stack)
-				armor_inv:set_stack("armor", i, nil)
+				--soulbound armors remain equipped after death
+				if minetest.get_item_group(stack:get_name(), "soulbound") == 0 then
+					table.insert(drop, stack)
+					armor:run_callbacks("on_unequip", player, i, stack)
+					armor_inv:set_stack("armor", i, nil)
+				end
 			end
 		end
 		armor:save_armor_inventory(player)
@@ -393,8 +401,8 @@ if armor.config.drop == true or armor.config.destroy == true then
 			end)
 		end
 	end)
-else -- reset un-dropped armor and it's effects
 	minetest.register_on_respawnplayer(function(player)
+		-- reset un-dropped armor and it's effects
 		armor:set_player_armor(player)
 	end)
 end
@@ -414,21 +422,29 @@ if armor.config.punch_damage == true then
 end
 
 minetest.register_on_player_hpchange(function(player, hp_change, reason)
-	if player and reason.type ~= "drown" and reason.hunger == nil
-			and hp_change < 0 then
-		local name = player:get_player_name()
-		if name then
-			local heal = armor.def[name].heal
-			if heal >= math.random(100) then
-				hp_change = 0
-			end
-			-- check if armor damage was handled by fire or on_punchplayer
-			local time = last_punch_time[name] or 0
-			if time == 0 or time + 1 < minetest.get_gametime() then
-				armor:punch(player)
-			end
+	if not minetest.is_player(player) then
+		return hp_change
+	end
+
+	if reason.type == "drown" or reason.hunger or hp_change >= 0 then
+		return hp_change
+	end
+
+	local name = player:get_player_name()
+	local properties = player:get_properties()
+	local hp = player:get_hp()
+	if hp + hp_change < properties.hp_max then
+		local heal = armor.def[name].heal
+		if heal >= math.random(100) then
+			hp_change = 0
+		end
+		-- check if armor damage was handled by fire or on_punchplayer
+		local time = last_punch_time[name] or 0
+		if time == 0 or time + 1 < minetest.get_gametime() then
+			armor:punch(player)
 		end
 	end
+
 	return hp_change
 end, true)
 

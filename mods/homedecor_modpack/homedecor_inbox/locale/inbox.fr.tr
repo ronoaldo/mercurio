@@ -1,7 +1,3 @@
-# textdomain: inbox
-
-
-### init.lua ###
-
-@1's Mailbox=Boîte aux lettres de @1
+# textdomain: homedecor_inbox
 Mailbox=Boîte aux lettres
+@1's Mailbox=Boîte aux lettres de @1

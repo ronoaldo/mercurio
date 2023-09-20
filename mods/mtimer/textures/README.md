@@ -1,8 +1,8 @@
 ## License
 
-If not specified otherwise: All textures are released under CC-BY-SA 4.0 or newer.
+If not specified otherwise: All textures are released under CC0 1.0.
 
-* <https://creativecommons.org/licenses/by-sa/4.0/>
+* <https://creativecommons.org/publicdomain/zero/1.0/>
 
 ## Buttons and Icons
 

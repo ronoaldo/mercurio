@@ -1,5 +1,7 @@
 -- Minetest 5.4.1 : airutils
 
+local storage = minetest.get_mod_storage()
+
 airutils = {}
 
 airutils.colors ={
@@ -20,8 +22,17 @@ airutils.colors ={
     yellow='#ffe400',
 }
 
+local load_blast_damage = storage:get_int("blast_damage")
+airutils.blast_damage = true
+-- 1 == true ---- 2 == false
+if load_blast_damage == 2 then airutils.blast_damage = false end
+
+airutils.is_minetest = minetest.get_modpath("player_api")
+airutils.is_mcl = minetest.get_modpath("mcl_player")
+
 airutils.fuel = {['biofuel:biofuel'] = 1,['biofuel:bottle_fuel'] = 1,
-                ['biofuel:phial_fuel'] = 0.25, ['biofuel:fuel_can'] = 10}
+                ['biofuel:phial_fuel'] = 0.25, ['biofuel:fuel_can'] = 10,
+                ['airutils:biofuel'] = 1,}
 
 if not minetest.settings:get_bool('airutils.disable_papi') then
     dofile(minetest.get_modpath("airutils") .. DIR_DELIM .. "airutils_papi.lua")
@@ -32,11 +43,25 @@ end
 if not minetest.settings:get_bool('airutils.disable_repair') then
     dofile(minetest.get_modpath("airutils") .. DIR_DELIM .. "airutils_repair.lua")
 end
+
+airutils.get_wind = dofile(minetest.get_modpath("airutils") .. DIR_DELIM ..'/wind.lua')
+dofile(minetest.get_modpath("airutils") .. DIR_DELIM .. "common_entities.lua")
+dofile(minetest.get_modpath("airutils") .. DIR_DELIM .. "airutils_wind.lua")
 dofile(minetest.get_modpath("airutils") .. DIR_DELIM .. "inventory_management.lua")
 dofile(minetest.get_modpath("airutils") .. DIR_DELIM .. "light.lua")
 dofile(minetest.get_modpath("airutils") .. DIR_DELIM .. "physics_lib.lua")
+dofile(minetest.get_modpath("airutils") .. DIR_DELIM .. "lib_planes" .. DIR_DELIM .. "init.lua")
 
-if player_api and not minetest.settings:get_bool('airutils.disable_uniforms') then
+local is_biofuel_installed = false
+if biomass then
+    if biomass.convertible_groups then is_biofuel_installed = true end
+end
+local enable_internal_bioduel = minetest.settings:get_bool('airutils.force_enable_biofuel')
+if not is_biofuel_installed or enable_internal_bioduel then
+    dofile(minetest.get_modpath("airutils") .. DIR_DELIM .. "airutils_biofuel.lua")
+end
+
+if minetest.get_modpath("player_api") and not minetest.settings:get_bool('airutils.disable_uniforms') then
     dofile(minetest.get_modpath("airutils") .. DIR_DELIM .. "pilot_skin_manager.lua")
 end
 
@@ -92,10 +117,11 @@ function airutils.setText(self, vehicle_name)
 end
 
 function airutils.transfer_control(self, status)
+    if not self._have_copilot then return end
     if status == false then
         self._command_is_given = false
-        if self._passenger then
-            minetest.chat_send_player(self._passenger,
+        if self.co_pilot then
+            minetest.chat_send_player(self.co_pilot,
                 core.colorize('#ff0000', " >>> The captain got the control."))
         end
         if self.driver_name then
@@ -104,8 +130,8 @@ function airutils.transfer_control(self, status)
         end
     else
         self._command_is_given = true
-        if self._passenger then
-            minetest.chat_send_player(self._passenger,
+        if self.co_pilot then
+            minetest.chat_send_player(self.co_pilot,
                 core.colorize('#00ff00', " >>> The control is with you now."))
         end
         if self.driver_name then minetest.chat_send_player(self.driver_name," >>> The control was given.") end
@@ -117,20 +143,26 @@ function airutils.detect_player_api(player)
     local player_proterties = player:get_properties()
     --local mesh = "character.b3d"
     --if player_proterties.mesh == mesh then
+    if minetest.get_modpath("player_api") then
         local models = player_api.registered_models
         local character = models[player_proterties.mesh]
+        --minetest.chat_send_all(dump(character));
         if character then
             if character.animations.sit.eye_height then
+                --minetest.chat_send_all(dump(character.animations.sit.eye_height));
                 if character.animations.sit.eye_height == 0.8 then
                     --minetest.chat_send_all("new model");
                     return 1
+                else
+                    --minetest.chat_send_all("new height");
+                    return 2 --strange bug with armor ands skins returning 1.47
                 end
             else
                 --minetest.chat_send_all("old model");
                 return 0
             end
         end
-    --end
+    end
 
     return 0
 end
@@ -234,6 +266,12 @@ end
 -- max_height: the max ceilling for the airplane
 -- wingspan: for ground effect calculation
 function airutils.getLiftAccel(self, velocity, accel, longit_speed, roll, curr_pos, lift, max_height, wingspan)
+    --add wind to the lift calcs
+    local wind = airutils.get_wind(curr_pos, 5)
+    local accel_wind = vector.subtract(accel, wind)  --why? because I need to fake more speed when against the wind to gain lift
+    local vel_wind = vector.multiply(accel_wind, self.dtime)
+    local new_velocity = vector.add(velocity, vel_wind)
+    
     if longit_speed == nil then longit_speed = 0 end
     wingspan = wingspan or 10
     local ground_effect_extra_lift = airutils.get_ground_effect_lift(self, curr_pos, lift, wingspan)
@@ -247,10 +285,20 @@ function airutils.getLiftAccel(self, velocity, accel, longit_speed, roll, curr_p
     if self._wing_configuration then wing_config = self._wing_configuration end --flaps!
     
     local retval = accel
-    if longit_speed > 1 then
+    local min_speed = 1;
+    if self._min_speed then min_speed = self._min_speed end
+    min_speed = min_speed / 2
+
+    if longit_speed > min_speed then
+        local striped_velocity = {x=velocity.x, y=velocity.y, z=velocity.z}
+        local cut_velocity = (min_speed * 1)/longit_speed
+        striped_velocity.x = striped_velocity.x - (striped_velocity.x * cut_velocity)
+        striped_velocity.z = striped_velocity.z - (striped_velocity.z * cut_velocity)
+
         local angle_of_attack = math.rad(self._angle_of_attack + wing_config)
         --local acc = 0.8
-        local daoa = deg(angle_of_attack)
+        local daoa = math.deg(angle_of_attack)
+        --minetest.chat_send_all(dump(daoa))
 
         --to decrease the lift coefficient at hight altitudes
         local curr_percent_height = (100 - ((curr_pos.y * 100) / max_height))/100
@@ -265,8 +313,9 @@ function airutils.getLiftAccel(self, velocity, accel, longit_speed, roll, curr_p
 	    local cross = vector.cross(velocity,hdir)
 	    local lift_dir = vector.normalize(vector.cross(cross,hdir))
 
-        local lift_coefficient = (0.24*abs(daoa)*(1/(0.025*daoa+3))^4*math.sign(angle_of_attack))
-        local lift_val = math.abs((lift*(vector.length(velocity)^2)*lift_coefficient)*curr_percent_height)
+        local lift_coefficient = (0.24*math.abs(daoa)*(1/(0.025*daoa+3))^4*math.sign(daoa))
+        local lift_val = math.abs((lift*(vector.length(striped_velocity)^2)*lift_coefficient)*curr_percent_height)
+        if lift_val < 1 then lift_val = 1 end -- hipotetical aerodinamic wing will have no "lift" for down
         --minetest.chat_send_all('lift: '.. lift_val)
 
         local lift_acc = vector.multiply(lift_dir,lift_val)
@@ -276,12 +325,13 @@ function airutils.getLiftAccel(self, velocity, accel, longit_speed, roll, curr_p
     end
     -----------------------------------------------------------
     -- end lift
+
     return retval
 end
 
 function airutils.get_plane_pitch(velocity, longit_speed, min_speed, angle_of_attack)
     local v_speed_factor = 0
-    if longit_speed > min_speed then v_speed_factor = (velocity.y * math.rad(1)) end --the pitch for climbing os descenting
+    if longit_speed > min_speed then v_speed_factor = (velocity.y * math.rad(2)) end --the pitch for climbing or descenting
     local min_rotation_speed = min_speed/2
     local scale_pitch_graph = ((longit_speed-min_rotation_speed)*1)/min_rotation_speed --lets use the min rotation speed for reference to when we will start the control work
     if scale_pitch_graph > 1 then scale_pitch_graph = 1 end --normalize to 100%
@@ -300,6 +350,7 @@ function airutils.adjust_attack_angle_by_speed(angle_of_attack, min_angle, max_a
     local correction = (limit*(longit_speed/5000)) * factor * (dtime/ideal_step)
     --minetest.chat_send_all("angle: "..angle_of_attack.." - correction: "..correction)
     local new_angle_of_attack = angle_of_attack + correction
+
     return new_angle_of_attack
 end
 
@@ -342,18 +393,21 @@ function airutils.set_paint(self, puncher, itmstck, texture_name)
         local color, indx, _
         if split[1] then _,indx = split[1]:find('dye') end
         if indx then
-            for clr,_ in pairs(airutils.colors) do
+            --[[for clr,_ in pairs(airutils.colors) do
                 local _,x = split[2]:find(clr)
                 if x then color = clr end
-            end
+            end]]--
             --lets paint!!!!
-	        --local color = item_name:sub(indx+1)
+	        local color = (item_name:sub(indx+1)):gsub(":", "")
 	        local colstr = airutils.colors[color]
             --minetest.chat_send_all(color ..' '.. dump(colstr))
 	        if colstr then
                 airutils.paint(self, colstr, texture_name)
+                if self._alternate_painting_texture and self._mask_painting_texture then
+                    airutils.paint_with_mask(self, colstr, self._alternate_painting_texture, self._mask_painting_texture)
+                end
 		        itmstck:set_count(itmstck:get_count()-1)
-		        puncher:set_wielded_item(itmstck)
+                if puncher ~= nil then puncher:set_wielded_item(itmstck) end
                 return true
 	        end
             -- end painting
@@ -364,6 +418,7 @@ end
 
 --painting
 function airutils.paint(self, colstr, texture_name)
+    if not self then return end
     if colstr then
         self._color = colstr
         local l_textures = self.initial_properties.textures
@@ -386,5 +441,102 @@ end
 function airutils.sit(player)
     --set_animation(frame_range, frame_speed, frame_blend, frame_loop)
     player:set_animation({x =  81, y = 160},30, 0, true)
+
     if emote then emote.start(player:get_player_name(), "sit") end
 end
+
+local function get_norm_angle(angle)
+    local new_angle = angle/360
+    new_angle = (new_angle - math.floor(new_angle))*360
+    if new_angle < -180 then new_angle = new_angle + 360 end
+    if new_angle > 180 then new_angle = new_angle - 360 end
+    return new_angle
+end
+
+function airutils.normalize_rotations(rotations)
+    return {x = get_norm_angle(rotations.x), y = get_norm_angle(rotations.y), z = get_norm_angle(rotations.z)}
+end
+
+minetest.register_chatcommand("enable_blast_damage", {
+    params = "<true/false>",
+    description = "Enable/disable explosion blast damage",
+    privs = {server=true},
+    func = function(name, param)
+        local command = param
+
+        if command == "false" then
+            airutils.blast_damage = false
+            minetest.chat_send_player(name, ">>> Blast damage by explosion is disabled")
+        else
+            airutils.blast_damage = true
+            minetest.chat_send_player(name, ">>> Blast damage by explosion is enabled")
+        end
+        local save = 2
+        if airutils.blast_damage == true then save = 1 end
+        storage:set_int("blast_damage", save)
+    end,
+})
+
+minetest.register_chatcommand("transfer_ownership", {
+    params = "<new_owner>",
+    description = "Transfer the property of a plane to another player",
+    privs = {interact=true},
+	func = function(name, param)
+        local player = minetest.get_player_by_name(name)
+        local target_player = minetest.get_player_by_name(param)
+        local attached_to = player:get_attach()
+
+		if attached_to ~= nil then
+            if target_player ~= nil then
+                local seat = attached_to:get_attach()
+                if seat ~= nil then
+                    local entity = seat:get_luaentity()
+                    if entity then
+                        if entity.owner == name or minetest.check_player_privs(name, {protection_bypass=true}) then
+                            entity.owner = param
+                            minetest.chat_send_player(name,core.colorize('#00ff00', " >>> This plane now is property of: "..param))
+                        else
+                            minetest.chat_send_player(name,core.colorize('#ff0000', " >>> only the owner or moderators can transfer this airplane"))
+                        end
+                    end
+                end
+            else
+                minetest.chat_send_player(name,core.colorize('#ff0000', " >>> the target player must be logged in"))
+            end
+		else
+			minetest.chat_send_player(name,core.colorize('#ff0000', " >>> you are not inside a plane to perform the command"))
+		end
+	end
+})
+
+minetest.register_chatcommand("eject_from_plane", {
+	params = "",
+	description = "Ejects from a plane",
+	privs = {interact = true},
+	func = function(name, param)
+        local colorstring = core.colorize('#ff0000', " >>> you are not inside a plane")
+        local player = minetest.get_player_by_name(name)
+        local attached_to = player:get_attach()
+
+		if attached_to ~= nil then
+            local seat = attached_to:get_attach()
+            if seat ~= nil then
+                local entity = seat:get_luaentity()
+                if entity then
+                    if entity.on_step == airutils.on_step then
+                        if entity.driver_name == name then
+                            airutils.dettachPlayer(entity, player)
+                        elseif entity._passenger == name then
+                            local passenger = minetest.get_player_by_name(entity._passenger)
+                            airutils.dettach_pax(entity, passenger)
+                        end
+                    else
+			            minetest.chat_send_player(name,colorstring)
+                    end
+                end
+            end
+		else
+			minetest.chat_send_player(name,colorstring)
+		end
+	end
+})

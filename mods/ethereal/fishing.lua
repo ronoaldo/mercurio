@@ -4,7 +4,7 @@
 
 ]]--
 
-local S = ethereal.intllib
+local S = ethereal.translate
 
 local fish_items = {
 	"ethereal:fish_bluefin",
@@ -18,12 +18,35 @@ local fish_items = {
 	{"ethereal:fish_pufferfish", "desert_ocean"},
 	{"ethereal:fish_cichlid", "junglee_ocean"},
 	{"ethereal:fish_coy", "sakura"},
+	{"ethereal:fish_tilapia", "sakura"},
+	{"ethereal:fish_trevally", "sakura"},
 	{"ethereal:fish_angler", "ocean"},
 	{"ethereal:fish_jellyfish", "ocean"},
 	{"ethereal:fish_seahorse", "ocean"},
+	{"ethereal:fish_seahorse_green", "junglee_ocean"},
+	{"ethereal:fish_seahorse_pink", "mushroom_ocean"},
+	{"ethereal:fish_seahorse_blue", "frost_ocean"},
+	{"ethereal:fish_seahorse_yellow", "desert_ocean"},
+	{"ethereal:fish_parrot", "desert"},
 	{"ethereal:fish_piranha", "jungle"},
-	{"ethereal:fish_trout", "ocean"}
+	{"ethereal:fish_tuna", "jungle"},
+	{"ethereal:fish_trout", "ocean"},
+	{"ethereal:fish_cod", "ocean"},
+	{"ethereal:fish_flounder", "ocean"},
+	{"ethereal:fish_redsnapper", "ocean"},
+	{"ethereal:fish_squid", "ocean"},
+	{"ethereal:fish_shrimp", "ocean"},
+	{"ethereal:fish_carp", "swamp"}
 }
+-- grassland_ocean, desert_ocean, sakura_ocean, mesa_ocean, coniferous_forest_ocean,
+-- taiga_ocean, frost_ocean, deciduous_forest_ocean, grayness_ocean, grassytwo_ocean,
+-- prairie_ocean, jumble_ocean, junglee_ocean, grove_ocean, mushroom_ocean,
+-- sandstone_desert_ocean, plains_ocean, savanna_ocean, fiery_ocean, swamp_ocean,
+-- glacier_ocean, tundra_ocean
+
+local mod_bonemeal = minetest.get_modpath("bonemeal")
+local mod_armor = minetest.get_modpath("3d_armor")
+local mod_mobs = minetest.get_modpath("mobs")
 
 local junk_items = {
 	"ethereal:bowl",
@@ -31,16 +54,28 @@ local junk_items = {
 	"farming:string",
 	"default:papyrus",
 	"dye:black",
-	{"ethereal:bamboo", "bamboo"}
+	"flowers:waterlily",
+	"default:paper",
+	"flowers:mushroom_red",
+	"vessels:glass_bottle",
+	{"ethereal:bamboo", "bamboo"},
+	mod_bonemeal and "bonemeal:bone" or "default:stick",
+	mod_armor and "3d_armor:boots_wood 6000" or "default:stick"
 }
 
 local bonus_items = {
-	"mobs:nametag",
-	"mobs:saddle",
-	"flowers:waterlily",
+	mod_mobs and "mobs:nametag" or "fireflies:bug_net",
+	mod_mobs and "mobs:net" or "default:sapling",
+	"fireflies:firefly_bottle",
+	mod_mobs and "mobs:saddle" or "farming:cotton_wild",
 	"default:book",
+	{"ethereal:firethorn", "glacier"},
 	{"ethereal:crystal_spike", "frost"},
-	{"ethereal:banana_bunch", "grove"}
+	{"ethereal:banana_bunch", "grove"},
+	"tnt:tnt_stick",
+	"bucket:bucket_empty",
+	"default:sword_steel 12000",
+	"ethereal:fishing_rod 9000"
 }
 
 local default_item = "default:dirt"
@@ -125,7 +160,10 @@ if not self.cast then
 			local inv = player and player:get_inventory()
 			local bait = 0
 
-			if inv and inv:contains_item("main", "ethereal:worm") then
+			if inv and inv:contains_item("main", "caverealms:glow_bait") then
+				inv:remove_item("main", "caverealms:glow_bait")
+				bait = 40
+			elseif inv and inv:contains_item("main", "ethereal:worm") then
 				inv:remove_item("main", "ethereal:worm")
 				bait = 20
 			end
@@ -278,7 +316,6 @@ local find_item = function(list, pos)
 				table.insert(items, item[1])
 			end
 		end
-
 	end
 
 --print("==biome: " .. biome, dump(items))
@@ -329,14 +366,23 @@ local use_rod = function(itemstack, player, pointed_thing)
 					item = find_item(bonus_items, pos)
 				end
 
+				-- split into name and number (wear level or number of items)
+				local item_name = item:split(" ")[1]
+				local item_wear = item:split(" ")[2]
+
 				-- make sure item exists, if not replace with default item
-				if not minetest.registered_items[item] then
+				if not minetest.registered_items[item_name] then
 					item = default_item
 				end
 
 --print ("---caught", item, r)
 
-				item = ItemStack(item)
+				item = ItemStack(item) -- convert into itemstack
+
+				-- if tool then add wear
+				if item_wear and minetest.registered_tools[item_name] then
+					item:set_wear(65535 - item_wear)
+				end
 
 				local inv = player:get_inventory()
 
@@ -385,6 +431,11 @@ local use_rod = function(itemstack, player, pointed_thing)
 		obj:set_acceleration({x = dir.x * -3, y = -9.8, z = dir.z * -3})
 		obj:get_luaentity().fisher = player and player:get_player_name()
 	end
+
+	-- Add wear to fishing rod (65 uses)
+	itemstack:add_wear(65535 / 65)
+
+	return itemstack
 end
 
 
@@ -452,21 +503,37 @@ minetest.register_craft({
 
 local fish = {
 	{"Blue Fin", "bluefin", 2},
-	{"Blue Ram", "blueram", 2},
-	{"Catfish", "catfish", 2},
+	{"Blue Ram Chichlid", "blueram", 2},
+	{"Common Carp", "carp", 2},
+	{"Cod", "cod", 2},
+	{"Redtail Catfish", "catfish", 2},
 	{"Clownfish", "clownfish", 2},
-	{"Pike", "pike", 2},
-	{"Flathead", "flathead", 2},
+	{"Northern Pike", "pike", 2},
+	{"Dusky Flathead", "flathead", 2},
 	{"Plaice", "plaice", 2},
-	{"Pufferfish", "pufferfish", -2},
+	{"Tiger Pufferfish", "pufferfish", -2},
 	{"Coy", "coy", 2},
-	{"Salmon", "salmon", 2},
-	{"Cichlid", "cichlid", 2},
+	{"European Flounder", "flounder", 2},
+	{"Atlantic Salmon", "salmon", 2},
+	{"Iceblue Zebra Cichlid", "cichlid", 2},
 	{"Angler", "angler", 2},
-	{"Jellyfish", "jellyfish", 0},
-	{"Seahorse", "seahorse", 0},
+	{"Moon Jellyfish", "jellyfish", 0},
+	{"Pacific Mackerel", "mackerel", 2},
 	{"Piranha", "piranha", 2},
-	{"Trout", "trout", 2}
+	{"Rainbow Trout", "trout", 2},
+	{"Red Snapper", "redsnapper", 2},
+	{"Red Seahorse", "seahorse", 0},
+	{"Green Seahorse", "seahorse_green", 0},
+	{"Pink Seahorse", "seahorse_pink", 0},
+	{"Blue Seahorse", "seahorse_blue", 0},
+	{"Yellow Seahorse", "seahorse_yellow", 0},
+	{"Yellowfin Tuna", "tuna", 2},
+	{"Humboldt Squid", "squid", 0},
+	{"White Shrimp", "shrimp", 0},
+	{"Neon Tetra", "tetra", 1},
+	{"Tilapia", "tilapia", 2},
+	{"Golden Trevally", "trevally", 2},
+	{"Stoplight Parrotfish", "parrot", 2}
 }
 
 for n = 1, #fish do
@@ -486,6 +553,10 @@ for n = 1, #fish do
 		groups = groups
 	})
 end
+
+
+-- Make Neon Tetra glow slightly
+minetest.override_item("ethereal:fish_tetra", {light_source = 3})
 
 
 -- cooked fish

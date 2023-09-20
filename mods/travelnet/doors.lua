@@ -9,7 +9,7 @@ function travelnet.register_door(node_base_name, def_tiles, material)
 	local open_door = node_base_name .. "_open"
 
 	minetest.register_node(open_door, {
-		description = S("elevator door (open)"),
+		description = S("Elevator door (open)"),
 		drawtype = "nodebox",
 		tiles = def_tiles,
 		use_texture_alpha = "clip",
@@ -21,7 +21,10 @@ function travelnet.register_door(node_base_name, def_tiles, material)
 			snappy = 2,
 			choppy = 2,
 			oddly_breakable_by_hand = 2,
-			not_in_creative_inventory = 1
+			pickaxey = 1,
+			handy = 1,
+			not_in_creative_inventory = 1,
+			door = 1
 		},
 		-- larger than one node but slightly smaller than a half node so
 		-- that wallmounted torches pose no problem
@@ -48,7 +51,7 @@ function travelnet.register_door(node_base_name, def_tiles, material)
 	})
 
 	minetest.register_node(closed_door, {
-		description = S("elevator door (closed)"),
+		description = S("Elevator door (closed)"),
 		drawtype = "nodebox",
 		tiles = def_tiles,
 		use_texture_alpha = "clip",
@@ -58,8 +61,13 @@ function travelnet.register_door(node_base_name, def_tiles, material)
 		groups = {
 			snappy = 2,
 			choppy = 2,
-			oddly_breakable_by_hand = 2
+			oddly_breakable_by_hand = 2,
+			pickaxey = 1,
+			handy = 1,
+			door = 1
 		},
+		_mcl_blast_resistance = 1,
+		_mcl_hardness = 0.7,
 		node_box = {
 			type = "fixed",
 			fixed = {
@@ -123,4 +131,9 @@ if minetest.get_modpath("default") then
 	travelnet.register_door("travelnet:elevator_door_steel", { "default_stone.png" },           "default:steel_ingot")
 	travelnet.register_door("travelnet:elevator_door_glass", { "travelnet_elevator_door_glass.png" }, "default:glass")
 	travelnet.register_door("travelnet:elevator_door_tin",   { "default_clay.png" },              "default:tin_ingot")
+
+elseif minetest.registered_nodes["mcl_core:wood"] then
+	travelnet.register_door("travelnet:elevator_door_steel", { "default_stone.png" },           "mcl_core:iron_ingot")
+	travelnet.register_door("travelnet:elevator_door_glass", { "travelnet_elevator_door_glass.png" }, "mcl_core:glass")
+	-- travelnet.register_door("travelnet:elevator_door_tin",   { "default_clay.png" },              "default:tin_ingot")
 end

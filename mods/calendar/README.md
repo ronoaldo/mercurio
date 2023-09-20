@@ -12,7 +12,7 @@ There are 7 weekdays from Monday to Sunday, starting at Monday.
 The calendar starts at Day 1, Month 1 (January), Year 1.
 
 ## Version
-1.1.1
+1.1.3
 
 ## Compability
 This mod is designed for Minetest 5.3.0, but there's a compability
@@ -42,3 +42,8 @@ GNU Lesser General Public License version 3 (LGPL-3.0).
 This mod was created by Wuzzy. A small portion of the mod was adopted
 from the [belfry] mod by sorcerykid, namely `calendar.get_date_string`,
 based on `minetest.get_date_string` from the `belfry` mod.
+
+Translation credits:
+
+* German: Wuzzy
+* French: syl

@@ -553,14 +553,13 @@ minetest.register_entity("automobiles_coupe:coupe", {
             if (later_speed > min_later_speed or later_speed < -min_later_speed) and
                     self._last_time_drift_snd > 0.6 then
                 self._last_time_drift_snd = 0
-                minetest.sound_play("drifting", {
-                    to_player = self.driver_name,
-                    pos = curr_pos,
-                    max_hear_distance = 5,
-                    gain = 1.0,
-                    fade = 0.0,
-                    pitch = 1.0,
-                    ephemeral = true,
+                minetest.sound_play("automobiles_drifting", {
+                        pos = curr_pos,
+                        max_hear_distance = 20,
+                        gain = 3.0,
+                        fade = 0.0,
+                        pitch = 1.0,
+                        ephemeral = true,
                 })
             end
 

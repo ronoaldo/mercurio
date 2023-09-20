@@ -2,34 +2,50 @@ local S = minetest.get_translator("travelnet")
 
 local mod_data_path = minetest.get_worldpath() .. "/mod_travelnet.data"
 
--- called whenever a station is added or removed
-function travelnet.save_data()
-	local data = minetest.serialize(travelnet.targets)
+local storage = minetest.get_mod_storage()
 
-	local success = minetest.safe_file_write(mod_data_path, data)
-	if not success then
-		print(S("[Mod travelnet] Error: Savefile '@1' could not be written.", mod_data_path))
-	end
-end
-
-
-function travelnet.restore_data()
+-- migrate file-based storage to mod-storage
+local function migrate_file_storage()
 	local file = io.open(mod_data_path, "r")
 	if not file then
-		print(S("[Mod travelnet] Error: Savefile '@1' not found.", mod_data_path))
 		return
 	end
 
+	-- load from file
 	local data = file:read("*all")
-	travelnet.targets = minetest.deserialize(data)
-
-	if not travelnet.targets then
-		local backup_file = mod_data_path .. ".bak"
-		print(S("[Mod travelnet] Error: Savefile '@1' is damaged." .. " " ..
-				"Saved the backup as '@2'.", mod_data_path, backup_file))
-
-		minetest.safe_file_write(backup_file, data)
-		travelnet.targets = {}
+	local old_targets
+	if data:sub(1, 1) == "{" then
+		minetest.log("info", S("[travelnet] migrating from json-file to mod-storage"))
+		old_targets = minetest.parse_json(data)
+	else
+		minetest.log("info", S("[travelnet] migrating from serialize-file to mod-storage"))
+		old_targets = minetest.deserialize(data)
 	end
-	file:close()
+
+	for playername, player_targets in pairs(old_targets) do
+		storage:set_string(playername, minetest.write_json(player_targets))
+	end
+
+	-- rename old file
+	os.rename(mod_data_path, mod_data_path .. ".bak")
+end
+
+-- migrate old data as soon as possible
+migrate_file_storage()
+
+-- returns the player's travelnets
+function travelnet.get_travelnets(playername)
+	local json = storage:get_string(playername)
+	if not json or json == "" or json == "null" then
+		-- default to empty object
+		travelnet.log("action", "get_travelnets: player '" .. playername .. "' doesn't have an entry, creating one")
+		json = "{}"
+	end
+	return minetest.parse_json(json)
+end
+
+-- saves the player's modified travelnets
+function travelnet.set_travelnets(playername, travelnets)
+	travelnet.log("action", "set_travelnets: persisting travelnets for player '" .. playername .. "'")
+	storage:set_string(playername, minetest.write_json(travelnets))
 end

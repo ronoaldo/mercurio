@@ -180,6 +180,63 @@ minetest.register_node("nether:rack", {
 	sounds = default.node_sound_stone_defaults(),
 })
 
+-- Geode crystals can only be introduced by the biomes-based mapgen, since it requires the
+-- MT 5.0 world-align texture features.
+minetest.register_node("nether:geode", {
+	description = S("Nether Beryl"),
+	_doc_items_longdesc = S("Nether geode crystal, found lining the interior walls of Nether geodes"),
+	tiles = {{
+		name        = "nether_geode.png",
+		align_style = "world",
+		scale       = 4
+	}},
+	is_ground_content = true,
+	groups = {cracky = 3, oddly_breakable_by_hand = 3, nether_crystal = 1},
+	sounds = default.node_sound_glass_defaults(),
+})
+
+-- Nether Berylite is a Beryl that can seen in the dark, used to light up the internal structure
+-- of the geode, so to avoid player confusion we'll just have it drop plain Beryl, and have only
+-- plain Beryl in the creative inventory.
+minetest.register_node("nether:geodelite", {
+	description = S("Nether Berylite"),
+	_doc_items_longdesc = S("Nether geode crystal. A crystalline structure with faint glow found inside large Nether geodes"),
+	tiles = {{
+		name        = "nether_geode.png",
+		align_style = "world",
+		scale       = 4
+	}},
+	light_source = 2,
+	drop = "nether:geode",
+	is_ground_content = true,
+	groups = {cracky = 3, oddly_breakable_by_hand = 3, nether_crystal = 1, not_in_creative_inventory = 1},
+	sounds = default.node_sound_glass_defaults(),
+})
+
+if minetest.get_modpath("xpanes") and minetest.global_exists("xpanes") and xpanes.register_pane ~= nil then
+	xpanes.register_pane("nether_crystal_pane", {
+		description = S("Nether Crystal Pane"),
+		textures = {
+			{
+				name        = "nether_geode_glass.png",
+				align_style = "world",
+				scale       = 2
+			},
+			"",
+			"xpanes_edge_obsidian.png"
+		},
+		inventory_image = "([combine:32x32:-8,-8=nether_geode_glass.png:24,-8=nether_geode_glass.png:-8,24=nether_geode_glass.png:24,24=nether_geode_glass.png)^[resize:16x16^[multiply:#922^default_obsidian_glass.png",
+		wield_image     = "([combine:32x32:-8,-8=nether_geode_glass.png:24,-8=nether_geode_glass.png:-8,24=nether_geode_glass.png:24,24=nether_geode_glass.png)^[resize:16x16^[multiply:#922^default_obsidian_glass.png",		use_texture_alpha = true,
+		sounds = default.node_sound_glass_defaults(),
+		groups = {snappy=2, cracky=3, oddly_breakable_by_hand=3},
+		recipe = {
+			{"group:nether_crystal", "group:nether_crystal", "group:nether_crystal"},
+			{"group:nether_crystal", "group:nether_crystal", "group:nether_crystal"}
+		}
+	})
+end
+
+
 -- Deep Netherrack, found in the mantle / central magma layers
 minetest.register_node("nether:rack_deep", {
 	description = S("Deep Netherrack"),
@@ -249,26 +306,6 @@ minetest.register_node("nether:brick_cracked", {
 	sounds = default.node_sound_stone_defaults(),
 })
 
-local fence_texture =
-	"default_fence_overlay.png^nether_brick.png^default_fence_overlay.png^[makealpha:255,126,126"
-
-minetest.register_node("nether:fence_nether_brick", {
-	description = S("Nether Brick Fence"),
-	drawtype = "fencelike",
-	tiles = {"nether_brick.png"},
-	inventory_image = fence_texture,
-	wield_image = fence_texture,
-	paramtype = "light",
-	sunlight_propagates = true,
-	is_ground_content = false,
-	selection_box = {
-		type = "fixed",
-		fixed = {-1/7, -1/2, -1/7, 1/7, 1/2, 1/7},
-	},
-	groups = {cracky = 2, level = 2},
-	sounds = default.node_sound_stone_defaults(),
-})
-
 minetest.register_node("nether:brick_deep", {
 	description = S("Deep Nether Brick"),
 	tiles = {{
@@ -277,6 +314,34 @@ minetest.register_node("nether:brick_deep", {
 		scale       = 2
 	}},
 	is_ground_content = false,
+	groups = {cracky = 2, level = 2},
+	sounds = default.node_sound_stone_defaults()
+})
+
+-- Register fence and rails
+
+local fence_texture =
+	"default_fence_overlay.png^nether_brick.png^default_fence_overlay.png^[makealpha:255,126,126"
+
+local rail_texture =
+	"default_fence_rail_overlay.png^nether_brick.png^default_fence_rail_overlay.png^[makealpha:255,126,126"
+
+default.register_fence("nether:fence_nether_brick", {
+	description = S("Nether Brick Fence"),
+	texture = "nether_brick.png",
+	inventory_image = fence_texture,
+	wield_image = fence_texture,
+	material = "nether:brick",
+	groups = {cracky = 2, level = 2},
+	sounds = default.node_sound_stone_defaults()
+})
+
+default.register_fence_rail("nether:fence_rail_nether_brick", {
+	description = S("Nether Brick Fence Rail"),
+	texture = "nether_brick.png",
+	inventory_image = rail_texture,
+	wield_image = rail_texture,
+	material = "nether:brick",
 	groups = {cracky = 2, level = 2},
 	sounds = default.node_sound_stone_defaults()
 })
@@ -349,8 +414,8 @@ stairs.register_slab( -- register a slab without adding inner and outer stairs
 
 -- Connecting walls
 if minetest.get_modpath("walls") and minetest.global_exists("walls") and walls.register ~= nil then
-	walls.register("nether:rack_wall",      "A Netherrack wall",      "nether_rack.png",      "nether:rack",      minetest.registered_nodes["nether:rack"].sounds)
-	walls.register("nether:rack_deep_wall", "A Deep Netherrack wall", "nether_rack_deep.png", "nether:rack_deep", minetest.registered_nodes["nether:rack_deep"].sounds)
+	walls.register("nether:rack_wall",      S("A Netherrack wall"),      "nether_rack.png",      "nether:rack",      minetest.registered_nodes["nether:rack"].sounds)
+	walls.register("nether:rack_deep_wall", S("A Deep Netherrack wall"), "nether_rack_deep.png", "nether:rack_deep", minetest.registered_nodes["nether:rack_deep"].sounds)
 end
 
 -- StairsPlus
@@ -713,6 +778,7 @@ minetest.register_node("nether:lava_crust", {
 	--liquid_viscosity = 7,
 	damage_per_second = 2,
 	groups = {oddly_breakable_by_hand = 3, cracky = 3, explody = 1, igniter = 1},
+	sounds = default.node_sound_gravel_defaults(),
 })
 
 
@@ -775,7 +841,7 @@ local function fumarole_onTimer(pos, elapsed)
 	local smoke_time_adj = 1
 
 	local posAbove = {x = pos.x, y = pos.y + 1, z = pos.z}
-	local extinguish = minetest.get_node(posAbove).name ~= "air"
+	local extinguish = inNether and minetest.get_node(posAbove).name ~= "air"
 
 	if extinguish or (canCatchFire and math.floor(elapsed) % 7 == 0) then
 

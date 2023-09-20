@@ -1,7 +1,3 @@
-# textdomain: inbox
-
-
-### init.lua ###
-
-@1's Mailbox=Почтовый ящик @1
+# textdomain: homedecor_inbox
 Mailbox=Почтовый ящик
+@1's Mailbox=Почтовый ящик @1

@@ -26,6 +26,7 @@ dofile(path .. "sakura.lua")
 dofile(path .. "igloo.lua")
 dofile(path .. "lemon_tree.lua")
 dofile(path .. "olive_tree.lua")
+dofile(path .. "basandra_bush.lua")
 
 
 -- helper function
@@ -91,6 +92,10 @@ add_schem("ethereal:fiery_dirt", 0.01, {"fiery"}, 1, 100,
 -- large lava crater
 add_schem("ethereal:fiery_dirt", 0.003, {"fiery"}, 1, 100,
 	ethereal.volcanol, ethereal.fiery, nil, "ethereal:fiery_dirt", 8, "random")
+
+-- basandra bush
+add_schem("ethereal:fiery_dirt", 0.03, {"fiery"}, 1, 100,
+	ethereal.basandrabush, ethereal.fiery)
 
 -- default jungle tree
 add_schem({"ethereal:jungle_dirt", "default:dirt_with_rainforest_litter"},

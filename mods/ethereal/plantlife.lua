@@ -1,6 +1,25 @@
 
-local S = ethereal.intllib
+local S = ethereal.translate
 
+-- Spore Grass
+minetest.register_node("ethereal:spore_grass", {
+	description = S("Spore Grass"),
+	drawtype = "plantlike",
+	tiles = {"ethereal_spore_grass.png"},
+	inventory_image = "ethereal_spore_grass.png",
+	wield_image = "ethereal_spore_grass.png",
+	paramtype = "light",
+	sunlight_propagates = true,
+	waving = 1,
+	walkable = false,
+	buildable_to = true,
+	groups = {snappy = 3, flora = 1, attached_node = 1},
+	sounds = default.node_sound_leaves_defaults(),
+	selection_box = {
+		type = "fixed",
+		fixed = {-5 / 16, -0.5, -5 / 16, 5 / 16, 4 / 16, 5 / 16}
+	}
+})
 
 -- Firethorn (poisonous when eaten raw, must be crushed and washed in flowing water 1st)
 minetest.register_node("ethereal:firethorn", {
@@ -285,7 +304,7 @@ local add_moss = function(typ, descr, texture, receipe_item)
 end
 
 add_moss("crystal", "Crystal", "ethereal_grass_crystal_top.png", "ethereal:frost_leaves")
-add_moss("mushroom", "Mushroom", "ethereal_grass_mushroom_top.png", "ethereal:mushroom")
+add_moss("mushroom", "Mushroom", "ethereal_grass_mushroom_top.png", "ethereal:spore_grass")
 add_moss("fiery", "Fiery", "ethereal_grass_fiery_top.png", "ethereal:dry_shrub")
 add_moss("gray", "Gray", "ethereal_grass_gray_top.png", "ethereal:snowygrass")
 add_moss("green", "Green", "default_grass.png", "default:jungleleaves")

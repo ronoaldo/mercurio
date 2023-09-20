@@ -1,11 +1,12 @@
 
-local S = farming.intllib
+local S = farming.translate
+local a = farming.recipe_items
 
 -- beetroot
 minetest.register_craftitem("farming:beetroot", {
 	description = S("Beetroot"),
 	inventory_image = "farming_beetroot.png",
-	groups = {seed = 2, food_beetroot = 1, flammable = 2},
+	groups = {compostability = 48, seed = 2, food_beetroot = 1, flammable = 2},
 	on_place = function(itemstack, placer, pointed_thing)
 		return farming.place_seed(itemstack, placer, pointed_thing, "farming:beetroot_1")
 	end,
@@ -30,7 +31,7 @@ minetest.register_craft({
 
 -- red dye
 minetest.register_craft({
-	output = "dye:red",
+	output = a.dye_red,
 	recipe = {{"group:food_beetroot"}}
 })
 
@@ -45,10 +46,10 @@ local def = {
 	drop = "",
 	selection_box = farming.select,
 	groups = {
-		snappy = 3, flammable = 2, plant = 1, attached_node = 1,
+		handy = 1, snappy = 3, flammable = 2, plant = 1, attached_node = 1,
 		not_in_creative_inventory = 1, growing = 1
 	},
-	sounds = default.node_sound_leaves_defaults()
+	sounds = farming.sounds.node_sound_leaves_defaults()
 }
 
 -- stage 1
@@ -92,7 +93,7 @@ farming.registered_plants["farming:beetroot"] = {
 -- mapgen
 minetest.register_decoration({
 	deco_type = "simple",
-	place_on = {"default:dirt_with_grass"},
+	place_on = {"default:dirt_with_grass", "mcl_core:dirt_with_grass"},
 	sidelen = 16,
 	noise_params = {
 		offset = 0,

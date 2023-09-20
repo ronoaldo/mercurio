@@ -1,6 +1,21 @@
 
-local S = ethereal.intllib
+local S = ethereal.translate
 
+-- basandra wood
+minetest.register_node("ethereal:basandra_wood", {
+	description = S("Basandra Wood"),
+	tiles = {"ethereal_basandra_bush_wood.png"},
+	paramtype2 = "facedir",
+	is_ground_content = false,
+	groups = {choppy = 2, oddly_breakable_by_hand = 1},
+	sounds = default.node_sound_wood_defaults(),
+	on_place = minetest.rotate_node
+})
+
+minetest.register_craft({
+	output = "ethereal:basandra_wood 2",
+	recipe = {{"ethereal:basandra_bush_stem"}}
+})
 
 -- sakura trunk
 minetest.register_node("ethereal:sakura_trunk", {
@@ -301,7 +316,11 @@ minetest.register_node("ethereal:bamboo", {
 	walkable = true,
 	selection_box = {
 		type = "fixed",
-		fixed = {-0.3, -0.5, -0.3, 0.3, 0.5, 0.3}
+		fixed = {-0.15, -0.5, -0.15, 0.15, 0.5, 0.15}
+	},
+	collision_box = {
+		type = "fixed",
+		fixed = {-0.15, -0.5, -0.15, 0.15, 0.5, 0.15}
 	},
 	groups = {choppy = 3, oddly_breakable_by_hand = 1, flammable = 2},
 	sounds = default.node_sound_leaves_defaults(),

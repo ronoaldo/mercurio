@@ -1,6 +1,6 @@
 --[[
     X Bows. Adds bow and arrows with API.
-    Copyright (C) 2022 SaKeL <juraj.vajda@gmail.com>
+    Copyright (C) 2023 SaKeL <juraj.vajda@gmail.com>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Lesser General Public
@@ -17,6 +17,12 @@
 --]]
 
 local S = minetest.get_translator(minetest.get_current_modname())
+
+local arrow_tail_recipe_material = 'group:wool'
+
+if minetest.get_modpath('animalia') then
+    arrow_tail_recipe_material = 'group:feather'
+end
 
 XBows:register_bow('bow_wood', {
     description = S('Wooden Bow'),
@@ -49,7 +55,7 @@ XBows:register_arrow('arrow_wood', {
         recipe = {
             { 'default:flint' },
             { 'group:stick' },
-            { 'group:wool' }
+            { arrow_tail_recipe_material }
         },
         tool_capabilities = {
             full_punch_interval = 1,
@@ -68,7 +74,7 @@ XBows:register_arrow('arrow_stone', {
         recipe = {
             { 'default:flint' },
             { 'group:stone' },
-            { 'group:wool' }
+            { arrow_tail_recipe_material }
         },
         tool_capabilities = {
             full_punch_interval = 1.2,
@@ -86,7 +92,7 @@ XBows:register_arrow('arrow_bronze', {
         recipe = {
             { 'default:flint' },
             { 'default:bronze_ingot' },
-            { 'group:wool' }
+            { arrow_tail_recipe_material }
         },
         tool_capabilities = {
             full_punch_interval = 0.8,
@@ -104,7 +110,7 @@ XBows:register_arrow('arrow_steel', {
         recipe = {
             { 'default:flint' },
             { 'default:steel_ingot' },
-            { 'group:wool' }
+            { arrow_tail_recipe_material }
         },
         tool_capabilities = {
             full_punch_interval = 0.7,
@@ -122,7 +128,7 @@ XBows:register_arrow('arrow_mese', {
         recipe = {
             { 'default:flint' },
             { 'default:mese_crystal' },
-            { 'group:wool' }
+            { arrow_tail_recipe_material }
         },
         tool_capabilities = {
             full_punch_interval = 0.7,
@@ -140,7 +146,7 @@ XBows:register_arrow('arrow_diamond', {
         recipe = {
             { 'default:flint' },
             { 'default:diamond' },
-            { 'group:wool' }
+            { arrow_tail_recipe_material }
         },
         tool_capabilities = {
             full_punch_interval = 0.7,

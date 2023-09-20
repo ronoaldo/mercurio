@@ -1,5 +1,5 @@
 
-local S = ethereal.intllib
+local S = ethereal.translate
 
 
 -- set leaftype (value inside init.lua)
@@ -22,7 +22,7 @@ minetest.override_item("default:leaves", {
 
 -- ability to craft big tree sapling
 minetest.register_craft({
-	recipe = {{"default:sapling", "default:sapling",  "default:sapling"}},
+	recipe = {{"default:sapling", "default:sapling", "default:sapling"}},
 	output = "ethereal:big_tree_sapling"
 })
 
@@ -79,7 +79,7 @@ minetest.register_node("ethereal:willow_twig", {
 	wield_image = "ethereal_willow_twig.png",
 	paramtype = "light",
 	walkable = ethereal.leafwalk,
-	visual_scale = leafscale,
+	visual_scale = 1.4,
 	waving = 1,
 	groups = {snappy = 3, leafdecay = 3, leaves = 1, flammable = 2},
 	drop = {
@@ -487,6 +487,41 @@ minetest.register_craft({
 	burntime = 1
 })
 
+-- basandra bush stem, leaves
+minetest.register_node("ethereal:basandra_bush_stem", {
+	description = S("Basandra Bush Stem"),
+	drawtype = "plantlike",
+	visual_scale = 1.41,
+	walkable = false,
+	damage_per_second = 2,
+	tiles = {"ethereal_basandra_bush_stem.png"},
+	inventory_image = "ethereal_basandra_bush_stem.png",
+	wield_image = "ethereal_basandra_bush_stem.png",
+	paramtype = "light",
+	sunlight_propagates = true,
+	groups = {choppy = 2, oddly_breakable_by_hand = 1, flammable = 2},
+	sounds = default.node_sound_wood_defaults(),
+	selection_box = {
+		type = "fixed",
+		fixed = {-7 / 16, -0.5, -7 / 16, 7 / 16, 0.5, 7 / 16},
+	}
+})
+
+minetest.register_node("ethereal:basandra_bush_leaves", {
+	description = S("Basandra Bush Leaves"),
+	drawtype = "allfaces_optional",
+	tiles = {"ethereal_basandra_bush_leaves.png"},
+	paramtype = "light",
+	groups = {snappy = 3, flammable = 2, leaves = 1},
+	drop = {
+		max_items = 1,
+		items = {
+			{items = {"ethereal:basandra_bush_sapling"}, rarity = 5},
+			{items = {"ethereal:basandra_bush_leaves"}}
+		}
+	},
+	sounds = default.node_sound_leaves_defaults()
+})
 
 -- compatibility check for new mt version with leafdecay function
 if minetest.registered_nodes["default:dirt_with_rainforest_litter"] then

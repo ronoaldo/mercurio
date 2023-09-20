@@ -2,31 +2,8 @@
 -- Load support for intllib.
 local MP = minetest.get_modpath(minetest.get_current_modname()) .. "/"
 
--- Check for translation method
-local S
-if minetest.get_translator ~= nil then
-	S = minetest.get_translator("mob_horse") -- 5.x translation function
-else
-	if minetest.get_modpath("intllib") then
-		dofile(minetest.get_modpath("intllib") .. "/init.lua")
-		if intllib.make_gettext_pair then
-			S = intllib.make_gettext_pair() -- new gettext method
-		else
-			S = intllib.Getter() -- old text file method
-		end
-	else -- boilerplate function
-		S = function(str, ...)
-			local args = {...}
-			return str:gsub("@%d+", function(match)
-				return args[tonumber(match:sub(2))]
-			end)
-		end
-	end
-end
-
-
--- 0.4.17 or 5.0 check
-local y_off = minetest.features.object_independent_selectionbox and 10 or 20
+-- Translation support
+local S = minetest.get_translator("mob_horse")
 
 -- horse shoes (speed, jump, brake/reverse speed, overlay texture)
 local shoes = {
@@ -72,7 +49,8 @@ mobs:register_mob("mob_horse:horse", {
 	view_range = 5,
 	follow = {
 		"farming:wheat", "default:apple", "farming:oat",
-		"farming:barley", "farming:corn"},
+		"farming:barley", "farming:corn"
+	},
 	passive = true,
 	hp_min = 12,
 	hp_max = 16,
@@ -94,8 +72,8 @@ mobs:register_mob("mob_horse:horse", {
 			self.max_speed_reverse = 2
 			self.accel = 6
 			self.terrain_type = 3
-			self.driver_attach_at = {x = 0, y = y_off, z = -2}
-			self.driver_eye_offset = {x = 0, y = y_off + 3, z = 0}
+			self.driver_attach_at = {x = 0, y = 10, z = -2}
+			self.driver_eye_offset = {x = 0, y = 10 + 3, z = 0}
 			self.driver_scale = {x = 0.8, y = 0.8} -- shrink driver to fit model
 		end
 
@@ -211,6 +189,7 @@ mobs:register_mob("mob_horse:horse", {
 
 				-- apply horseshoe overlay to current horse texture
 				if overlay then
+
 					self.texture_mods = "^" .. overlay
 
 					if self.saddle then

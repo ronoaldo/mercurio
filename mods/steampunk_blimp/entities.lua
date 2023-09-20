@@ -25,12 +25,12 @@ initial_properties = {
 	    self.sdata = minetest.deserialize(std) or {}
 	    if self.sdata.remove then self.object:remove() end
     end,
-	    
+
     get_staticdata=function(self)
       self.sdata.remove=true
       return minetest.serialize(self.sdata)
     end,
-	
+
 })
 
 --
@@ -38,8 +38,8 @@ initial_properties = {
 --
 minetest.register_entity('steampunk_blimp:stand_base',{
     initial_properties = {
-	    physical = true,
-	    collide_with_objects=true,
+	    physical = false,
+	    collide_with_objects=false,
         collisionbox = {-2, -2, -2, 2, 0, 2},
 	    pointable=false,
 	    visual = "mesh",
@@ -47,12 +47,12 @@ minetest.register_entity('steampunk_blimp:stand_base',{
         textures = {"steampunk_blimp_alpha.png",},
 	},
     dist_moved = 0,
-	
+
     on_activate = function(self,std)
 	    self.sdata = minetest.deserialize(std) or {}
 	    if self.sdata.remove then self.object:remove() end
     end,
-	    
+
     get_staticdata=function(self)
       self.sdata.remove=true
       return minetest.serialize(self.sdata)
@@ -83,10 +83,11 @@ minetest.register_entity("steampunk_blimp:blimp", {
     timeout = 0;
     buoyancy = 0.15,
     max_hp = 50,
-    anchored = false,
+    anchored = true,
     physics = steampunk_blimp.physics,
     hull_integrity = nil,
     owner = "",
+    time_total = 0,
     _shared_owners = {},
     _engine_running = false,
     _power_lever = 0,
@@ -102,6 +103,7 @@ minetest.register_entity("steampunk_blimp:blimp", {
     _passengers = {}, --passengers list
     _passengers_base = {}, --obj id
     _passengers_base_pos = steampunk_blimp.copy_vector({}),
+    _passenger_is_sit = {}, -- 0, 1, 2, 3 or 4 ==> stand, 0, 90, 180, 270 --the sit rotation
     _passengers_locked = false,
     _disconnection_check_time = 0,
     _inv = nil,
@@ -155,7 +157,7 @@ minetest.register_entity("steampunk_blimp:blimp", {
             self.hull_integrity = data.stored_hull_integrity
             self.item = data.stored_item
             self._inv_id = data.stored_inv_id
-            self._passengers = data.stored_passengers or steampunk_blimp.copy_vector({[1]=nil, [2]=nil, [3]=nil, [4]=nil, [5]=nil,})
+            self._passengers = data.stored_passengers or steampunk_blimp.copy_vector({[1]=nil, [2]=nil, [3]=nil, [4]=nil, [5]=nil, [6]=nil, [7]=nil})
             self._passengers_locked = data.stored_passengers_locked
             --minetest.debug("loaded: ", self._energy)
             local properties = self.object:get_properties()
@@ -176,30 +178,17 @@ minetest.register_entity("steampunk_blimp:blimp", {
         fire:set_attach(self.object,'',{x=0.0,y=0.0,z=0.0},{x=0,y=0,z=0})
 	    self.fire = fire
 
-        self._passengers_base = steampunk_blimp.copy_vector({[1]=nil, [2]=nil, [3]=nil, [4]=nil, [5]=nil,})
-        self._passengers_base_pos = steampunk_blimp.copy_vector({[1]=nil, [2]=nil, [3]=nil, [4]=nil, [5]=nil,})
-        self._passengers_base_pos = {
-                [1]=steampunk_blimp.copy_vector(steampunk_blimp.passenger_pos[1]),
-                [2]=steampunk_blimp.copy_vector(steampunk_blimp.passenger_pos[2]),
-                [3]=steampunk_blimp.copy_vector(steampunk_blimp.passenger_pos[3]),
-                [4]=steampunk_blimp.copy_vector(steampunk_blimp.passenger_pos[4]),
-                [5]=steampunk_blimp.copy_vector(steampunk_blimp.passenger_pos[5]),} --curr pos
-        --self._passengers = {[1]=nil, [2]=nil, [3]=nil, [4]=nil, [5]=nil,} --passenger names
-
-        self._passengers_base[1]=minetest.add_entity(pos,'steampunk_blimp:stand_base')
-        self._passengers_base[1]:set_attach(self.object,'',self._passengers_base_pos[1],{x=0,y=0,z=0})
-
-        self._passengers_base[2]=minetest.add_entity(pos,'steampunk_blimp:stand_base')
-        self._passengers_base[2]:set_attach(self.object,'',self._passengers_base_pos[2],{x=0,y=0,z=0})
-
-        self._passengers_base[3]=minetest.add_entity(pos,'steampunk_blimp:stand_base')
-        self._passengers_base[3]:set_attach(self.object,'',self._passengers_base_pos[3],{x=0,y=0,z=0})
-
-        self._passengers_base[4]=minetest.add_entity(pos,'steampunk_blimp:stand_base')
-        self._passengers_base[4]:set_attach(self.object,'',self._passengers_base_pos[4],{x=0,y=0,z=0})
-
-        self._passengers_base[5]=minetest.add_entity(pos,'steampunk_blimp:stand_base')
-        self._passengers_base[5]:set_attach(self.object,'',self._passengers_base_pos[5],{x=0,y=0,z=0})
+        --passengers positions
+        self._passenger_is_sit = steampunk_blimp.copy_vector({})
+        self._passengers_base = steampunk_blimp.copy_vector({})
+        self._passengers_base_pos = steampunk_blimp.copy_vector({})
+        for i = 1,steampunk_blimp.max_seats,1
+        do
+            self._passenger_is_sit[i] = 0
+            self._passengers_base_pos[i] = steampunk_blimp.copy_vector(steampunk_blimp.passenger_pos[i])
+            self._passengers_base[i]=minetest.add_entity(pos,'steampunk_blimp:stand_base')
+            self._passengers_base[i]:set_attach(self.object,'',self._passengers_base_pos[i],{x=0,y=0,z=0})
+        end
 
         --animation load - stoped
         self.object:set_animation({x = 1, y = 47}, 0, 0, true)
@@ -210,7 +199,7 @@ minetest.register_entity("steampunk_blimp:blimp", {
 
         airutils.actfunc(self, staticdata, dtime_s)
 
-        self.object:set_armor_groups({immortal=1})        
+        self.object:set_armor_groups({immortal=1})
 
 		local inv = minetest.get_inventory({type = "detached", name = self._inv_id})
 		-- if the game was closed the inventories have to be made anew, instead of just reattached
@@ -227,11 +216,11 @@ minetest.register_entity("steampunk_blimp:blimp", {
 	    self.dtime = math.min(dtime,0.2)
 	    self.colinfo = colinfo
 	    self.height = airutils.get_box_height(self)
-	    
+
     --  physics comes first
 	    local vel = self.object:get_velocity()
-	    
-	    if colinfo then 
+
+	    if colinfo then
 		    self.isonground = colinfo.touching_ground
 	    else
 		    if self.lastvelocity.y==0 and vel.y==0 then
@@ -240,61 +229,65 @@ minetest.register_entity("steampunk_blimp:blimp", {
 			    self.isonground = false
 		    end
 	    end
-	    
+
 	    self:physics()
 
 	    if self.logic then
 		    self:logic()
 	    end
-	    
+
 	    self.lastvelocity = self.object:get_velocity()
 	    self.time_total=self.time_total+self.dtime
     end,
     logic = function(self)
-        
+
         local accel_y = self.object:get_acceleration().y
         local rotation = self.object:get_rotation()
         local yaw = rotation.y
-        local newyaw=yaw
-        local pitch = rotation.x
-        local newpitch = pitch
-        local roll = rotation.z
+        local curr_pos = self.object:get_pos()
+        local newyaw
+        local newpitch
 
         local hull_direction = minetest.yaw_to_dir(yaw)
         local nhdir = {x=hull_direction.z,y=0,z=-hull_direction.x}        -- lateral unit vector
         local velocity = self.object:get_velocity()
+        local wind_speed = airutils.get_wind(curr_pos, 0.15)
 
         local longit_speed = steampunk_blimp.dot(velocity,hull_direction)
         self._longit_speed = longit_speed --for anchor verify
-        local longit_drag = vector.multiply(hull_direction,longit_speed*
-                longit_speed*LONGIT_DRAG_FACTOR*-1*steampunk_blimp.sign(longit_speed))
+        local relative_longit_speed = longit_speed
+        if steampunk_blimp.wind_enabled then
+            relative_longit_speed = steampunk_blimp.dot(vector.add(velocity, wind_speed), hull_direction)
+        end
+        self._relative_longit_speed = relative_longit_speed
+
+        local longit_drag = vector.multiply(hull_direction,relative_longit_speed*
+                relative_longit_speed*LONGIT_DRAG_FACTOR*-1*steampunk_blimp.sign(relative_longit_speed))
         local later_speed = steampunk_blimp.dot(velocity,nhdir)
         local later_drag = vector.multiply(nhdir,later_speed*later_speed*
                 LATER_DRAG_FACTOR*-1*steampunk_blimp.sign(later_speed))
         local accel = vector.add(longit_drag,later_drag)
 
-        local vel = self.object:get_velocity()
-        local curr_pos = self.object:get_pos()
         self._last_pos = curr_pos
         self.object:move_to(curr_pos)
 
         --minetest.chat_send_all(self._energy)
-        --local node_bellow = airutils.nodeatpos(airutils.pos_shift(curr_pos,{y=-2.8}))
+        --local node_below = airutils.nodeatpos(airutils.pos_shift(curr_pos,{y=-2.8}))
         --[[local is_flying = true
-        if node_bellow and node_bellow.drawtype ~= 'airlike' then is_flying = false end]]--
+        if node_below and node_below.drawtype ~= 'airlike' then is_flying = false end]]--
 
-        local is_attached = false
-        local player = nil
+        --[[local is_attached = false
         if self.driver_name then
-            player = minetest.get_player_by_name(self.driver_name)
-            
+            local player = minetest.get_player_by_name(self.driver_name)
+
             if player then
                 is_attached = steampunk_blimp.checkAttach(self, player)
             end
         end
+        ]]--
 
         if self.owner == "" then return end
-        --[[if longit_speed == 0 and is_flying == false and is_attached == false and self._engine_running == false then
+        --[[if relative_longit_speed == 0 and is_flying == false and is_attached == false and self._engine_running == false then
             self.object:move_to(curr_pos)
             --self.object:set_acceleration({x=0,y=airutils.gravity,z=0})
             return
@@ -308,19 +301,19 @@ minetest.register_entity("steampunk_blimp:blimp", {
         end
 
         --detect collision
-        steampunk_blimp.testDamage(self, vel, curr_pos)
+        steampunk_blimp.testDamage(self, velocity, curr_pos)
 
-        accel = steampunk_blimp.control(self, self.dtime, hull_direction, longit_speed, accel) or vel
+        accel = steampunk_blimp.control(self, self.dtime, hull_direction, relative_longit_speed, accel) or velocity
 
         --get disconnected players
         steampunk_blimp.rescueConnectionFailedPassengers(self)
 
         local turn_rate = math.rad(18)
-        newyaw = yaw + self.dtime*(1 - 1 / (math.abs(longit_speed) + 1)) *
-            self._rudder_angle / 30 * turn_rate * steampunk_blimp.sign(longit_speed)
+        newyaw = yaw + self.dtime*(1 - 1 / (math.abs(relative_longit_speed) + 1)) *
+            self._rudder_angle / 30 * turn_rate * steampunk_blimp.sign(relative_longit_speed)
 
         steampunk_blimp.engine_step(self, accel)
-        
+
         --roll adjust
         ---------------------------------
         local sdir = minetest.yaw_to_dir(newyaw)
@@ -330,7 +323,7 @@ minetest.register_entity("steampunk_blimp:blimp", {
         local newroll = 0
         if self._last_roll ~= nil then newroll = self._last_roll end
         --oscilation when stoped
-        if longit_speed == 0 then
+        if relative_longit_speed == 0 then
             local time_correction = (self.dtime/steampunk_blimp.ideal_step)
             --stoped
             if self._roll_state == nil then
@@ -352,7 +345,7 @@ minetest.register_entity("steampunk_blimp:blimp", {
             --in movement
             self._roll_state = nil
             newroll = (prsr*math.rad(rollfactor))*later_speed
-            if self._last_roll ~= nil then 
+            if self._last_roll ~= nil then
                 if math.sign(newroll) ~= math.sign(self._last_roll) then
                     steampunk_blimp.play_rope_sound(self)
                 end
@@ -363,8 +356,19 @@ minetest.register_entity("steampunk_blimp:blimp", {
         ---------------------------------
         -- end roll
 
+        if steampunk_blimp.wind_enabled then
+            --local wind_yaw = minetest.dir_to_yaw(wind_speed)
+            --minetest.chat_send_all("x: "..wind_speed.x.. " - z: "..wind_speed.z.." - yaw: "..math.deg(wind_yaw).. " - orig: "..wind_yaw)
+
+            if self.anchored == false and self.isonground == false then
+                accel = vector.add(accel, wind_speed)
+            else
+                accel = vector.new()
+            end
+        end
         accel.y = accel_y
-        newpitch = velocity.y * math.rad(1.5)
+
+        newpitch =  velocity.y * math.rad(1.5) * (relative_longit_speed/3)
         self.object:set_acceleration(accel)
         self.object:set_rotation({x=newpitch,y=newyaw,z=newroll})
 
@@ -384,21 +388,13 @@ minetest.register_entity("steampunk_blimp:blimp", {
         if not puncher or not puncher:is_player() then
             return
         end
-        local is_admin = false
+        local is_admin
         is_admin = minetest.check_player_privs(puncher, {server=true})
 		local name = puncher:get_player_name()
-        if self.owner and self.owner ~= name and self.owner ~= "" then
-            if is_admin == false then return end
-        end
         if self.owner == nil then
             self.owner = name
         end
-            
-        if self.driver_name and self.driver_name ~= name then
-            -- do not allow other players to remove the object while there is a driver
-            return
-        end
-        
+
         local is_attached = steampunk_blimp.checkAttach(self, puncher)
 
         local itmstck=puncher:get_wielded_item()
@@ -407,8 +403,17 @@ minetest.register_entity("steampunk_blimp:blimp", {
 
         if is_attached == true then
             --refuel
-            steampunk_blimp.load_fuel(self, puncher)
-            steampunk_blimp.load_water(self, puncher)
+            if steampunk_blimp.load_fuel(self, puncher) then return end
+            if steampunk_blimp.load_water(self, puncher) then return end
+        end
+
+        if self.owner and self.owner ~= name and self.owner ~= "" then
+            if is_admin == false then return end
+        end
+
+        if self.driver_name and self.driver_name ~= name then
+            -- do not allow other players to remove the object while there is a driver
+            return
         end
 
         -- deal with painting or destroying
@@ -435,10 +440,9 @@ minetest.register_entity("steampunk_blimp:blimp", {
         end
 
         if is_attached == false then
-            local i = 0
             local has_passengers = false
-            for i = steampunk_blimp.max_seats,1,-1 
-            do 
+            for i = steampunk_blimp.max_seats,1,-1
+            do
                 if self._passengers[i] ~= nil then
                     has_passengers = true
                     break
@@ -447,7 +451,7 @@ minetest.register_entity("steampunk_blimp:blimp", {
 
 
             if not has_passengers and toolcaps and toolcaps.damage_groups and
-                    toolcaps.groupcaps and toolcaps.groupcaps.choppy then
+                    toolcaps.groupcaps and (toolcaps.groupcaps.choppy or toolcaps.groupcaps.axey_dig) then
 
                 local is_empty = true --[[false
                 local inventory = airutils.get_inventory(self)
@@ -473,11 +477,10 @@ minetest.register_entity("steampunk_blimp:blimp", {
             end
 
         end
-        
+
     end,
 
     on_rightclick = function(self, clicker)
-        local message = ""
 		if not clicker or not clicker:is_player() then
 			return
 		end
@@ -487,10 +490,6 @@ minetest.register_entity("steampunk_blimp:blimp", {
         if self.owner == "" then
             self.owner = name
         end
-
-        local touching_ground, liquid_below = airutils.check_node_below(self.object, 2.5)
-        local is_on_ground = self.isinliquid or touching_ground or liquid_below
-        local is_under_water = airutils.check_is_under_water(self.object)
 
         --minetest.chat_send_all('passengers: '.. dump(self._passengers))
         --=========================
@@ -505,8 +504,8 @@ minetest.register_entity("steampunk_blimp:blimp", {
 
         --check error after being shot for any other mod
         if is_attached == false then
-            for i = steampunk_blimp.max_seats,1,-1 
-            do 
+            for i = steampunk_blimp.max_seats,1,-1
+            do
                 if self._passengers[i] == name then
                     self._passengers[i] = nil --clear the wrong information
                     break
@@ -572,8 +571,8 @@ minetest.register_entity("steampunk_blimp:blimp", {
             else
                 --first lets clean the boat slots
                 --note that when it happens, the "rescue" function will lost the historic
-                for i = steampunk_blimp.max_seats,1,-1 
-                do 
+                for i = steampunk_blimp.max_seats,1,-1
+                do
                     if self._passengers[i] ~= nil then
                         local old_player = minetest.get_player_by_name(self._passengers[i])
                         if not old_player then self._passengers[i] = nil end

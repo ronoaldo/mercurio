@@ -28,3 +28,6 @@
 [submodule "mods/water_life"]
 	path = mods/water_life
 	url = https://github.com/ronoaldo/water_life
+[submodule "mods/markdown2formspec"]
+	path = mods/markdown2formspec
+	url = https://github.com/ronoaldo/markdown2formspec

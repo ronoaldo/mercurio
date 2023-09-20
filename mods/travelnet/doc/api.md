@@ -1,5 +1,31 @@
 # API
 
+## travelnet.get_travelnets(playername, create)
+
+Returns the per-player travelnet data, for example:
+
+```lua
+-- auto-create a new entry if it not exists
+local travelnets = travelnet.get_travelnets(playername, true)
+
+-- return the exsiting data, nil if no entry found
+local travelnets = travelnet.get_travelnets(playername)
+```
+
+## travelnet.set_travelnets(playername, travelnets)
+
+Sets and saves the updated travelnet data for the player
+**NOTE**: this function also perists changes
+
+```lua
+-- retrieve the player-data
+local travelnets = travelnet.get_travelnets(playername)
+-- add a station stub
+travelnets["my_network"] = {}
+-- save the modified data
+travelnet.set_travelnets(playername, travelnets)
+```
+
 ## travelnet.register_travelnet_box
 
 Lets you register your own travelnet boxes with a custom color, name and dye ingredient

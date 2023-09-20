@@ -1,22 +1,130 @@
-# Translation of the farming mod by TenPlus1
 # textdomain: farming
-# author: (you)
-# last update: 2020/Apr/26
-
-###### folder . ######
-
-### init.lua ###
-Seed=
-
-### compatibility.lua ###
 Banana=
 Banana Leaves=
 Orange=
+Artichoke=
+Asparagus=
+Barley Seed=
+Barley=
+Green Beans=
+Bean Pole (place on soil before planting beans)=
+Beetroot=
+Beetroot Soup=
+Blackberries=
+Wild Blueberries=
+Blueberry Muffin=
+Blueberry Pie=
+Cabbage=
+Carrot=
+Carrot Juice=
+Golden Carrot=
+Chili Pepper=
+Bowl of Chili=
+Chili Powder=
+Raw Cocoa Beans=
+Cocoa Beans=
+Cookie=
+Bar of Dark Chocolate=
+Chocolate Block=
+Coffee Beans=
+Cup of Coffee=
+Corn=
+Corn on the Cob=
+Popcorn=
+Cornstarch=
+Bottle of Ethanol=
+Wild Cotton=
+Cotton Seed=
+Cotton=
+String=
+Cucumber=
+Eggplant=
+Garlic clove=
+Garlic=
+Garlic Braid=
+Ginger=
+Grapes=
+Trellis (place on soil before planting grapes)=
+Hemp Seed=
+Hemp Leaf=
+Bottle of Hemp Oil=
+Hemp Fibre=
+Hemp Block=
+Hemp Rope=
+Lettuce=
+Melon Slice=
+Melon=
+Mint Seeds=
+Mint Leaf=
+Mint Tea=
+Onion=
+Onion Soup=
+Parsley=
+Pea Pod=
+Pea Soup=
+Peppercorn=
+Green Pepper=
+Yellow Pepper=
+Red Pepper=
+Ground Pepper=
+Pineapple Top=
+Pineapple=
+Pineapple Ring=
+Pineapple Juice=
+Potato=
+Baked Potato=
+Cucumber and Potato Salad=
+Pumpkin Slice=
+Jack 'O Lantern (punch to turn on and off)=
+Scarecrow Bottom=
+Pumpkin Bread=
+Pumpkin Dough=
+Pumpkin=
+Raspberries=
+Raspberry Smoothie=
+Rhubarb=
+Rhubarb Pie=
+Rice Seed=
+Rice=
+Rice Bread=
+Rice Flour=
+Rye seed=
+Rye=
+Oat seed=
+Oats=
+Multigrain Flour=
+Multigrain Bread=
+Soy Pod=
+Soy Sauce=
+Soy Milk=
+Tofu=
+Cooked Tofu=
+Spinach=
 Strawberry=
-
-### food.lua ###
+Sunflower=
+Sunflower Seeds=
+Toasted Sunflower Seeds=
+Bottle of Sunflower Oil=
+Sunflower Seed Bread=
+Tomato=
+Tomato Soup=
+Vanilla=
+Vanilla Extract=
+Wheat Seed=
+Wheat=
+Straw=
+Flour=
+Bread=
+Sliced Bread=
+Toast=
+Toast Sandwich=
+Glass of Water=
 Sugar=
+Sugar Cube=
+Caramel=
 Salt=
+Salt crystal=
+Mayonnaise=
 Rose Water=
 Turkish Delight=
 Garlic Bread=
@@ -25,8 +133,24 @@ Chocolate Donut=
 Apple Donut=
 Porridge=
 Jaffa Cake=
-
-### hoes.lua ###
+Apple Pie=
+Cactus Juice=
+Pasta=
+Mac & Cheese=
+Spaghetti=
+Bibimbap=
+Burger=
+Salad=
+Triple Berry Smoothie=
+Spanish Potatoes=
+Potato omelet=
+Paella=
+Vanilla Flan=
+Vegan Cheese=
+Onigiri=
+Gyoza=
+Mochi=
+Gingerbread Man=
 Hoe=
 Wooden Hoe=
 Stone Hoe=
@@ -34,16 +158,14 @@ Steel Hoe=
 Bronze Hoe=
 Mese Hoe=
 Diamond Hoe=
-# Surcharge du mod [Toolranks] à faire #
+Wood Hoe=
 Hoe Bomb (use or throw on grassy areas to hoe land)=
-Mithril Scythe (Right-click to harvest and replant crops)=
-# Surcharge du mod [Toolranks] à faire #
-
-### soil.lua ###
+Mithril Scythe (Use to harvest and replant crops)=
+Seed=
+Savanna Soil=
+Wet Savanna Soil=
 Soil=
 Wet Soil=
-
-### utensils.lua ###
 Wooden Bowl=
 Saucepan=
 Cooking Pot=
@@ -53,142 +175,3 @@ Mortar and Pestle=
 Cutting Board=
 Juicer=
 Glass Mixing Bowl=
-
-
-###### folder ./crops ######
-
-### barley.lua ###
-Barley Seed=
-Barley=
-
-### beans.lua ###
-Green Beans=
-Bean Pole (place on soil before planting beans)=
-
-### beetroot.lua ###
-Beetroot=
-Beetroot Soup=
-
-### blueberry.lua ###
-Blueberries=
-Blueberry Muffin=
-Blueberry Pie=
-
-### carrot.lua ##
-Carrot=
-Carrot Juice=
-Golden Carrot=
-
-### chili.lua ###
-Chili Pepper=
-Bowl of Chili=
-
-### cocoa.lua ###
-Cocoa Beans=
-Cookie=
-Bar of Dark Chocolate=
-Chocolate Block=
-
-### coffee.lua ###
-Coffee Beans=
-Cup of Coffee=
-
-### corn.lua ###
-Corn=
-Corn on the Cob=
-Cornstarch=
-Bottle of Ethanol=
-
-### cotton.lua ###
-Cotton Seed=
-Cotton=
-String=
-
-### cucumber.lua ###
-Cucumber=
-
-### garlic.lua ###
-Garlic clove=
-Garlic=
-Garlic Braid=
-
-### grapes.lua ###
-Grapes=
-Trellis (place on soil before planting grapes)=
-
-### hemp.lua ###
-Hemp Seed=
-Hemp Leaf=
-Bottle of Hemp Oil=
-Hemp Fibre=
-Hemp Block=
-Hemp Rope=
-
-### melon.lua ###
-Melon Slice=
-Melon=
-
-### onion.lua ###
-Onion=
-
-### peas.lua ###
-Pea Pod=
-Peas=
-Pea Soup=
-
-### pepper.lua ###
-Peppercorn=
-Pepper=
-Ground Pepper=
-
-### pinapple.lua ###
-Pineapple Top=
-Pineapple=
-Pineapple Ring=
-Pineapple Juice=
-
-### potato.lua ###
-Potato=
-Baked Potato=
-Cucumber and Potato Salad=
-
-### pumpkin.lua ###
-Pumpkin Slice=
-Jack 'O Lantern (punch to turn on and off)=
-Scarecrow Bottom=
-Pumpkin Bread=
-Pumpkin Dough=
-Pumpkin=
-
-### raspberry.lua ###
-Raspberries=
-Raspberry Smoothie=
-
-### rhubarb.lua ###
-Rhubarb=
-Rhubarb Pie=
-
-### ryeoatrice.lua ###
-Rye=
-Rye seed=
-Oat=
-Oat seed=
-Rice=
-Rice grains=
-Rice Bread=
-Rice Flour=
-Multigrain Flour=
-Multigrain Bread=
-
-### tomato.lua ###
-Tomato=
-
-### wheat.lua ###
-Wheat Seed=
-Wheat=
-Straw=
-Flour=
-Bread=
-Sliced Bread=
-Toast=
-Toast Sandwich=

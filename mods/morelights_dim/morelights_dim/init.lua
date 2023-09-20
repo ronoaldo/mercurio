@@ -4,19 +4,23 @@
 morelights_dim = {};
 dofile(minetest.get_modpath("morelights_dim") .. "/util.lua");
 
+-- These must be queried with default value immediately added as fallback.
+-- Engine bug #6711
+local mod_settings = {
+    tools = minetest.settings:get("morelights_dim_light_level_tools") or "morelights:bulb";
+    with_hand = minetest.settings:get_bool("morelights_dim_change_light_level_with_hand", false);
+};
+
 --- Items listed as key in this table will trigger the
 --- morelights_dim.change_to_next_variant() right-click handler.
 morelights_dim.light_level_tools = {};
-for _, tool in ipairs(string.split(minetest.settings:get(
-                                           "morelights_dim_light_level_tools") or
-                                           "")) do
+for _, tool in ipairs(string.split(mod_settings.tools)) do
     morelights_dim.light_level_tools[string.trim(tool)] = true;
 end
 
 --- If true, the empty hand will trigger the
 --- morelights_dim.change_to_next_variant() right-click handler.
-morelights_dim.change_light_level_with_hand =
-        minetest.settings:get_bool("morelights_dim_change_light_level_with_hand");
+morelights_dim.change_light_level_with_hand = mod_settings.with_hand;
 if not morelights_dim.change_light_level_with_hand then
     minetest.register_on_mods_loaded(function()
         if next(morelights_dim.light_level_tools) == nil then

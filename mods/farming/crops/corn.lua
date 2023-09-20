@@ -4,13 +4,14 @@
 	http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/wip-mods/1440575-1-2-5-generation-minecraft-beta-1-2-farming-and
 ]]
 
-local S = farming.intllib
+local S = farming.translate
+local a = farming.recipe_items
 
 -- corn
 minetest.register_craftitem("farming:corn", {
 	description = S("Corn"),
 	inventory_image = "farming_corn.png",
-	groups = {seed = 2, food_corn = 1, flammable = 2},
+	groups = {compostability = 45, seed = 2, food_corn = 1, flammable = 2},
 	on_place = function(itemstack, placer, pointed_thing)
 		return farming.place_seed(itemstack, placer, pointed_thing, "farming:corn_1")
 	end,
@@ -21,7 +22,7 @@ minetest.register_craftitem("farming:corn", {
 minetest.register_craftitem("farming:corn_cob", {
 	description = S("Corn on the Cob"),
 	inventory_image = "farming_corn_cob.png",
-	groups = {food_corn_cooked = 1, flammable = 2},
+	groups = {compostability = 65, food_corn_cooked = 1, flammable = 2},
 	on_use = minetest.item_eat(5)
 })
 
@@ -36,14 +37,14 @@ minetest.register_craft({
 minetest.register_craftitem("farming:popcorn", {
 	description = S("Popcorn"),
 	inventory_image = "farming_popcorn.png",
-	groups = {food_popcorn = 1, flammable = 2},
+	groups = {compostability = 55, food_popcorn = 1, flammable = 2},
 	on_use = minetest.item_eat(4)
 })
 
 minetest.register_craft({
 	output = "farming:popcorn",
 	recipe = {
-		{"group:food_pot", "group:food_oil", "group:food_corn"}
+		{"group:food_oil", "group:food_corn", a.pot}
 	},
 	replacements = {
 		{"group:food_pot", "farming:pot"},
@@ -55,13 +56,13 @@ minetest.register_craft({
 minetest.register_craftitem("farming:cornstarch", {
 	description = S("Cornstarch"),
 	inventory_image = "farming_cornstarch.png",
-	groups = {food_cornstarch = 1, food_gelatin = 1, flammable = 2}
+	groups = {food_cornstarch = 1, food_gelatin = 1, flammable = 2, compostability = 65}
 })
 
 minetest.register_craft({
 	output = "farming:cornstarch",
 	recipe = {
-		{"group:food_mortar_pestle", "group:food_corn_cooked", "group:food_baking_tray"},
+		{a.mortar_pestle, "group:food_corn_cooked", a.baking_tray},
 		{"", "group:food_bowl", ""},
 	},
 	replacements = {
@@ -85,14 +86,14 @@ minetest.register_node("farming:bottle_ethanol", {
 		fixed = {-0.25, -0.5, -0.25, 0.25, 0.3, 0.25}
 	},
 	groups = {vessel = 1, dig_immediate = 3, attached_node = 1},
-	sounds = default.node_sound_glass_defaults()
+	sounds = farming.sounds.node_sound_glass_defaults()
 })
 
 minetest.register_craft( {
 	output = "farming:bottle_ethanol",
 	recipe = {
 		{"group:food_corn", "group:food_corn", "group:food_corn"},
-		{"group:food_corn", "vessels:glass_bottle", "group:food_corn"},
+		{"group:food_corn", a.glass_bottle, "group:food_corn"},
 		{"group:food_corn", "group:food_corn", "group:food_corn"}
 	}
 })
@@ -101,7 +102,7 @@ minetest.register_craft({
 	type = "fuel",
 	recipe = "farming:bottle_ethanol",
 	burntime = 80,
-	replacements = {{"farming:bottle_ethanol", "vessels:glass_bottle"}}
+	replacements = {{"farming:bottle_ethanol", a.glass_bottle}}
 })
 
 -- corn definition
@@ -113,12 +114,13 @@ local def = {
 	walkable = false,
 	buildable_to = true,
 	drop = "",
+	waving = 1,
 	selection_box = farming.select,
 	groups = {
-		snappy = 3, flammable = 2, plant = 1, attached_node = 1,
+		handy = 1, snappy = 3, flammable = 2, plant = 1, attached_node = 1,
 		not_in_creative_inventory = 1, growing = 1
 	},
-	sounds = default.node_sound_leaves_defaults()
+	sounds = farming.sounds.node_sound_leaves_defaults()
 }
 
 -- stage 1
@@ -181,7 +183,7 @@ farming.registered_plants["farming:corn"] = {
 -- mapgen
 minetest.register_decoration({
 	deco_type = "simple",
-	place_on = {"default:dirt_with_grass"},
+	place_on = {"default:dirt_with_grass", "mcl_core:dirt_with_grass"},
 	sidelen = 16,
 	noise_params = {
 		offset = 0,

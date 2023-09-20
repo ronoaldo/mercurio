@@ -26,7 +26,6 @@ Version 0.4:
 
 Refinery-Output is now a Vial instead of a Bottle.
 
-
 Version 0.4.1:
 -------------
 Temporary fix of dependency error
@@ -63,7 +62,6 @@ New biofuel can texture     (El-Naso)
 
 [Hopper Support : FaceDeer's Version](https://forum.minetest.net/viewtopic.php?t=20058) (Lokrates/OgelGames)
 
-
 Version 0.7
 -----------
 Translation of the logging function removed due to errors	(Lokrates)
@@ -71,3 +69,14 @@ Translation of the logging function removed due to errors	(Lokrates)
 Add use_alpha_texture property	(Lokrates)
 
 Additional trunks support (nixnoxus)
+
+Version 0.8
+-----------
+zh_TW Translation added (Emojigit)
+
+es Translation added (Jolesh)
+
+New Screenshots (Lokrates)
+
+add reverse Recipes (Lokrates)
+

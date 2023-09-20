@@ -3,6 +3,7 @@
 xdecor = {}
 local modpath = minetest.get_modpath("xdecor")
 
+dofile(modpath .. "/handlers/glasscut.lua")
 dofile(modpath .. "/handlers/animations.lua")
 dofile(modpath .. "/handlers/helpers.lua")
 dofile(modpath .. "/handlers/nodeboxes.lua")

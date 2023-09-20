@@ -8,8 +8,8 @@ mobs:register_mob("dmobs:fox", {
 	hp_max = 52,
 	armor = 130,
 	collisionbox = {-0.4, -0.6, -0.4, 0.3, 0.3, 0.3},
-	runaway = true,
-	pathfinding = true,
+	--runaway = true,
+	--pathfinding = true,
 	visual = "mesh",
 	mesh = "fox.b3d",
 	textures = {

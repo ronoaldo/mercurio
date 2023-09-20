@@ -1,5 +1,5 @@
 # Inventory Icon
-Version: 1.1.0
+Version: 2.0.0
 
 ## Description
 This simple mod adds an icon to the player's HUD at the bottom right corner.
@@ -14,8 +14,8 @@ mods are used, icons for each bag are displayed, too.
 The code is licensed under the MIT License.
 
 ### Media files
-Licensed under [CC-BY-SA 3.0 Unported](https://creativecommons.org/licenses/by-sa/3.0/).
+Licensed under [CC BY-SA 3.0 Unported](https://creativecommons.org/licenses/by-sa/3.0/).
 
 #### Authors
-* `inventory_icon_backpack_free.png`: DitsyDM and Traipse OpenRPG (CC-BY-SA 3.0 Unported)
-* `inventory_icon_backpack_full.png`: DitsyDM, Traipse OpenRPG and Wuzzy (CC-BY-SA 3.0 Unported)
+* `inventory_icon_backpack_free.png`: DitsyDM and Traipse OpenRPG (CC BY-SA 3.0 Unported)
+* `inventory_icon_backpack_full.png`: DitsyDM, Traipse OpenRPG and Wuzzy (CC BY-SA 3.0 Unported)

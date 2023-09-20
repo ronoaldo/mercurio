@@ -1,4 +1,4 @@
-# skinsdb
+# skinsdb - User-facing branch that includes a few basic skins
 
 This Minetest mod offers changeable player skins with a graphical interface for multiple inventory mods.
 
@@ -37,9 +37,9 @@ You might want to run `minetest` in a Terminal/Console window to check the log o
 **Requirements:**
 
  * Python 3
- * `requests` library: `pip3 install requests`  
- 
-Go to the updater folder of this mod and run `python3 update_skins.py`  
+ * `requests` library: `pip3 install requests`
+
+Go to the updater folder of this mod and run `python3 update_skins.py`
 The Script will download all the skins from the database for you.
 
 ### Manual addition

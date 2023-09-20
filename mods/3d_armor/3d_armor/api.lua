@@ -631,6 +631,9 @@ end
 armor.damage = function(self, player, index, stack, use)
 	local old_stack = ItemStack(stack)
 	local worn_armor = armor:get_weared_armor_elements(player)
+	if not worn_armor then
+		return
+	end
 	local armor_worn_cnt = 0
 	for k,v in pairs(worn_armor) do
 		armor_worn_cnt = armor_worn_cnt + 1
@@ -681,6 +684,10 @@ armor.equip = function(self, player, itemstack)
 		for i=1, armor_inv:get_size("armor") do
 			local stack = armor_inv:get_stack("armor", i)
 			if self:get_element(stack:get_name()) == armor_element then
+				--prevents equiping an armor that would unequip a cursed armor.
+				if minetest.get_item_group(stack:get_name(), "cursed") ~= 0 then
+					return itemstack
+				end
 				index = i
 				self:unequip(player, armor_element)
 				break

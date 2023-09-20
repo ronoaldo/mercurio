@@ -1,4 +1,6 @@
-xbg = default.gui_bg .. default.gui_bg_img .. default.gui_slots
+local S = minetest.get_translator("xdecor")
+
+xdecor.xbg = default.gui_bg .. default.gui_bg_img .. default.gui_slots
 local default_inventory_size = 32
 
 local default_inventory_formspecs = {
@@ -66,13 +68,33 @@ local function xdecor_stairs_alternative(nodename, def)
 				}
 			)
 		elseif minetest.get_modpath("stairs") then
-			stairs.register_stair_and_slab(name,nodename,
-				def.groups,
-				def.tiles,
-				("%s Stair"):format(def.description),
-				("%s Slab"):format(def.description),
-				def.sounds
-			)
+			local custom_tiles = xdecor.glasscuts[nodename]
+			if custom_tiles and (custom_tiles.slab or custom_tiles.stair) then
+				if custom_tiles.stair then
+					stairs.register_stair(name, nodename,
+						def.groups, custom_tiles.stair, S("@1 Stair", def.description),
+						def.sounds)
+					stairs.register_stair_inner(name, nodename,
+						def.groups, custom_tiles.stair_inner, "", def.sounds, nil, S("Inner @1 Stair", def.description))
+					stairs.register_stair_outer(name, nodename,
+						def.groups, custom_tiles.stair_outer, "", def.sounds, nil, S("Outer @1 Stair", def.description))
+				end
+				if custom_tiles.slab then
+					stairs.register_slab(name, nodename,
+						def.groups, custom_tiles.slab, S("@1 Slab", def.description),
+						def.sounds)
+				end
+			else
+				stairs.register_stair_and_slab(name,nodename,
+					def.groups,
+					def.tiles,
+					S("@1 Stair", def.description),
+					S("@1 Slab", def.description),
+					def.sounds, nil,
+					S("Inner @1 Stair", def.description),
+					S("Outer @1 Stair", def.description)
+				)
+			end
 		end
 	end
 
@@ -112,7 +134,7 @@ function xdecor.register(name, def)
 
 			inv:set_size("main", size)
 			meta:set_string("formspec",
-				(inventory.formspec or get_formspec_by_size(size)) .. xbg)
+				(inventory.formspec or get_formspec_by_size(size)) .. xdecor.xbg)
 		end
 
 		def.can_dig = def.can_dig or default_can_dig
@@ -135,3 +157,27 @@ function xdecor.register(name, def)
 		end
 	end
 end
+
+-- Registers aliases for a node that had a name collision
+-- with a node from the moreblocks mod
+function xdecor.register_legacy_aliases(original_basename, new_basename)
+	minetest.register_alias("xdecor:"..original_basename, "xdecor:"..new_basename)
+	minetest.register_alias("xdecor:"..original_basename.."_panel", "xdecor:"..new_basename.."_panel")
+	minetest.register_alias("xdecor:"..original_basename.."_doublepanel", "xdecor:"..new_basename.."_doublepanel")
+	minetest.register_alias("xdecor:"..original_basename.."_micropanel", "xdecor:"..new_basename.."_micropanel")
+	minetest.register_alias("xdecor:"..original_basename.."_halfstair", "xdecor:"..new_basename.."_halfstair")
+	minetest.register_alias("xdecor:"..original_basename.."_thinstair", "xdecor:"..new_basename.."_thinstair")
+	minetest.register_alias("xdecor:"..original_basename.."_cube", "xdecor:"..new_basename.."_cube")
+	minetest.register_alias("xdecor:"..original_basename.."_microslab", "xdecor:"..new_basename.."_microslab")
+	minetest.register_alias("xdecor:"..original_basename.."_nanoslab", "xdecor:"..new_basename.."_nanoslab")
+	if not minetest.get_modpath("moreblocks") then
+		minetest.register_alias("stairs:slab_"..original_basename, "stairs:slab_"..new_basename)
+		minetest.register_alias("stairs:stair_"..original_basename, "stairs:stair_"..new_basename)
+		minetest.register_alias("stairs:stair_outer_"..original_basename, "stairs:stair_outer_"..new_basename)
+		minetest.register_alias("stairs:stair_inner_"..original_basename, "stairs:stair_inner"..new_basename)
+	end
+	if minetest.get_modpath("stairsplus") and minetest.global_exists("stairsplus") and stairsplus.api then
+		stairsplus.api.register_alias_all("xdecor:"..original_basename, "xdecor:"..new_basename)
+	end
+end
+

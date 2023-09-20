@@ -189,6 +189,11 @@ add_node({"default:desert_sand"}, 0.005, {"desert"}, 1, 100,
 add_node({"ethereal:mushroom_dirt"}, 0.01, {"mushroom"}, 1, 100,
 	{"flowers:mushroom_red"}, nil, nil, nil, ethereal.mushroom)
 
+-- spore grass
+add_node({"ethereal:mushroom_dirt"}, 0.1, {"mushroom"}, 1, 100,
+	{"ethereal:spore_grass"}, nil, nil, nil, ethereal.mushroom)
+
+
 local list = {
 	{"junglee", {"ethereal:jungle_dirt", "default:dirt_with_rainforest_litter"}, ethereal.junglee},
 	{"deciduous_forest", {"default:dirt_with_grass"}, ethereal.grassy},

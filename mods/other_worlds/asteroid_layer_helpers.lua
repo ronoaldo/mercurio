@@ -91,7 +91,8 @@ local np_satmos = {
 -- On dignode function. Atmosphere flows into a dug hole.
 minetest.register_on_dignode(function(pos, oldnode, digger)
 
-	if minetest.find_node_near(pos, 1, {"asteroid:atmos"}) then
+	if minetest.find_node_near(pos, 1, {"asteroid:atmos"})
+	and minetest.get_node(pos).name == "air" then
 		minetest.set_node(pos, {name = "asteroid:atmos"})
 	end
 end)
@@ -149,17 +150,17 @@ function otherworlds.asteroids.create_on_generated(ymin, ymax, content_ids)
 		local data = vm:get_data()
 
 		local nvals1 = minetest.get_perlin_map(np_large,
-				chulens):get3dMap_flat(minpos)
+				chulens):get_3d_map_flat(minpos)
 		local nvals3 = minetest.get_perlin_map(np_fissure,
-				chulens):get3dMap_flat(minpos)
+				chulens):get_3d_map_flat(minpos)
 		local nvals4 = minetest.get_perlin_map(np_small,
-				chulens):get3dMap_flat(minpos)
+				chulens):get_3d_map_flat(minpos)
 		local nvals5 = minetest.get_perlin_map(np_ores,
-				chulens):get3dMap_flat(minpos)
+				chulens):get_3d_map_flat(minpos)
 		local nvals6 = minetest.get_perlin_map(np_latmos,
-				chulens):get3dMap_flat(minpos)
+				chulens):get_3d_map_flat(minpos)
 		local nvals7 = minetest.get_perlin_map(np_satmos,
-				chulens):get3dMap_flat(minpos)
+				chulens):get_3d_map_flat(minpos)
 
 		local ni = 1
 

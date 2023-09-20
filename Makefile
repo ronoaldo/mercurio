@@ -1,7 +1,7 @@
 # Mercurio server build/management tool
 
 INTERACTIVE=true
-TEST_ARGS=--env-file /tmp/.env.test -f docker-compose.yml -f docker-compose.test.yml
+TEST_ARGS=--env-file /tmp/.env.test -f docker-compose.yml -f docker-compose.auto.yml
 TEST_ENV= -e MERCURIO_AUTO_SHUTDOWN=true -e NO_LOOP=true
 
 all: build
@@ -21,7 +21,7 @@ volumes: .minetest/world .minetest/logs
 
 submodules:
 	git submodule init
-	git submodule update
+	git submodule update --init --recursive
 
 rm-submodule:
 	@if [ x"" = x"$(M)" ]; then \

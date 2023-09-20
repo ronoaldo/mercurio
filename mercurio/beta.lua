@@ -32,3 +32,39 @@ local function auto_grant_privs(player, last_login)
 end
 
 minetest.register_on_joinplayer(auto_grant_privs)
+
+minetest.register_on_mods_loaded(function()
+    -- Create a log of registered nodes and item names
+    log_action("Saving registered names")
+
+    local buff = {}
+    local count = 0
+
+    for name, def in pairs(minetest.registered_nodes) do
+        table.insert(buff, "node=" .. name)
+        count = count+1
+    end
+
+    for name, def in pairs(minetest.registered_items) do
+        table.insert(buff, "item=" .. name)
+        count = count+1
+    end
+
+    local wp = minetest.get_worldpath()
+    local filename = wp .. "/mercurio_registered_names.txt"
+    table.sort(buff)
+    minetest.safe_file_write(filename, table.concat(buff, "\n"))
+
+    log_action(tostring(count) .. " registered names saved to " .. filename)
+
+    -- Auto-shutdown hook - for testing basic server startup/shutdown
+    local auto_shutdown = minetest.settings:get("mercurio_auto_shutdown") or "false"
+    log_action("mercurio_auto_shutdown => " .. auto_shutdown)
+    if auto_shutdown == "true" then
+        log_action("Auto shutdown is enabled. Turning server off after 15s.")
+        minetest.after(15, function()
+            log_action("Requesting shutdown...")
+            minetest.request_shutdown("", false, 1)
+        end)
+    end
+end)

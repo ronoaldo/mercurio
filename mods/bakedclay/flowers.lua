@@ -1,17 +1,17 @@
--- 5.x translation
-S = minetest.get_translator("bakedclay")
+-- translation support
+local S = minetest.get_translator("bakedclay")
 
 local flowers = {
-	{"delphinium", "Blue Delphinium",
+	{"delphinium", S("Blue Delphinium"),
 	{-0.15, -0.5, -0.15, 0.15, 0.3, 0.15}, {color_cyan = 1}},
 
-	{"thistle", "Thistle",
+	{"thistle", S("Thistle"),
 	{-0.15, -0.5, -0.15, 0.15, 0.2, 0.15}, {color_magenta = 1}},
 
-	{"lazarus", "Lazarus Bell",
+	{"lazarus", S("Lazarus Bell"),
 	{-0.15, -0.5, -0.15, 0.15, 0.2, 0.15}, {color_pink = 1}},
 
-	{"mannagrass", "Reed Mannagrass",
+	{"mannagrass", S("Reed Mannagrass"),
 	{-0.15, -0.5, -0.15, 0.15, 0.2, 0.15}, {color_dark_green = 1}}
 }
 
@@ -25,7 +25,7 @@ local function add_simple_flower(name, desc, box, f_groups)
 	f_groups.attached_node = 1
 
 	minetest.register_node("bakedclay:" .. name, {
-		description = S(desc),
+		description = desc,
 		drawtype = "plantlike",
 		waving = 1,
 		tiles = {"baked_clay_" .. name .. ".png"},
@@ -35,7 +35,6 @@ local function add_simple_flower(name, desc, box, f_groups)
 		paramtype = "light",
 		walkable = false,
 		buildable_to = true,
-		stack_max = 99,
 		groups = f_groups,
 		sounds = default.node_sound_leaves_defaults(),
 		selection_box = {type = "fixed", fixed = box}

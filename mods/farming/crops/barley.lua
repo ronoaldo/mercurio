@@ -1,5 +1,6 @@
 
-local S = farming.intllib
+local S = farming.translate
+local a = farming.recipe_items
 
 -- barley seeds
 minetest.register_node("farming:seed_barley", {
@@ -8,14 +9,15 @@ minetest.register_node("farming:seed_barley", {
 	inventory_image = "farming_barley_seed.png",
 	wield_image = "farming_barley_seed.png",
 	drawtype = "signlike",
-	groups = {seed = 1, snappy = 3, attached_node = 1},
+	groups = {compostability = 48, seed = 1, snappy = 3, attached_node = 1, growing = 1},
 	paramtype = "light",
 	paramtype2 = "wallmounted",
 	walkable = false,
 	sunlight_propagates = true,
+	next_plant = "farming:barley_1",
 	selection_box = farming.select,
 	on_place = function(itemstack, placer, pointed_thing)
-		return farming.place_seed(itemstack, placer, pointed_thing, "farming:barley_1")
+		return farming.place_seed(itemstack, placer, pointed_thing, "farming:seed_barley")
 	end
 })
 
@@ -23,7 +25,7 @@ minetest.register_node("farming:seed_barley", {
 minetest.register_craftitem("farming:barley", {
 	description = S("Barley"),
 	inventory_image = "farming_barley.png",
-	groups = {food_barley = 1, flammable = 2}
+	groups = {food_barley = 1, flammable = 2, compostability = 65}
 })
 
 -- flour
@@ -31,7 +33,7 @@ minetest.register_craft({
 	output = "farming:flour",
 	recipe = {
 		{"farming:barley", "farming:barley", "farming:barley"},
-		{"farming:barley", "farming:mortar_pestle", ""}
+		{"farming:barley", a.mortar_pestle, ""}
 	},
 	replacements = {{"group:food_mortar_pestle", "farming:mortar_pestle"}}
 })
@@ -47,12 +49,13 @@ local def = {
 	walkable = false,
 	buildable_to = true,
 	drop = "",
+	waving = 1,
 	selection_box = farming.select,
 	groups = {
-		snappy = 3, flammable = 2, plant = 1, attached_node = 1,
+		handy = 1, snappy = 3, flammable = 2, plant = 1, attached_node = 1,
 		not_in_creative_inventory = 1, growing = 1
 	},
-	sounds = default.node_sound_leaves_defaults()
+	sounds = farming.sounds.node_sound_leaves_defaults()
 }
 
 -- stage 1

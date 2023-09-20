@@ -1,7 +1,14 @@
+-- Translation support
+local S = minetest.get_translator("mobs_animal")
 
-local S = mobs.intllib_animal
 local hairball = minetest.settings:get("mobs_hairball")
 
+local kitten_types = {
+
+	{	nodes = {"farming:jackolantern_on"},
+		skins = {"mobs_kitten_black.png"}
+	}
+}
 
 -- Kitten by Jordach / BFD
 
@@ -59,6 +66,28 @@ mobs:register_mob("mobs_animal:kitten", {
 	},
 	view_range = 8,
 
+	-- check surrounding nodes and spawn a specific kitten
+	on_spawn = function(self)
+
+		local pos = self.object:get_pos() ; pos.y = pos.y - 1
+		local tmp
+
+		for n = 1, #kitten_types do
+
+			tmp = kitten_types[n]
+
+			if minetest.find_node_near(pos, 1, tmp.nodes) then
+
+				self.base_texture = tmp.skins
+				self.object:set_properties({textures = tmp.skins})
+
+				return true
+			end
+		end
+
+		return true -- run only once, false/nil runs every activation
+	end,
+
 	on_rightclick = function(self, clicker)
 
 		if mobs:feed_tame(self, clicker, 4, true, true) then return end
@@ -92,8 +121,7 @@ mobs:register_mob("mobs_animal:kitten", {
 		end
 		self.hairball_timer = 0
 
-		if self.child
-		or math.random(250) > 1 then
+		if self.child or math.random(250) > 1 then
 			return
 		end
 
@@ -102,10 +130,7 @@ mobs:register_mob("mobs_animal:kitten", {
 		minetest.add_item(pos, "mobs:hairball")
 
 		minetest.sound_play("default_dig_snappy", {
-			pos = pos,
-			gain = 1.0,
-			max_hear_distance = 5
-		})
+				pos = pos, gain = 1.0, max_hear_distance = 5}, true)
 	end
 })
 
@@ -145,7 +170,8 @@ local hairball_items = {
 	"default:clay_lump", "default:paper", "default:dry_grass_1", "dye:red", "",
 	"farming:string", "mobs:chicken_feather", "default:acacia_bush_sapling", "",
 	"default:bush_sapling", "default:copper_lump", "default:iron_lump", "",
-	"dye:black", "dye:brown", "default:obsidian_shard", "default:tin_lump"
+	"dye:black", "dye:brown", "default:obsidian_shard", "default:tin_lump",
+	"ethereal:fish_tetra"
 }
 
 minetest.register_craftitem(":mobs:hairball", {
@@ -164,10 +190,7 @@ minetest.register_craftitem(":mobs:hairball", {
 		end
 
 		minetest.sound_play("default_place_node_hard", {
-			pos = newpos,
-			gain = 1.0,
-			max_hear_distance = 5
-		})
+				pos = newpos, gain = 1.0, max_hear_distance = 5}, true)
 
 		itemstack:take_item()
 

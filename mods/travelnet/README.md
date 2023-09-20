@@ -1,12 +1,13 @@
 # Travelnet
 
 [![luacheck](https://github.com/mt-mods/travelnet/workflows/luacheck/badge.svg)](https://github.com/mt-mods/travelnet/actions?query=workflow%3Aluacheck)
-[![Integration test](https://github.com/mt-mods/travelnet/workflows/integration-test/badge.svg)](https://github.com/mt-mods/travelnet/actions?query=workflow%3Aintegration-test)
+[![test](https://github.com/mt-mods/travelnet/workflows/luacheck/badge.svg)](https://github.com/mt-mods/travelnet/actions?query=workflow%3Atest)
 [![ContentDB](https://content.minetest.net/packages/mt-mods/travelnet/shields/downloads/)](https://content.minetest.net/packages/mt-mods/travelnet/)
 
 ## How this works
 
-- craft it by filling the right and left row with glass; place in the middle row (from top to bottom): steel, mese, steel
+- craft it by filling the right and left column with glass; place in the middle column (from top to bottom): steel, mese, steel
+  - MineClone 2: use a redstone block instead of mese
 - place the travelnet box somewhere
 - right-click on it; enter name of the station (e.g. "my house", "center of desert city") and name of the network (e.g. "intresting towns","my buildings")
 - punch it to update the list of stations on that network
@@ -14,6 +15,17 @@
 
 An unconfigured travelnet box can be configured by anyone. If it is misconfigured, just dig it and place it anew.
 All stations that have the same network name set and are owned by the same user connect to the same network.
+
+
+## Crafting
+The Travelnet mod provides five craftable items.
+See [doc/crafting.md](https://github.com/mt-mods/travelnet/blob/master/doc/crafting.md).
+
+
+## Settings
+
+See [settingtypes.txt](https://github.com/mt-mods/travelnet/blob/master/settingtypes.txt).
+
 
 ## Documentation
 

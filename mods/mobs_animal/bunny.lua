@@ -1,14 +1,13 @@
-
-local S = mobs.intllib_animal
-
+-- Translation support
+local S = minetest.get_translator("mobs_animal")
 
 -- Bunny by ExeterDad
 
 mobs:register_mob("mobs_animal:bunny", {
-stepheight = 0.6,
 	type = "animal",
 	passive = true,
 	reach = 1,
+	stepheight = 0.6,
 	hp_min = 1,
 	hp_max = 4,
 	armor = 200,
@@ -61,26 +60,41 @@ stepheight = 0.6,
 
 		-- Monty Python tribute
 		local item = clicker:get_wielded_item()
+		local player_name = clicker:get_player_name()
 
-		if item:get_name() == "mobs:lava_orb" then
+		if self.owner == player_name
+		and item:get_name() == "mobs:lava_orb" then
 
+			-- take orb
 			if not mobs.is_creative(clicker:get_player_name()) then
 				item:take_item()
 				clicker:set_wielded_item(item)
 			end
 
-			self.base_texture = {"mobs_bunny_evil.png"}
-
-			self.object:set_properties({
-				textures = {"mobs_bunny_evil.png"}
+			-- set special bunny attributes
+			local staticdata = minetest.serialize({
+				type = "monster",
+				attack_type = "dogfight",
+				hp_max = 20,
+				health = 20,
+				damage = 5,
+				run_velocity = 3,
+				passive = false,
+				runaway = false,
+				runaway_from = {},
+				runaway_timer = 0,
+				tamed = false,
+				base_texture = {"mobs_bunny_evil.png"}
 			})
 
-			self.type = "monster"
-			self.health = 20
-			self.passive = false
-			self.runaway = false
+			-- add evil bunny
+			local obj = minetest.add_entity(
+					self.object:get_pos(), "mobs_animal:bunny", staticdata)
 
-			return
+			-- remove old bunny
+			if obj:get_luaentity() then
+				mobs:remove(self, true)
+			end
 		end
 	end,
 
@@ -108,10 +122,7 @@ stepheight = 0.6,
 		end
 
 		return true -- run only once, false/nil runs every activation
-	end,
-
-	attack_type = "dogfight",
-	damage = 5
+	end
 })
 
 

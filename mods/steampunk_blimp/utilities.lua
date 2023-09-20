@@ -67,15 +67,20 @@ local function do_attach(self, player, slot)
         --minetest.chat_send_all(self.driver_name)
         self._passengers[slot] = name
         player:set_attach(self._passengers_base[slot], "", {x = 0, y = 0, z = 0}, {x = 0, y = 0, z = 0})
-        player_api.player_attached[name] = true
+        
+        if airutils.is_mcl then
+            mcl_player.player_attached[name] = true
+        else
+            player_api.player_attached[name] = true
+        end
     end
 end
 
 function steampunk_blimp.check_passenger_is_attached(self, name)
     local is_attached = false
     if is_attached == false then
-        for i = 5,1,-1 
-        do 
+        for i = steampunk_blimp.max_seats,1,-1
+        do
             if self._passengers[i] == name then
                 is_attached = true
                 break
@@ -91,18 +96,23 @@ function steampunk_blimp.rescueConnectionFailedPassengers(self)
     if self._disconnection_check_time > 1 then
         --minetest.chat_send_all(dump(self._passengers))
         self._disconnection_check_time = 0
-        for i = 5,1,-1 
-        do 
+        for i = steampunk_blimp.max_seats,1,-1
+        do
             if self._passengers[i] then
                 local player = minetest.get_player_by_name(self._passengers[i])
                 if player then --we have a player!
-                    if player_api.player_attached[self._passengers[i]] == nil then --but isn't attached?
+                    local is_attached = nil
+                    if airutils.is_mcl then
+                        is_attached = mcl_player.player_attached[self._passengers[i]]
+                    else
+                        is_attached = player_api.player_attached[self._passengers[i]]
+                    end
+
+                    if is_attached == nil then --but isn't attached?
                         --minetest.chat_send_all("okay")
 		                if player:get_hp() > 0 then
                             self._passengers[i] = nil --clear the slot first
                             do_attach(self, player, i) --attach
-                        else
-                            --steampunk_blimp.dettachPlayer(self, player)
 		                end
                     end
                 end
@@ -142,7 +152,7 @@ function steampunk_blimp.attach_pax(self, player, slot)
 
     --now yes, lets attach the player
     --randomize the seat
-    local t = {1,2,3,4,5}
+    local t = {1,2,3,4,5,6,7}
     for i = 1, #t*2 do
         local a = math.random(#t)
         local b = math.random(#t)
@@ -151,11 +161,11 @@ function steampunk_blimp.attach_pax(self, player, slot)
 
     --minetest.chat_send_all(dump(t))
 
-    local i=0
     for k,v in ipairs(t) do
-        i = t[k]
+        local i = t[k] or 0
         if self._passengers[i] == nil then
             do_attach(self, player, i)
+            --minetest.chat_send_all(i)
             break
         end
     end
@@ -168,8 +178,8 @@ function steampunk_blimp.dettach_pax(self, player, side)
         steampunk_blimp.remove_hud(player)
 
         -- passenger clicked the object => driver gets off the vehicle
-        for i = 5,1,-1 
-        do 
+        for i = steampunk_blimp.max_seats,1,-1
+        do
             if self._passengers[i] == name then
                 self._passengers[i] = nil
                 self._passengers_base_pos[i] = steampunk_blimp.copy_vector(steampunk_blimp.passenger_pos[i])
@@ -179,8 +189,13 @@ function steampunk_blimp.dettach_pax(self, player, side)
 
         -- detach the player
         player:set_detach()
-        player_api.player_attached[name] = nil
-        player_api.set_animation(player, "stand")
+        if airutils.is_mcl then
+            mcl_player.player_attached[name] = nil
+            mcl_player.player_set_animation(player, "stand", 30)
+        else
+            player_api.player_attached[name] = nil
+            player_api.set_animation(player, "stand")
+        end
 
         -- move player down
         minetest.after(0.1, function(pos)
@@ -263,11 +278,14 @@ function steampunk_blimp.destroy(self, overload)
 
     local pos = self.object:get_pos()
     if self.fire then self.fire:remove() end
+
     if self._passengers_base[1] then self._passengers_base[1]:remove() end
     if self._passengers_base[2] then self._passengers_base[2]:remove() end
     if self._passengers_base[3] then self._passengers_base[3]:remove() end
     if self._passengers_base[4] then self._passengers_base[4]:remove() end
     if self._passengers_base[5] then self._passengers_base[5]:remove() end
+    if self._passengers_base[6] then self._passengers_base[6]:remove() end
+    if self._passengers_base[7] then self._passengers_base[7]:remove() end
 
     airutils.destroy_inventory(self)
     self.object:remove()
@@ -284,14 +302,10 @@ function steampunk_blimp.destroy(self, overload)
     --minetest.add_item({x=pos.x+math.random()-0.5,y=pos.y,z=pos.z+math.random()-0.5},'steampunk_blimp:boat')
     --minetest.add_item({x=pos.x+math.random()-0.5,y=pos.y,z=pos.z+math.random()-0.5},'default:diamond')
 
-    --[[local total_biofuel = math.floor(self._energy) - 1
-    for i=0,total_biofuel do
-        minetest.add_item({x=pos.x+math.random()-0.5,y=pos.y,z=pos.z+math.random()-0.5},'biofuel:biofuel')
-    end]]--
     if overload then
         local stack = ItemStack(self.item)
         local item_def = stack:get_definition()
-        
+
         if item_def.overload_drop then
             for _,item in pairs(item_def.overload_drop) do
                 minetest.add_item({x=pos.x+math.random()-0.5,y=pos.y,z=pos.z+math.random()-0.5},item)
@@ -332,8 +346,8 @@ function steampunk_blimp.checkAttach(self, player)
     if player then
         local player_attach = player:get_attach()
         if player_attach then
-            for i = 5,1,-1 
-            do 
+            for i = steampunk_blimp.max_seats,1,-1
+            do
                 if player_attach == self._passengers_base[i] then
                     retVal = true
                     break
@@ -366,7 +380,9 @@ function steampunk_blimp.engineSoundPlay(self)
     if self.sound_handle then minetest.sound_stop(self.sound_handle) end
     if self.sound_handle_pistons then minetest.sound_stop(self.sound_handle_pistons) end
     if self.object then
-        self.sound_handle = minetest.sound_play({name = "default_furnace_active"},
+        local furnace_sound = "default_furnace_active"
+        if airutils.is_mcl then furnace_sound = "fire_fire" end
+        self.sound_handle = minetest.sound_play({name = furnace_sound},
             {object = self.object, gain = 0.2,
                 max_hear_distance = 5,
                 loop = true,})
@@ -413,253 +429,13 @@ function steampunk_blimp.start_furnace(self)
         -- sound
         if self.sound_handle then minetest.sound_stop(self.sound_handle) end
         if self.object then
-            self.sound_handle = minetest.sound_play({name = "default_furnace_active"},
+            local furnace_sound = "default_furnace_active"
+            if airutils.is_mcl then furnace_sound = "fire_fire" end
+
+            self.sound_handle = minetest.sound_play({name = furnace_sound},
                 {object = self.object, gain = 0.2,
                     max_hear_distance = 5,
                     loop = true,})
-        end
-    end
-end
-
-function steampunk_blimp.boat_upper_deck_map(pos, dpos)
-    local orig_pos = steampunk_blimp.copy_vector(pos)
-    local position = steampunk_blimp.copy_vector(dpos)
-    local new_pos = steampunk_blimp.copy_vector(dpos)
-    
-    new_pos.z = steampunk_blimp.clamp(new_pos.z, -47, -16)
-
-    if position.z >= -49 and position.z < -32 then --limit 10
-        new_pos.y = 20.821
-        new_pos.x = steampunk_blimp.clamp(new_pos.x, -8, 8)
-        return new_pos
-    end
-    if position.z >= -32 and position.z < -14 then --limit 11
-        new_pos.y = 20.821
-        new_pos.x = steampunk_blimp.clamp(new_pos.x, -11, 11)
-        if position.z >= -28 then --timao
-            if orig_pos.x <= -4 or orig_pos.x >= 4 then
-                new_pos.x = steampunk_blimp.reclamp(new_pos.x, -4, 4)
-            else
-                new_pos.z = steampunk_blimp.reclamp(new_pos.z, -28, -20)
-            end
-        end
-        if position.z > -24 then --escada
-            if orig_pos.x <= 4 then
-                new_pos.z = steampunk_blimp.reclamp(new_pos.z, -24, -12)
-            end
-        end
-        return new_pos
-    end
-    return new_pos
-end
-
-function steampunk_blimp.boat_lower_deck_map(pos, dpos)
-    local orig_pos = steampunk_blimp.copy_vector(pos)
-    local position = steampunk_blimp.copy_vector(dpos)
-    local new_pos = steampunk_blimp.copy_vector(dpos)
-    new_pos.z = steampunk_blimp.clamp(new_pos.z, -29, 45)
-    if position.z > -31 and position.z < -14 then --limit 10
-        new_pos.y = 0
-        new_pos.x = steampunk_blimp.clamp(new_pos.x, -10, 10)
-        return new_pos
-    end
-    if position.z >= -14 and position.z < -4 then --limit 11
-        new_pos.y = 0
-        new_pos.x = steampunk_blimp.clamp(new_pos.x, -12, 12)
-        if position.z > -9 then
-            if orig_pos.x <= -6 or orig_pos.x >= 6 then
-                new_pos.x = steampunk_blimp.reclamp(new_pos.x, -6, 6)
-            else
-                new_pos.z = steampunk_blimp.reclamp(new_pos.z, -9, -4)
-            end
-        end
-        return new_pos
-    end
-    if position.z >= -4 and position.z <= 4 then --limit 14
-        new_pos.y = 0
-        new_pos.x = steampunk_blimp.clamp(position.x, -14, 14)
-        if orig_pos.x <= -6 or orig_pos.x >= 6 then new_pos.x = steampunk_blimp.reclamp(new_pos.x, -6, 6) end
-        return new_pos
-    end
-    if position.z > 4 and position.z <= 19 then --limit 11
-        new_pos.y = 0
-        new_pos.x = steampunk_blimp.clamp(position.x, -12, 12)
-        if position.z < 14 then
-            if orig_pos.x <= -6 or orig_pos.x >= 6 then
-                new_pos.x = steampunk_blimp.reclamp(new_pos.x, -6, 6)
-            else
-                new_pos.z = steampunk_blimp.reclamp(new_pos.z, 4, 14)
-            end
-        end
-        return new_pos
-    end
-    if position.z > 19 and position.z <= 22 then --limit 10
-        new_pos.y = 4.4
-        new_pos.x = steampunk_blimp.clamp(new_pos.x, -10, 10)
-        return new_pos
-    end
-    if position.z > 22 and position.z <= 30 then --limit 7
-        new_pos.y = 8.5
-        new_pos.x = steampunk_blimp.clamp(new_pos.x, -7, 7)
-        return new_pos
-    end
-    if position.z > 30 and position.z <= 36 then --limit 5
-        new_pos.y = 8.5
-        new_pos.x = steampunk_blimp.clamp(new_pos.x, -5, 5)
-        return new_pos
-    end
-    if position.z > 36 and position.z < 47 then --limit 1
-        new_pos.y = 8.5
-        new_pos.x = steampunk_blimp.clamp(new_pos.x, -2, 2)
-        return new_pos
-    end
-    return new_pos
-end
-
-function steampunk_blimp.ladder_map(pos, dpos)
-    local orig_pos = steampunk_blimp.copy_vector(pos)
-    local position = steampunk_blimp.copy_vector(dpos)
-    local new_pos = steampunk_blimp.copy_vector(dpos)
-    new_pos.z = steampunk_blimp.clamp(new_pos.z, -18, -12)
-    if position.z > -20 and position.z < -10 then --limit 10
-        new_pos.x = steampunk_blimp.clamp(new_pos.x, 4, 12)
-    end
-    return new_pos
-end
-
-local function is_ladder_zone(pos)
-    local ladder_zone = false
-    if pos.z <= -12 and pos.z >= -18 and pos.x > 4 and pos.x < 12 then ladder_zone = true end
-    return ladder_zone
-end
-
-function steampunk_blimp.play_rope_sound(self)
-    minetest.sound_play({name = "steampunk_blimp_rope"},
-                {object = self.object, gain = 1,
-                    max_hear_distance = 5,
-                    ephemeral = true,})
-end
-
---note: index variable just for the walk
-local function get_result_pos(self, player, index)
-    local pos = nil
-    if player then
-        local ctrl = player:get_player_control()
-
-        local direction = player:get_look_horizontal()
-        local rotation = self.object:get_rotation()
-        direction = direction - rotation.y
-
-        pos = vector.new()
-
-        local y_rot = -math.deg(direction)
-        pos.y = y_rot --okay, this is strange to keep here, but as I dont use it anyway...
-
-        if ctrl.up or ctrl.down or ctrl.left or ctrl.right then
-            player_api.set_animation(player, "walk", 30)
-
-            local speed = 0.7
-
-            dir = vector.new(ctrl.up and -1 or ctrl.down and 1 or 0, 0, ctrl.left and 1 or ctrl.right and -1 or 0)
-            dir = vector.normalize(dir)
-            dir = vector.rotate(dir, {x = 0, y = -direction, z = 0})
-
-            local time_correction = (self.dtime/steampunk_blimp.ideal_step)
-            local move = speed * time_correction
-
-            pos.x = move * dir.x
-            pos.z = move * dir.z
-
-            --lets fake walk sound
-            if self._passengers_base_pos[index].dist_moved == nil then self._passengers_base_pos[index].dist_moved = 0 end
-            self._passengers_base_pos[index].dist_moved = self._passengers_base_pos[index].dist_moved + move;
-            if math.abs(self._passengers_base_pos[index].dist_moved) > 5 then
-                self._passengers_base_pos[index].dist_moved = 0
-                minetest.sound_play({name = "default_wood_footstep"},
-                    {object = self._passengers_base_pos[index].object, gain = 0.1,
-                        max_hear_distance = 5,
-                        ephemeral = true,})
-            end
-        else
-            player_api.set_animation(player, "stand")
-        end
-    end
-    return pos
-end
-
-function steampunk_blimp.navigate_deck(pos, dpos, player)
-    local pos_d = dpos
-    local ladder_zone = is_ladder_zone(pos)
-    local upper_deck_y = 20.821
-    if player then
-        if pos.y == upper_deck_y then
-            pos_d = steampunk_blimp.boat_upper_deck_map(pos, dpos)
-        elseif pos.y <= 8.5 and pos.y >= 0 then
-            if ladder_zone == false then
-                pos_d = steampunk_blimp.boat_lower_deck_map(pos, dpos)
-            end
-        elseif pos.y > 8.5 and pos.y < upper_deck_y then
-            pos_d = steampunk_blimp.ladder_map(pos, dpos)
-        end
-
-        local ctrl = player:get_player_control()
-        if ctrl.jump or ctrl.sneak then --ladder
-            if ladder_zone then
-                --minetest.chat_send_all(dump(pos))
-                if ctrl.jump then
-                    pos_d.y = pos_d.y + 0.9
-                    if pos_d.y > upper_deck_y then pos_d.y = upper_deck_y end
-                end
-                if ctrl.sneak then
-                    pos_d.y = pos_d.y - 0.9
-                    if pos_d.y < 0 then pos_d.y = 0 end
-                end
-            end
-        end
-    end
-
-    return pos_d
-end
-
-function steampunk_blimp.move_persons(self)
-    --self._passenger = nil
-    if self.object == nil then return end
-    for i = 5,1,-1 
-    do
-        local player = nil
-        if self._passengers[i] then player = minetest.get_player_by_name(self._passengers[i]) end
-
-        if self.driver_name and self._passengers[i] == self.driver_name then
-            --clean driver if it's nil
-            if player == nil then
-                self._passengers[i] = nil
-                self.driver_name = nil
-            end
-        else
-            if self._passengers[i] ~= nil then
-                --minetest.chat_send_all("pass: "..dump(self._passengers[i]))
-                --the rest of the passengers
-                if player then
-                    local result_pos = get_result_pos(self, player, i)
-                    local y_rot = 0
-                    if result_pos then
-                        y_rot = result_pos.y -- the only field that returns a rotation
-                        local new_pos = steampunk_blimp.copy_vector(self._passengers_base_pos[i])
-                        new_pos.x = new_pos.x - result_pos.z
-                        new_pos.z = new_pos.z - result_pos.x
-                        --minetest.chat_send_all(dump(new_pos))
-                        --local pos_d = steampunk_blimp.boat_lower_deck_map(self._passengers_base_pos[i], new_pos)
-                        local pos_d = steampunk_blimp.navigate_deck(self._passengers_base_pos[i], new_pos, player)
-                        --minetest.chat_send_all(dump(height))
-                        self._passengers_base_pos[i] = steampunk_blimp.copy_vector(pos_d)
-                        self._passengers_base[i]:set_attach(self.object,'',self._passengers_base_pos[i],{x=0,y=0,z=0})
-                    end
-                    --minetest.chat_send_all(dump(self._passengers_base_pos[i]))
-                    player:set_attach(self._passengers_base[i], "", {x = 0, y = 0, z = 0}, {x = 0, y = y_rot, z = 0})
-                else
-                    --self._passengers[i] = nil
-                end
-            end
         end
     end
 end
@@ -671,3 +447,20 @@ function steampunk_blimp.copy_vector(original_vector)
     end
     return tablecopy
 end
+
+function steampunk_blimp.play_rope_sound(self)
+    minetest.sound_play({name = "steampunk_blimp_rope"},
+                {object = self.object, gain = 1,
+                    max_hear_distance = 5,
+                    ephemeral = true,})
+end
+
+function steampunk_blimp.table_copy(table_here)
+    local tablecopy = {}
+    for k, v in pairs(table_here) do
+      tablecopy[k] = v
+    end
+    return tablecopy
+end
+
+

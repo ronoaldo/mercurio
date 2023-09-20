@@ -1,11 +1,31 @@
-#For enabling a subpart of X-Decor.
+# For enabling components of X-Decor-libre.
 
-enable_xdecor_chess 		(Enable Chess)		bool true
+
+
+# This adds a chessboard on which you can play Chess against other players or the computer.
+enable_xdecor_chess 		(Enable Chess)	        bool true
+
+# This enables the cauldron which you can use to store water and cook soup.
 enable_xdecor_cooking		(Enable Cooking) 	bool true
+
+# This adds the enchanting table which you can use to upgrade your tools with mese crystals.
 enable_xdecor_enchanting  	(Enable Enchanting) 	bool true
+
+# This adds the artificial beehive which produces honey.
 enable_xdecor_hive 		(Enable Hive) 		bool true
+
+# This adds itemframes which are used to show off items on a wall.
 enable_xdecor_itemframe 	(Enable Itemframe) 	bool true
+
+# This enables the mailbox which allows players to receive gifts from other players.
 enable_xdecor_mailbox 		(Enable Mailbox) 	bool true
+
+# This adds mechanisms like the lever and pressure plate which are used to trigger doors.
 enable_xdecor_mechanisms 	(Enable Mechanisms) 	bool true
+
+# This adds ropes which can be used for climbing.
 enable_xdecor_rope 		(Enable Rope) 		bool true
+
+# This adds the workbench which allows you to craft, store items, cut blocks and repair tools.
+# Due to block cutting, many new block shapes become available.
 enable_xdecor_workbench 	(Enable Workbench) 	bool true

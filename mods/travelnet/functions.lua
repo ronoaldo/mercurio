@@ -15,12 +15,41 @@ local function string_startswith(str, start)
 	end
 end
 
+function travelnet.is_falsey_string(str)
+	return not str or str == ""
+end
+
+function travelnet.node_description(pos)
+
+	local node = minetest.get_node_or_nil(pos)
+	if not node then return end
+
+	local description
+
+	if minetest.get_item_group(node.name, "travelnet") == 1 then
+		description = S("travelnet box")
+	elseif minetest.get_item_group(node.name, "elevator") == 1 then
+		description = S("elevator")
+	elseif node.name == "locked_travelnet:travelnet" then
+		description = S("locked travelnet")
+	elseif node.name == "locked_travelnet:elevator" then
+		description = S("locked elevator")
+	else
+		description = nil
+	end
+
+	return description, node.name
+
+end
+
 function travelnet.find_nearest_elevator_network(pos, owner_name)
 	local nearest_network = false
 	local nearest_dist = false
 	local nearest_dist_x
 	local nearest_dist_z
-	for target_network_name, network in pairs(travelnet.targets[owner_name]) do
+
+	local player_travelnets = travelnet.get_travelnets(owner_name)
+	for target_network_name, network in pairs(player_travelnets) do
 		local station_name = next(network, nil)
 		if station_name then
 			local station = network[station_name]
@@ -88,33 +117,66 @@ function travelnet.param2_to_yaw(param2)
 	end
 end
 
-function travelnet.get_or_create_network(owner_name, network_name)
-	if not travelnet.targets then
-		travelnet.targets = {}
-	end
+function travelnet.get_network(owner_name, network_name)
+	local player_travelnets = travelnet.get_travelnets(owner_name)
 
-	-- first one by this player?
-	if not travelnet.targets[owner_name] then
-		travelnet.targets[owner_name] = {}
-	end
+	if not player_travelnets then return end
 
-	local owners_targets = travelnet.targets[owner_name]
-
-	-- first station on this network?
-	if not owners_targets[network_name] then
-		owners_targets[network_name] = {}
-	end
-
-	return owners_targets[network_name]
+	return player_travelnets[network_name]
 end
 
-function travelnet.get_network(owner_name, network_name)
-	if not travelnet.targets then return end
+function travelnet.get_ordered_stations(owner_name, network_name, is_elevator)
+	local travelnets = travelnet.get_travelnets(owner_name)
+	local network = travelnets[network_name]
+	if not network then
+		return {}
+	end
 
-	local owners_targets = travelnet.targets[owner_name]
-	if not owners_targets then return end
+	local stations = {}
+	for k in pairs(network) do
+		table.insert(stations, k)
+	end
 
-	return travelnet.targets[owner_name][network_name]
+	if is_elevator then
+		local ground_level = 1
+		table.sort(stations, function(a, b)
+			return network[a].pos.y > network[b].pos.y
+		end)
+
+		-- find ground level
+		local vgl_timestamp = 999999999999
+		for index,k in ipairs(stations) do
+			local station = network[k]
+			if not station.timestamp then
+				station.timestamp = os.time()
+			end
+			if station.timestamp < vgl_timestamp then
+				vgl_timestamp = station.timestamp
+				ground_level  = index
+			end
+		end
+
+		for index,k in ipairs(stations) do
+			local station = network[k]
+			if index == ground_level then
+				station.nr = "G"
+			else
+				station.nr = tostring(ground_level - index)
+			end
+		end
+		-- TODO: hacky workaround for setting the "nr" field on the stations
+		-- should be done on elevator placement instead
+		travelnet.log("action", "creating ad-hoc elevator fields for player '" .. owner_name ..
+			"' and network '" .. network_name .. "'")
+		travelnet.set_travelnets(owner_name, travelnets)
+	else
+		-- sort the table according to the timestamp (=time the station was configured)
+		table.sort(stations, function(a, b)
+			return network[a].timestamp < network[b].timestamp
+		end)
+	end
+
+	return stations
 end
 
 function travelnet.get_station(owner_name, station_network, station_name)
@@ -146,7 +208,6 @@ function travelnet.check_if_trying_to_dig(puncher)
 	return true
 end
 
-
 -- allow doors to open
 function travelnet.open_close_door(pos, player, mode)
 	local this_node = minetest.get_node_or_nil(pos)
@@ -167,6 +228,10 @@ function travelnet.open_close_door(pos, player, mode)
 
 	local right_click_action = minetest.registered_nodes[door_node.name].on_rightclick
 	if not right_click_action then return end
+
+	if not minetest.registered_nodes[door_node.name].groups["door"] then
+		return
+	end
 
 	-- Map to old API in case anyone is using it externally
 	if     mode == 0 then mode = "toggle"
@@ -191,24 +256,17 @@ function travelnet.open_close_door(pos, player, mode)
 			-- Get the player again in case it doesn't exist anymore (logged out)
 			local pplayer = minetest.get_player_by_name(playername)
 			if pplayer then
-				right_click_action(door_pos, door_node, pplayer)
+				right_click_action(door_pos, door_node, pplayer, ItemStack(""))
 			end
 		end)
 	else
-		right_click_action(door_pos, door_node, player)
+		right_click_action(door_pos, door_node, player, ItemStack(""))
 	end
 end
 
-
-travelnet.rotate_player = function(target_pos, player, tries)
-	-- try later when the box is loaded
+travelnet.rotate_player = function(target_pos, player)
 	local target_node = minetest.get_node_or_nil(target_pos)
-	if target_node == nil then
-		if tries < 30 then
-			minetest.after(0, travelnet.rotate_player, target_pos, player, tries+1)
-		end
-		return
-	end
+	if target_node == nil then return end
 
 	-- play sound at the target position as well
 	if travelnet.travelnet_sound_enabled then
@@ -237,11 +295,9 @@ travelnet.rotate_player = function(target_pos, player, tries)
 end
 
 
-travelnet.remove_box = function(_, _, oldmetadata, digger)
+travelnet.remove_box_action = function(oldmetadata)
 	if not oldmetadata or oldmetadata == "nil" or not oldmetadata.fields then
-		minetest.chat_send_player(digger:get_player_name(), S("Error") .. ": " ..
-				S("Could not find information about the station that is to be removed."))
-		return
+		return false, S("Could not find information about the station that is to be removed.")
 	end
 
 	local owner_name      = oldmetadata.fields["owner"]
@@ -252,29 +308,77 @@ travelnet.remove_box = function(_, _, oldmetadata, digger)
 	if	not (owner_name and station_network and station_name)
 		or not travelnet.get_station(owner_name, station_network, station_name)
 	then
-		minetest.chat_send_player(digger:get_player_name(), S("Error") .. ": " ..
-				S("Could not find the station that is to be removed."))
-		return
+		return false, S("Could not find the station that is to be removed.")
 	end
 
-	travelnet.targets[owner_name][station_network][station_name] = nil
+	local player_travelnets = travelnet.get_travelnets(owner_name)
+	player_travelnets[station_network][station_name] = nil
+	travelnet.set_travelnets(owner_name, player_travelnets)
 
-	-- inform the owner
-	minetest.chat_send_player(owner_name,
-			S("Station '@1'" .. " " ..
-				"has been REMOVED from the network '@2'.", station_name, station_network))
-
-	if digger and owner_name ~= digger:get_player_name() then
-		minetest.chat_send_player(digger:get_player_name(),
-				S("Station '@1'" .. " " ..
-					"has been REMOVED from the network '@2'.", station_name, station_network))
+	return true
+end
+travelnet.remove_box_message = function(oldmetadata, digger)
+	local removal_message = S(
+		"Station '@1'" .. " " .. "has been REMOVED from the network '@2'.",
+		oldmetadata.fields["station_name"],
+		oldmetadata.fields["station_network"]
+	)
+	local owner_name = oldmetadata.fields["owner"]
+	minetest.chat_send_player(owner_name, removal_message)
+	local digger_name = digger and digger:get_player_name()
+	if digger and owner_name ~= digger_name then
+		minetest.chat_send_player(digger_name, removal_message)
 	end
+end
+travelnet.remove_box = function(_, _, oldmetadata, digger)
+	local success, reason = travelnet.remove_box_action(oldmetadata)
 
-	-- save the updated network data in a savefile over server restart
-	travelnet.save_data()
+	if success then
+		travelnet.remove_box_message(oldmetadata, digger)
+	else
+		minetest.chat_send_player(digger:get_player_name(), S("Error") .. ": " ..reason)
+	end
 end
 
+-- privs of player are already checked by on_receive_fields before sending
+-- the edit form, but we need to check again in case somebody is cheating
+function travelnet.edit_box(pos, fields, meta, player_name)
+	local description, node_name = travelnet.node_description(pos)
+	local is_elevator = travelnet.is_elevator(node_name)
+	local success, result = travelnet.actions.update_station({
+		meta = meta,
+		pos = pos,
+		props = {
+			owner_name = meta:get_string("owner"),
+			station_network = meta:get_string("station_network"),
+			station_name	= meta:get_string("station_name"),
+			description = description,
+			is_elevator = is_elevator
+		}
+	}, fields, minetest.get_player_name(player_name))
+	if not success then
+		minetest.chat_send_player(player_name, result)
+	end
+end
 
+function travelnet.edit_elevator(pos, fields, meta, player_name)
+	local description, node_name = travelnet.node_description(pos)
+	local is_elevator = travelnet.is_elevator(node_name)
+	local success, result = travelnet.actions.update_elevator({
+		meta = meta,
+		pos = pos,
+		props = {
+			owner_name = meta:get_string("owner"),
+			station_network = meta:get_string("station_network"),
+			station_name	= meta:get_string("station_name"),
+			description = description,
+			is_elevator = is_elevator
+		}
+	}, fields, minetest.get_player_name(player_name))
+	if not success then
+		minetest.chat_send_player(player_name, result)
+	end
+end
 
 travelnet.can_dig = function()
 	-- forbid digging of the travelnet

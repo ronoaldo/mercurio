@@ -1,7 +1,3 @@
-# textdomain: inbox
-
-
-### init.lua ###
-
-@1's Mailbox=@1的邮箱
+# textdomain: homedecor_inbox
 Mailbox=邮箱
+@1's Mailbox=@1的邮箱

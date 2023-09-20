@@ -1,40 +1,32 @@
 local workbench = {}
-local nodes = {}
+local registered_cuttable_nodes = {}
+local special_cuts = {}
 
 screwdriver = screwdriver or {}
 local min, ceil = math.min, math.ceil
 local S = minetest.get_translator("xdecor")
 local FS = function(...) return minetest.formspec_escape(S(...)) end
 
--- Nodes allowed to be cut
--- Only the regular, solid blocks without metas or explosivity can be cut
-for node, def in pairs(minetest.registered_nodes) do
-	if xdecor.stairs_valid_def(def) then
-		nodes[#nodes + 1] = node
-	end
-end
 
 -- Nodeboxes definitions
 workbench.defs = {
-	-- Name YieldX  YZ  WH  L
-	{"nanoslab",	16, { 0, 0,  0, 8,  1, 8  }},
-	{"micropanel",	16, { 0, 0,  0, 16, 1, 8  }},
-	{"microslab",	8,  { 0, 0,  0, 16, 1, 16 }},
-	{"thinstair",	8,  { 0, 7,  0, 16, 1, 8  },
-			 { 0, 15, 8, 16, 1, 8  }},
-	{"cube", 	4,  { 0, 0,  0, 8,  8, 8  }},
-	{"panel",	4,  { 0, 0,  0, 16, 8, 8  }},
-	{"slab", 	2,  nil			  },
-	{"doublepanel", 2,  { 0, 0,  0, 16, 8, 8  },
-			 { 0, 8,  8, 16, 8, 8  }},
-	{"halfstair",	2,  { 0, 0,  0, 8,  8, 16 },
-			 { 0, 8,  8, 8,  8, 8  }},
-	{"stair_outer",	1,  nil			  },
-	{"stair",	1,  nil			  },
-	{"stair_inner",	1,  nil			  }
+	-- Name Yield Nodeboxes (X Y Z W H L)  Description
+	{"nanoslab",    16, {{ 0, 0,  0, 8,  1, 8  }}, S("Nanoslab")},
+	{"micropanel",  16, {{ 0, 0,  0, 16, 1, 8  }}, S("Micropanel")},
+	{"microslab",   8,  {{ 0, 0,  0, 16, 1, 16 }}, S("Microslab")},
+	{"thinstair",   8,  {{ 0, 7,  0, 16, 1, 8  },
+			{ 0, 15, 8, 16, 1, 8  }}, S("Thin Stair")},
+	{"cube",        4,  {{ 0, 0,  0, 8,  8, 8 }}, S("Cube")},
+	{"panel",       4,  {{ 0, 0,  0, 16, 8, 8 }}, S("Panel")},
+	{"slab",        2,  nil, S("Slab") },
+	{"doublepanel", 2,  {{ 0, 0,  0, 16, 8, 8  },
+			{ 0, 8,  8, 16, 8, 8  }}, S("Double Panel")},
+	{"halfstair",   2,  {{ 0, 0,  0, 8,  8, 16 },
+			{ 0, 8,  8, 8,  8, 8  }}, S("Half-Stair")},
+	{"stair_outer", 1,  nil, nil},
+	{"stair",       1,  nil, S("Stair")},
+	{"stair_inner", 1,  nil, nil},
 }
-
-local repairable_tools = {"pick", "axe", "shovel", "sword", "hoe", "armor", "shield"}
 
 local custom_repairable = {}
 function xdecor:register_repairable(item)
@@ -43,13 +35,39 @@ end
 
 -- Tools allowed to be repaired
 function workbench:repairable(stack)
-	if custom_repairable[stack] then return true end
+	-- Explicitly registeded as repairable: Overrides everything else
+	if custom_repairable[stack] then
+		return true
+	end
+	-- no repair if non-tool
+	if not minetest.registered_tools[stack] then
+		return false
+	end
+	-- no repair if disable_repair group
+	if minetest.get_item_group(stack, "disable_repair") == 1 then
+		return false
+	end
+	return true
+end
 
-	for _, t in ipairs(repairable_tools) do
-		if stack:find(t) then
+-- Returns true if item can be cut into basic stairs and slabs
+function workbench:cuttable(itemname)
+	local split = string.split(itemname, ":")
+	if split and split[1] and split[2] then
+		if minetest.registered_nodes["stairs:stair_"..split[2]] ~= nil or
+		minetest.registered_nodes["stairs:slab_"..split[2]] ~= nil then
 			return true
 		end
 	end
+	if registered_cuttable_nodes[itemname] == true then
+		return true
+	end
+	return false
+end
+
+-- Returns true if item can be cut into xdecor extended shapes (thinslab, panel, cube, etc.)
+function workbench:cuttable_extended(itemname)
+	return registered_cuttable_nodes[itemname] == true
 end
 
 -- method to allow other mods to check if an item is repairable
@@ -59,16 +77,41 @@ end
 
 function workbench:get_output(inv, input, name)
 	local output = {}
+	local extended = workbench:cuttable_extended(input:get_name())
 	for i = 1, #self.defs do
 		local nbox = self.defs[i]
-		local count = min(nbox[2] * input:get_count(), input:get_stack_max())
-		local item = name .. "_" .. nbox[1]
+		local cuttype = nbox[1]
+		local count = nbox[2] * input:get_count()
+		local max_count = input:get_stack_max()
+		if count > max_count then
+			-- Limit count to maximum multiple to avoid waste
+			count = nbox[2] * math.floor(max_count / nbox[2])
+		end
+		local was_cut = false
+		if extended or nbox[3] == nil then
+			local item = name .. "_" .. cuttype
 
-		item = nbox[3] and item or "stairs:" .. nbox[1] .. "_" .. name:match(":(.*)")
-		output[i] = item .. " " .. count
+			item = nbox[3] and item or "stairs:" .. cuttype .. "_" .. name:match(":(.*)")
+			if minetest.registered_items[item] then
+				output[i] = item .. " " .. count
+				was_cut = true
+			end
+		end
+		if not was_cut and special_cuts[input:get_name()] ~= nil then
+			local cut = special_cuts[input:get_name()][cuttype]
+			if cut then
+				output[i] = cut .. " " .. count
+				was_cut = true
+			end
+		end
 	end
 
 	inv:set_list("forms", output)
+end
+
+function workbench:register_special_cut(nodename, cutlist)
+	registered_cuttable_nodes[nodename] = true
+	special_cuts[nodename] = cutlist
 end
 
 local main_fs = "label[0.9,1.23;"..FS("Cut").."]"
@@ -123,7 +166,7 @@ local formspecs = {
 function workbench:set_formspec(meta, id)
 	meta:set_string("formspec",
 		"size[8,7;]list[current_player;main;0,3.25;8,4;]" ..
-		formspecs[id] .. xbg .. default.get_hotbar_bg(0,3.25))
+		formspecs[id] .. xdecor.xbg .. default.get_hotbar_bg(0,3.25))
 end
 
 function workbench.construct(pos)
@@ -156,6 +199,12 @@ function workbench.dig(pos)
 	       inv:is_empty("tool") and inv:is_empty("storage")
 end
 
+function workbench.blast(pos)
+	local drops = xdecor.get_inventory_drops(pos, {"input", "hammer", "tool", "storage"})
+	minetest.remove_node(pos)
+	return drops
+end
+
 function workbench.timer(pos)
 	local timer = minetest.get_node_timer(pos)
 	local inv = minetest.get_meta(pos):get_inventory()
@@ -179,9 +228,8 @@ end
 
 function workbench.allow_put(pos, listname, index, stack, player)
 	local stackname = stack:get_name()
-	if (listname == "tool" and stack:get_wear() > 0 and
-		workbench:repairable(stackname)) or
-	   (listname == "input" and minetest.registered_nodes[stackname .. "_cube"]) or
+	if (listname == "tool" and workbench:repairable(stackname)) or
+	   (listname == "input" and workbench:cuttable(stackname)) or
 	   (listname == "hammer" and stackname == "xdecor:hammer") or
 	    listname == "storage" then
 		return stack:get_count()
@@ -202,7 +250,16 @@ function workbench.on_put(pos, listname, index, stack, player)
 end
 
 function workbench.allow_move(pos, from_list, from_index, to_list, to_index, count, player)
-	return (to_list == "storage" and from_list ~= "forms") and count or 0
+	if (to_list == "storage" and from_list ~= "forms") then
+		return count
+	elseif (to_list == "hammer" and from_list == "tool") or (to_list == "tool" and from_list == "hammer") then
+		local inv = minetest.get_inventory({type="node", pos=pos})
+		local stack = inv:get_stack(from_list, from_index)
+		if stack:get_name() == "xdecor:hammer" then
+			return count
+		end
+	end
+	return 0
 end
 
 function workbench.on_move(pos, from_list, from_index, to_list, to_index, count, player)
@@ -226,7 +283,7 @@ function workbench.on_take(pos, listname, index, stack, player)
 	local stackname = stack:get_name()
 
 	if listname == "input" then
-		if stackname == inputname and minetest.registered_nodes[inputname .. "_cube"] then
+		if stackname == inputname and workbench:cuttable(inputname) then
 			workbench:get_output(inv, input, stackname)
 		else
 			inv:set_list("forms", {})
@@ -248,7 +305,9 @@ end
 
 xdecor.register("workbench", {
 	description = S("Work Bench"),
+	_tt_help = S("For cutting blocks, repairing tools with a hammer, crafting and storing items"),
 	groups = {cracky = 2, choppy = 2, oddly_breakable_by_hand = 1},
+	is_ground_content = false,
 	sounds = default.node_sound_wood_defaults(),
 	tiles = {
 		"xdecor_workbench_top.png","xdecor_workbench_top.png",
@@ -257,6 +316,7 @@ xdecor.register("workbench", {
 	},
 	on_rotate = screwdriver.rotate_simple,
 	can_dig = workbench.dig,
+	on_blast = workbench.blast,
 	on_timer = workbench.timer,
 	on_construct = workbench.construct,
 	on_receive_fields = workbench.fields,
@@ -268,9 +328,25 @@ xdecor.register("workbench", {
 	allow_metadata_inventory_move = workbench.allow_move
 })
 
+
+minetest.register_on_mods_loaded(function()
+local cuttable_nodes = {}
+
+-- Nodes allowed to be cut:
+-- Only the regular, solid blocks without metas or explosivity
+-- from the xdecor or default mods.
+for nodename, def in pairs(minetest.registered_nodes) do
+	local nodenamesplit = string.split(nodename, ":")
+	local modname = nodenamesplit[1]
+	if xdecor.stairs_valid_def(def) then
+		cuttable_nodes[#cuttable_nodes + 1] = nodename
+		registered_cuttable_nodes[nodename] = true
+	end
+end
+
 for _, d in ipairs(workbench.defs) do
-for i = 1, #nodes do
-	local node = nodes[i]
+for i = 1, #cuttable_nodes do
+	local node = cuttable_nodes[i]
 	local mod_name, item_name = node:match("^(.-):(.*)")
 	local def = minetest.registered_nodes[node]
 
@@ -295,25 +371,74 @@ for i = 1, #nodes do
 			tiles = {def.tile_images[1]}
 		end
 
-		--TODO: Translation support for Stairs/Slab
-		if not minetest.registered_nodes["stairs:slab_" .. item_name] then
-			stairs.register_stair_and_slab(item_name, node,
-				groups, tiles, def.description .. " Stair",
-				def.description .. " Slab", def.sounds)
+		-- Erase `tileable_vertical=false` from tiles because it
+		-- lead to buggy textures (e.g. with default:permafrost_with_moss)
+		for t=1, #tiles do
+			if type(tiles[t]) == "table" and tiles[t].tileable_vertical == false then
+				tiles[t].tileable_vertical = nil
+			end
 		end
 
-		minetest.register_node(":" .. node .. "_" .. d[1], {
-			--TODO: Translation support
-			description = def.description .. " " .. d[1]:gsub("^%l", string.upper),
+		local custom_tiles = xdecor.glasscuts[node]
+		if custom_tiles then
+			if not custom_tiles.nanoslab then
+				custom_tiles.nanoslab = custom_tiles.cube
+			end
+			if not custom_tiles.micropanel then
+				custom_tiles.micropanel = custom_tiles.micropanel
+			end
+			if not custom_tiles.doublepanel then
+				custom_tiles.doublepanel = custom_tiles.panel
+			end
+		end
+
+		if not minetest.registered_nodes["stairs:slab_" .. item_name] then
+			if custom_tiles and (custom_tiles.slab or custom_tiles.stair) then
+				if custom_tiles.stair then
+					stairs.register_stair(item_name, node,
+						groups, custom_tiles.stair, S("@1 Stair", def.description),
+						def.sounds)
+					stairs.register_stair_inner(item_name, node,
+						groups, custom_tiles.stair_inner, "", def.sounds, nil, S("Inner @1 Stair", def.description))
+					stairs.register_stair_outer(item_name, node,
+						groups, custom_tiles.stair_outer, "", def.sounds, nil, S("Outer @1 Stair", def.description))
+				end
+				if custom_tiles.slab then
+					stairs.register_slab(item_name, node,
+						groups, custom_tiles.slab, S("@1 Slab", def.description),
+						def.sounds)
+				end
+			else
+				stairs.register_stair_and_slab(item_name, node,
+					groups, tiles,
+					S("@1 Stair", def.description),
+					S("@1 Slab", def.description),
+					def.sounds, nil,
+					S("Inner @1 Stair", def.description),
+					S("Outer @1 Stair", def.description))
+			end
+		end
+
+		local cutname = d[1]
+		local tiles_special_cut
+		if custom_tiles and custom_tiles[cutname] then
+			tiles_special_cut = custom_tiles[cutname]
+		else
+			tiles_special_cut = tiles
+		end
+
+		minetest.register_node(":" .. node .. "_" .. cutname, {
+			-- @1: Base node description (e.g. "Stone"); @2: modifier (e.g. "Nanoslab")
+			description = S("@1 @2", def.description, d[4]),
 			paramtype = "light",
 			paramtype2 = "facedir",
 			drawtype = "nodebox",
 			sounds = def.sounds,
-			tiles = tiles,
+			tiles = tiles_special_cut,
 			use_texture_alpha = def.use_texture_alpha,
 			groups = groups,
-			-- `unpack` has been changed to `table.unpack` in newest Lua versions
-			node_box = xdecor.pixelbox(16, {unpack(d, 3)}),
+			is_ground_content = def.is_ground_content,
+			node_box = xdecor.pixelbox(16, d[3]),
 			sunlight_propagates = true,
 			on_place = minetest.rotate_node
 		})
@@ -330,11 +455,13 @@ for i = 1, #nodes do
 	end
 end
 end
+end)
 
 -- Craft items
 
 minetest.register_tool("xdecor:hammer", {
 	description = S("Hammer"),
+	_tt_help = S("Repairs tools at the work bench"),
 	inventory_image = "xdecor_hammer.png",
 	wield_image = "xdecor_hammer.png",
 	on_use = function() do
@@ -359,3 +486,7 @@ minetest.register_craft({
 		{"group:wood", "group:wood"}
 	}
 })
+
+-- Special cuts for cushion block and cabinet
+workbench:register_special_cut("xdecor:cushion_block", { slab = "xdecor:cushion" })
+workbench:register_special_cut("xdecor:cabinet", { slab = "xdecor:cabinet_half" })

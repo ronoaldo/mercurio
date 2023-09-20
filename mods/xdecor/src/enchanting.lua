@@ -53,14 +53,14 @@ function enchanting:get_tooltip(enchant, orig_caps, fleshy)
 	}
 
 	return minetest.colorize and minetest.colorize(specs[enchant][1],
-			"\n" .. enchant_loc[enchant] .. specs[enchant][2]) or
-			"\n" .. enchant_loc[enchant] .. specs[enchant][2]
+			enchant_loc[enchant] .. specs[enchant][2]) or
+			enchant_loc[enchant] .. specs[enchant][2]
 end
 
 local enchant_buttons = {
-	"image_button[3.9,0.85;4,0.92;bg_btn.png;fast;"..FS("Efficiency").."]" ..
-	"image_button[3.9,1.77;4,1.12;bg_btn.png;durable;"..FS("Durability").."]",
-	"image_button[3.9,2.9;4,0.92;bg_btn.png;sharp;"..FS("Sharpness").."]",
+	"image_button[3.6,0.67;4.75,0.85;bg_btn.png;fast;"..FS("Efficiency").."]" ..
+	"image_button[3.6,1.65;4.75,1.05;bg_btn.png;durable;"..FS("Durability").."]",
+	"image_button[3.6,2.8;4.75,0.85;bg_btn.png;sharp;"..FS("Sharpness").."]",
 }
 
 function enchanting.formspec(pos, num)
@@ -131,6 +131,12 @@ end
 function enchanting.dig(pos)
 	local inv = minetest.get_meta(pos):get_inventory()
 	return inv:is_empty("tool") and inv:is_empty("mese")
+end
+
+function enchanting.blast(pos)
+	local drops = xdecor.get_inventory_drops(pos, {"tool", "mese"})
+	minetest.remove_node(pos)
+	return drops
 end
 
 local function allowed(tool)
@@ -216,16 +222,19 @@ end
 
 xdecor.register("enchantment_table", {
 	description = S("Enchantment Table"),
+	_tt_help = S("Enchant your tools with mese crystals"),
 	tiles = {
 		"xdecor_enchantment_top.png",  "xdecor_enchantment_bottom.png",
 		"xdecor_enchantment_side.png", "xdecor_enchantment_side.png",
 		"xdecor_enchantment_side.png", "xdecor_enchantment_side.png"
 	},
 	groups = {cracky = 1, level = 1},
+	is_ground_content = false,
 	light_source = 6,
 	sounds = default.node_sound_stone_defaults(),
 	on_rotate = screwdriver.rotate_simple,
 	can_dig = enchanting.dig,
+	on_blast = enchanting.blast,
 	on_timer = enchanting.timer,
 	on_construct = enchanting.construct,
 	on_destruct = enchanting.destruct,
@@ -241,7 +250,8 @@ xdecor.register("enchantment_table", {
 minetest.register_entity("xdecor:book_open", {
 	visual = "sprite",
 	visual_size = {x=0.75, y=0.75},
-	collisionbox = {0},
+	collisionbox = {0,0,0,0,0,0},
+	pointable = false,
 	physical = false,
 	textures = {"xdecor_book_open.png"},
 	static_save = false,
@@ -294,10 +304,12 @@ function enchanting:register_tools(mod, def)
 				fleshy = fleshy + enchanting.damages
 			end
 
+			local arg1 = def.material_desc[material] or cap(material)
+			local arg2 = def.tools[tool].desc or cap(tool)
+			local arg3 = self:get_tooltip(enchant, original_groupcaps[group], fleshy)
 			minetest.register_tool(":" .. mod .. ":enchanted_" .. tool .. "_" .. material .. "_" .. enchant, {
-				description = S("Enchanted @1 @2 @3",
-					def.material_desc[material] or cap(material), def.tools[tool].desc or cap(tool),
-					self:get_tooltip(enchant, original_groupcaps[group], fleshy)),
+				description = S("Enchanted @1 @2\n@3", arg1, arg2, arg3),
+				short_description = S("Enchanted @1 @2", arg1, arg2),
 				inventory_image = original_tool.inventory_image .. "^[colorize:violet:50",
 				wield_image = original_tool.wield_image,
 				groups = {not_in_creative_inventory = 1},

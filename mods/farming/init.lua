@@ -7,7 +7,7 @@
 
 farming = {
 	mod = "redo",
-	version = "20230122",
+	version = "20230906",
 	path = minetest.get_modpath("farming"),
 	select = {
 		type = "fixed",
@@ -20,10 +20,25 @@ farming = {
 	registered_plants = {},
 	min_light = 12,
 	max_light = 15,
-	mapgen = minetest.get_mapgen_setting("mg_name")
+	mapgen = minetest.get_mapgen_setting("mg_name"),
+	use_utensils = minetest.settings:get_bool("farming_use_utensils") ~= false,
+	mtg = minetest.get_modpath("default"),
+	mcl = minetest.get_modpath("mcl_core"),
+	sounds = {}
 }
 
+-- default sound functions just incase
+function farming.sounds.node_sound_defaults() end
+function farming.sounds.node_sound_leaves_defaults() end
+function farming.sounds.node_sound_glass_defaults() end
+function farming.sounds.node_sound_wood_defaults() end
+function farming.sounds.node_sound_gravel_defaults() end
 
+-- sounds check
+if farming.mtg then farming.sounds = default end
+if farming.mcl then farming.sounds = mcl_sounds end
+
+-- check for creative mode or priv
 local creative_mode_cache = minetest.settings:get_bool("creative_mode")
 
 function farming.is_creative(name)
@@ -33,30 +48,10 @@ end
 
 local statistics = dofile(farming.path .. "/statistics.lua")
 
--- Intllib
-local S
-if minetest.get_translator ~= nil then
-	S = minetest.get_translator("farming") -- 5.x translation function
-else
-	if minetest.get_modpath("intllib") then
-		dofile(minetest.get_modpath("intllib") .. "/init.lua")
-		if intllib.make_gettext_pair then
-			gettext, ngettext = intllib.make_gettext_pair() -- new gettext method
-		else
-			gettext = intllib.Getter() -- old text file method
-		end
-		S = gettext
-	else -- boilerplate function
-		S = function(str, ...)
-			local args = {...}
-			return str:gsub("@%d+", function(match)
-				return args[tonumber(match:sub(2))]
-			end)
-		end
-	end
-end
+-- Translation support
+local S = minetest.get_translator("farming")
 
-farming.intllib = S
+farming.translate = S
 
 
 -- Utility Function
@@ -198,30 +193,30 @@ local function reg_plant_stages(plant_name, stage, force_last)
 			local old_constr = node_def.on_construct
 			local old_destr  = node_def.on_destruct
 
-			minetest.override_item(node_name,
-				{
-					on_construct = function(pos)
+			minetest.override_item(node_name, {
 
-						if old_constr then
-							old_constr(pos)
-						end
+				on_construct = function(pos)
 
-						farming.handle_growth(pos)
-					end,
+					if old_constr then
+						old_constr(pos)
+					end
 
-					on_destruct = function(pos)
+					farming.handle_growth(pos)
+				end,
 
-						minetest.get_node_timer(pos):stop()
+				on_destruct = function(pos)
 
-						if old_destr then
-							old_destr(pos)
-						end
-					end,
+					minetest.get_node_timer(pos):stop()
 
-					on_timer = function(pos, elapsed)
-						return farming.plant_growth_timer(pos, elapsed, node_name)
-					end,
-				})
+					if old_destr then
+						old_destr(pos)
+					end
+				end,
+
+				on_timer = function(pos, elapsed)
+					return farming.plant_growth_timer(pos, elapsed, node_name)
+				end,
+			})
 		end
 
 	elseif force_last then
@@ -313,9 +308,37 @@ minetest.register_abm({
 	chance = 1,
 	catch_up = false,
 	action = function(pos, node)
-		farming.handle_growth(pos, node)
+
+		-- check if group:growing node is a seed
+		local def = minetest.registered_nodes[node.name]
+
+		if def and def.groups and def.groups.seed then
+
+			local next_stage = def.next_plant
+
+			def = minetest.registered_nodes[next_stage]
+
+			-- change seed to stage_1 or crop
+			if def then
+
+				local p2 = def.place_param2 or 1
+
+				minetest.set_node(pos, {name = next_stage, param2 = p2})
+			end
+		else
+			farming.handle_growth(pos, node)
+		end
 	end
 })
+
+
+-- Standard growth logic, swap node until we reach last stage.
+function farming.classic_growth(pos, next_stage)
+
+	local p2 = minetest.registered_nodes[next_stage].place_param2 or 1
+
+	minetest.swap_node(pos, {name = next_stage, param2 = p2})
+end
 
 
 -- Plant timer function that grows plants under the right conditions.
@@ -338,7 +361,7 @@ function farming.plant_growth_timer(pos, elapsed, node_name)
 
 	if chk then
 
-		if chk(pos, node_name) then
+		if not chk(pos, node_name) then
 			return true
 		end
 
@@ -399,9 +422,14 @@ function farming.plant_growth_timer(pos, elapsed, node_name)
 
 	if minetest.registered_nodes[stages.stages_left[growth]] then
 
-		local p2 = minetest.registered_nodes[stages.stages_left[growth] ].place_param2 or 1
+		-- Custom grow function
+		local on_grow = minetest.registered_nodes[node_name].on_grow
 
-		minetest.swap_node(pos, {name = stages.stages_left[growth], param2 = p2})
+		if on_grow then
+			on_grow(pos, stages.stages_left[growth])
+		else
+			farming.classic_growth(pos, stages.stages_left[growth])
+		end
 	else
 		return true
 	end
@@ -542,18 +570,21 @@ farming.register_plant = function(name, def)
 		inventory_image = def.inventory_image,
 		wield_image = def.inventory_image,
 		drawtype = "signlike",
-		groups = {seed = 1, snappy = 3, attached_node = 1, flammable = 2},
+		groups = {
+			seed = 1, snappy = 3, attached_node = 1, flammable = 2, growing = 1,
+			compostability = 65
+		},
 		paramtype = "light",
 		paramtype2 = "wallmounted",
 		walkable = false,
 		sunlight_propagates = true,
 		selection_box = farming.select,
-		place_param2 = def.place_param2 or nil,
+		place_param2 = 1, -- place seed flat
 		next_plant = mname .. ":" .. pname .. "_1",
 
 		on_place = function(itemstack, placer, pointed_thing)
-			return farming.place_seed(itemstack, placer,
-				pointed_thing, mname .. ":" .. pname .. "_1")
+			return farming.place_seed(itemstack, placer, pointed_thing,
+					mname .. ":seed_" .. pname)
 		end
 	})
 
@@ -568,9 +599,11 @@ farming.register_plant = function(name, def)
 	for i = 1, def.steps do
 
 		local base_rarity = 1
+
 		if def.steps ~= 1 then
 			base_rarity =  8 - (i - 1) * 7 / (def.steps - 1)
 		end
+
 		local drop = {
 			items = {
 				{items = {mname .. ":" .. pname}, rarity = base_rarity},
@@ -582,7 +615,7 @@ farming.register_plant = function(name, def)
 
 		local sel = farming.select
 		local g = {
-			snappy = 3, flammable = 2, plant = 1, growing = 1,
+			handy = 1, snappy = 3, flammable = 2, plant = 1, growing = 1,
 			attached_node = 1, not_in_creative_inventory = 1,
 		}
 
@@ -614,7 +647,7 @@ farming.register_plant = function(name, def)
 			drop = drop,
 			selection_box = sel,
 			groups = g,
-			sounds = default.node_sound_leaves_defaults(),
+			sounds = farming.sounds.node_sound_leaves_defaults(),
 			minlight = def.minlight,
 			maxlight = def.maxlight,
 			next_plant = next_plant
@@ -678,7 +711,7 @@ farming.rice = true
 
 
 -- Load new global settings if found inside mod folder
-local input = io.open(farming.path.."/farming.conf", "r")
+local input = io.open(farming.path .. "/farming.conf", "r")
 if input then
 	dofile(farming.path .. "/farming.conf")
 	input:close()
@@ -686,23 +719,41 @@ end
 
 -- load new world-specific settings if found inside world folder
 local worldpath = minetest.get_worldpath()
-input = io.open(worldpath.."/farming.conf", "r")
+input = io.open(worldpath .. "/farming.conf", "r")
 if input then
 	dofile(worldpath .. "/farming.conf")
 	input:close()
 end
 
+-- recipe items
+dofile(farming.path .. "/items.lua")
 
 -- important items
-dofile(farming.path.."/soil.lua")
-dofile(farming.path.."/hoes.lua")
+if not farming.mcl then
+	dofile(farming.path .. "/soil.lua")
+	dofile(farming.path .. "/hoes.lua")
+end
+
 dofile(farming.path.."/grass.lua")
 dofile(farming.path.."/utensils.lua")
 
 -- default crops
-dofile(farming.path.."/crops/wheat.lua")
+if not farming.mcl then
+	dofile(farming.path.."/crops/wheat.lua")
+end
+
 dofile(farming.path.."/crops/cotton.lua")
 
+-- disable crops Mineclone already has
+if farming.mcl then
+	farming.carrot = nil
+	farming.potato = nil
+	farming.melon = nil
+	farming.cocoa = nil
+	farming.beetroot = nil
+	farming.sunflower = nil
+	farming.pumpkin = nil
+end
 
 -- helper function
 local function ddoo(file, check)
@@ -754,7 +805,10 @@ ddoo("spinach.lua", farming.eggplant)
 ddoo("ginger.lua", farming.ginger)
 
 dofile(farming.path .. "/food.lua")
-dofile(farming.path .. "/compatibility.lua") -- Farming Plus compatibility
+
+if not farming.mcl then
+	dofile(farming.path .. "/compatibility.lua") -- Farming Plus compatibility
+end
 
 if minetest.get_modpath("lucky_block") then
 	dofile(farming.path .. "/lucky_block.lua")

@@ -7,7 +7,6 @@ mobs:register_mob("dmobs:rat", {
 	hp_max = 42,
 	armor = 130,
 	collisionbox = {-0.4, 0, -0.4, 0.3, 1, 0.3},
-	runaway = true,
 	visual = "mesh",
 	mesh = "dmobs_rat.b3d",
 	textures = {

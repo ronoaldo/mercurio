@@ -42,6 +42,7 @@ dofile(path .. "desertcreatures.lua") --
 dofile(path .. "slavecreatures.lua") --
 dofile(path .. "buyablestuff.lua") --
 dofile(path .. "explodingtoad.lua") --
+dofile(path .. "lootchest.lua") --
 dofile(path .. "hunger.lua") --
 
 

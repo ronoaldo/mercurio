@@ -1,5 +1,6 @@
 
-local S = farming.intllib
+local S = farming.translate
+local a = farming.recipe_items
 
 -- Textures for Pea crop and Peas were done by Andrey01
 
@@ -7,7 +8,9 @@ local S = farming.intllib
 minetest.register_craftitem("farming:pea_pod", {
 	description = S("Pea Pod"),
 	inventory_image = "farming_pea_pod.png",
-	groups = {seed = 2, food_peas = 1, food_pea_pod = 1, flammable = 2},
+	groups = {
+		compostability = 48, seed = 2, food_peas = 1, food_pea_pod = 1, flammable = 2
+	},
 	on_place = function(itemstack, placer, pointed_thing)
 		return farming.place_seed(itemstack, placer, pointed_thing, "farming:pea_1")
 	end,
@@ -21,8 +24,8 @@ minetest.register_alias("farming:peas", "farming:pea_pod")
 minetest.register_craftitem("farming:pea_soup", {
 	description = S("Pea Soup"),
 	inventory_image = "farming_pea_soup.png",
-	groups = {flammable = 2},
-	on_use = minetest.item_eat(4, "farming:bowl")
+	groups = {flammable = 2, compostability = 65},
+	on_use = minetest.item_eat(4, a.bowl)
 })
 
 minetest.register_craft({
@@ -47,10 +50,10 @@ local def = {
 	drop = "",
 	selection_box = farming.select,
 	groups = {
-		snappy = 3, flammable = 2, plant = 1, attached_node = 1,
+		handy = 1, snappy = 3, flammable = 2, plant = 1, attached_node = 1,
 		not_in_creative_inventory = 1, growing = 1
 	},
-	sounds = default.node_sound_leaves_defaults()
+	sounds = farming.sounds.node_sound_leaves_defaults()
 }
 
 -- stage 1
@@ -94,7 +97,7 @@ farming.registered_plants["farming:pea_pod"] = {
 -- mapgen
 minetest.register_decoration({
 	deco_type = "simple",
-	place_on = {"default:dirt_with_grass"},
+	place_on = {"default:dirt_with_grass", "mcl_core:dirt_with_grass"},
 	sidelen = 16,
 	noise_params = {
 		offset = 0,

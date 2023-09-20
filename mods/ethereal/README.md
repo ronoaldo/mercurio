@@ -19,7 +19,7 @@ TODO:
 
 #### Lucky Blocks
 
-It provides 47 new lucky blocks if the mod is detected.
+It provides 63 new lucky blocks if the mod is detected.
 
 ## Technical info
 -----------------
@@ -42,7 +42,6 @@ Also those more as optional:
 * Lucky Block `lucky_block`
 * doors
 * moreblocks
-* intllib (only need on older engines)
 * toolranks
 
 #### Settings and Biome List
@@ -97,6 +96,15 @@ several examples are at the documentation of [api.txt](api.txt) file.
 
 A huge thanks to Chinchow who was the inspiration behind Ethereal and everyone
 who helped make this mod bigger and better throughout it's release :)
+
+### 1.30
+ - New fish textures by SirroBzeroone and BlueTangs Rock
+ - New fish added along with food recipes (thanks BlueTangs Rock)
+ - Fishing rod now has 65 uses
+ - Fixed willow leaves scaling and forced schematic trunk placement
+ - Add 11 new lucky blocks
+ - Caverealms' glow bait reduces wait time when fishing
+ - Add Basandra Bush and wood items, Add Spore Grass
 
 #### 1.29
  - Use "stratum" to generate mesa biome for stripey goodness

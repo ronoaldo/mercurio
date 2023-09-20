@@ -1,5 +1,5 @@
 
-local S = ethereal.intllib
+local S = ethereal.translate
 
 
 -- Ice Brick

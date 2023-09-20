@@ -3,3 +3,5 @@ itemframes.return_item (return placed item to the player's inventory on right-cl
 
 # if false, inserting and removing items from frames and pedestals will not be logged
 itemframes.log_actions (log player actions when using itemframes and pedestals) bool false
+
+itemframes.allow_rotate (Allow item rotation in protected areas) bool false

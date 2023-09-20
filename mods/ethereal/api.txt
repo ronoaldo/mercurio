@@ -28,6 +28,10 @@ You may also use a table that not only adds an item but the biome it can be foun
 
 	ethereal.add_item("", "", {"ethereal:crystal_spike", "frost"})
 
+.. add special item with wear level:
+
+	ethereal.add_item("", "", "default:sword_steel 15000")
+
 
 Please note that only Ethereal biome names can be used for specific finds, unless mod
 specifically adds ethereal as an optional dependency.
