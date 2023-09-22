@@ -47,6 +47,9 @@ minetest.register_node("farming:seed_cotton", {
 	next_plant = "farming:cotton_1",
 	on_place = function(itemstack, placer, pointed_thing)
 		return farming.place_seed(itemstack, placer, pointed_thing, "farming:seed_cotton")
+	end,
+	on_timer = function(pos, elapsed)
+		minetest.set_node(pos, {name = "farming:cotton_1", param2 = 1})
 	end
 })
 

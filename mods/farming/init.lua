@@ -7,7 +7,7 @@
 
 farming = {
 	mod = "redo",
-	version = "20230906",
+	version = "20230915",
 	path = minetest.get_modpath("farming"),
 	select = {
 		type = "fixed",
@@ -53,6 +53,9 @@ local S = minetest.get_translator("farming")
 
 farming.translate = S
 
+-- localise
+local random = math.random
+local floor = math.floor
 
 -- Utility Function
 local time_speed = tonumber(minetest.settings:get("time_speed")) or 72
@@ -92,7 +95,7 @@ local function day_or_night_time(dt, count_day)
 	local dt_c = clamp(t2_c, 0, 0.5) - clamp(t1_c, 0, 0.5)  -- this cycle
 
 	if t1_c < -0.5 then
-		local nc = math.floor(-t1_c)
+		local nc = floor(-t1_c)
 		t1_c = t1_c + nc
 		dt_c = dt_c + 0.5 * nc + clamp(-t1_c - 0.5, 0, 0.5)
 	end
@@ -105,6 +108,16 @@ end
 local STAGE_LENGTH_AVG = tonumber(
 		minetest.settings:get("farming_stage_length")) or 200
 local STAGE_LENGTH_DEV = STAGE_LENGTH_AVG / 6
+
+
+-- quick start seed timer
+farming.start_seed_timer = function(pos)
+
+	local timer = minetest.get_node_timer(pos)
+	local grow_time = floor(random(STAGE_LENGTH_DEV, STAGE_LENGTH_AVG))
+
+	timer:start(grow_time)
+end
 
 
 -- return plant name and stage from node provided
@@ -267,7 +280,7 @@ local function set_growing(pos, stages_left)
 
 			stage_length = clamp(stage_length, 0.5 * STAGE_LENGTH_AVG, 3.0 * STAGE_LENGTH_AVG)
 
-			timer:set(stage_length, -0.5 * math.random() * STAGE_LENGTH_AVG)
+			timer:set(stage_length, -0.5 * random() * STAGE_LENGTH_AVG)
 		end
 
 	elseif timer:is_started() then
@@ -309,16 +322,29 @@ minetest.register_abm({
 	catch_up = false,
 	action = function(pos, node)
 
+		-- skip if node timer already active
+		if minetest.get_node_timer(pos):is_started() then
+			return
+		end
+
 		-- check if group:growing node is a seed
 		local def = minetest.registered_nodes[node.name]
 
 		if def and def.groups and def.groups.seed then
 
+			-- start node timer if found
+			if def.on_timer then
+
+				farming.start_seed_timer(pos)
+
+				return
+			end
+
 			local next_stage = def.next_plant
 
 			def = minetest.registered_nodes[next_stage]
 
-			-- change seed to stage_1 or crop
+			-- switch seed without timer to stage_1 of crop
 			if def then
 
 				local p2 = def.place_param2 or 1
@@ -326,19 +352,11 @@ minetest.register_abm({
 				minetest.set_node(pos, {name = next_stage, param2 = p2})
 			end
 		else
+			-- start normal crop timer
 			farming.handle_growth(pos, node)
 		end
 	end
 })
-
-
--- Standard growth logic, swap node until we reach last stage.
-function farming.classic_growth(pos, next_stage)
-
-	local p2 = minetest.registered_nodes[next_stage].place_param2 or 1
-
-	minetest.swap_node(pos, {name = next_stage, param2 = p2})
-end
 
 
 -- Plant timer function that grows plants under the right conditions.
@@ -422,14 +440,9 @@ function farming.plant_growth_timer(pos, elapsed, node_name)
 
 	if minetest.registered_nodes[stages.stages_left[growth]] then
 
-		-- Custom grow function
-		local on_grow = minetest.registered_nodes[node_name].on_grow
+		local p2 = minetest.registered_nodes[stages.stages_left[growth] ].place_param2 or 1
 
-		if on_grow then
-			on_grow(pos, stages.stages_left[growth])
-		else
-			farming.classic_growth(pos, stages.stages_left[growth])
-		end
+		minetest.set_node(pos, {name = stages.stages_left[growth], param2 = p2})
 	else
 		return true
 	end
@@ -517,6 +530,7 @@ function farming.place_seed(itemstack, placer, pointed_thing, plantname)
 
 		minetest.set_node(pt.above, {name = plantname, param2 = p2})
 
+farming.start_seed_timer(pt.above)
 --minetest.get_node_timer(pt.above):start(1)
 --farming.handle_growth(pt.above)--, node)
 
@@ -581,6 +595,18 @@ farming.register_plant = function(name, def)
 		selection_box = farming.select,
 		place_param2 = 1, -- place seed flat
 		next_plant = mname .. ":" .. pname .. "_1",
+
+		on_timer = function(pos, elapsed)
+
+			local def = minetest.registered_nodes[mname .. ":" .. pname .. "_1"]
+
+			if def then
+				minetest.swap_node(pos, {
+					name = def.next_plant,
+					param2 = def.place_param2
+				})
+			end
+		end,
 
 		on_place = function(itemstack, placer, pointed_thing)
 			return farming.place_seed(itemstack, placer, pointed_thing,

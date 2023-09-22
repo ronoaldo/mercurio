@@ -56,9 +56,23 @@ mobs:register_mob("mobs_animal:chicken", {
 	},
 	follow = {
 		"farming:seed_wheat", "farming:seed_cotton", "farming:seed_barley",
-		"farming:seed_oat", "farming:seed_rye"
+		"farming:seed_oat", "farming:seed_rye", "farming:seed_rice",
+		"farming:seed_hemp", "farming:seed_sunflower", "farming:seed_mint"
 	},
 	view_range = 5,
+	replace_rate = 5,
+	replace_what = {
+		{"farming:seed_wheat", "air", 0},
+		{"farming:seed_cotton", "air", 0},
+		{"farming:seed_barley", "air", 0},
+		{"farming:seed_oat", "air", 0},
+		{"farming:seed_rye", "air", 0},
+		{"farming:seed_rice", "air", 0},
+		{"farming:seed_hemp", "air", 0},
+		{"farming:seed_mint", "air", 0},
+		{"farming:seed_sunflower", "air", 0}
+	},
+	stay_near = {{"group:seed"}, 7},
 
 	on_rightclick = function(self, clicker)
 

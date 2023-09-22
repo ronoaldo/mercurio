@@ -18,6 +18,9 @@ minetest.register_node("farming:seed_hemp", {
 	next_plant = "farming:hemp_1",
 	on_place = function(itemstack, placer, pointed_thing)
 		return farming.place_seed(itemstack, placer, pointed_thing, "farming:seed_hemp")
+	end,
+	on_timer = function(pos, elapsed)
+		minetest.set_node(pos, {name = "farming:hemp_1", param2 = 1})
 	end
 })
 

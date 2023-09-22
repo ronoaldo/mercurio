@@ -63,3 +63,10 @@ end,
 This is a function to add items to a list that scythes will not drop, e.g. farming:trellis or farming:beanpole.
 
 farming.add_to_scythe_not_drops(item_name)
+
+### Start timer function
+
+A handy function that starts a crops timer with a randomly selected time set by using
+stage_length setting.  This is mostly used for special functions or 3rd party mods.
+
+farming.start_seed_timer(pos)
