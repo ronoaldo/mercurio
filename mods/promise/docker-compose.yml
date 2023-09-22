@@ -1,0 +1,18 @@
+version: "3.6"
+
+services:
+ sut:
+  build:
+   context: ./test
+   args:
+    ENGINE_VERSION: ${ENGINE_VERSION:-5.7.0}
+  user: root
+  volumes:
+    - "./:/root/.minetest/worlds/world/worldmods/promise/"
+    - "world_data:/root/.minetest/worlds/world"
+    - "./test/world.mt:/root/.minetest/worlds/world/world.mt"
+    - "./test/minetest.conf:/minetest.conf"
+    - "./coverage:/var/lib/minetest"
+
+volumes:
+  world_data: {}
