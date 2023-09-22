@@ -1,0 +1,15 @@
+version: "3.6"
+
+services:
+ test:
+  build: ./test
+  user: root
+  volumes:
+    - "./:/root/.minetest/worlds/world/worldmods/mtzip/"
+    - "./test/minetest.conf:/minetest.conf"
+    - "./test/entrypoint.sh:/entrypoint.sh"
+    - "world:/root/.minetest/worlds/world"
+    - "./coverage:/var/lib/minetest"
+
+volumes:
+  world: {}
