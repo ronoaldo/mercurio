@@ -7,7 +7,7 @@ minetest.register_node("ethereal:basandra_wood", {
 	tiles = {"ethereal_basandra_bush_wood.png"},
 	paramtype2 = "facedir",
 	is_ground_content = false,
-	groups = {choppy = 2, oddly_breakable_by_hand = 1},
+	groups = {wood = 1, choppy = 2, oddly_breakable_by_hand = 1},
 	sounds = default.node_sound_wood_defaults(),
 	on_place = minetest.rotate_node
 })

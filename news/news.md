@@ -17,14 +17,54 @@ The server is designed to be friendly and enjoyable! Please:
 
 # **Server Updates, September 2023**
 
-The server was updated to the Minetest 5.7.0 engine version.
-There are no significant changes in gameplay, but this new
-version fixed some bugs and also brings performance improvements.
+## Updates for Sep, 22
 
-If you find any issues, mention @ronoaldo in chat so the server
-hosting team can work on them.
+**New**: Added the mod `blockexchange`. This mod allows you to upload
+your builds to the https://blockexchange.minetest.ch website. This portal will
+help you preserve your builds once you finish them. This will help admins to
+recover your build in case it was destroyed. This will also allow you to export
+your hard work and restore it using the same mod or a schem file using World
+Edit. This restoring process can help you load your build on another server or
+for local gameplay.
 
-## Updated Mods
+For details about how to use this mod see this page:
+https://github.com/blockexchange/blockexchange
+
+**New**: Automobiles are now able to climb regular blocks. Due to poppular
+demand, APercy added a new feature for the automobiles in which they can now
+ride on irregular terrain as well as nicelly built roads. Try it out!
+
+### Updated Mods
+
+```
+    automobiles_pck
+    anvil
+    bakedclay
+    ethereal
+    farming
+    mobs_animal
+    nautilus
+    other_worlds
+    pipeworkds
+    skinsdb
+```
+
+### New mods
+
+```
+    blockexchange
+```
+
+## Updates for Sep, 20
+
+The server was updated to the Minetest 5.7.0 engine version.  There are no
+significant changes in gameplay, but this new version fixed some bugs and also
+brings performance improvements.
+
+If you find any issues, mention @ronoaldo in chat so the server hosting team can
+work on them.
+
+### Updated Mods
 
 ```
     3d_armor
