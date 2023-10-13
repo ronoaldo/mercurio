@@ -90,6 +90,7 @@ if dmobs.dragons then
 	dofile(dpath .. "dragons/water_dragon.lua")
 	dofile(dpath .. "dragons/wyvern.lua")
 	dofile(dpath .. "dragons/eggs.lua")
+	dofile(dpath .. "dragons/spawn_eggs.lua")
 end
 
 dofile(dpath .. "arrows/dragonfire.lua")

@@ -122,7 +122,14 @@ minetest.register_node(":mobs:beehive", {
 	on_punch = function(pos, node, puncher)
 
 		-- yep, bee's don't like having their home punched by players
-		puncher:set_hp(puncher:get_hp() - 4)
+		minetest.after(0.2, function()
+
+			local hp = puncher and puncher:get_hp()
+
+			if hp then
+				puncher:set_hp(hp - 4)
+			end
+		end)
 	end,
 
 	allow_metadata_inventory_put = function(pos, listname, index, stack, player)

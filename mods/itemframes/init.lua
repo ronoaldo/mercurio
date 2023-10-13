@@ -8,28 +8,21 @@ local allow_rotate = minetest.settings:get_bool("itemframes.allow_rotate", false
 
 -- translation support
 
-local S
-if minetest.get_translator then
-	S = minetest.get_translator("itemframes") -- 5.x translation function
-else -- boilerplate function
-	S = function(str, ...)
-		local args = {...}
-		return str:gsub("@%d+", function(match)
-			return args[tonumber(match:sub(2))]
-		end)
-	end
-end
+local S = minetest.get_translator("itemframes")
 
 -- item entity
 
 minetest.register_entity("itemframes:item", {
-	hp_max = 1,
-	visual = "wielditem",
-	visual_size = {x = 0.33, y = 0.33},
-	collisionbox = {0, 0, 0, 0, 0, 0},
-	physical = false,
-	textures = {"air"},
-	static_save = false,
+
+	initial_properties = {
+		hp_max = 1,
+		visual = "wielditem",
+		visual_size = {x = 0.33, y = 0.33},
+		collisionbox = {0, 0, 0, 0, 0, 0},
+		physical = false,
+		textures = {"air"},
+		static_save = false
+	},
 
 	on_activate = function(self, staticdata)
 

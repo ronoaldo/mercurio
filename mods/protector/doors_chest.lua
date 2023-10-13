@@ -167,6 +167,8 @@ function register_door(name, def)
 			fixed = def.selection_box_bottom
 		},
 		groups = def.groups,
+		_mcl_hardness = 0.8,
+		_mcl_blast_resistance = 1,
 
 		after_dig_node = function(pos, oldnode, oldmetadata, digger)
 			pos.y = pos.y+1
@@ -205,6 +207,8 @@ function register_door(name, def)
 			fixed = def.selection_box_top
 		},
 		groups = def.groups,
+		_mcl_hardness = 0.8,
+		_mcl_blast_resistance = 1,
 
 		after_dig_node = function(pos, oldnode, oldmetadata, digger)
 			pos.y = pos.y-1
@@ -243,6 +247,8 @@ function register_door(name, def)
 			fixed = def.selection_box_bottom
 		},
 		groups = def.groups,
+		_mcl_hardness = 0.8,
+		_mcl_blast_resistance = 1,
 
 		after_dig_node = function(pos, oldnode, oldmetadata, digger)
 			pos.y = pos.y+1
@@ -281,6 +287,8 @@ function register_door(name, def)
 			fixed = def.selection_box_top
 		},
 		groups = def.groups,
+		_mcl_hardness = 0.8,
+		_mcl_blast_resistance = 1,
 
 		after_dig_node = function(pos, oldnode, oldmetadata, digger)
 			pos.y = pos.y-1
@@ -312,7 +320,7 @@ register_door(name, {
 	inventory_image = "doors_wood.png^protector_logo.png",
 	groups = {
 		snappy = 1, choppy = 2, dig_immediate = 2,
-		unbreakable = 1, --door = 1
+		unbreakable = 1, axey = 1, --door = 1
 	},
 	tiles_bottom = {"doors_wood_b.png^protector_logo.png", "doors_brown.png"},
 	tiles_top = {"doors_wood_a.png", "doors_brown.png"},
@@ -356,11 +364,11 @@ register_door(name, {
 	inventory_image = "doors_steel.png^protector_logo.png",
 	groups = {
 		snappy = 1, bendy = 2, cracky = 1,
-		level = 2, unbreakable = 1, -- door = 1
+		level = mcl and 0 or 2, pickaxey = 2, unbreakable = 1, -- door = 1
 	},
 	tiles_bottom = {"doors_steel_b.png^protector_logo.png", "doors_grey.png"},
 	tiles_top = {"doors_steel_a.png", "doors_grey.png"},
-	sounds = default.node_sound_wood_defaults(),
+	sounds = default.node_sound_metal_defaults(),
 	sunlight = false,
 })
 
@@ -464,8 +472,10 @@ register_trapdoor("protector:trapdoor", {
 	tile_side = "doors_trapdoor_side.png",
 	groups = {
 		snappy = 1, choppy = 2, dig_immediate = 2,
-		unbreakable = 1, --door = 1
+		unbreakable = 1, axey = 1, --door = 1
 	},
+	_mcl_hardness = 0.8,
+	_mcl_blast_resistance = 1,
 	sounds = default.node_sound_wood_defaults(),
 })
 
@@ -504,10 +514,12 @@ register_trapdoor("protector:trapdoor_steel", {
 	tile_front = "doors_trapdoor_steel.png^protector_logo.png",
 	tile_side = "doors_trapdoor_steel_side.png",
 	groups = {
-		snappy = 1, bendy = 2, cracky = 1, melty = 2, level = 2,
-		unbreakable = 1, --door = 1
+		snappy = 1, bendy = 2, cracky = 1, melty = 2, level = mcl and 0 or 2,
+		unbreakable = 1, pickaxey = 2, --door = 1
 	},
-	sounds = default.node_sound_wood_defaults(),
+	_mcl_hardness = 1,
+	_mcl_blast_resistance = 1,
+	sounds = default.node_sound_metal_defaults(),
 })
 
 if protector_crafts then

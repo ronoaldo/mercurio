@@ -101,10 +101,10 @@ mobs:register_mob("mobs_animal:kitten", {
 				self.order = "stand"
 				self.state = "stand"
 				self.object:set_velocity({x = 0, y = 0, z = 0})
-				mobs:set_animation(self, "stand")
+				self:set_animation("stand")
 			else
 				self.order = ""
-				mobs:set_animation(self, "stoodup")
+				self:set_animation("stoodup")
 			end
 		end
 	end,

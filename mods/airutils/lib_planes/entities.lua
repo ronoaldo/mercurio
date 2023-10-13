@@ -177,6 +177,19 @@ function airutils.logic(self)
     local co_pilot = nil
     if self.co_pilot and self._have_copilot then co_pilot = minetest.get_player_by_name(self.co_pilot) end
 
+    local plane_properties = self.object:get_properties()
+    if self.isonground then
+        if plane_properties.show_on_minimap == true then
+            plane_properties.show_on_minimap = false
+            self.object:set_properties(plane_properties)
+        end
+    else
+        if plane_properties.show_on_minimap == false then
+            plane_properties.show_on_minimap = true
+            self.object:set_properties(plane_properties)
+        end
+    end
+
     if player then
         local ctrl = player:get_player_control()
         ---------------------
@@ -481,11 +494,12 @@ function airutils.logic(self)
     if stop ~= true then --maybe == nil
         self._last_accell = new_accel
 	    self.object:move_to(curr_pos)
-        --self.object:set_velocity(velocity)
-        --[[if player then 
-            airutils.attach(self, player, self._instruction_mode)
-        end]]--
-        airutils.set_acceleration(self.object, new_accel)
+        --airutils.set_acceleration(self.object, new_accel)
+        local limit = 100
+        local vel_to_add = vector.multiply(new_accel,self.dtime)
+        vel_to_add.y = 0
+        self.object:add_velocity(vel_to_add)
+        self.object:set_acceleration({x=0,y=new_accel.y, z=0})
     else
         if stop == true then
             self._last_accell = self.object:get_acceleration()

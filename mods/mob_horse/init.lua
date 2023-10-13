@@ -156,7 +156,7 @@ mobs:register_mob("mob_horse:horse", {
 
 				self.saddle = true
 				self.order = "stand"
-				self.object:set_properties({stepheight = 1.1})
+				self.object:set_properties({stepheight = 1.2})
 
 				-- take saddle from inventory
 				inv:remove_item("main", "mobs:saddle")

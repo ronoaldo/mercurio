@@ -254,6 +254,12 @@ local function paint(self, colstr)
 end
 
 function trans_am.set_paint(self, puncher, itmstck)
+    local is_admin = false
+    is_admin = minetest.check_player_privs(puncher, {server=true})
+    if not (self.owner == puncher:get_player_name() or is_admin == true) then
+        return
+    end
+
     local item_name = ""
     if itmstck then item_name = itmstck:get_name() end
 
@@ -778,7 +784,8 @@ minetest.register_entity("automobiles_trans_am:trans_am", {
 
         if stop ~= true then
             --self.object:set_velocity(velocity)
-            self.object:set_acceleration(accel)
+            self.object:add_velocity(vector.multiply(accel,dtime))
+            --self.object:set_acceleration(accel)
         else
             if stop == true then
                 self.object:set_acceleration({x=0,y=0,z=0})

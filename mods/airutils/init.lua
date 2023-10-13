@@ -1,8 +1,10 @@
 -- Minetest 5.4.1 : airutils
 
-local storage = minetest.get_mod_storage()
+airutils = {
+    storage = minetest.get_mod_storage()
+}
 
-airutils = {}
+local storage = airutils.storage
 
 airutils.colors ={
     black='#2b2b2b',
@@ -174,7 +176,7 @@ local function get_nodedef_field(nodename, fieldname)
     return minetest.registered_nodes[nodename][fieldname]
 end
 
---for 
+--for
 function airutils.eval_vertical_interception(initial_pos, end_pos)
     local ret_y = nil
 	local cast = minetest.raycast(initial_pos, end_pos, true, true)
@@ -211,7 +213,7 @@ end
 local function lerp(a, b, c)
 	return a + (b - a) * c
 end
- 
+
 function airutils.quadBezier(t, p0, p1, p2)
 	local l1 = lerp(p0, p1, t)
 	local l2 = lerp(p1, p2, t)
@@ -238,7 +240,7 @@ function airutils.get_ground_effect_lift(self, curr_pos, lift, wingspan)
             ground_distance = initial_pos.y - ground_y
         end
         --minetest.chat_send_all(dump(ground_distance))
-    
+
         --smooth the curve
         local distance_factor = ((ground_distance) * 1) / (wingspan)
         local effect_factor = airutils.quadBezier(distance_factor, 0, wingspan, 0)
@@ -246,13 +248,13 @@ function airutils.get_ground_effect_lift(self, curr_pos, lift, wingspan)
         if effect_factor > 0 then
             effect_factor = math.abs( half_wingspan - effect_factor )
         end
-        
+
         local lift_factor = ((effect_factor) * 1) / (half_wingspan) --agora isso é um percentual
         local max_extra_lift_percent = 0.5 * lift  --e aqui o maximo extra de sustentação
         local extra_lift = max_extra_lift_percent * lift_factor
         self._extra_lift = extra_lift
     end
-    
+
     return self._extra_lift --return the value stored
 end
 
@@ -271,7 +273,7 @@ function airutils.getLiftAccel(self, velocity, accel, longit_speed, roll, curr_p
     local accel_wind = vector.subtract(accel, wind)  --why? because I need to fake more speed when against the wind to gain lift
     local vel_wind = vector.multiply(accel_wind, self.dtime)
     local new_velocity = vector.add(velocity, vel_wind)
-    
+
     if longit_speed == nil then longit_speed = 0 end
     wingspan = wingspan or 10
     local ground_effect_extra_lift = airutils.get_ground_effect_lift(self, curr_pos, lift, wingspan)
@@ -283,7 +285,7 @@ function airutils.getLiftAccel(self, velocity, accel, longit_speed, roll, curr_p
     max_height = max_height or 20000
     local wing_config = 0
     if self._wing_configuration then wing_config = self._wing_configuration end --flaps!
-    
+
     local retval = accel
     local min_speed = 1;
     if self._min_speed then min_speed = self._min_speed end
@@ -305,7 +307,7 @@ function airutils.getLiftAccel(self, velocity, accel, longit_speed, roll, curr_p
 
 	    local rotation=self.object:get_rotation()
 	    local vrot = airutils.dir_to_rot(velocity,rotation)
-	    
+
 	    local hpitch,hyaw = pitchroll2pitchyaw(angle_of_attack,roll)
 
 	    local hrot = {x=vrot.x+hpitch,y=vrot.y-hyaw,z=roll}
@@ -358,7 +360,7 @@ function airutils.elevator_auto_correction(self, longit_speed, dtime, max_speed,
     intensity = intensity or 500
     if longit_speed <= 0 then return end
     local factor = 1
-    
+
     if self._elevator_angle > 0 then factor = -1 end
     local ref_speed = longit_speed
     if ref_speed > max_speed then ref_speed = max_speed end
@@ -366,7 +368,7 @@ function airutils.elevator_auto_correction(self, longit_speed, dtime, max_speed,
     local divisor = intensity
     speed_scale = speed_scale / divisor
     local correction = speed_scale * factor * (dtime/ideal_step)
-    
+
     local before_correction = elevator_angle
     local new_elevator_angle = elevator_angle + correction
 

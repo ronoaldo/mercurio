@@ -69,7 +69,8 @@ shell:
 
 update:
 	git pull
-	git submodule update
+	git submodule init
+	git submodule update --init --recursive
 	docker pull ghcr.io/ronoaldo/mercurio:main
 	docker-compose pull
 	docker-compose up -d
@@ -80,3 +81,7 @@ fix-perms:
 	sudo find .minetest/world -type d -exec chmod g+rwx {} ';'
 	sudo chgrp $$(id -g) .minetest
 	sudo chmod g+rwx .minetest
+
+updated-mods:
+	git status --short | grep mods/ | cut -f 2 -d/ | sort | uniq
+

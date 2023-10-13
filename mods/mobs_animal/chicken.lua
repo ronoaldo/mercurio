@@ -102,7 +102,7 @@ mobs:register_mob("mobs_animal:chicken", {
 			pos = pos,
 			gain = 1.0,
 			max_hear_distance = 5
-		})
+		}, true)
 	end
 })
 
@@ -174,10 +174,13 @@ mobs:register_arrow("mobs_animal:egg_entity", {
 			return
 		end
 
-		local staticdata = minetest.serialize(
-			{child = true, tamed = true, owner = self.playername})
-
-		minetest.add_entity(pos, "mobs_animal:chicken", staticdata)
+		mobs:add_mob(pos, {
+			name = "mobs_animal:chicken",
+			child = true,
+			owner = self.playername,
+--			nametag = "Chicky",
+			ignore_count = true -- ignores mob count per map area
+		})
 	end
 })
 
