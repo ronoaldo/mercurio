@@ -1,6 +1,6 @@
 --[[
 Functions
-Copyright (C) 2014-2022 ChaosWormz and contributors
+Copyright (C) 2014-2023 ChaosWormz and contributors
 
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
@@ -18,8 +18,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301
 USA
 --]]
 
--- Support for intllib
-local S = tp.intllib
+local S = tp.S
 
 -- Placeholders
 local chatmsg, source, target, name2,

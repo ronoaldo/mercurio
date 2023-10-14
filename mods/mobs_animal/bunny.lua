@@ -75,7 +75,6 @@ mobs:register_mob("mobs_animal:bunny", {
 			local staticdata = minetest.serialize({
 				type = "monster",
 				attack_type = "dogfight",
-				hp_max = 20,
 				health = 20,
 				damage = 5,
 				run_velocity = 3,
@@ -90,6 +89,8 @@ mobs:register_mob("mobs_animal:bunny", {
 			-- add evil bunny
 			local obj = minetest.add_entity(
 					self.object:get_pos(), "mobs_animal:bunny", staticdata)
+
+			obj:set_properties({textures = {"mobs_bunny_evil.png"}, hp_max = 20})
 
 			-- remove old bunny
 			if obj:get_luaentity() then

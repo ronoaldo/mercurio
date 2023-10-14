@@ -4,10 +4,16 @@ function dmobs.register_fire(fname, texture, dmg, replace_node, explode,
 		ice, variance, size)
 
 	minetest.register_entity(fname, {
-		textures = {texture},
+
+		initial_properties = {
+
+			textures = {texture},
+			collisionbox = {0, 0, 0, 0, 0, 0}
+		},
+
 		velocity = 0.1,
 		damage = dmg,
-		collisionbox = {0, 0, 0, 0, 0, 0},
+
 		on_step = function(self, obj, pos)
 
 			local remove = minetest.after(2, function()

@@ -8,25 +8,17 @@ default = default or {
 	gui_slots = ""
 }
 
+if minetest.get_modpath("mcl_sounds") then
+	default.node_sound_stone_defaults = mcl_sounds.node_sound_stone_defaults
+	default.node_sound_wood_defaults = mcl_sounds.node_sound_wood_defaults
+	default.node_sound_metal_defaults = mcl_sounds.node_sound_metal_defaults
+end
+
 local MP = minetest.get_modpath(minetest.get_current_modname())
 local F = minetest.formspec_escape
 
 -- Translation support
-local S
-
-if minetest.get_translator then
-	S = minetest.get_translator("protector")
-else
-	S = function(str, ...)
-
-		local args = {...}
-
-		return str:gsub("@%d+", function(match)
-			return args[tonumber(match:sub(2))]
-		end)
-	end
-end
-
+local S = minetest.get_translator("protector")
 
 -- Load support for factions
 local factions_available = minetest.global_exists("factions")
@@ -756,14 +748,19 @@ end)
 
 -- display entity shown when protector node is punched
 minetest.register_entity("protector:display", {
-	physical = false,
-	collisionbox = {0, 0, 0, 0, 0, 0},
-	visual = "wielditem",
-	-- wielditem seems to be scaled to 1.5 times original node size
-	visual_size = {x = 0.67, y = 0.67},
-	textures = {"protector:display_node"},
+
+	initial_properties = {
+
+		physical = false,
+		collisionbox = {0, 0, 0, 0, 0, 0},
+		visual = "wielditem",
+		-- wielditem seems to be scaled to 1.5 times original node size
+		visual_size = {x = 0.67, y = 0.67},
+		textures = {"protector:display_node"},
+		glow = 10
+	},
+
 	timer = 0,
-	glow = 10,
 
 	on_step = function(self, dtime)
 

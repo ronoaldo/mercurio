@@ -1,4 +1,4 @@
-Copyright (C) ChaosWormz 2014-2022 and contributors
+Copyright (C) ChaosWormz 2014-2023 and contributors
 
                   GNU LESSER GENERAL PUBLIC LICENSE
                        Version 2.1, February 1999

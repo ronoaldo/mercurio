@@ -1,9 +1,11 @@
 -- Minetest 5.4.1 : automobiles
 
 local S = minetest.get_translator(minetest.get_current_modname())
-automobiles_lib = {}
+automobiles_lib = {
+    storage = minetest.get_mod_storage()
+}
 
-local storage = minetest.get_mod_storage()
+local storage = automobiles_lib.storage
 
 automobiles_lib.fuel = {['biofuel:biofuel'] = 1,['biofuel:bottle_fuel'] = 1,
                 ['biofuel:phial_fuel'] = 0.25, ['biofuel:fuel_can'] = 10,
@@ -466,6 +468,12 @@ minetest.register_node("automobiles_lib:light", {
 })
 
 function automobiles_lib.set_paint(self, puncher, itmstck)
+    local is_admin = false
+    is_admin = minetest.check_player_privs(puncher, {server=true})
+    if not (self.owner == puncher:get_player_name() or is_admin == true) then
+        return
+    end
+
     local item_name = ""
     if itmstck then item_name = itmstck:get_name() end
 

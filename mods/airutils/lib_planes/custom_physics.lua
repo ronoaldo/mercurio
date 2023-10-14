@@ -51,6 +51,7 @@ function airutils.physics(self)
         new_velocity = {x=new_velocity.x*friction,
 							    y=new_velocity.y,
 							    z=new_velocity.z*friction}
+
         -- bounciness
         if self.springiness and self.springiness > 0 and self.buoyancy >= 1 then
             local vnew = vector.new(new_velocity)
@@ -82,7 +83,10 @@ function airutils.physics(self)
             end --damage the plane if it have hard friction
         end
 
-        self.object:set_velocity(new_velocity)
+        --self.object:set_velocity(new_velocity)
+        local vel_sum = vector.subtract(new_velocity,vel)
+		self.object:add_velocity(vel_sum)
+
     end
 
 end

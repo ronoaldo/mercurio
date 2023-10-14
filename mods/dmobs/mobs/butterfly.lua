@@ -16,12 +16,16 @@ minetest.register_abm({
 
 
 minetest.register_entity("dmobs:butterfly", {
-	visual = "mesh",
-	mesh = "butterfly.b3d",
-	physical = true,
-	textures = {"dmobs_butterfly.png"},
-	visual_size = {x = 0.3, y = 0.3},
-	collisionbox = {0,0,0,0,0.1,0},
+
+	initial_properties = {
+		visual = "mesh",
+		mesh = "butterfly.b3d",
+		physical = true,
+		textures = {"dmobs_butterfly.png"},
+		visual_size = {x = 0.3, y = 0.3},
+		collisionbox = {0,0,0,0,0.1,0}
+	},
+
 	on_activate = function(self)
 
 		local num = math.random(4)
@@ -29,13 +33,17 @@ minetest.register_entity("dmobs:butterfly", {
 		self.object:set_properties({textures = {"dmobs_butterfly" .. num .. ".png"}})
 		self.object:set_animation({x = 1, y = 10}, 20, 0)
 		self.object:set_yaw(math.pi + num)
-
-		minetest.after(10, function()
-			self.object:remove()
-		end)
 	end,
 
-	on_step = function(self)
+	on_step = function(self, dtime)
+
+		-- remove after 10 seconds
+		self.end_timer = (self.end_timer or 0) + dtime
+
+		if self.end_timer > 10 then
+			self.object:remove()
+			return
+		end
 
 		local pos = self.object:get_pos()
 		local vec = self.object:get_velocity()

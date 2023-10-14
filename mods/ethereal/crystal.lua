@@ -87,11 +87,11 @@ if minetest.get_modpath("builtin_item") then
 end
 
 minetest.register_craft({
-	type = "shapeless",
 	output = "ethereal:crystal_ingot",
 	recipe = {
-		"default:mese_crystal", "ethereal:crystal_spike",
-		"ethereal:crystal_spike", "default:mese_crystal", "bucket:bucket_water"
+		{"default:mese_crystal", "ethereal:crystal_spike"},
+		{"ethereal:crystal_spike", "default:mese_crystal"},
+		{"bucket:bucket_water", ""}
 	},
 	replacements = {{"bucket:bucket_water", "bucket:bucket_empty"}}
 })

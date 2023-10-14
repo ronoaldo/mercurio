@@ -1,6 +1,6 @@
 # Teleport Request
 
-[![Build status](https://github.com/ChaosWormz/teleport-request/workflows/build/badge.svg)](https://github.com/ChaosWormz/teleport-request/actions)
+[![LuaCheck status](https://github.com/minetest-mods/teleport-request/workflows/luacheck/badge.svg)](https://github.com/minetest-mods/teleport-request/actions)
 [![License](https://img.shields.io/badge/license-LGPLv2.1%2B-blue.svg)](https://www.gnu.org/licenses/old-licenses/lgpl-2.1.en.html)
 [![ContentDB](https://content.minetest.net/packages/Traxie21/tpr/shields/downloads/)](https://content.minetest.net/packages/Traxie21/tpr/)
 
@@ -103,7 +103,7 @@ If you know how to fix an issue, or want something to be added, consider opening
 
 ## License
 
-Copyright (C) 2014-2022 ChaosWormz and contributors.
+Copyright (C) 2014-2023 ChaosWormz and contributors.
 
 Teleport Request code is licensed under LGPLv2.1+, see [`LICENSE.md`](LICENSE.md).\
 [`tpr_warp.ogg`](sounds/tpr_warp.ogg) is licensed under [CC BY-SA 4.0 International](https://creativecommons.org/licenses/by-sa/4.0/).

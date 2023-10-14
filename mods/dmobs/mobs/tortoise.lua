@@ -53,23 +53,22 @@ mobs:register_mob("dmobs:tortoise", {
 		stand1_start = 1,
 		stand1_end = 20,
 		run_start = 23,
-		run_end = 43
+		run_end = 43,
+		hide_start = 10,
+		hide_end = 10
 	},
 
 	on_rightclick = function(self, clicker)
 
-		if mobs:feed_tame(self, clicker, 8, true, true) then
-			return
-		end
+		if mobs:feed_tame(self, clicker, 8, true, true) then return end
+		if mobs:capture_mob(self, clicker, nil, 50, 80, false, nil) then return end
 
 		if self.state ~= "attack" then
 
 			self.state = "hide"
 
-			mobs:set_velocity(self, 0)
-
-			-- play inside shell animation
-			self.object:set_animation({x = 10, y = 10}, 6, 0)
+			self:set_velocity(0)
+			self:set_animation("hide")
 
 			minetest.after(5, function()
 
@@ -82,14 +81,12 @@ mobs:register_mob("dmobs:tortoise", {
 				end
 			end)
 		end
-
-		mobs:capture_mob(self, clicker, 0, 50, 80, false, nil)
 	end,
 
 	do_custom = function(self, dtime)
 
 		if self.state == "hide" then
-			mobs:set_velocity(self, 0)
+			self:set_velocity(0)
 		end
 	end
 })

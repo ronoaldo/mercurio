@@ -10,9 +10,6 @@ read_globals = {
 	string = {fields = {"split", "trim"}},
 	table = {fields = {"copy", "getn"}},
 
-	"minetest", "vector",
-
-	"chat2", "gamehub", 
-	"intllib", "areas",
-
+	"minetest", "vector", "chat2",
+	"gamehub",  "areas",
 }

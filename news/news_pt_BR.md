@@ -15,7 +15,55 @@ O servidor foi projetado para ser amigável e agradável! Por favor:
 
 -------------------------------
 
+# **Atualização do servidor, Outubro de 2023**
+
+## Atualização de 13 de Outubro
+
+Atualização de hotfix para baixar os patches novos para os mods:
+
+```
+    airutils
+    anvil
+    automobiles_pck
+    dmobs
+    ethereal
+    farming
+    homedecor_modpack
+    itemframes
+    mob_horse
+    mobs
+    mobs_animal
+    mobs_monster
+    moreores
+    pipeworks
+    protector
+    signs_lib
+    steampunk_blimp
+    technic
+    tpr
+```
+
 # **Atualização do servidor, Setembro de 2023**
+
+## Atualizações em 28 de Setembro
+
+Hotfix: atualização parobter as versões mais novas dos mods:
+
+```
+    airutils
+    anvil
+    automobiles_pck
+    dmobs
+    homedecor_modpack
+    itemframes
+    mobs
+    mobs_animal
+    protector
+    signs_lib
+    technic
+    tpr
+```
+
 
 ## Atualizações em 22 de Setembro
 

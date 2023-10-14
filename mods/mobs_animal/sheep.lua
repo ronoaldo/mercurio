@@ -223,8 +223,9 @@ for _, col in ipairs(all_colours) do
 			self.base_texture = {textures}
 
 			local pos = self.object:get_pos()
+			local prop = self.object:get_properties()
 
-			pos.y = pos.y + (self.collisionbox[2] * -1) - 0.4
+			pos.y = pos.y + (prop.collisionbox[2] * -1) - 0.4
 
 			self.object:set_pos(pos)
 
@@ -444,7 +445,10 @@ if not mobs.custom_spawn_animal then
 				local entity = mobs:add_mob(pos,
 						{name = "mobs_animal:sheep_" .. types, child = lamb})
 
-				if entity and not lamb then
+-- nil check
+if not entity then return end
+
+				if not lamb then
 					-- Set horns attribute, lower height will be rarer.
 					-- This wont affect mobs spawned by egg those only spawn hornless sheep.
 					local horns = random(max_ht) <= pos.y
