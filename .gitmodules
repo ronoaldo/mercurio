@@ -13,9 +13,6 @@
 [submodule "mods/helicopter"]
 	path = mods/helicopter
 	url = https://github.com/ronoaldo/helicopter
-[submodule "mods/drawers"]
-	path = mods/drawers
-	url = https://github.com/ronoaldo/drawers
 [submodule "mods/xtraores"]
 	path = mods/xtraores
 	url = https://github.com/ronoaldo/xtraores
