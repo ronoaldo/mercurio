@@ -17,7 +17,7 @@ log() {
 FILE=$1
 case $FILE in
     "latest")
-        export FILE=s3://backups/mercurio.current.tar.gz
+        export FILE=gs://minetest-backups/servers/mercurio/backups/mercurio.current.tar.gz
     ;;
 esac
 if [ x"$FILE" = x"" ] ; then
@@ -29,14 +29,14 @@ fi
 case $FILE in
     gs://*)
         log "Fetching from Cloud Storage ..."
-        gsutil -m cp $FILE /tmp/restore.tar.gz
-        export FILE=/tmp/restore.tar.gz
+        gsutil -m cp $FILE /var/tmp/restore.tar.gz
+        export FILE=/var/tmp/restore.tar.gz
         log "Done. Using $FILE to restore."
     ;;
     s3://*)
         log "Fetching from S3 Storage ..."
-        s3cmd get --continue $FILE /tmp/restore.tar.gz
-        export FILE=/tmp/restore.tar.gz
+        s3cmd get --continue $FILE /var/tmp/restore.tar.gz
+        export FILE=/var/tmp/restore.tar.gz
         log "Done. Using $FILE to restore."
     ;;
 esac
