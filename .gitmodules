@@ -25,3 +25,9 @@
 [submodule "mods/markdown2formspec"]
 	path = mods/markdown2formspec
 	url = https://github.com/ronoaldo/markdown2formspec
+[submodule "mods/techpack"]
+	path = mods/techpack
+	url = https://github.com/0siribix/techpack_0siribix
+[submodule "mods/drawers"]
+	path = mods/drawers
+	url = https://github.com/0siribix/drawers_0siribix

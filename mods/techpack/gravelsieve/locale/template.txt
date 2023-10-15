@@ -1,7 +1,0 @@
-# textdomain: gravelsieve
-
-Hammer converts Cobblestone into Gravel=
-Gravel Sieve=
-Automatic Gravel Sieve=
-Sieved Gravel=
-Compressed Gravel=
