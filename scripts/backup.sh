@@ -65,8 +65,13 @@ fi
 log "Initializing $BACKUP_DIR"
 mkdir -p $BACKUP_DIR
 
+log "Ensuring the db server is up"
+docker-compose up --detach db
+
 log "Exporting compressed SQL file ..."
 docker-compose exec -T db pg_dump -c -U mercurio | gzip --fast -c > .minetest/db.sql.gz
+_size="$(du -sh .minetest/db.sql.gz)"
+log "Exported ${_size} in .minetest/db.sql.gz"
 
 log "Creating backup archive $BACKUP_FILE ..."
 for i in $(seq 1 3) ; do
@@ -76,6 +81,9 @@ for i in $(seq 1 3) ; do
         .minetest/world .minetest/db.sql.gz && break
     sleep $(( i * 2 ))
 done
+_size="$(du -sh ${BACKUP_FILE})"
+log "Validating the resulting backup contents are valid (size=${_size})"
+tar tf ${BACKUP_FILE}
 
 log "Removing backup file .minetest/db.sql.gz"
 rm -vf .minetest/db.sql.gz
