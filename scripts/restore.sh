@@ -47,7 +47,7 @@ sudo tar xvf "$FILE" .minetest/world
 
 # Restore the database from backup
 log "Restoring database. This may take a long time"
-gunzip -c "$DB_FILE" | docker-compose exec -T db pg_restore -U mercurio --dbname=mercurio -Ft -c
+gunzip -c "$DB_FILE" | docker-compose exec -T db psql -U mercurio
 
 # Fix permissions after restore
 log "Fixing permissions after restore"

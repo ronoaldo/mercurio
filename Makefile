@@ -61,9 +61,6 @@ stop:
 backup:
 	./scripts/backup.sh
 
-restore:
-	./scripts/restore.sh latest
-
 shell:
 	docker-compose exec --user 0 game bash
 

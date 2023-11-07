@@ -15,7 +15,7 @@ BACKUP_DIR=$HOME/backups/$(date +'%Y%m')
 
 BACKUP_FILE_NAME=$BASENAME-$(date +'%Y%m%d-%H%M%S')
 BACKUP_FILE="${BACKUP_DIR}/${BACKUP_FILE_NAME}.world.tar"
-DB_BACKUP_FILE="${BACKUP_DIR}/${BACKUP_FILE_NAME}.db.tar.gz"
+DB_BACKUP_FILE="${BACKUP_DIR}/${BACKUP_FILE_NAME}.db.sql.gz"
 
 # Include helper functions
 source "$BASEDIR/scripts/lib/all.sh"
@@ -75,7 +75,7 @@ log "Ensuring the db server is up"
 docker-compose up --detach db
 
 log "Creating database backup into $DB_BACKUP_FILE ..."
-docker-compose exec -T db pg_dump -c -Ft -Z0 -U mercurio | gzip --fast -c > "$DB_BACKUP_FILE"
+docker-compose exec -T db pg_dump -c -Fp -Z0 -U mercurio | gzip --fast -c > "$DB_BACKUP_FILE"
 _size="$(du -sh "$DB_BACKUP_FILE")"
 log "Exported ${_size} in $DB_BACKUP_FILE"
 
@@ -92,19 +92,19 @@ done
 _size="$(du -sh "${BACKUP_FILE}")"
 log "Validating the resulting backup contents are valid (size=${_size})"
 tar tf "${BACKUP_FILE}" >/dev/null
-tar tf "${DB_BACKUP_FILE}" >/dev/null
+gunzip --test "${DB_BACKUP_FILE}" >/dev/null
 
 # Move backups to Cloud Storage if applicable
 if [ "$MINETEST_BACKUP_GCS" = "true" ] ; then
     log "Copying backup to Cloud Storage ..."
-    gsutil -m --quiet cp "$BACKUP_FILE" "gs://minetest-backups/servers/mercurio/backups/${BASENAME}.world.current.tar"
-    gsutil -m --quiet cp "$DB_BACKUP_FILE" "gs://minetest-backups/servers/mercurio/backups/${BASENAME}.db.current.tar"
+    gsutil -m --quiet cp "$BACKUP_FILE" "gs://minetest-backups/servers/mercurio/backups/${BASENAME}.current.world.tar"
+    gsutil -m --quiet cp "$DB_BACKUP_FILE" "gs://minetest-backups/servers/mercurio/backups/${BASENAME}.current.db.sql.gz"
 fi
 
 if [ "$MINETEST_BACKUP_S3CMD" = "true" ] ; then
     log "Copying backup to S3 Storage ..."
-    s3cmd put --no-progress "$BACKUP_FILE" "s3://backups/${BASENAME}.world.current.tar"
-    s3cmd put --no-progress "$DB_BACKUP_FILE" "s3://backups/${BASENAME}.db.current.tar"
+    s3cmd put --no-progress "$BACKUP_FILE" "s3://backups/${BASENAME}.current.world.tar"
+    s3cmd put --no-progress "$DB_BACKUP_FILE" "s3://backups/${BASENAME}.current.db.sql.gz"
 fi
 
 # Post to webhook, if configured to
