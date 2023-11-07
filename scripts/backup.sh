@@ -1,22 +1,28 @@
 #!/bin/bash
+# shellcheck disable=SC1091
+
+# Sanity checks, bashism setup
 set -e
 set -o pipefail
-
-[ x"$DEBUG" == x"true" ] && set -x
+[ "$DEBUG" == "true" ] && set -x
+export LANG=C LC_ALL=C
 
 # Config
-BASEDIR=`readlink -f $(dirname $0)/..`
-BASENAME=`basename $BASEDIR`
+BASEDIR="$(readlink -f "$(dirname "$0")"/..)"
+BASENAME="$(basename "$BASEDIR")"
+
 BACKUP_DIR=$HOME/backups/$(date +'%Y%m')
-BACKUP_FILE_NAME=$BASENAME-$(date +'%Y%m%d-%H%M%S').tar
-BACKUP_FILE="${BACKUP_DIR}/${BACKUP_FILE_NAME}"
-export LANG=C LC_ALL=C
+
+BACKUP_FILE_NAME=$BASENAME-$(date +'%Y%m%d-%H%M%S')
+BACKUP_FILE="${BACKUP_DIR}/${BACKUP_FILE_NAME}.world.tar"
+DB_BACKUP_FILE="${BACKUP_DIR}/${BACKUP_FILE_NAME}.db.tar.gz"
+
 # Include helper functions
-source $BASEDIR/scripts/lib/all.sh
+source "$BASEDIR/scripts/lib/all.sh"
 
 # Log with timestamps for measuring time.
 log() {
-    echo "$(date '+%Y-%m-%d %H:%M:%S') $BASENAME: $@"
+    echo "$(date '+%Y-%m-%d %H:%M:%S') $BASENAME: $*"
 }
 
 # Ensure we clean the temp db.sql file which is HUGE
@@ -24,18 +30,17 @@ _cleanup() {
     RET=$?
     log "Cleaning up (DO_REMOVE=${DO_REMOVE})... (exit_status=$RET)"
     
-    cd $BASEDIR
-    rm -vf .minetest/db.sql .minetest/db.sql.gz .minetest/db.pg_dump.tar
-    if [ x"$DO_REMOVE" = x"true" ] ; then
-        log "Removing local file to free space ${BACKUP_FILE} ..."
-        rm -vf $BACKUP_FILE
+    cd "$BASEDIR"
+    if [ "$DO_REMOVE" = "true" ] ; then
+        log "Removing local file to free space ${BACKUP_FILE} ${DB_BACKUP_FILE} ..."
+        rm -vf "$BACKUP_FILE" "$DB_BACKUP_FILE"
     fi
 
     if [ x"$RET" != x"0" ]; then
         discord_message ":x: Backup execution failed."
     fi
 
-    DISK_SPACE="$(df -h $PWD | grep -v 'Size' | awk  '{print $4", "$5}')"
+    DISK_SPACE="$(df -h "$PWD" | grep -v 'Size' | awk  '{print $4", "$5}')"
     discord_message ":mag_right: Free disk space: $DISK_SPACE used"
 }
 
@@ -45,58 +50,61 @@ _cleanup() {
 echo ; echo ; echo
 
 # On exit callback - cleanup files
-trap "_cleanup" EXIT KILL
+trap "_cleanup" EXIT
 
 log "Entering $BASEDIR, and sourcing $BASEDIR/.env"
-cd $BASEDIR
+cd "$BASEDIR"
 # Replace docker-compose env definitions with bash compatible definitions
 sed -e 's/=/="/' -e 's/=\(.*\)$/\0"/' < .env > .env.sh
 . .env.sh
 rm .env.sh
 
-log "Saving backup to $BACKUP_FILE ..."
+log "Saving backup to $BACKUP_FILE and $DB_BACKUP_FILE ..."
 discord_message ":vhs: Starting backup of '$BASENAME' ..."
 
 log "Configured to export to GCS(${MINETEST_BACKUP_GCS}) / S3(${MINETEST_BACKUP_S3CMD}) cloud storage"
-if [ x"$MINETEST_BACKUP_GCS" = x"true" -o x"$MINETEST_BACKUP_S3CMD" = x"true" ] ; then
+if [ "$MINETEST_BACKUP_GCS" = "true" -o "$MINETEST_BACKUP_S3CMD" = "true" ] ; then
+    echo "> Will remove temporary files on exit"
     export DO_REMOVE=true
 fi
 
 log "Initializing $BACKUP_DIR"
-mkdir -p $BACKUP_DIR
+mkdir -p "$BACKUP_DIR"
 
 log "Ensuring the db server is up"
 docker-compose up --detach db
 
-log "Exporting compressed SQL file ..."
-docker-compose exec -T db pg_dump -c -U mercurio | gzip --fast -c > .minetest/db.sql.gz
-_size="$(du -sh .minetest/db.sql.gz)"
-log "Exported ${_size} in .minetest/db.sql.gz"
+log "Creating database backup into $DB_BACKUP_FILE ..."
+docker-compose exec -T db pg_dump -c -Ft -Z0 -U mercurio | gzip --fast -c > "$DB_BACKUP_FILE"
+_size="$(du -sh "$DB_BACKUP_FILE")"
+log "Exported ${_size} in $DB_BACKUP_FILE"
 
-log "Creating backup archive $BACKUP_FILE ..."
+log "Creating world backup archive $BACKUP_FILE ..."
 for i in $(seq 1 3) ; do
     log "> Attempt $i/3..."
-    tar --exclude=mapserver.tiles --exclude=mapserver.sqlite \
-        -cf $BACKUP_FILE \
-        .minetest/world .minetest/db.sql.gz && break
+    tar \
+        --exclude=mapserver.tiles \
+        --exclude=mapserver.sqlite \
+        -cf "$BACKUP_FILE" \
+        .minetest/world && break
     sleep $(( i * 2 ))
 done
-_size="$(du -sh ${BACKUP_FILE})"
+_size="$(du -sh "${BACKUP_FILE}")"
 log "Validating the resulting backup contents are valid (size=${_size})"
-tar tf ${BACKUP_FILE}
-
-log "Removing backup file .minetest/db.sql.gz"
-rm -vf .minetest/db.sql.gz
+tar tf "${BACKUP_FILE}" >/dev/null
+tar tf "${DB_BACKUP_FILE}" >/dev/null
 
 # Move backups to Cloud Storage if applicable
-if [ x$MINETEST_BACKUP_GCS = x"true" ] ; then
+if [ "$MINETEST_BACKUP_GCS" = "true" ] ; then
     log "Copying backup to Cloud Storage ..."
-    gsutil -m --quiet cp $BACKUP_FILE gs://minetest-backups/servers/mercurio/backups/${BASENAME}.current.tar.gz
+    gsutil -m --quiet cp "$BACKUP_FILE" "gs://minetest-backups/servers/mercurio/backups/${BASENAME}.world.current.tar"
+    gsutil -m --quiet cp "$DB_BACKUP_FILE" "gs://minetest-backups/servers/mercurio/backups/${BASENAME}.db.current.tar"
 fi
 
-if [ x"$MINETEST_BACKUP_S3CMD" = x"true" ] ; then
+if [ "$MINETEST_BACKUP_S3CMD" = "true" ] ; then
     log "Copying backup to S3 Storage ..."
-    s3cmd put --no-progress $BACKUP_FILE s3://backups/${BASENAME}.current.tar.gz 
+    s3cmd put --no-progress "$BACKUP_FILE" "s3://backups/${BASENAME}.world.current.tar"
+    s3cmd put --no-progress "$DB_BACKUP_FILE" "s3://backups/${BASENAME}.db.current.tar"
 fi
 
 # Post to webhook, if configured to

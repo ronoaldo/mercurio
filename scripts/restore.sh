@@ -3,43 +3,27 @@
 
 # Exit on any error
 set -e -o pipefail
-[ x"$DEBUG" == x"true" ] && set -x
+[ "$DEBUG" == "true" ] && set -x
 
-BASEDIR=`readlink -f $(dirname $0)/../`
-BASENAME=`basename $BASEDIR`
+BASEDIR=$(readlink -f "$(dirname "$0")/../")
+BASENAME=$(basename "$BASEDIR")
 
 # Log with timestamps for measuring time.
 log() {
-    echo "$(date '+%Y-%m-%d %H:%M:%S') $BASENAME: $@"
+    echo "$(date '+%Y-%m-%d %H:%M:%S') $BASENAME: $*"
+}
+
+die() {
+    log "$*"
+    exit 1
 }
 
 # Requires positional arg from 
 FILE=$1
-case $FILE in
-    "latest")
-        export FILE=gs://minetest-backups/servers/mercurio/backups/mercurio.current.tar.gz
-    ;;
-esac
-if [ x"$FILE" = x"" ] ; then
-    log "Error: no file provided. "
-    exit 1
-fi
+DB_FILE=$2
 
-# Allow to restore from GCS
-case $FILE in
-    gs://*)
-        log "Fetching from Cloud Storage ..."
-        gsutil -m cp $FILE /var/tmp/restore.tar.gz
-        export FILE=/var/tmp/restore.tar.gz
-        log "Done. Using $FILE to restore."
-    ;;
-    s3://*)
-        log "Fetching from S3 Storage ..."
-        s3cmd get --continue $FILE /var/tmp/restore.tar.gz
-        export FILE=/var/tmp/restore.tar.gz
-        log "Done. Using $FILE to restore."
-    ;;
-esac
+[ -f "$FILE" ] || die "Missing world backup file"
+[ -f "$FILE" ] || die "Missing db backup file"
 
 # Only keep the container server running
 log "Shutting services down"
@@ -48,10 +32,10 @@ docker-compose down
 TIMESTAMP=$(date +%Y%m%d-%H%M%S)
 AUX=.minetest/world.$TIMESTAMP
 log "Moving current world dir to $AUX"
-sudo mv .minetest/world $AUX
+sudo mv .minetest/world "$AUX"
 AUX=.minetest/db.$TIMESTAMP
 log "Moving current db dir to $AUX"
-sudo mv .minetest/db $AUX
+sudo mv .minetest/db "$AUX"
 
 log "Starting database with empty structure"
 docker-compose up -d db
@@ -59,11 +43,11 @@ sleep 10
 
 # Extract the world folder from backup
 log "Restoring world from backup ... "
-sudo tar xvf $FILE .minetest/world
+sudo tar xvf "$FILE" .minetest/world
 
 # Restore the database from backup
 log "Restoring database. This may take a long time"
-tar -xOf $FILE .minetest/db.sql.gz | gunzip -c | docker-compose exec -T db psql -U mercurio
+gunzip -c "$DB_FILE" | docker-compose exec -T db pg_restore -U mercurio --dbname=mercurio -Ft -c
 
 # Fix permissions after restore
 log "Fixing permissions after restore"
