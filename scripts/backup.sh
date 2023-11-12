@@ -64,7 +64,7 @@ discord_message ":vhs: Starting backup of '$BASENAME' ..."
 
 log "Configured to export to GCS(${MINETEST_BACKUP_GCS}) / S3(${MINETEST_BACKUP_S3CMD}) cloud storage"
 if [ "$MINETEST_BACKUP_GCS" = "true" -o "$MINETEST_BACKUP_S3CMD" = "true" ] ; then
-    echo "> Will remove temporary files on exit"
+    log "Will remove temporary files on exit"
     export DO_REMOVE=true
 fi
 
@@ -76,8 +76,9 @@ docker-compose up --detach db
 
 log "Creating database backup into $DB_BACKUP_FILE ..."
 docker-compose exec -T db pg_dump -c -Fp -Z0 -U mercurio | gzip --fast -c > "$DB_BACKUP_FILE"
-_size="$(du -sh "$DB_BACKUP_FILE")"
-log "Exported ${_size} in $DB_BACKUP_FILE"
+_size="$(du -sh "${DB_BACKUP_FILE}")"
+log "Validating the resulting backup contents are valid (size=${_size})"
+gunzip --test "${DB_BACKUP_FILE}"
 
 log "Creating world backup archive $BACKUP_FILE ..."
 for i in $(seq 1 3) ; do
@@ -92,18 +93,22 @@ done
 _size="$(du -sh "${BACKUP_FILE}")"
 log "Validating the resulting backup contents are valid (size=${_size})"
 tar tf "${BACKUP_FILE}" >/dev/null
-gunzip --test "${DB_BACKUP_FILE}" >/dev/null
 
 # Move backups to Cloud Storage if applicable
 if [ "$MINETEST_BACKUP_GCS" = "true" ] ; then
     log "Copying backup to Cloud Storage ..."
-    gsutil -m --quiet cp "$BACKUP_FILE" "gs://minetest-backups/servers/mercurio/backups/${BASENAME}.current.world.tar"
-    gsutil -m --quiet cp "$DB_BACKUP_FILE" "gs://minetest-backups/servers/mercurio/backups/${BASENAME}.current.db.sql.gz"
+    BUCKET="gs://minetest-backups/servers/mercurio/backups"
+    log "Uploading world backup ..."
+    gsutil --quiet cp "$BACKUP_FILE"    "${BUCKET}/${BASENAME}.current.world.tar"
+    log "Uploading db backup ..."
+    gsutil --quiet cp "$DB_BACKUP_FILE" "${BUCKET}/${BASENAME}.current.db.sql.gz"
 fi
 
 if [ "$MINETEST_BACKUP_S3CMD" = "true" ] ; then
     log "Copying backup to S3 Storage ..."
+    log "Uploading world backup ..."
     s3cmd put --no-progress "$BACKUP_FILE" "s3://backups/${BASENAME}.current.world.tar"
+    log "Uploading db backup ..."
     s3cmd put --no-progress "$DB_BACKUP_FILE" "s3://backups/${BASENAME}.current.db.sql.gz"
 fi
 
