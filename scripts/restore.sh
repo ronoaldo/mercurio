@@ -23,7 +23,7 @@ FILE=$1
 DB_FILE=$2
 
 [ -f "$FILE" ] || die "Missing world backup file"
-[ -f "$FILE" ] || die "Missing db backup file"
+[ -f "$DB_FILE" ] || die "Missing db backup file"
 
 # Only keep the container server running
 log "Shutting services down"

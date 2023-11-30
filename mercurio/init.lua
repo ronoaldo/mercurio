@@ -14,6 +14,9 @@ end
 
 -- format_pos formats the given position with no decimal places
 mercurio.fmt_pos = function(pos)
+    if pos == nil then
+        return "null"
+    end
     return minetest.pos_to_string(pos, 0)
 end
 
@@ -35,8 +38,9 @@ local fmt_pos = mercurio.fmt_pos
 local to_json = mercurio.to_json
 
 -- PvP area as defined by the server settings.
-local pvp_center = minetest.setting_get_pos("pvp_area_center")
-local pvp_size   = minetest.settings:get("pvp_area_size")
+-- If not specified in minetest.conf, defaults to the whole world being pvp enabled.
+local pvp_center = minetest.setting_get_pos("pvp_area_center") or {x=0, y=0, z=0}
+local pvp_size   = minetest.settings:get("pvp_area_size") or 33000
 
 -- Custom on_punchplayer callback to implement server-wide damage overrides.
 minetest.register_on_punchplayer(function(player, hitter, time_from_last_punch, tool_capabilities, dir, damage)
