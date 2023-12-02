@@ -8,10 +8,11 @@ DEST="${BASEDIR}/.minetest/world/area-export"
 
 export_map() {
     docker-compose up -d db
-    sleep 10
-    cd "${BASEDIR}/".minetest/world || exit
+    sleep 5
+    cp -v mapcleaner_protect.txt "${BASEDIR}/".minetest/world
+    cd "${BASEDIR}/".minetest/world || exit 1
     rm -rf area-export
-    mapcleaner --mode export_protected
+    mapcleaner --mode export_protected --export-all --batch-size 100000
     sqlite3 "${BASEDIR}/.minetest/world/area-export/map.sqlite" "select count(*) from blocks"
     cd "${BASEDIR}"
 }
