@@ -1,5 +1,9 @@
+-- Nether check for Xanadu server
+local nether_mod = minetest.get_modpath("nether") and minetest.get_modpath("xanadu")
+
 -- Heights for skyboxes
-local underground = -50
+local underground_low = nether_mod and -28000 or -31000
+local underground_high = -50
 local space_low = 5000
 local space_high = 5999
 local redsky_low = 6000
@@ -53,11 +57,6 @@ local set_gravity = function(player, grav)
 end
 
 
--------- this just adds nether background for xanadu server
-local nether_mod = minetest.get_modpath("nether") and minetest.get_modpath("xanadu")
---------
-
-
 local timer = 0
 
 minetest.register_globalstep(function(dtime)
@@ -70,50 +69,50 @@ minetest.register_globalstep(function(dtime)
 
 	timer = 0
 
+	local name, pos, current
+
 	for _, player in pairs(minetest.get_connected_players()) do
 
-		local name = player:get_player_name()
-		local pos = player:get_pos()
-		local current = player_list[name] or ""
+		name = player:get_player_name()
+		pos = player:get_pos()
+		current = player_list[name] or ""
 
--------- this just adds nether background for xanadu server
-if nether_mod and pos.y < -28000 and current ~= "nether" then
+		-- this just adds nether background for xanadu server
+		if nether_mod and pos.y < underground_low and current ~= "nether" then
 
-	player:set_sky({
-		type = "plain",
-		base_color = "#1d1118", --"#300530", --"#070916", --"#1D0504",
-		clouds = false,
-		sky_color = {
-			day_horizon = "#9bc1f0",
-			dawn_horizon = "#bac1f0",
-			fog_tint_type = "default",
-			dawn_sky = "#b4bafa",
-			day_sky = "#8cbafa",
-			night_sky = "#006aff",
-			indoors = "#646464",
-			night_horizon = "#4090ff"
-		}
-	})
+			player:set_sky({
+				type = "plain",
+				base_color = "#1d1118",
+				clouds = false,
+				sky_color = {
+					day_horizon = "#9bc1f0",
+					dawn_horizon = "#bac1f0",
+					fog_tint_type = "default",
+					dawn_sky = "#b4bafa",
+					day_sky = "#8cbafa",
+					night_sky = "#006aff",
+					indoors = "#646464",
+					night_horizon = "#4090ff"
+				}
+			})
 
-	player:set_moon({visible = false})
-	player:set_stars({visible = false})
-	player:set_sun({visible = false, sunrise_visible = false})
+			player:set_moon({visible = false})
+			player:set_stars({visible = false})
+			player:set_sun({visible = false, sunrise_visible = false})
 
-	player_list[name] = "nether"
+			player_list[name] = "nether"
 
-	if otherworlds.settings.gravity.enable then
-		set_gravity(player, 1.05)
-	end
---------
+			if otherworlds.settings.gravity.enable then
+				set_gravity(player, 1.05)
+			end
 
-		-- Underground
-		elseif pos.y > -28000 and pos.y < underground and current ~= "underground" then
---		if pos.y < underground and current ~= "underground" then
+		-- Underground (above Nether limit)
+		elseif pos.y >= underground_low and pos.y <= underground_high
+		and current ~= "underground" then
 
 			player:set_sky({
 				type = "plain",
 				clouds = false,
-				sunrise_visible = false,
 				base_color = "#101010"
 			})
 
@@ -128,13 +127,12 @@ if nether_mod and pos.y < -28000 and current ~= "nether" then
 			end
 
 		-- Earth
-		elseif pos.y > underground and pos.y < space_low
+		elseif pos.y > underground_high and pos.y < space_low
 		and current ~= "earth" then
 
 			player:set_sky({
 				type = "regular",
-				clouds = true,
-				sunrise_visible = true
+				clouds = true
 			})
 
 			player:set_moon({visible = true})
@@ -148,14 +146,13 @@ if nether_mod and pos.y < -28000 and current ~= "nether" then
 			end
 
 		-- Outerspace
-		elseif pos.y > space_low and pos.y < space_high
+		elseif pos.y >= space_low and pos.y <= space_high
 		and current ~= "space" then
 
 			player:set_sky({
 				type = "skybox",
 				textures = spaceskybox,
-				clouds = false,
-				sunrise_visible = false
+				clouds = false
 			})
 
 			player:set_moon({visible = false})
@@ -169,14 +166,13 @@ if nether_mod and pos.y < -28000 and current ~= "nether" then
 			end
 
 		-- Redsky
-		elseif pos.y > redsky_low and pos.y < redsky_high
+		elseif pos.y >= redsky_low and pos.y <= redsky_high
 		and current ~= "redsky" then
 
 			player:set_sky({
 				type = "skybox",
 				textures = redskybox,
-				clouds = false,
-				sunrise_visible = false
+				clouds = false
 			})
 
 			player:set_moon({visible = false})
@@ -189,14 +185,13 @@ if nether_mod and pos.y < -28000 and current ~= "nether" then
 				set_gravity(player, 0.2)
 			end
 
-		-- Everything else (blackness)
+		-- Everything else above (the blackness)
 		elseif pos.y > redsky_high and current ~= "blackness" then
 
 			player:set_sky({
 				type = "skybox",
 				textures = darkskybox,
-				clouds = false,
-				sunrise_visible = false
+				clouds = false
 			})
 
 			player:set_moon({visible = false})
@@ -212,6 +207,10 @@ if nether_mod and pos.y < -28000 and current ~= "nether" then
 	end
 end)
 
+
 minetest.register_on_leaveplayer(function(player)
 	player_list[player:get_player_name()] = nil
 end)
+
+
+print("[MOD] Other Worlds loaded")

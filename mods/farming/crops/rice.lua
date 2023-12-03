@@ -10,7 +10,7 @@ minetest.register_node("farming:seed_rice", {
 	wield_image = "farming_rice_seed.png",
 	drawtype = "signlike",
 	groups = {
-		compostability = 48, seed = 1, snappy = 3, attached_node = 1,
+		handy = 1, compostability = 48, seed = 1, snappy = 3, attached_node = 1,
 		flammable = 4, growing = 1
 	},
 	paramtype = "light",

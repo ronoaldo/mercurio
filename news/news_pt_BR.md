@@ -1,177 +1,69 @@
-![0,0](item:///default:furnace)
+![0,0,r](item:///default:furnace)
 
 # **Bem-vindo ao Servidor Mercurio!**
 
--------------------------------
-
-O servidor foi projetado para ser amigável e agradável! Por favor:
+O servidor é desenhado para ser amigável e agradável! Por favor:
 
 ```
-* Não destrua as propriedades de outros jogadores
-* Não se aproprie de itens de outros jogadores.
-* Nenhum namoro permitido.
-* Nenhuma forma de discriminação é tolerada.
+* Não destrua as propriedades dos outros.
+* Não se aproprie de itens dos outros jogadores.
+* Namoro não é permitido.
+* Nenhuma forma de discriminação será tolerada.
+* Seja amigável para famílias e seguro para as crianças.
 ```
 
--------------------------------
+**Moderadores reservam o direito de banir jogadores que não se _comportem aproriadamente_**
 
-# **Atualização do servidor, Outubro de 2023**
+.
 
-## Atualização de 13 de Outubro
+---------------------
 
-Atualização de hotfix para baixar os patches novos para os mods:
+# **Importante**
 
-```
-    airutils
-    anvil
-    automobiles_pck
-    dmobs
-    ethereal
-    farming
-    homedecor_modpack
-    itemframes
-    mob_horse
-    mobs
-    mobs_animal
-    mobs_monster
-    moreores
-    pipeworks
-    protector
-    signs_lib
-    steampunk_blimp
-    technic
-    tpr
-```
+**Proteja as suas construções**. É importante proteger as suas áreas
+construídas porque o servidor irá passar por uma **limpeza massiva**.
+Isso significa que **`áreas não protegidas serão removidas`**.
+Isso é necessário porque o mapa do servidor está com mais de 80GB de espaço.
+Use itens do mod `protector`:
+![0,0](item:///protector:protect)
 
-# **Atualização do servidor, Setembro de 2023**
+Ou use no chat `/help` para aprender como usar o mod areas e seus comandos.
 
-## Atualizações em 28 de Setembro
-
-Hotfix: atualização parobter as versões mais novas dos mods:
-
-```
-    airutils
-    anvil
-    automobiles_pck
-    dmobs
-    homedecor_modpack
-    itemframes
-    mobs
-    mobs_animal
-    protector
-    signs_lib
-    technic
-    tpr
-```
+-------------------------------------------
 
 
-## Atualizações em 22 de Setembro
+# **Atualizações do Servidor, Dezembro de 2023**
 
-**Novo**: Adicionado o mod `blockexchange`. Este mod permite que você carregue
-suas construções para o site https://blockexchange.minetest.ch. Este portal irá
-ajudá-lo a preservar suas construções depois de terminá-las. Isso ajudará os
-administradores a recuperar sua construção caso ela tenha sido destruída e
-também permite exportar sua trabalhe duro e restaurá-lo usando o mesmo mod ou
-arquivo de esquema usando World Edit.  Este processo de restauração pode
-ajudá-lo a carregar sua construção em outro servidor ou para jogabilidade local.
+## Atualizações de Dezembro de 2023
 
-Para obter detalhes sobre como usar este mod, consulte esta página:
-https://github.com/blockexchange/blockexchange
+Nossa atualização regular de mods para obter as novas funcionalidades e
+as melhorias do ContentDB.
 
-**Novo**: Automóveis agora são capazes de escalar blocos regulares. Devido à
-demanda popular, o APercy adicionou um novo recurso para os automóveis em que
-agora eles podem andar em terrenos irregulares além de percorrer estradas bem
-construídas. Experimente!
-
-### Mods atualizados
-
-```
-    automobiles_pck
-    anvil
-    bakedclay
-    ethereal
-    farming
-    mobs_animal
-    nautilus
-    other_worlds
-    pipeworkds
-    skinsdb
-```
-
-### Novos mods
-
-```
-    blockexchange
-```
-
-## Atualizações em 20 Setembro
-
-O servidor foi atualizado para a versão do motor Minetest 5.7.0.
-Não há mudanças significativas no gameplay, mas esta nova versão
-corrige alguns problemas e traz melhorias de performance.
-
-Se você encontrar algum problema, mencione @ronoaldo no chat para
-que o time que hospeda o servidor possa trabalhar neles.
-
-### Updated Mods
+Esta semana os seguintes mods foram atualizados:
 
 ```
     3d_armor
     airutils
-    animalia
     anvil
-    areas
-    automobiles_pck
-    awards
-    basic_materials
-    basic_signs
-    biofuel
+    blockexchange
     bonemeal
-    calendar
-    creatura
-    demoiselle
+    carpets
     digilines
-    dmobs
-    ethereal
     farming
-    hbhunger
-    hidroplane
     homedecor_modpack
-    home_workshop_modpack
-    hudbars
-    inventory_icon
-    itemframes
     ju52
-    lumberjack
-    markdown2formspec
-    mesecons
-    mob_horse
     mobs
-    mobs_animal
-    mobs_monster
-    mobs_npc
-    morelights_dim
-    moreores
-    mtimer
+    mtzip
     mydoors
-    nativevillages
-    nether
     other_worlds
-    pa28
-    people
     pipeworks
-    protector
-    regrowing_fruits
+    promise
     signs_lib
-    skinsdb
-    steampunk_blimp
-    supercub
-    technic
+    tpr
     travelnet
-    trike
+    tubelib2
     unifieddyes
     unified_inventory
-    worldedit
     x_bows
-    xdecor
 ```
+

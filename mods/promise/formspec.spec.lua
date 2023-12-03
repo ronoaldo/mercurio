@@ -28,6 +28,6 @@ mtt.register("Promise.formspec", function(callback)
     assert(last_playername == "singleplayer")
 
     for _, fn in ipairs(minetest.registered_on_player_receive_fields) do
-        fn(player, last_formname, { x=1 })
+        fn(player, last_formname, { x=1, quit="true" })
     end
 end)

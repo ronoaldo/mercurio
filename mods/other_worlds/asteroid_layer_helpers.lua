@@ -17,13 +17,15 @@ local ICET = 0.05 -- Comet ice threshold
 local ATMOT = -0.2 -- Comet atmosphere threshold
 local FISTS = 0.01 -- Fissure noise threshold at surface. Controls size of fissures and amount / size of fissure entrances
 local FISEXP = 0.3 -- Fissure expansion rate under surface
-local ORECHA = 3*3*3 -- Ore 1/x chance per stone node
+local ORECHA = otherworlds.settings.ore_chance.value -- Ore 1/x chance per stone node
 local CPCHU = 0 -- Maximum craters per chunk
 local CRMIN = 5 -- Crater radius minimum, radius includes dust and obsidian layers
 local CRRAN = 8 -- Crater radius range
 
 local random = math.random
 local floor = math.floor
+local abs = math.abs
+
 
 -- Note: for fewer large objects: increase the 'spread' numbers in 'np_large' noise parameters. For fewer small objects do the same in 'np_small'. Then tune size with 'ASCOT'
 
@@ -139,9 +141,6 @@ function otherworlds.asteroids.create_on_generated(ymin, ymax, content_ids)
 --print ("[asteroid] chunk ("..x0.." "..y0.." "..z0..")")
 
 		local sidelen = x1 - x0 + 1 -- chunk side length
-
-		--local vplanarea = sidelen ^ 2 -- vertical plane area, used if calculating noise index from x y z
-
 		local chulens = {x = sidelen, y = sidelen, z = sidelen}
 		local minpos = {x = x0, y = y0, z = z0}
 
@@ -149,31 +148,26 @@ function otherworlds.asteroids.create_on_generated(ymin, ymax, content_ids)
 		local area = VoxelArea:new{MinEdge = emin, MaxEdge = emax}
 		local data = vm:get_data()
 
-		local nvals1 = minetest.get_perlin_map(np_large,
-				chulens):get_3d_map_flat(minpos)
-		local nvals3 = minetest.get_perlin_map(np_fissure,
-				chulens):get_3d_map_flat(minpos)
-		local nvals4 = minetest.get_perlin_map(np_small,
-				chulens):get_3d_map_flat(minpos)
-		local nvals5 = minetest.get_perlin_map(np_ores,
-				chulens):get_3d_map_flat(minpos)
-		local nvals6 = minetest.get_perlin_map(np_latmos,
-				chulens):get_3d_map_flat(minpos)
-		local nvals7 = minetest.get_perlin_map(np_satmos,
-				chulens):get_3d_map_flat(minpos)
+		local nvals1 = minetest.get_perlin_map(np_large, chulens):get_3d_map_flat(minpos)
+		local nvals3 = minetest.get_perlin_map(np_fissure, chulens):get_3d_map_flat(minpos)
+		local nvals4 = minetest.get_perlin_map(np_small, chulens):get_3d_map_flat(minpos)
+		local nvals5 = minetest.get_perlin_map(np_ores, chulens):get_3d_map_flat(minpos)
+		local nvals6 = minetest.get_perlin_map(np_latmos, chulens):get_3d_map_flat(minpos)
+		local nvals7 = minetest.get_perlin_map(np_satmos, chulens):get_3d_map_flat(minpos)
 
 		local ni = 1
+		local noise1abs, noise4abs, comet, noise1dep, noise4dep, vi
 
 		for z = z0, z1 do -- for each vertical plane do
 		for y = y0, y1 do -- for each horizontal row do
 
-		local vi = area:index(x0, y, z) -- LVM index for first node in x row
+		vi = area:index(x0, y, z) -- LVM index for first node in x row
 
 		for x = x0, x1 do -- for each node do
 
-			local noise1abs = math.abs(nvals1[ni])
-			local noise4abs = math.abs(nvals4[ni])
-			local comet = false
+			noise1abs = abs(nvals1[ni])
+			noise4abs = abs(nvals4[ni])
+			comet = false
 
 			-- comet biome
 			if nvals6[ni] < -(ASCOT + ATMOT)
@@ -185,13 +179,13 @@ function otherworlds.asteroids.create_on_generated(ymin, ymax, content_ids)
 			if noise1abs > ASCOT or noise4abs > SASCOT then
 
 				-- noise1dep zero at surface, positive beneath
-				local noise1dep = noise1abs - ASCOT
+				noise1dep = noise1abs - ASCOT
 
 				-- if no fissure
-				if math.abs(nvals3[ni]) > FISTS + noise1dep * FISEXP then
+				if abs(nvals3[ni]) > FISTS + noise1dep * FISEXP then
 
 					-- noise4dep zero at surface, positive beneath
-					local noise4dep = noise4abs - SASCOT
+					noise4dep = noise4abs - SASCOT
 
 					if not comet
 					or (comet and (noise1dep > random() + ICET
@@ -201,7 +195,7 @@ function otherworlds.asteroids.create_on_generated(ymin, ymax, content_ids)
 						if noise1dep >= STOT or noise4dep >= STOT then
 
 							-- stone/ores
-							if random(ORECHA) == 2 then
+							if random(ORECHA) == 1 then
 
 								if nvals5[ni] > 0.6 then
 									data[vi] = c_goldore
@@ -247,29 +241,28 @@ function otherworlds.asteroids.create_on_generated(ymin, ymax, content_ids)
 		end
 		end
 
+		local cr, cx, cz, comet, surfy, vi, nr, nodeid
+
 		-- craters
 		for ci = 1, CPCHU do -- iterate
 
 			-- exponential radius
-			local cr = CRMIN + floor(random() ^ 2 * CRRAN)
-			local cx = random(minp.x + cr, maxp.x - cr) -- centre x
-			local cz = random(minp.z + cr, maxp.z - cr) -- centre z
-			local comet = false
-			local surfy = false
+			cr = CRMIN + floor(random() ^ 2 * CRRAN)
+			cx = random(minp.x + cr, maxp.x - cr) -- centre x
+			cz = random(minp.z + cr, maxp.z - cr) -- centre z
+			comet = false
+			surfy = false
 
 			for y = y1, y0 + cr, -1 do
 
-				local vi = area:index(cx, y, cz) -- LVM index for node
-				local nodeid = data[vi]
+				vi = area:index(cx, y, cz) -- LVM index for node
+				nodeid = data[vi]
 
-				if nodeid == c_dust
-				or nodeid == c_gravel
-				or nodeid == c_cobble then
+				if nodeid == c_dust or nodeid == c_gravel or nodeid == c_cobble then
 					surfy = y
 					break
 
-				elseif nodename == c_snowblock
-				or nodename == c_waterice then
+				elseif nodename == c_snowblock or nodename == c_waterice then
 					comet = true
 					surfy = y
 					break
@@ -284,9 +277,8 @@ function otherworlds.asteroids.create_on_generated(ymin, ymax, content_ids)
 				for y = surfy - cr, surfy + cr do -- for each node do
 
 					-- LVM index for node
-					local vi = area:index(x, y, z)
-					local nr = ((x - cx) ^ 2 + (y - surfy) ^ 2
-							+ (z - cz) ^ 2) ^ 0.5
+					vi = area:index(x, y, z)
+					nr = ((x - cx) ^ 2 + (y - surfy) ^ 2 + (z - cz) ^ 2) ^ 0.5
 
 					if nr <= cr - 2 then
 
@@ -298,7 +290,7 @@ function otherworlds.asteroids.create_on_generated(ymin, ymax, content_ids)
 
 					elseif nr <= cr - 1 then
 
-						local nodeid = data[vi]
+						nodeid = data[vi]
 
 						if nodeid == c_gravel
 						or nodeid == c_cobble
@@ -313,7 +305,7 @@ function otherworlds.asteroids.create_on_generated(ymin, ymax, content_ids)
 
 					elseif nr <= cr then
 
-						local nodeid = data[vi]
+						nodeid = data[vi]
 
 						if nodeid == c_cobble
 						or nodeid == c_stone then

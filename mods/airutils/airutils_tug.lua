@@ -9,8 +9,8 @@ function airutils.move_target(player, pointed_thing)
     if object then
         local obj_pos = object:get_pos()
         local hip = math.sqrt(math.pow(obj_pos.x - pos.x,2)+math.pow(obj_pos.z - pos.z,2)) + 1
-        pos_x = math.sin(yaw) * -hip
-        pos_z = math.cos(yaw) * hip
+        local pos_x = math.sin(yaw) * -hip
+        local pos_z = math.cos(yaw) * hip
         obj_pos.x = pos.x + pos_x
         obj_pos.z = pos.z + pos_z
 

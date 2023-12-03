@@ -66,6 +66,15 @@ minetest.register_chatcommand("tpn", {
 	func = tp.tpr_deny
 })
 
+minetest.register_chatcommand("tpf", {
+	description = S("Show all teleport requests, made by you or to you, that are still active"),
+	privs = {interact = true, tp = true},
+	func = function(player)
+		tp.tpf_update_time[player] = true
+		tp.list_requests(player)
+	end
+})
+
 minetest.register_chatcommand("tpr_mute", {
 	description = S("Mutes a player: denies them from sending you teleport requests"),
 	params = S("<playername> | leave playername empty to see help message"),

@@ -133,6 +133,7 @@ function airutils.check_passenger_is_attached(self, name)
 end
 
 local function attach_copilot(self, name, player, eye_y)
+    if not self.co_pilot_seat_base then return end
     self.co_pilot = name
     self._passengers[2] = name
     -- attach the driver
@@ -252,16 +253,32 @@ function airutils.checkAttach(self, player)
     return false
 end
 
+local function spawn_drops(self, pos)
+    if self._drops then
+        for k,v in pairs(self._drops) do
+            --print(k,v)
+            for i=1,v do
+                minetest.add_item({x=pos.x+math.random()-0.5,y=pos.y,z=pos.z+math.random()-0.5},k)
+            end
+        end
+    end
+end
+
 function airutils.destroy(self, by_name)
     by_name = by_name or ""
     local with_fire = self._enable_fire_explosion
-    if by_name == self.owner then with_fire = false end
+    local owner = self.owner
+    if by_name == owner then with_fire = false end
     local pos = self.object:get_pos()
+    local rot = self.object:get_rotation()
+    local trunk_slots = self._trunk_slots
+    local inv_id = self._inv_id
+    if pos == nil then return end
 
-    if self.owner and self._vehicle_name then
-        minetest.log("action", "airutils: The player "..self.owner.." had it's "..self._vehicle_name.." destroyed at position x="..pos.x.." y="..pos.y.." z="..pos.z)
+    if owner and self._vehicle_name then
+        minetest.log("action", "airutils: The player "..owner.." had it's "..self._vehicle_name.." destroyed at position x="..math.floor(pos.x).." y="..math.floor(pos.y).." z="..math.floor(pos.z))
     else
-        minetest.log("action", "airutils: An airplane was destroyed at position x="..pos.x.." y="..pos.y.." z="..pos.z)
+        minetest.log("action", "airutils: An airplane was destroyed at position x="..math.floor(pos.x).." y="..math.floor(pos.y).." z="..math.floor(pos.z))
     end
 
     if self.sound_handle then
@@ -292,36 +309,49 @@ function airutils.destroy(self, by_name)
         self._destroy_parts_method(self)
     end
 
-    airutils.destroy_inventory(self)
+    local destroyed_ent = nil
+    if self._destroyed_ent then
+        destroyed_ent = self._destroyed_ent
+    end
+
+    --if dont have a destroyed version, destroy the inventory
+    if not destroyed_ent then
+        airutils.destroy_inventory(self)
+        spawn_drops(self, pos)
+    else
+        if not with_fire then --or by the owner itself
+            airutils.destroy_inventory(self)
+            spawn_drops(self, pos)
+        end
+    end
+
     self.object:remove()
 
     if airutils.blast_damage == true and with_fire == true then
         airutils.add_blast_damage(pos, 7, 10)
+        if destroyed_ent then
+
+		    local dest_ent = minetest.add_entity(pos, destroyed_ent)
+		    if dest_ent then
+                local ent = dest_ent:get_luaentity()
+                if ent then
+                    ent.owner = owner
+                    ent._inv_id = inv_id
+                    ent._trunk_slots = trunk_slots
+                    ent._game_time = minetest.get_gametime()
+			        dest_ent:set_yaw(rot.y)
+                end
+		    end
+
+        end
     end
-
-    --[[pos.y=pos.y+2
-    minetest.add_item({x=pos.x+math.random()-0.5,y=pos.y,z=pos.z+math.random()-0.5},'hidroplane:wings')
-
-    for i=1,6 do
-	    minetest.add_item({x=pos.x+math.random()-0.5,y=pos.y,z=pos.z+math.random()-0.5},'default:steel_ingot')
-    end
-
-    for i=1,2 do
-	    minetest.add_item({x=pos.x+math.random()-0.5,y=pos.y,z=pos.z+math.random()-0.5},'wool:white')
-    end
-
-    for i=1,6 do
-	    minetest.add_item({x=pos.x+math.random()-0.5,y=pos.y,z=pos.z+math.random()-0.5},'default:mese_crystal')
-        minetest.add_item({x=pos.x+math.random()-0.5,y=pos.y,z=pos.z+math.random()-0.5},'default:diamond')
-    end]]--
-
-    --minetest.add_item({x=pos.x+math.random()-0.5,y=pos.y,z=pos.z+math.random()-0.5},'hidroplane:hidro')
 end
 
 function airutils.testImpact(self, velocity, position)
     if self.hp_max < 0 then --if acumulated damage is greater than 50, adieu
         airutils.destroy(self)
     end
+    if velocity == nil then return end
     local impact_speed = 2
     local p = position --self.object:get_pos()
     local collision = false
@@ -1097,4 +1127,98 @@ function airutils.get_adf_angle(self, pos)
     return adf
 end
 
+function airutils.destroyed_save_static_data(self)
+        return minetest.serialize(
+            {
+                stored_owner = self.owner,
+                stored_slots = self._trunk_slots,
+                stored_inv_id = self._inv_id,
+                stored_game_time = self._game_time,
+            }
+        )
+end
 
+function airutils.destroyed_on_activate(self, staticdata, dtime_s)
+    local pos = self.object:get_pos()
+
+    if staticdata ~= "" and staticdata ~= nil then
+        local data = minetest.deserialize(staticdata) or {}
+        self.owner = data.stored_owner
+        self._inv_id = data.stored_inv_id
+        self._trunk_slots = data.stored_slots
+        self._game_time = data.stored_game_time
+    end
+
+	local inv = minetest.get_inventory({type = "detached", name = self._inv_id})
+	-- if the game was closed the inventories have to be made anew, instead of just reattached
+	if inv then
+	    self._inv = inv
+    end
+
+    airutils.set_acceleration(self.object,{x=0,y=airutils.gravity,z=0})
+    self.object:set_bone_position("elevator", self._elevator_pos, {x=-170, y=0, z=0})
+end
+
+local function check_shared_by_time(self)
+    local shared_by_time = false
+    if self._game_time then
+        --check if it was created in the last 20 minutes (1200 seconds)
+        if minetest.get_gametime() - self._game_time >= 1200 then shared_by_time = true end
+    end
+    return shared_by_time
+end
+
+function airutils.destroyed_open_inventory(self, clicker)
+    local message = ""
+	if not clicker or not clicker:is_player() then
+		return
+	end
+
+    local name = clicker:get_player_name()
+
+    if self.owner == "" then
+        self.owner = name
+    end
+
+    local shared_by_time = check_shared_by_time(self)
+
+    if name == self.owner or shared_by_time then
+        if not self._inv then
+            airutils.create_inventory(self, self._trunk_slots)
+        end
+        airutils.show_vehicle_trunk_formspec(self, clicker, self._trunk_slots)
+    else
+        minetest.chat_send_player(name, core.colorize('#ff0000', '>>> You cannot claim this scrap yet, wait some minutes.'))
+    end
+end
+
+function airutils.destroyed_on_punch(self, puncher, ttime, toolcaps, dir, damage)
+    if not puncher or not puncher:is_player() then
+		return
+	end
+
+    local name = puncher:get_player_name()
+    local shared_by_time = check_shared_by_time(self)
+    local pos = self.object:get_pos()
+
+    local is_admin = false
+    is_admin = minetest.check_player_privs(puncher, {server=true})
+    if shared_by_time == false then
+        if self.owner and self.owner ~= name and self.owner ~= "" then
+            if is_admin == false then return end
+        end
+    end
+
+    minetest.sound_play("airutils_collision", {
+        object = self.object,
+        max_hear_distance = 5,
+        gain = 1.0,
+        fade = 0.0,
+        pitch = 1.0,
+    })
+
+    spawn_drops(self, pos)
+
+    airutils.destroy_inventory(self)
+    self.object:remove()
+end

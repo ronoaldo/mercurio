@@ -1,7 +1,7 @@
 
 travelnet.MAX_STATIONS_PER_NETWORK (max stations on a network, 0 for unlimited) int 24
 travelnet.travelnet_effect_enabled (simulated beam effect) bool false
-travelnet.travelnet_sound_enabled (sound played on travelent use) bool true
+travelnet.travelnet_sound_enabled (sound played on travelnet use) bool true
 travelnet.travelnet_enabled (enable/disable travelnets) bool true
 travelnet.travelnet_cleanup_lbm (enable/disable cleanup lbm) bool false
 travelnet.elevator_enabled (enable/disable elevators) bool true
@@ -24,4 +24,4 @@ travelnet.allow_travel (allow players to use other networks) bool true
 travelnet.attach_priv (set a custom 'travelnet_attach' priv) string travelnet_attach
 
 #   Allows a custom remove priv
-travelnet.remove_priv (set a custom 'travelnet_remove' priv) string travelent_remove
+travelnet.remove_priv (set a custom 'travelnet_remove' priv) string travelnet_remove

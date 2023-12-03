@@ -1,4 +1,4 @@
--- playername -> { id => fn() }
+-- playername -> { id => { promise, callback} }
 local formspec_promises = {}
 
 minetest.register_on_leaveplayer(function(player)
@@ -13,22 +13,32 @@ minetest.register_on_player_receive_fields(function(player, id, fields)
         return false
     end
 
-    local p = cb_map[id]
-    if not p then
+    local data = cb_map[id]
+    if not data then
         return false
     end
 
-    p:resolve({
-        fields = fields,
-        player = player
-    })
+    if fields.quit == "true" then
+        -- "quit" event, resolve promise
+        data.promise:resolve({
+            fields = fields,
+            player = player
+        })
+    else
+        -- other events (scrollbar, dropdown, etc) formspec is still open
+        if type(data.callback) == "function" then
+            data.callback(fields)
+        end
+        return true
+    end
+
 
     -- cleanup
     cb_map[id] = nil
     return true
 end)
 
-function Promise.formspec(player, formspec)
+function Promise.formspec(player, formspec, callback)
     local p = Promise.new()
     local id = "" .. math.floor(math.random() * 100000)
 
@@ -39,7 +49,10 @@ function Promise.formspec(player, formspec)
         cb_map = {}
         formspec_promises[playername] = cb_map
     end
-    cb_map[id] = p
-    minetest.show_formspec(player:get_player_name(), id, formspec)
+    cb_map[id] = {
+        promise = p,
+        callback = callback
+    }
+    minetest.show_formspec(playername, id, formspec)
     return p
 end

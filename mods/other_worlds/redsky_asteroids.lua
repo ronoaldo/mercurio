@@ -30,8 +30,7 @@ minetest.register_on_generated(
 local TOPDECO = 500
 
 local grass = {
-	"mars:grass_1", "mars:grass_2", "mars:grass_3",
-	"mars:grass_4", "mars:grass_5"
+	"mars:grass_1", "mars:grass_2", "mars:grass_3", "mars:grass_4", "mars:grass_5"
 }
 
 local flower = {

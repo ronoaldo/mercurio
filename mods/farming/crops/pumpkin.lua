@@ -49,7 +49,9 @@ minetest.register_node("farming:jackolantern", {
 		if minetest.is_protected(pos, name) then return end
 		node.name = "farming:jackolantern_on"
 		minetest.swap_node(pos, node)
-	end
+	end,
+	_mcl_hardness = 0.8,
+	_mcl_blast_resistance = 1
 })
 
 minetest.register_node("farming:jackolantern_on", {
@@ -74,7 +76,9 @@ minetest.register_node("farming:jackolantern_on", {
 		if minetest.is_protected(pos, name) then return end
 		node.name = "farming:jackolantern"
 		minetest.swap_node(pos, node)
-	end
+	end,
+	_mcl_hardness = 0.8,
+	_mcl_blast_resistance = 1
 })
 
 minetest.register_craft({
@@ -100,7 +104,9 @@ minetest.register_node("farming:scarecrow_bottom", {
 			{-12/16, 4/16, -1/16, 12/16, 2/16, 1/16},
 		}
 	},
-	groups = {handy = 1, snappy = 3, flammable = 2}
+	groups = {axey = 1, handy = 1, snappy = 3, flammable = 2},
+	_mcl_hardness = 0.8,
+	_mcl_blast_resistance = 1
 })
 
 minetest.register_craft({
@@ -194,12 +200,14 @@ minetest.register_node("farming:pumpkin_8", {
 	},
 	groups = {
 		food_pumpkin = 1, snappy = 3, choppy = 3, oddly_breakable_by_hand = 2,
-		flammable = 2, plant = 1
+		flammable = 2, plant = 1, handy = 1
 	},
 	drop = "farming:pumpkin_8",
 	sounds = farming.sounds.node_sound_wood_defaults(),
 	paramtype2 = "facedir",
-	on_place = minetest.rotate_node
+	on_place = minetest.rotate_node,
+	_mcl_hardness = 0.8,
+	_mcl_blast_resistance = 1
 })
 
 minetest.register_alias("farming:pumpkin", "farming:pumpkin_8")

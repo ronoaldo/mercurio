@@ -31,10 +31,11 @@ local S = minetest.get_translator(minetest.get_current_modname())
 
 tp = {
 	S = S,
-	tpr_list = {},
-	tphr_list = {},
-	tpc_list = {},
-	tpn_list = {}
+	tpr_list = { },
+	tphr_list = { },
+	tpc_list = { },
+	tpn_list = { },
+	tpf_update_time = { }
 }
 
 -- Clear requests when the player leaves

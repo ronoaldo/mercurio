@@ -22,7 +22,11 @@ if not minetest.safe_file_write then
 	error("[Mod travelnet] Your Minetest version is no longer supported. (version < 0.4.17)")
 end
 
-travelnet = {}
+travelnet = {
+	-- some players seem to be confused with entering network names at first; provide them
+	-- with a default name
+	default_network = "net1"
+}
 
 travelnet.log = function(c, msg) minetest.log(c, "[travelnet] " .. msg) end
 travelnet.player_formspec_data = {}
@@ -54,6 +58,9 @@ mod_dofile("update_formspec")
 
 -- add button
 mod_dofile("add_target")
+
+-- chatcommand
+mod_dofile("chat")
 
 -- receive fields handler
 mod_dofile("on_receive_fields")

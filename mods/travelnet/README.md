@@ -37,6 +37,10 @@ See [settingtypes.txt](https://github.com/mt-mods/travelnet/blob/master/settingt
 ![](screenshot_day.png)
 ![](screenshot_night.png)
 
+## Chatcommands
+
+* `/travelnet [network?]` Shows the travelnet formspec for the network (needs the `teleport` priv)
+
 ## License
 
 The mod was written by me, Sokomine, and includes small contributions from other contributors.

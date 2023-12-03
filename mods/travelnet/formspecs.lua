@@ -39,9 +39,6 @@ end
 
 function travelnet.formspecs.edit_travelnet(options)
 	if not options then options = {} end
-	-- some players seem to be confused with entering network names at first; provide them
-	-- with a default name
-	local default_network = "net1"
 
 	return ([[
 		size[10,6.0]
@@ -64,10 +61,10 @@ function travelnet.formspecs.edit_travelnet(options)
 		S("Assign to network:"),
 		minetest.formspec_escape(
 			travelnet.is_falsey_string(options.station_network)
-				and default_network
+				and travelnet.default_network
 				or options.station_network
 		),
-		S("You can have more than one network. If unsure, use \"@1\".", default_network),
+		S("You can have more than one network. If unsure, use \"@1\".", travelnet.default_network),
 		S("Owned by:"),
 		minetest.formspec_escape(options.owner_name or ""),
 		S("Unless you know what you are doing, leave this as is."),

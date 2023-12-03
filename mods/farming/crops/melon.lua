@@ -86,7 +86,9 @@ minetest.register_node("farming:melon_8", {
 	drop = "farming:melon_8",
 	sounds = farming.sounds.node_sound_wood_defaults(),
 	paramtype2 = "facedir",
-	on_place = minetest.rotate_node
+	on_place = minetest.rotate_node,
+	_mcl_hardness = 0.8,
+	_mcl_blast_resistance = 1
 })
 
 -- add to registered_plants
