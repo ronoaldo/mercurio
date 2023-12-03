@@ -21,7 +21,7 @@ USA
 local S = tp.S
 
 -- Placeholders
-local chatmsg, source, target, name2,
+local chatmsg, source, target,
 target_coords, tpc_target_coords, old_tpc_target_coords
 
 local spam_prevention = {}
@@ -52,6 +52,317 @@ local function send_message(player, message)
 	minetest.chat_send_player(player, minetest.colorize(message_color, message))
 	if minetest.get_modpath("chat2") then
 		chat2.send_message(minetest.get_player_by_name(player), message, message_color_number)
+	end
+end
+
+local next_request_id = 0
+local request_list = {}
+local sender_list = {}
+local receiver_list = {}
+local area_list = {}
+
+function tp.make_request(sender, receiver, direction)
+	next_request_id = next_request_id+1
+	request_list[next_request_id] = {
+		time = os.time(),
+		direction = direction or "receiver",
+		receiver = receiver,
+		sender = sender
+	}
+
+	receiver_list[receiver] = receiver_list[receiver] or {count=0}
+	receiver_list[receiver][next_request_id] = true
+	receiver_list[receiver].count = receiver_list[receiver].count+1
+
+	sender_list[sender] = sender_list[sender] or {count=0}
+	sender_list[sender][next_request_id] = true
+	sender_list[sender].count = sender_list[sender].count+1
+
+	return next_request_id
+end
+
+function tp.clear_request(id)
+	local request = request_list[id]
+	request_list[id] = nil
+
+	sender_list[request.sender][id] = nil
+	receiver_list[request.receiver][id] = nil
+
+	sender_list[request.sender].count = sender_list[request.sender].count-1
+	receiver_list[request.receiver].count = receiver_list[request.receiver].count-1
+
+	return request
+end
+
+function tp.accept_request(id)
+
+	local request = tp.clear_request(id)
+
+	if request.direction == "area" then
+		source = minetest.get_player_by_name(request.receiver)
+		target = minetest.get_player_by_name(request.sender)
+		chatmsg = S("@1 is teleporting to your protected area @2.", request.sender, minetest.pos_to_string(tpc_target_coords[request.receiver]))
+		-- If source or target are not present, abort request.
+		if not source or not target then
+			send_message(request.receiver, S("@1 is not online right now.", request.sender))
+			return
+		end
+		if not tpc_target_coords[request.receiver] then
+			tpc_target_coords[request.sender] = old_tpc_target_coords[request.receiver]
+			tp.tpp_teleport_player(request.sender, tpc_target_coords[request.sender])
+
+			chatmsg = S("@1 is teleporting to your protected area @2.", request.sender, minetest.pos_to_string(tpc_target_coords[request.sender]))
+		else
+			tp.tpp_teleport_player(request.sender, tpc_target_coords[request.receiver])
+			chatmsg = S("@1 is teleporting to your protected area @2.", request.sender, minetest.pos_to_string(tpc_target_coords[request.receiver]))
+		end
+
+		send_message(request.receiver, chatmsg)
+		send_message(request.sender, S("Request Accepted!"))
+
+		-- Avoid abusing with area requests
+		target_coords = nil
+	elseif request.direction == "receiver" then
+		source = minetest.get_player_by_name(request.receiver)
+		target = minetest.get_player_by_name(request.sender)
+		chatmsg = S("@1 is teleporting to you.", request.sender)
+		-- Could happen if either player disconnects (or timeout); if so just abort
+		if not source
+		or not target then
+			send_message(request.receiver, S("@1 is not online right now.", request.sender))
+			return
+		end
+
+		tp.tpr_teleport_player()
+
+		-- Avoid abusing with area requests
+		target_coords = nil
+
+		send_message(request.receiver, chatmsg)
+
+		if minetest.check_player_privs(request.sender, {tp_admin = true}) == false then
+			send_message(request.sender, S("Request Accepted!"))
+		else
+			if tp.enable_immediate_teleport then return end
+
+			send_message(request.sender, S("Request Accepted!"))
+			return
+		end
+	elseif request.direction == "sender" then
+		source = minetest.get_player_by_name(request.sender)
+		target = minetest.get_player_by_name(request.receiver)
+		chatmsg = S("You are teleporting to @1.", request.sender)
+		-- Could happen if either player disconnects (or timeout); if so just abort
+		if not source
+		or not target then
+			send_message(request.receiver, S("@1 is not online right now.", request.sender))
+			return
+		end
+
+		tp.tpr_teleport_player()
+
+		-- Avoid abusing with area requests
+		target_coords = nil
+
+		send_message(request.receiver, chatmsg)
+
+		if minetest.check_player_privs(request.sender, {tp_admin = true}) == false then
+			send_message(request.sender, S("Request Accepted!"))
+		else
+			if tp.enable_immediate_teleport then return end
+
+			send_message(request.sender, S("Request Accepted!"))
+			return
+		end
+	end
+	return request
+end
+
+function tp.deny_request(id, own)
+	local request = tp.clear_request(id)
+	if own then
+		send_message(request.sender, S("You denied your request sent to @1.", request.receiver))
+		send_message(request.receiver, S("@1 denied their request sent to you.", request.sender))
+	else
+		if request.direction == "area" then
+			send_message(request.sender, S("Area request denied."))
+			send_message(request.receiver, S("You denied the request @1 sent you.", request.sender))
+			spam_prevention[request.receiver] = request.sender
+		elseif request.direction == "receiver" then
+			send_message(request.sender, S("Teleport request denied."))
+			send_message(request.receiver, S("You denied the request @1 sent you.", request.sender))
+			spam_prevention[request.receiver] = request.sender
+		elseif request.direction == "sender" then
+			send_message(request.sender, S("Teleport request denied."))
+			send_message(request.receiver, S("You denied the request @1 sent you.", request.sender))
+			spam_prevention[request.receiver] = request.sender
+		end
+	end
+end
+
+function tp.list_requests(playername)
+	local sent_requests = tp.get_requests(playername, "sender")
+	local received_requests = tp.get_requests(playername, "receiver")
+	local area_requests = tp.get_requests(playername, "area")
+
+	local formspec
+	if sent_requests.count == 0 and received_requests.count == 0 and area_requests.count == 0 then
+		formspec = ("size[5,2]label[1,0.3;%s:]"):format(S("Teleport Requests"))
+		formspec = formspec..("label[1,1.2;%s]"):format(S("You have no requests."))
+	else
+		local y = 1
+		local request_list_formspec = ""
+		if sent_requests.count ~= 0 then
+			request_list_formspec = request_list_formspec..("label[0.2,%f;%s:]"):format(y, S("Sent by you"))
+			y = y+0.7
+			for request_id, _ in pairs(sent_requests) do
+				if request_id ~= "count" then
+					local request = request_list[request_id]
+					if request.direction == "receiver" then
+						request_list_formspec = request_list_formspec..("label[0.3,%f;%s]button[7,%f;1,1;deny_%s;Cancel]")
+							:format(
+								y, tostring(os.time()-request.time).."s ago: "..S("You are requesting to teleport to @1.", request.receiver),
+								y, tostring(request_id)
+							)
+					elseif request.direction == "sender" then
+						request_list_formspec = request_list_formspec..("label[0.3,%f;%s]button[7,%f;1,1;deny_%s;Cancel]")
+							:format(
+								y, tostring(os.time()-request.time).."s: "..S("You are requesting that @1 teleports to you.", request.receiver),
+								y, tostring(request_id)
+							)
+					elseif request.direction == "area" then
+						request_list_formspec = request_list_formspec..("label[0.3,%f;%s]button[7,%f;1,1;deny_%s;Cancel]")
+							:format(
+								y, tostring(os.time()-request.time).."s: "..S("You are requesting to teleport to @1's protected area.", request.receiver),
+								y, tostring(request_id)
+							)
+					end
+					y = y+0.8
+				end
+			end
+		end
+		if received_requests.count ~= 0 then
+			y = y+0.5
+			request_list_formspec = request_list_formspec..("label[0.2,%f;%s:]"):format(y, S("Sent to you"))
+			y = y+0.7
+			for request_id, _ in pairs(received_requests) do
+				if request_id ~= "count" then
+					local request = request_list[request_id]
+					if request.direction == "receiver" then
+						request_list_formspec = request_list_formspec..("label[0.3,%f;%s]button[6,%f;1,1;accept_%s;Accept]button[7,%f;1,1;deny_%s;Deny]")
+							:format(
+								y, tostring(os.time()-request.time).."s ago: "..S("@1 is requesting to teleport to you.", request.sender),
+								y, tostring(request_id),
+								y, tostring(request_id)
+							)
+					elseif request.direction == "sender" then
+						request_list_formspec = request_list_formspec..("label[0.3,%f;%s]button[6,%f;1,1;accept_%s;Accept]button[7,%f;1,1;deny_%s;Deny]")
+							:format(
+								y, tostring(os.time()-request.time).."s ago: "..S("@1 is requesting that you teleport to them.", request.sender),
+								y, tostring(request_id),
+								y, tostring(request_id)
+							)
+					elseif request.direction == "area" then
+						request_list_formspec = request_list_formspec..("label[0.3,%f;%s]button[6,%f;1,1;accept_%s;Accept]button[7,%f;1,1;deny_%s;Deny]")
+							:format(
+								y, tostring(os.time()-request.time).."s ago: "..S("@1 is requesting to teleport to your protected area.", request.sender),
+								y, tostring(request_id),
+								y, tostring(request_id)
+							)
+					end
+					y = y+0.8
+				end
+			end
+		end
+		formspec = ("size[8,%f]label[1,0.3;%s:]"):format(math.min(y,10),S("Teleport Requests"))
+			..request_list_formspec
+	end
+
+	minetest.show_formspec(playername, "teleport_request_list", formspec)
+
+	local function update_time()
+		if formspec == "" or string.find(formspec, S("You have no requests.")) then
+			tp.tpf_update_time[playername] = false
+			return
+		end
+
+		if tp.tpf_update_time[playername] then
+			-- TODO: find a way to edit the text only and update
+			-- the formspec without re-calling the function.
+			tp.list_requests(playername)
+		end
+	end
+
+	minetest.after(1, update_time)
+end
+
+minetest.register_on_player_receive_fields(function(player, formname, fields)
+	if formname ~= "teleport_request_list" then return end
+
+	local playername = player:get_player_name()
+
+	local accepts = {}
+	local denys = {}
+	for button_name, _ in pairs(fields) do
+		if string.sub(button_name, 1, 5) == "deny_" then
+			table.insert(denys, tonumber(string.sub(button_name, 6)))
+		elseif string.sub(button_name, 1, 7) == "accept_" then
+			table.insert(accepts, tonumber(string.sub(button_name, 8)))
+		end
+	end
+	local changes = false
+	for _, id in ipairs(accepts) do
+		if request_list[id] and request_list[id].receiver == playername then
+			tp.accept_request(id)
+			changes = true
+		end
+	end
+	for _, id in ipairs(denys) do
+		if request_list[id] and (request_list[id].sender == playername or request_list[id].receiver == playername) then
+			tp.deny_request(id, request_list[id].sender == playername)
+			changes = true
+		end
+	end
+
+	if changes and not fields.quit then
+		tp.tpf_update_time[playername] = true
+		tp.list_requests(playername)
+	elseif fields.quit then
+		tp.tpf_update_time[playername] = false
+	end
+end)
+
+function tp.get_requests(playername, party)
+	local list
+	if party == "sender" then
+		list = sender_list
+	elseif party == "receiver" then
+		list = receiver_list
+	elseif party == "area" then
+		list = area_list
+	else
+		return -- Invalid party
+	end
+	if not list then return end
+
+	return list[playername] or {count=0}
+end
+
+function tp.count_requests(playername, party)
+	local player_list = tp.get_requests(playername, party)
+	if not player_list then return 0 end
+
+	return player_list.count or 0
+end
+
+function tp.first_request(playername, party)
+	local player_list = tp.get_requests(playername, party)
+	if not player_list then return end
+
+	for request_id, _ in pairs(player_list) do
+		if request_id ~= "count" then
+			return request_id
+		end
 	end
 end
 
@@ -205,9 +516,7 @@ function tp.tpr_send(sender, receiver)
 				band = true
 			end
 		end, sender, receiver)
-
 	else
-
 	-- Compatibility with beerchat
 		if minetest.get_modpath("beerchat") and not minetest.check_player_privs(sender, {tp_admin = true}) then
 			if receiver == "" then
@@ -238,9 +547,8 @@ function tp.tpr_send(sender, receiver)
 				return
 			end
 
-			tp.tpr_list[receiver] = sender
-			tp.tpr_accept(receiver)
-			send_message(sender, S("You are teleporting to @1.", receiver))
+			local id = tp.make_request(sender, receiver, "receiver")
+			tp.accept_request(id)
 			return
 		end
 
@@ -264,21 +572,18 @@ function tp.tpr_send(sender, receiver)
 		send_message(receiver, S("@1 is requesting to teleport to you. /tpy to accept.", sender))
 		send_message(sender, S("Teleport request sent! It will timeout in @1 seconds.", tp.timeout_delay))
 
-		-- Write name values to list and clear old values.
-		tp.tpr_list[receiver] = sender
-		tp.tpn_list[sender] = receiver
+		local tp_id = tp.make_request(sender, receiver, "receiver")
 
 		-- Teleport timeout delay
-		minetest.after(tp.timeout_delay, function(sender_name, receiver_name)
-			if tp.tpr_list[receiver_name] and tp.tpn_list[sender_name] then
-				tp.tpr_list[receiver_name] = nil
-				tp.tpn_list[sender_name] = nil
+		minetest.after(tp.timeout_delay, function(id)
+			if request_list[id] then
+				local request = tp.clear_request(id)
 
-				send_message(sender_name, S("Request timed-out."))
-				send_message(receiver_name, S("Request timed-out."))
+				send_message(request.sender, S("Request timed-out."))
+				send_message(request.receiver, S("Request timed-out."))
 				return
 			end
-		end, sender, receiver)
+		end, tp_id)
 	end
 end
 
@@ -312,9 +617,7 @@ function tp.tphr_send(sender, receiver)
 				band = true
 			end
 		end, sender, receiver)
-
 	else
-
 	-- Compatibility with beerchat
 		if minetest.get_modpath("beerchat") and not minetest.check_player_privs(sender, {tp_admin = true}) then
 			if receiver == "" then
@@ -371,22 +674,18 @@ function tp.tphr_send(sender, receiver)
 		send_message(receiver, S("@1 is requesting that you teleport to them. /tpy to accept; /tpn to deny.", sender))
 		send_message(sender, S("Teleport request sent! It will timeout in @1 seconds.", tp.timeout_delay))
 
-		-- Write name values to list and clear old values.
-		tp.tphr_list[receiver] = sender
-		tp.tpn_list[sender] = receiver
+		local tp_id = tp.make_request(sender, receiver, "sender")
 
 		-- Teleport timeout delay
+		minetest.after(tp.timeout_delay, function(id)
+			if request_list[id] then
+				local request = tp.clear_request(id)
 
-		minetest.after(tp.timeout_delay, function(sender_name, receiver_name)
-			if tp.tphr_list[receiver_name] and tp.tpn_list[sender_name] then
-				tp.tphr_list[receiver_name] = nil
-				tp.tpn_list[sender_name] = nil
-
-				send_message(sender_name, S("Request timed-out."))
-				send_message(receiver_name, S("Request timed-out."))
+				send_message(request.sender, S("Request timed-out."))
+				send_message(request.receiver, S("Request timed-out."))
 				return
 			end
-		end, sender, receiver)
+		end, tp_id)
 	end
 end
 
@@ -441,19 +740,17 @@ function tp.tpc_send(sender, coordinates)
 							send_message(area.owner, S("@1 is requesting to teleport to a protected area" ..
 							" of yours @2.", sender, minetest.pos_to_string(tpc_target_coords[area.owner])))
 
-							tp.tpc_list[area.owner] = sender
-							tp.tpn_list[sender] = area.owner
+							local tp_id = tp.make_request(sender, area.owner, "area")
 
-							minetest.after(tp.timeout_delay, function(sender_name, receiver_name)
-								if tp.tpc_list[receiver_name] and tp.tpn_list[sender_name] then
-									tp.tpc_list[receiver_name] = nil
-									tp.tpn_list[sender_name] = nil
+							minetest.after(tp.timeout_delay, function(id)
+								if request_list[id] then
+									local request = tp.clear_request(id)
 
-									send_message(sender_name, S("Request timed-out."))
-									send_message(receiver_name, S("Request timed-out."))
+									send_message(request.sender, S("Request timed-out."))
+									send_message(request.receiver, S("Request timed-out."))
 									return
 								end
-							end, sender, area.owner)
+							end, tp_id)
 						else
 							minetest.record_protection_violation(target_coords, sender)
 						end
@@ -475,63 +772,27 @@ function tp.tpc_send(sender, coordinates)
 end
 
 function tp.tpr_deny(name)
-	if not tp.tpr_list[name] and not tp.tphr_list[name]
-	and not tp.tpc_list[name] and not tp.tpn_list[name] then
+	if tp.count_requests(name, "sender") == 0 and tp.count_requests(name, "receiver") == 0 then
 		send_message(name, S("Usage: /tpn allows you to deny teleport/area requests sent to you by other players."))
 		return
 	end
 
-	-- Area requests
-	if tp.tpc_list[name] then
-		name2 = tp.tpc_list[name]
-		send_message(name2, S("Area request denied."))
-		send_message(name, S("You denied the request @1 sent you.", name2))
-		tp.tpc_list[name] = nil
-
-		-- Don't allow re-denying requests.
-		tp.tpn_list[name2] = nil
+	if (tp.count_requests(name, "sender") + tp.count_requests(name, "receiver")) > 1 then
+		-- Show formspec for decision
+		tp.list_requests(name)
+		tp.tpf_update_time[name] = true
 		return
 	end
 
-	-- Teleport requests
-	if tp.tpr_list[name] then
-		name2 = tp.tpr_list[name]
-		send_message(name2, S("Teleport request denied."))
-		send_message(name, S("You denied the request @1 sent you.", name2))
+	local received_request = tp.first_request(name, "receiver")
+	if received_request then
+		tp.deny_request(received_request, false)
+		return
+	end
 
-		tp.tpr_list[name] = nil
-		spam_prevention[name] = name2
-
-		-- Don't allow re-denying requests.
-		tp.tpn_list[name2] = nil
-
-	elseif tp.tphr_list[name] then
-		name2 = tp.tphr_list[name]
-		send_message(name2, S("Teleport request denied."))
-		send_message(name, S("You denied the request @1 sent you.", name2))
-
-		tp.tphr_list[name] = nil
-		spam_prevention[name] = name2
-
-		-- Don't allow re-denying requests.
-		tp.tpn_list[name2] = nil
-
-	elseif tp.tpn_list[name] then
-		name2 = tp.tpn_list[name]
-		send_message(name, S("You denied your request sent to @1.", name2))
-		send_message(name2, S("@1 denied their request sent to you.", name))
-
-		if tp.tpr_list[name2] then
-			tp.tpr_list[name2] = nil
-
-		elseif tp.tphr_list[name2] then
-			tp.tphr_list[name2] = nil
-
-		elseif tp.tpc_list[name2] then
-			tp.tpc_list[name2] = nil
-		end
-
-		tp.tpn_list[name] = nil
+	local sent_request = tp.first_request(name, "sender")
+	if sent_request then
+		tp.deny_request(sent_request, true)
 		return
 	end
 end
@@ -539,103 +800,23 @@ end
 -- Teleport Accept Systems
 function tp.tpr_accept(name)
 	-- Check to prevent constant teleporting
-	if not tp.tpr_list[name] and not tp.tphr_list[name]
-	and not tp.tpc_list[name] then
+	if tp.count_requests(name, "receiver") == 0 then
 		send_message(name, S("Usage: /tpy allows you to accept teleport/area requests sent to you by other players."))
 		return
 	end
 
-	-- Area requests
-	if tp.tpc_list[name] then
-
-		if tp.tpc_list[name] then
-			name2 = tp.tpc_list[name]
-			source = minetest.get_player_by_name(name)
-			target = minetest.get_player_by_name(name2)
-			chatmsg = S("@1 is teleporting to your protected area @2.", name2, minetest.pos_to_string(tpc_target_coords[name]))
-			tp.tpc_list[name] = nil
-		else
-			return
-		end
-
-		-- If source or target are not present, abort request.
-		if not source or not target then
-			send_message(name, S("@1 is not online right now.", name2))
-			tp.tpc_list[name] = nil
-			return
-		end
-
-		if not tpc_target_coords[name] then
-			tpc_target_coords[name2] = old_tpc_target_coords[name]
-			tp.tpp_teleport_player(name2, tpc_target_coords[name2])
-
-			chatmsg = S("@1 is teleporting to your protected area @2.", name2, minetest.pos_to_string(tpc_target_coords[name2]))
-		else
-			tp.tpp_teleport_player(name2, tpc_target_coords[name])
-			chatmsg = S("@1 is teleporting to your protected area @2.", name2, minetest.pos_to_string(tpc_target_coords[name]))
-		end
-
-		-- Don't allow re-denying requests.
-		if tp.tpn_list[name] or tp.tpn_list[name2] then
-			tp.tpn_list[name] = nil
-			tp.tpn_list[name2] = nil
-		end
-
-		send_message(name, chatmsg)
-		send_message(name2, S("Request Accepted!"))
-
-		-- Avoid abusing with area requests
-		target_coords = nil
-	end
-
-	-- Teleport requests.
-	if tp.tpr_list[name] then
-		name2 = tp.tpr_list[name]
-		source = minetest.get_player_by_name(name)
-		target = minetest.get_player_by_name(name2)
-		chatmsg = S("@1 is teleporting to you.", name2)
-		tp.tpr_list[name] = nil
-
-	elseif tp.tphr_list[name] then
-		name2 = tp.tphr_list[name]
-		source = minetest.get_player_by_name(name2)
-		target = minetest.get_player_by_name(name)
-		chatmsg = S("You are teleporting to @1.", name2)
-		tp.tphr_list[name] = nil
-	else
+	if tp.count_requests(name, "receiver") > 1 then
+		-- Show formspec for decision
+		tp.list_requests(name)
+		tp.tpf_update_time[name] = true
 		return
 	end
 
-	-- Could happen if either player disconnects (or timeout); if so just abort
-	if not source
-	or not target then
-		send_message(name, S("@1 is not online right now.", name2))
-		tp.tpr_list[name] = nil
-		tp.tphr_list[name] = nil
-		return
-	end
+	local received_request = tp.first_request(name, "receiver")
 
-	tp.tpr_teleport_player()
+	if not received_request then return end -- This shouldn't happen, but who knows
 
-	-- Avoid abusing with area requests
-	target_coords = nil
-
-	-- Don't allow re-denying requests.
-	if tp.tpn_list[name] or tp.tpn_list[name2] then
-		tp.tpn_list[name] = nil
-		tp.tpn_list[name2] = nil
-	end
-
-	send_message(name, chatmsg)
-
-	if minetest.check_player_privs(name2, {tp_admin = true}) == false then
-		send_message(name2, S("Request Accepted!"))
-	else
-		if tp.enable_immediate_teleport then return end
-
-		send_message(name2, S("Request Accepted!"))
-		return
-	end
+	tp.accept_request(received_request)
 end
 
 -- Teleport Jump - Relative Position Teleportation by number of nodes

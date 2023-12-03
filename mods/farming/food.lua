@@ -135,9 +135,11 @@ end
 minetest.register_node("farming:sugar_cube", {
 	description = S("Sugar Cube"),
 	tiles = {"farming_sugar_cube.png"},
-	groups = {crumbly = 2},
+	groups = {shovely = 1, handy = 1, crumbly = 2},
 	floodable = true,
-	sounds = farming.sounds.node_sound_gravel_defaults()
+	sounds = farming.sounds.node_sound_gravel_defaults(),
+	_mcl_hardness = 0.8,
+	_mcl_blast_resistance = 1
 })
 
 minetest.register_craft({
@@ -248,12 +250,14 @@ minetest.register_node("farming:salt_crystal", {
 	paramtype = "light",
 	light_source = 1,
 	tiles = {"farming_salt_crystal.png"},
-	groups = { dig_immediate = 3, attached_node = 1},
+	groups = {dig_immediate = 3, attached_node = 1},
 	sounds = farming.sounds.node_sound_defaults(),
 	selection_box = {
 		type = "fixed",
 		fixed = {-0.25, -0.5, -0.25, 0.25, 0.3, 0.25}
-	}
+	},
+	_mcl_hardness = 0.8,
+	_mcl_blast_resistance = 1
 })
 
 minetest.register_craft({

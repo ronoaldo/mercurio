@@ -11,7 +11,7 @@ minetest.register_node("farming:seed_mint", {
 	drawtype = "signlike",
 	groups = {
 		compostability = 48, seed = 1, snappy = 3, attached_node = 1, growing = 1,
-		flammable = 2
+		handy = 1, flammable = 2
 	},
 	paramtype = "light",
 	paramtype2 = "wallmounted",

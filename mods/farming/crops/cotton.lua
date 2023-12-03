@@ -14,7 +14,9 @@ minetest.register_node("farming:cotton_wild", {
 	sunlight_propagates = true,
 	walkable = false,
 	buildable_to = true,
-	groups = {handy = 1, snappy = 3, attached_node = 1, flammable = 4, compostability = 60},
+	groups = {
+		handy = 1, snappy = 3, attached_node = 1, flammable = 4, compostability = 60
+	},
 	drop = {
 		items = {
 			{items = {"farming:cotton"}, rarity = 2},

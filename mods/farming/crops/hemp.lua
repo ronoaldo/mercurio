@@ -9,7 +9,10 @@ minetest.register_node("farming:seed_hemp", {
 	inventory_image = "farming_hemp_seed.png",
 	wield_image = "farming_hemp_seed.png",
 	drawtype = "signlike",
-	groups = {compostability = 38, seed = 1, snappy = 3, attached_node = 1, growing = 1},
+	groups = {
+		handy = 1, compostability = 38, seed = 1, snappy = 3, attached_node = 1,
+		growing = 1
+	},
 	paramtype = "light",
 	paramtype2 = "wallmounted",
 	walkable = false,
@@ -91,7 +94,7 @@ minetest.register_craft( {
 		{"farming:hemp_leaf", "group:water_bucket", "farming:hemp_leaf"},
 		{"farming:hemp_leaf", "farming:hemp_leaf", "farming:hemp_leaf"}
 	},
-	replacements = {{a.bucket_water, a.bucket_empty}}
+	replacements = {{"group:water_bucket", a.bucket_empty}}
 })
 
 if minetest.get_modpath("bucket_wooden") then
@@ -112,10 +115,12 @@ minetest.register_node("farming:hemp_block", {
 	tiles = {"farming_hemp_block.png"},
 	paramtype = "light",
 	groups = {
-		handy = 1, snappy = 2, oddly_breakable_by_hand = 1, flammable = 2,
+		axey = 1, handy = 1, snappy = 2, oddly_breakable_by_hand = 1, flammable = 2,
 		compostability = 85
 	},
-	sounds =  farming.sounds.node_sound_leaves_defaults()
+	sounds =  farming.sounds.node_sound_leaves_defaults(),
+	_mcl_hardness = 0.8,
+	_mcl_blast_resistance = 1
 })
 
 minetest.register_craft( {
@@ -178,13 +183,16 @@ minetest.register_node("farming:hemp_rope", {
 	inventory_image = "farming_hemp_rope.png",
 	drawtype = "plantlike",
 	groups = {
-		flammable = 2, choppy = 3, oddly_breakable_by_hand = 3, compostability = 55
+		handy = 1, axey = 1, swordy = 1, flammable = 2, choppy = 3,
+		oddly_breakable_by_hand = 3, compostability = 55
 	},
 	sounds =  farming.sounds.node_sound_leaves_defaults(),
 	selection_box = {
 		type = "fixed",
 		fixed = {-1/7, -1/2, -1/7, 1/7, 1/2, 1/7}
-	}
+	},
+	_mcl_hardness = 0.8,
+	_mcl_blast_resistance = 1
 })
 
 -- string

@@ -20,7 +20,7 @@ local function write_file(file, filename, data)
 	local uncompressed_size = #data
 	if uncompressed_size > 10 then
 		compressed = true
-		data = minetest.compress(data, "deflate")
+		data = minetest.compress(data, "deflate", 9)
 		-- strip zlib header
 		data = string.sub(data, 3)
 	end

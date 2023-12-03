@@ -9,7 +9,9 @@ minetest.register_node("farming:seed_wheat", {
 	inventory_image = "farming_wheat_seed.png",
 	wield_image = "farming_wheat_seed.png",
 	drawtype = "signlike",
-	groups = {seed = 1, snappy = 3, attached_node = 1, flammable = 4, growing = 1},
+	groups = {
+		handy = 1, seed = 1, snappy = 3, attached_node = 1, flammable = 4, growing = 1
+	},
 	paramtype = "light",
 	paramtype2 = "wallmounted",
 	walkable = false,
@@ -36,8 +38,10 @@ minetest.register_node("farming:straw", {
 	description = S("Straw"),
 	tiles = {"farming_straw.png"},
 	is_ground_content = false,
-	groups = {snappy = 3, flammable = 4, fall_damage_add_percent = -30},
-	sounds = farming.sounds.node_sound_leaves_defaults()
+	groups = {handy = 1, snappy = 3, flammable = 4, fall_damage_add_percent = -30},
+	sounds = farming.sounds.node_sound_leaves_defaults(),
+	_mcl_hardness = 0.8,
+	_mcl_blast_resistance = 1
 })
 
 minetest.register_craft({

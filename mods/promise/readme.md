@@ -147,14 +147,31 @@ Returns a delayed promise that resolves to given value or error
 
 Emerges the given area and resolves afterwards
 
-## `Promise.formspec(player, formspec)`
+## `Promise.formspec(player, formspec, callback)`
 
 Formspec shorthand / util
 
 Example:
 ```lua
-Promise.formspec(player, "size[2,2]button[0,0;2,2;mybutton;label]")
+Promise.formspec(player, "size[2,2]button_exit[0,0;2,2;mybutton;label]")
 :next(function(data)
+    -- formspec closed
+    assert(data.player:get_player_name())
+    assert(data.fields.mybutton == true)
+end)
+```
+
+**NOTE**: the promise only resolves if the player exits the formspec (with a `quit="true"` value, a default in exit_buttons)
+
+Example with optional scroll/dropdown callbacks:
+```lua
+local callback = function(fields)
+    -- TODO: handle CHG, and other "non-quit" events here
+end
+
+Promise.formspec(player, "size[2,2]button_exit[0,0;2,2;mybutton;label]", callback)
+:next(function(data)
+    -- formspec closed
     assert(data.player:get_player_name())
     assert(data.fields.mybutton == true)
 end)
@@ -163,6 +180,7 @@ end)
 ## `Promise.handle_async(fn, args...)`
 
 Executes the function `fn` in the async environment with given arguments
+
 **NOTE:** This falls back to a simple function-call if the `minetest.handle_async` function isn't available.
 
 ## `Promise.http(http, url, opts)`
@@ -198,6 +216,22 @@ end):catch(function(result)
     assert(result.data == "Server error")
 end)
 ```
+
+## `Promise.dynamic_add_media(options)`
+
+Dynamic media push
+
+Example:
+```lua
+Promise.dynamic_add_media({ filepath = "world/image.png", to_player = "singleplayer" })
+:next(function(name)
+    -- player callback
+end):catch(function()
+    -- error handling
+end)
+```
+
+**NOTE**: experimental, only works if the `to_player` property is set
 
 # License
 

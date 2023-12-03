@@ -9,3 +9,5 @@ otherworlds.redsky.ymin (Redsky asteroid min height) int 6000
 otherworlds.redsky.ymax (Redsky asteroid max height) int 7000
 
 otherworlds.gravity (Enable gravity) bool false
+
+otherworlds.ore_chance (Chance of finding ores) int 27

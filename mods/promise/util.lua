@@ -45,3 +45,12 @@ function Promise.handle_async(fn, ...)
         end
     end)
 end
+
+function Promise.dynamic_add_media(options)
+    return Promise.new(function(resolve, reject)
+        local success = minetest.dynamic_add_media(options, resolve)
+        if not success then
+            reject()
+        end
+    end)
+end

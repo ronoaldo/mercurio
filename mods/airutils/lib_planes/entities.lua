@@ -26,9 +26,14 @@ end
 
 function airutils.on_deactivate(self)
     airutils.save_inventory(self)
+    local pos = self.object:get_pos()
+    if airutils.debug_log then
+        minetest.log("action","deactivating: "..self._vehicle_name.." from "..self.owner.." at position "..math.floor(pos.x)..","..math.floor(pos.y)..","..math.floor(pos.z))
+    end
 end
 
 function airutils.on_activate(self, staticdata, dtime_s)
+    local pos = self.object:get_pos()
     airutils.actfunc(self, staticdata, dtime_s)
     self._flap = false
 
@@ -64,6 +69,10 @@ function airutils.on_activate(self, staticdata, dtime_s)
     self._roll = 0
     self._pitch = 0
 
+    if airutils.debug_log then
+        minetest.log("action","activating: "..self._vehicle_name.." from "..self.owner.." at position "..math.floor(pos.x)..","..math.floor(pos.y)..","..math.floor(pos.z))
+    end
+
     if self._register_parts_method then
         self._register_parts_method(self)
     end
@@ -89,7 +98,7 @@ function airutils.on_activate(self, staticdata, dtime_s)
 	if not inv then
         airutils.create_inventory(self, self._trunk_slots)
 	else
-	    self.inv = inv
+	    self._inv = inv
     end
 
     airutils.seats_create(self)
@@ -108,6 +117,22 @@ function airutils.on_step(self,dtime,colinfo)
     
 --  physics comes first
     local vel = self.object:get_velocity()
+    local pos = self.object:get_pos()
+    local props = self.object:get_properties()
+
+-- handle visibility on radar
+    if (pos and pos.y < airutils.radarMinHeight and props.show_on_minimap) then
+        props.show_on_minimap = false
+        self.object:set_properties(props)
+    end
+    if (pos and pos.y >= airutils.radarMinHeight and not props.show_on_minimap) then
+        props.show_on_minimap = true
+        self.object:set_properties(props)
+    end
+    if self.isonground and props.show_on_minimap then
+        props.show_on_minimap = false
+        self.object:set_properties(props)
+    end
     
     if colinfo then 
 	    self.isonground = colinfo.touching_ground
@@ -134,7 +159,7 @@ function airutils.on_step(self,dtime,colinfo)
 end
 
 local function ground_pitch(self, longit_speed, curr_pitch)
-    newpitch = curr_pitch
+    local newpitch = curr_pitch
     if self._last_longit_speed == nil then self._last_longit_speed = 0 end
 
     -- Estado atual do sistema
@@ -167,6 +192,7 @@ function airutils.logic(self)
     local velocity = self.object:get_velocity()
     local curr_pos = self.object:get_pos()
     self._curr_pos = curr_pos --shared
+    self._last_accel = self.object:get_acceleration()
 
     self._last_time_command = self._last_time_command + self.dtime
 
@@ -177,18 +203,8 @@ function airutils.logic(self)
     local co_pilot = nil
     if self.co_pilot and self._have_copilot then co_pilot = minetest.get_player_by_name(self.co_pilot) end
 
-    local plane_properties = self.object:get_properties()
-    if self.isonground then
-        if plane_properties.show_on_minimap == true then
-            plane_properties.show_on_minimap = false
-            self.object:set_properties(plane_properties)
-        end
-    else
-        if plane_properties.show_on_minimap == false then
-            plane_properties.show_on_minimap = true
-            self.object:set_properties(plane_properties)
-        end
-    end
+    --test collision
+    airutils.testImpact(self, velocity, curr_pos)
 
     if player then
         local ctrl = player:get_player_control()
@@ -313,20 +329,36 @@ function airutils.logic(self)
         end
     end
 
+    --adjust elevator pitch (3d model)
+    self.object:set_bone_position("elevator", self._elevator_pos, {x=-self._elevator_angle*2 - 90, y=0, z=0})
+    --adjust rudder
+    self.object:set_bone_position("rudder", self._rudder_pos, {x=0,y=self._rudder_angle,z=0})
+    --adjust ailerons
+    if self._aileron_r_pos and self._aileron_l_pos then
+        local ailerons = self._rudder_angle
+        if self._invert_ailerons then ailerons = ailerons * -1 end
+        self.object:set_bone_position("aileron.r", self._aileron_r_pos, {x=-ailerons - 90,y=0,z=0})
+        self.object:set_bone_position("aileron.l", self._aileron_l_pos, {x=ailerons - 90,y=0,z=0})
+    end
 
-    if longit_speed == 0 and is_flying == false and is_attached == false and self._engine_running == false then
+    if (math.abs(velocity.x) < 0.1 and math.abs(velocity.z) < 0.1) and is_flying == false and is_attached == false and self._engine_running == false then
+        if self._ground_friction then
+            if not self.isinliquid then self.object:set_velocity({x=0,y=airutils.gravity*self.dtime,z=0}) end
+        end
         return
     end
 
     --adjust climb indicator
-    local climb_rate = velocity.y
+    local y_velocity = 0
+    if self._engine_running or is_flying then y_velocity = velocity.y end
+    local climb_rate =  y_velocity
     if climb_rate > 5 then climb_rate = 5 end
     if climb_rate < -5 then
         climb_rate = -5
     end
 
     -- pitch
-    local newpitch = airutils.get_plane_pitch(velocity, longit_speed, self._min_speed, self._angle_of_attack)
+    local newpitch = airutils.get_plane_pitch(y_velocity, longit_speed, self._min_speed, self._angle_of_attack)
 
     --for airplanes with cannard or pendulum wing
     local actuator_angle = self._elevator_angle
@@ -495,14 +527,12 @@ function airutils.logic(self)
         self._last_accell = new_accel
 	    self.object:move_to(curr_pos)
         --airutils.set_acceleration(self.object, new_accel)
-        local limit = 100
-        local vel_to_add = vector.multiply(new_accel,self.dtime)
-        vel_to_add.y = 0
-        self.object:add_velocity(vel_to_add)
-        self.object:set_acceleration({x=0,y=new_accel.y, z=0})
+        local limit = (self._max_speed/self.dtime)
+        if new_accel.y > limit then new_accel.y = limit end --it isn't a rocket :/
+
     else
         if stop == true then
-            self._last_accell = self.object:get_acceleration()
+            self._last_accell = vector.new() --self.object:get_acceleration()
             self.object:set_acceleration({x=0,y=0,z=0})
             self.object:set_velocity({x=0,y=0,z=0})
         end
@@ -511,7 +541,8 @@ function airutils.logic(self)
     if self.wheels then
         if is_flying == false then --isn't flying?
             --animate wheels
-            if math.abs(longit_speed) > 0.1 then
+            local min_speed_animation = 0.1
+            if math.abs(velocity.x) > min_speed_animation or math.abs(velocity.z) > min_speed_animation then
                 self.wheels:set_animation_frame_speed(longit_speed * 10)
             else
                 self.wheels:set_animation_frame_speed(0)
@@ -583,26 +614,11 @@ function airutils.logic(self)
         self._flap = false
     end
 
-
-    --adjust elevator pitch (3d model)
-    self.object:set_bone_position("elevator", self._elevator_pos, {x=-self._elevator_angle*2 - 90, y=0, z=0})
-    --adjust rudder
-    self.object:set_bone_position("rudder", self._rudder_pos, {x=0,y=self._rudder_angle,z=0})
-    --adjust ailerons
-    if self._aileron_r_pos and self._aileron_l_pos then
-        local ailerons = self._rudder_angle
-        if self._invert_ailerons then ailerons = ailerons * -1 end
-        self.object:set_bone_position("aileron.r", self._aileron_r_pos, {x=-ailerons - 90,y=0,z=0})
-        self.object:set_bone_position("aileron.l", self._aileron_l_pos, {x=ailerons - 90,y=0,z=0})
-    end
-
     -- calculate energy consumption --
     airutils.consumptionCalc(self, accel)
 
-    --test collision
-    airutils.testImpact(self, velocity, curr_pos)
-
     --saves last velocity for collision detection (abrupt stop)
+    self._last_accel = new_accel
     self._last_vel = self.object:get_velocity()
     self._last_longit_speed = longit_speed
     self._yaw = newyaw
@@ -611,39 +627,45 @@ function airutils.logic(self)
 end
 
 local function damage_vehicle(self, toolcaps, ttime, damage)
-    for group,_ in pairs( (toolcaps.damage_groups or {}) ) do
-        local tmp = ttime / (toolcaps.full_punch_interval or 1.4)
-
-        if tmp < 0 then
-	        tmp = 0.0
-        elseif tmp > 1 then
-	        tmp = 1.0
-        end
-
-        damage = damage + (toolcaps.damage_groups[group] or 0) * tmp
-        self.hp_max = self.hp_max - damage
-        airutils.setText(self, self._vehicle_name)
+    if (not toolcaps) then
+        return
     end
+    local value = toolcaps.damage_groups.fleshy or 0
+    if (toolcaps.damage_groups.vehicle) then
+        value = toolcaps.damage_groups.vehicle
+    end
+    damage = damage + value / 10
+    self.hp_max = self.hp_max - damage
+    airutils.setText(self, self._vehicle_name)
 end
 
 function airutils.on_punch(self, puncher, ttime, toolcaps, dir, damage)
-	local name = puncher:get_player_name()
-    if self.hp_max <= 0 then
-        airutils.destroy(self, name)
-    end
-    airutils.setText(self, self._vehicle_name)
-
-    -- lets permit destroying on the air
-    local is_flying = not self.colinfo.touching_ground
-    --if is_flying and not puncher:is_player() then
-    if not puncher:is_player() then
-        damage_vehicle(self, toolcaps, ttime, damage)
-    end
-    --end
+    local name = ""
+    local ppos = {}
 
     if not puncher or not puncher:is_player() then
 		return
 	end
+
+    if (puncher:is_player()) then
+	    name = puncher:get_player_name()
+        ppos = puncher:get_pos()
+        if (minetest.is_protected(ppos, name) and
+            airutils.protect_in_areas) then
+            return
+        end
+    end
+
+    if self.hp_max <= 0 then
+        airutils.destroy(self, name)
+        return
+    end
+    airutils.setText(self, self._vehicle_name)
+
+    if (string.find(puncher:get_wielded_item():get_name(), "rayweapon") or 
+        toolcaps.damage_groups.vehicle) then
+            damage_vehicle(self, toolcaps, ttime, damage)
+    end
 
     local is_admin = false
     is_admin = minetest.check_player_privs(puncher, {server=true})

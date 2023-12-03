@@ -9,7 +9,10 @@ minetest.register_node("farming:seed_barley", {
 	inventory_image = "farming_barley_seed.png",
 	wield_image = "farming_barley_seed.png",
 	drawtype = "signlike",
-	groups = {compostability = 48, seed = 1, snappy = 3, attached_node = 1, growing = 1},
+	groups = {
+		handy = 1, compostability = 48, seed = 1, snappy = 3, attached_node = 1,
+		growing = 1
+	},
 	paramtype = "light",
 	paramtype2 = "wallmounted",
 	walkable = false,

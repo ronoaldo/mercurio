@@ -34,3 +34,10 @@ otherworlds.settings.gravity = {
 	-- set to true to enable gravity
 	enable = minetest.settings:get_bool("otherworlds.gravity", false)
 }
+
+
+-- increase or decrease change of ores appearing in asteroids
+otherworlds.settings.ore_chance = {
+	-- default ore chance is multiplied by following value
+	value = tonumber(minetest.settings:get("otherworlds.ore_chance") or 27)
+}

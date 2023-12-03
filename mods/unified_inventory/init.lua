@@ -191,7 +191,10 @@ dofile(modpath.."/register.lua")
 if minetest.settings:get_bool("unified_inventory_bags") ~= false then
 	dofile(modpath.."/bags.lua")
 end
-
-dofile(modpath.."/item_names.lua")
-dofile(modpath.."/waypoints.lua")
+if minetest.settings:get_bool("unified_inventory_item_names") ~= false then
+	dofile(modpath.."/item_names.lua")
+end
+if minetest.settings:get_bool("unified_inventory_waypoints") ~= false then
+	dofile(modpath.."/waypoints.lua")
+end
 dofile(modpath.."/legacy.lua") -- mod compatibility
