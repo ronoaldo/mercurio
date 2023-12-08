@@ -86,6 +86,8 @@ for i in $(seq 1 3) ; do
     tar \
         --exclude=mapserver.tiles \
         --exclude=mapserver.sqlite \
+        --exclude='*area-export*' \
+        --exclude='mercurio-export*' \
         -cf "$BACKUP_FILE" \
         .minetest/world && break
     sleep $(( i * 2 ))

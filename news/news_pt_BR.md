@@ -1,5 +1,22 @@
 ![0,0,r](item:///default:furnace)
 
+# **Importante**
+
+Prezados jogadores: o servidor **Mercurio** será desligado em Janeiro de 2024.
+O mantenedor do servidor, `ronoaldo`, irá encerrar a hospedagem do servidor
+em janeiro, e a partir de hoje não será mais possível criar novas contas.
+
+Não queremos que as suas construções sejam perdidas, então iremos realizar
+uma exportação do mapa com todas as construções para que você possa continuar
+jogando offline. Somente as áreas protegidas serão exportadas, então é
+**necessário proteger as suas construções**. Você também pode utilizar o mod
+`block_exchange` para fazer o upload de suas construções e baixar somente elas
+para jogar localmente.
+
+.
+
+---------------------
+
 # **Bem-vindo ao Servidor Mercurio!**
 
 O servidor é desenhado para ser amigável e agradável! Por favor:
@@ -15,55 +32,3 @@ O servidor é desenhado para ser amigável e agradável! Por favor:
 **Moderadores reservam o direito de banir jogadores que não se _comportem aproriadamente_**
 
 .
-
----------------------
-
-# **Importante**
-
-**Proteja as suas construções**. É importante proteger as suas áreas
-construídas porque o servidor irá passar por uma **limpeza massiva**.
-Isso significa que **`áreas não protegidas serão removidas`**.
-Isso é necessário porque o mapa do servidor está com mais de 80GB de espaço.
-Use itens do mod `protector`:
-![0,0](item:///protector:protect)
-
-Ou use no chat `/help` para aprender como usar o mod areas e seus comandos.
-
--------------------------------------------
-
-
-# **Atualizações do Servidor, Dezembro de 2023**
-
-## Atualizações de Dezembro de 2023
-
-Nossa atualização regular de mods para obter as novas funcionalidades e
-as melhorias do ContentDB.
-
-Esta semana os seguintes mods foram atualizados:
-
-```
-    3d_armor
-    airutils
-    anvil
-    blockexchange
-    bonemeal
-    carpets
-    digilines
-    farming
-    homedecor_modpack
-    ju52
-    mobs
-    mtzip
-    mydoors
-    other_worlds
-    pipeworks
-    promise
-    signs_lib
-    tpr
-    travelnet
-    tubelib2
-    unifieddyes
-    unified_inventory
-    x_bows
-```
-

@@ -1,5 +1,21 @@
 ![0,0,r](item:///default:furnace)
 
+# **Important**
+
+Dear players: the server **Mercurio** will be shut down in Jan, 2024.
+The server maintainer, `ronoaldo`, will stop the server hosting in January,
+and starting from now it is not possible to create new accounts.
+
+We don't want your buildings to be lost, so we will be making an export
+of the server map so you can keep playing offline.
+Only protected areas will be exported, so it is very important to
+**protect your buildings**. You can also use the mod `block_exchange`
+to upload your areas and download them to play offline.
+
+.
+
+---------------------
+
 # **Welcome to Mercurio Server!**
 
 The server is designed to be friendly and enjoyable! Please:
@@ -15,55 +31,3 @@ The server is designed to be friendly and enjoyable! Please:
 **Moderators reserve the right to ban players that do not _behave properly_**
 
 .
-
----------------------
-
-# **Important**
-
-**Protect your buildings**. It is important to protect your areas
-and buildings because the server will have a **massive map cleanup**.
-This means that **`unprotected regions will be removed!`**.
-This is necessary because the server map is over 80G of space.
-Use items from the protector mod:
-![0,0](item:///protector:protect)
-
-Or use `/help` to learn how to use areas mod with the commands.
-
--------------------------------------------
-
-
-# **Server Updates, December 2023**
-
-## Updates for Dec, 12
-
-Our regular mod updates to fetch new features and improvements from
-ContentDB.
-
-This mods were updated this week:
-
-```
-    3d_armor
-    airutils
-    anvil
-    blockexchange
-    bonemeal
-    carpets
-    digilines
-    farming
-    homedecor_modpack
-    ju52
-    mobs
-    mtzip
-    mydoors
-    other_worlds
-    pipeworks
-    promise
-    signs_lib
-    tpr
-    travelnet
-    tubelib2
-    unifieddyes
-    unified_inventory
-    x_bows
-```
-
