@@ -1,0 +1,4 @@
+#    If enabled, users can create an account. Setting this to false is desirable
+#    when you're using bulk account creation and don't want users to be able to
+#    create their own accounts.
+accountmgr.allow_user_register (Allow Users to Register) bool true
