@@ -82,3 +82,8 @@ fix-perms:
 updated-mods:
 	git status --short | grep mods/ | cut -f 2 -d/ | sort | uniq
 
+connection-list:
+	grep 'joins game' .minetest/logs/debug* |\
+		while read date time srv player ip rest ; do \
+		echo "$$ip|$${player}" | tr -d '[' | tr -d ']'; \
+		done | sort | uniq
