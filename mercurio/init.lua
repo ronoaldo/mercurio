@@ -245,6 +245,11 @@ if is_beta_server == "true" then
     dofile(path .. "/beta.lua")
 end
 
+-- Load server chat filter
+filter.import_file(path .. "/bannedwords/pt_BR.txt")
+filter.import_file(path .. "/bannedwords/es.txt")
+filter.import_file(path .. "/bannedwords/en.txt")
+
 -- Load server-only craft items
 dofile(path .. "/items.lua")
 

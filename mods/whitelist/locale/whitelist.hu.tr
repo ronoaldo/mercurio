@@ -1,0 +1,24 @@
+# version 1.2.0
+# author(s): nyomi
+# reviewer(s):
+# textdomain: whitelist
+
+# api.lua
+[!] The whitelist is already enabled!=[!] A tiltólista már engedélyezve van!
+Whitelist successfully enabled=A tiltólista sikeresen engedélyezve lett
+[!] The whitelist is already disabled!=[!] A tiltólist már le van tiltva!
+Whitelist successfully disabled=A tiltólista le lett tiltva
+[!] @1 is already whitelisted!=[!] @1 már ki lett tiltva
+[!] There is no player whitelisted with that name...=[!] Nincs ezzel a névvel játékos kitiltva …
+[!] You can't remove yourself!=[!] nemtudod magadat kitörölni!
+[!] Whitelist can't be empty when enabled!=[!] A tiltólista nem lehet üres az engedélyezésekor!
+Whitelisted players: =Kitiltott játékosok: 
+
+# commands.lua
+Whitelist commands. <player> is only needed for 'add' and 'remove'=Parancsok engedélyezési listája. A <Játékos> csak az "add" és "Remove" műveletekhez szükséges
+player=Játékos
+
+#player_manager.lua
+You're not whitelisted!=Nem vagy letiltva!
+
+

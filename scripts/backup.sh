@@ -88,6 +88,7 @@ for i in $(seq 1 3) ; do
         --exclude=mapserver.sqlite \
         --exclude='*area-export*' \
         --exclude='mercurio-export*' \
+        --exclude="*new-users-*" \
         -cf "$BACKUP_FILE" \
         .minetest/world && break
     sleep $(( i * 2 ))

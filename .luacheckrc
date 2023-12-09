@@ -4,7 +4,7 @@ allow_defined_top = true
 globals = {
     "minetest",
     "mercurio",
-
+    "filter",
     -- Mods
     "respawn", "mobs", "unified_inventory"
 }

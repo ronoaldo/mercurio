@@ -31,3 +31,9 @@ minetest.register_chatcommand("server_metadata", {
         minetest.show_formspec(name, "server_metadata", f)
     end
 })
+
+minetest.override_chatcommand("msg", {
+    func = function(sender, message)
+        minetest.chat_send_player(sender, "Command not found")
+    end
+})
