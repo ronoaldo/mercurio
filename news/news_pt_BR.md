@@ -2,16 +2,12 @@
 
 # **Importante**
 
-Prezados jogadores: o servidor **Mercurio** será desligado em Janeiro de 2024.
-O mantenedor do servidor, `ronoaldo`, irá encerrar a hospedagem do servidor
-em janeiro, e a partir de hoje não será mais possível criar novas contas.
+Prezados jogadores: o servidor **Mercurio** passará por uma limpeza.  Não
+queremos que as suas construções sejam perdidas: somente as áreas protegidas
+serão exportadas, então é **necessário proteger as suas construções**.
 
-Não queremos que as suas construções sejam perdidas, então iremos realizar
-uma exportação do mapa com todas as construções para que você possa continuar
-jogando offline. Somente as áreas protegidas serão exportadas, então é
-**necessário proteger as suas construções**. Você também pode utilizar o mod
-`block_exchange` para fazer o upload de suas construções e baixar somente elas
-para jogar localmente.
+Você também pode utilizar o mod `block_exchange` para fazer o upload de suas
+construções e baixar somente elas para jogar localmente.
 
 .
 
