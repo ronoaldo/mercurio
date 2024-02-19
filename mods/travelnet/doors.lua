@@ -132,7 +132,7 @@ if minetest.get_modpath("default") then
 	travelnet.register_door("travelnet:elevator_door_glass", { "travelnet_elevator_door_glass.png" }, "default:glass")
 	travelnet.register_door("travelnet:elevator_door_tin",   { "default_clay.png" },              "default:tin_ingot")
 
-elseif minetest.registered_nodes["mcl_core:wood"] then
+elseif minetest.get_modpath("mcl_core") then
 	travelnet.register_door("travelnet:elevator_door_steel", { "default_stone.png" },           "mcl_core:iron_ingot")
 	travelnet.register_door("travelnet:elevator_door_glass", { "travelnet_elevator_door_glass.png" }, "mcl_core:glass")
 	-- travelnet.register_door("travelnet:elevator_door_tin",   { "default_clay.png" },              "default:tin_ingot")

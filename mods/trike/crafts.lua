@@ -1,17 +1,19 @@
+local S = trike.S
+
 -- wing
 minetest.register_craftitem("trike:wing",{
-	description = "trike wing",
+	description = S("trike wing"),
 	inventory_image = "trike_wing_ico.png",
 })
 -- fuselage
 minetest.register_craftitem("trike:fuselage",{
-	description = "trike fuselage",
+	description = S("trike fuselage"),
 	inventory_image = "trike_body.png",
 })
 
 -- trike
 minetest.register_craftitem("trike:trike", {
-	description = "Ultralight Trike",
+	description = S("Ultralight Trike"),
 	inventory_image = "trike.png",
     liquids_pointable = true,
 

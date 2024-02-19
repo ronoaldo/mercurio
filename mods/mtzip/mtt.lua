@@ -2,9 +2,9 @@
 mtt.register("timestamp parsing", function(callback)
     local date = 21621
     local time = 23636
-    local o = mtzip.common.fromDosTime(date, time)
+    local o = mtzip.fromDosTime(date, time)
 
-    local d2, t2 = mtzip.common.toDosTime(o)
+    local d2, t2 = mtzip.toDosTime(o)
     assert(date == d2)
     assert(time == t2)
     callback()

@@ -44,9 +44,10 @@ end)
 Wait for multiple http requests:
 ```lua
 local http = minetest.request_http_api()
+local toJson = function(res) return res.json() end
 
-local p1 = Promise.http(http, "http://localhost/x")
-local p2 = Promise.http(http, "http://localhost/y")
+local p1 = Promise.http(http, "http://localhost/x"):next(toJson)
+local p2 = Promise.http(http, "http://localhost/y"):next(toJson)
 
 Promise.all(p1, p2):next(function(values)
     local x = values[1]
@@ -190,7 +191,6 @@ Http query
 * `http` The http instance returned from `minetest.request_http_api()`
 * `url` The url to call
 * `opts` Table with options:
-  * `json` parse result as json (default: false)
   * `method` The http method (default: "GET")
   * `timeout` Timeout in seconds (default: 10)
   * `data` Data to transfer, serialized as json if type is `table`
@@ -201,19 +201,32 @@ Examples:
 local http = minetest.request_http_api()
 
 -- call chuck norris api: https://api.chucknorris.io/ and expect json-response
-Promise.http(http, "https://api.chucknorris.io/jokes/random", { json = true })
-:next(function(joke)
+Promise.http(http, "https://api.chucknorris.io/jokes/random"):next(function(res)
+    return res.json()
+end):next(function(joke)
     assert(type(joke.value) == "string")
 end)
 
 -- post json-payload with 10 second timeout and expect raw string-response (or error)
-Promise.http(http, "http://localhost/stuff", { method = "POST", timeout = 10, data = { x=123 } })
-:next(function(result)
+Promise.http(http, "http://localhost/stuff", { method = "POST", timeout = 10, data = { x=123 } }):next(function(res)
+    return res.text()
+end):next(function(result)
     assert(result)
-end):catch(function(result)
-    -- result.code can be 0 if the timeout was reached
-    assert(result.code == 500)
-    assert(result.data == "Server error")
+end):catch(function(res)
+    -- something went wrong with the http call itself (no response)
+    -- dump the raw http response (res.code, res.timeout)
+    print(dump(res))
+end)
+```
+
+## `Promise.mods_loaded()`
+
+Resolved on mods loaded (`minetest.register_on_mods_loaded`)
+
+Example:
+```lua
+Promise.mods_loaded():next(function()
+    -- stuff that runs when all mods are loaded
 end)
 ```
 

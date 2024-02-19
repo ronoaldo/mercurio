@@ -1,5 +1,9 @@
 local MP = minetest.get_modpath("promise")
 
+Promise = {
+	api_version = 1
+}
+
 dofile(MP.."/promise.lua")
 dofile(MP.."/util.lua")
 dofile(MP.."/http.lua")

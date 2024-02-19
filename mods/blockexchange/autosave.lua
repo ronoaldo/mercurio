@@ -2,16 +2,63 @@
 -- list of changed mapblocks marked for export
 local mapblocks = {}
 
+-- list of currently autosaving areas
+local busy_areas = {}
+
+function blockexchange.is_area_autosaving(area_id)
+    return busy_areas[area_id]
+end
+
 local function worker()
+    local pending_entries = {} -- area.id => { pos1, pos2, area }
+
     for mapblock_pos_str in pairs(mapblocks) do
         local mapblock_pos = minetest.string_to_pos(mapblock_pos_str)
         local pos1, pos2 = blockexchange.get_mapblock_bounds_from_mapblock(mapblock_pos)
-        print(pos1, pos2) --TODO
-        --[[
-        local list = autosave_areas:get_areas_in_area(pos1, pos2, true, true, true)
-        for _, entry in pairs(list) do
+
+        local list = blockexchange.get_areas_in_area(pos1, pos2)
+        for _, area in ipairs(list) do
+            if area.autosave and area.playername then
+                if pending_entries[area.id] then
+                    -- update existing border
+                    pending_entries[area.id].pos1 = blockexchange.sort_pos(pending_entries[area.id].pos1, pos1)
+                    _, pending_entries[area.id].pos2 = blockexchange.sort_pos(pending_entries[area.id].pos2, pos2)
+                else
+                    -- create new entry
+                    pending_entries[area.id] = {
+                        pos1 = pos1,
+                        pos2 = pos2,
+                        area = area
+                    }
+                end
+            end
         end
-        --]]
+    end
+
+    for _, entry in pairs(pending_entries) do
+        local area = entry.area
+        minetest.log("action",
+            "[blockexchange] autosaving area " .. area.id ..
+            " playername: " .. area.playername ..
+            " username: " .. area.username ..
+            " pos1: " .. minetest.pos_to_string(entry.pos1) ..
+            " pos2: " .. minetest.pos_to_string(entry.pos2)
+        )
+        busy_areas[area.id] = true
+        local promise = blockexchange.save_update_area(area.playername,
+            area.pos1, area.pos2,
+            entry.pos1, entry.pos2,
+            area.username, area.schema_uid
+        )
+        promise:next(function()
+            busy_areas[area.id] = nil
+        end):catch(function(e)
+            busy_areas[area.id] = nil
+            minetest.log("error",
+                "[blockexchange] autosave failed for area: " .. area.id ..
+                " reason: " .. (e or "<unkown>")
+            )
+        end)
     end
 
     mapblocks = {}

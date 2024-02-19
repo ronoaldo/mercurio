@@ -1,8 +1,3 @@
-
---------------
--- Manual --
---------------
-
 function steampunk_blimp.getPlaneFromPlayer(player)
     local seat = player:get_attach()
     if seat then
@@ -58,23 +53,81 @@ function steampunk_blimp.pax_formspec(name)
     minetest.show_formspec(name, "steampunk_blimp:passenger_main", basic_form)
 end
 
-function steampunk_blimp.logo_formspec(name)
-    local basic_form = table.concat({
-        "formspec_version[3]",
-        "size[6,4]",
-	}, "")
-
-    local logos = {"blimp_clover.png","blimp_liz.png","blimp_shotting_star.png","blimp_skull.png", "blimp_jack.png",}
-    local logolist = ""
-    for k, v in pairs(logos) do
-        logolist = logolist .. v .. ","
+local default_logos = {
+    "blimp_clover.png",
+    "blimp_liz.png",
+    "blimp_shotting_star.png",
+    "blimp_skull.png",
+    "blimp_jack.png",
+    "blimp_xmas.png",
+}
+function steampunk_blimp.logo_ext_formspec(name, t_index, t_page, t_type)
+    t_index = t_index or 1
+    t_page = t_page or 1
+    t_type = t_type or 1
+--[[
+    formspec_version[4]
+    size[12,9]
+    label[0.5,0.9;Type]
+    dropdown[2,0.5;3,0.8;t_type;Default,Nodes,Entities,Items;1]
+    textlist[0.5,1.5;4.5,6;;;1;false]
+    image[5.5,1.5;6,6;]
+    label[0.5,8.2;Page]
+    dropdown[1.8,7.8;1.9,0.8;t_page;1,2,3;1]
+    button[8.5,7.8;3,0.8;set;Set Texture]
+]]--
+    if airutils.isTextureLoaded then
+        airutils.isTextureLoaded('heart.png') --force the textures first load
+    else
+        minetest.chat_send_player(name,core.colorize('#ff0000', " >>> you are using an old version of airutils, update it first"))
+        return
     end
 
-    basic_form = basic_form.."label[1,1.0;Select a logo:]"
-    basic_form = basic_form.."dropdown[1,1.2;4,0.6;logo;"..logolist..";0;false]"
-    basic_form = basic_form.."button[1,2.2;4,0.8;set_logo;Set Blimp Logo]"
+    local basic_form = table.concat({
+        "formspec_version[4]",
+        "size[12,9]",
+	}, "")
 
-    minetest.show_formspec(name, "steampunk_blimp:logo_main", basic_form)
+    local textures = {}
+    if t_type == "1" or t_type == 1 then textures = airutils.properties_copy(default_logos) end
+    if t_type == "2" or t_type == 2 then textures = airutils.properties_copy(airutils.all_game_textures) end
+    if t_type == "3" or t_type == 3 then textures = airutils.properties_copy(airutils.all_entities_textures) end
+    if t_type == "4" or t_type == 4 then textures = airutils.properties_copy(airutils.all_items_textures) end
+
+    local text_count = #textures
+    local items_per_page = 50
+    local pages = math.ceil(text_count / items_per_page)
+    local logolist = ""
+    local items_count = 0
+    local item_start = ((t_page-1)*items_per_page) + 1
+    for k, v in pairs(textures) do
+        if k >= item_start and items_count < items_per_page then
+            logolist = logolist .. v .. ","
+            items_count = items_count + 1
+        end
+        if items_count >= items_per_page then break end
+    end
+
+    local pages_list = ""
+    for i = 1,pages,1 
+    do 
+       pages_list = pages_list .. i .. ","
+    end
+
+    basic_form = basic_form.."label[0.5,0.9;Type]"
+    basic_form = basic_form.."dropdown[2,0.5;3,0.8;t_type;Default,Nodes,Entities,Items;"..t_type..";true]"
+    basic_form = basic_form.."textlist[0.5,1.5;4.5,6;logos;"..logolist..";"..t_index..";false]"
+    local curr_real_index = (items_per_page * (t_page-1)) + t_index
+    local texture_name = textures[curr_real_index] or ""
+    basic_form = basic_form.."image[5.5,1.5;6,6;"..texture_name.."]"
+    basic_form = basic_form.."label[0.6,8.2;Page]"
+    basic_form = basic_form.."dropdown[1.8,7.8;1.9,0.8;t_page;"..pages_list..";"..t_page..";true]"
+    basic_form = basic_form.."button[8.5,7.8;3,0.8;set_texture;Set Texture]"
+
+    basic_form = basic_form.."field[5.3,20.0;3,0.8;texture_name;;"..texture_name.."]"
+    basic_form = basic_form.."field[5.3,21.0;3,0.8;last_type;;"..t_type.."]"
+
+    minetest.show_formspec(name, "steampunk_blimp:logo_ext", basic_form)
 end
 
 function steampunk_blimp.owner_formspec(name)
@@ -89,6 +142,12 @@ function steampunk_blimp.owner_formspec(name)
     basic_form = basic_form.."button[3,2.4;2,1;disembark_r;Right >>]"
 
     minetest.show_formspec(name, "steampunk_blimp:owner_main", basic_form)
+end
+
+function set_list(list)
+  local set = {}
+  for _, l in ipairs(list) do set[l] = true end
+  return set
 end
 
 minetest.register_on_player_receive_fields(function(player, formname, fields)
@@ -144,20 +203,49 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
         end
         minetest.close_formspec(name, "steampunk_blimp:passenger_main")
 	end
-    if formname == "steampunk_blimp:logo_main" then
+    if formname == "steampunk_blimp:logo_ext" then
         local name = player:get_player_name()
         local plane_obj = steampunk_blimp.getPlaneFromPlayer(player)
         if plane_obj == nil then
-            minetest.close_formspec(name, "steampunk_blimp:logo_main")
+            minetest.close_formspec(name, "steampunk_blimp:logo_ext")
             return
         end
         local ent = plane_obj:get_luaentity()
         if ent then
-		    if fields.logo or fields.set_logo then
-                steampunk_blimp.set_logo(ent, fields.logo)
+            if fields.set_texture then
+                if ent.name == "steampunk_blimp:blimp" then
+                    if ent.owner == name or minetest.check_player_privs(name, {protection_bypass=true}) then
+                        if fields.texture_name then
+                            local image_name = fields.texture_name
+                            local logo_list = set_list(default_logos)
+                            if airutils.isTextureLoaded(image_name) or logo_list[image_name] then
+                                steampunk_blimp.set_logo(ent, image_name)
+                                minetest.chat_send_player(name,core.colorize('#00ff00', " >>> texture '"..image_name.."' set"))
+                                --minetest.close_formspec(name, "steampunk_blimp:logo_ext")
+                                return
+                            end
+                        end
+                    end
+                end
+            end
+		    if fields.logos or fields.t_page then
+                --minetest.close_formspec(name, "steampunk_blimp:logo_ext")
+                --steampunk_blimp.logo_ext_formspec(name,fields.logos)
+                local result = minetest.explode_textlist_event(fields.logos)
+                if result.type == "CHG" then
+                    --minetest.chat_send_all(dump(result.index))
+                    --minetest.close_formspec(name, "steampunk_blimp:logo_ext")
+                    steampunk_blimp.logo_ext_formspec(name,result.index,fields.t_page,fields.last_type)
+                    return
+                end
+                steampunk_blimp.logo_ext_formspec(name,1,fields.t_page,fields.last_type)
+                return
 		    end
+            if fields.t_type then
+                steampunk_blimp.logo_ext_formspec(name,1,1,fields.t_type)
+                return
+            end
         end
-        minetest.close_formspec(name, "steampunk_blimp:logo_main")
     end
     if formname == "steampunk_blimp:pilot_main" then
         local name = player:get_player_name()
@@ -419,10 +507,12 @@ minetest.register_chatcommand("blimp_lock", {
 })
 
 minetest.register_chatcommand("blimp_logo", {
-	params = "",
+	params = "<image_name.png>",
 	description = "Changes blimp logo",
 	privs = {interact = true},
 	func = function(name, param)
+        local image_name = param --"blimp_alpha.png^"..param
+        local colorstring = core.colorize('#ff0000', " >>> you are not inside a blimp")
         local player = minetest.get_player_by_name(name)
         local attached_to = player:get_attach()
 
@@ -432,19 +522,32 @@ minetest.register_chatcommand("blimp_logo", {
                 local entity = seat:get_luaentity()
                 if entity then
                     if entity.name == "steampunk_blimp:blimp" then
-                        if entity.owner == name then
-                            steampunk_blimp.logo_formspec(name)
-                            --minetest.chat_send_all(dump(entity._shared_owners))
+                        if entity.owner == name or minetest.check_player_privs(name, {protection_bypass=true}) then
+                            if airutils.isTextureLoaded then
+                                if param == '' then
+                                    steampunk_blimp.logo_ext_formspec(name)
+                                else
+                                    local logo_list = set_list(default_logos)
+                                    if airutils.isTextureLoaded(image_name) or logo_list[image_name] then
+                                        steampunk_blimp.set_logo(entity, image_name)
+                                        minetest.chat_send_player(name,core.colorize('#00ff00', " >>> texture '"..image_name.."' set"))
+                                    else
+                                        minetest.chat_send_player(name,core.colorize('#ff0000', " >>> texture '"..image_name.."' not found"))
+                                    end
+                                end
+                            else
+                                minetest.chat_send_player(name,core.colorize('#ff0000', " >>> you are using an old version of airutils, update it first"))
+                            end
                         else
                             minetest.chat_send_player(name,core.colorize('#ff0000', " >>> only the owner can do this action"))
                         end
                     else
-			            minetest.chat_send_player(name,core.colorize('#ff0000', " >>> you are not inside a blimp to perform this command"))
+			            minetest.chat_send_player(name,colorstring)
                     end
                 end
             end
 		else
-			minetest.chat_send_player(name,core.colorize('#ff0000', " >>> you are not inside a blimp to perform this command"))
+			minetest.chat_send_player(name,colorstring)
 		end
 	end
 })

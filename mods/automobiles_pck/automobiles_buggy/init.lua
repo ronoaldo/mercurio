@@ -2,22 +2,24 @@
 -- constants
 --
 buggy={}
-buggy.LONGIT_DRAG_FACTOR = 0.14*0.14
-buggy.LATER_DRAG_FACTOR = 25.0
 buggy.gravity = automobiles_lib.gravity
-buggy.max_speed = 15
-buggy.max_acc_factor = 5
 
-BUGGY_GAUGE_FUEL_POSITION =  {x=0,y=4.65,z=15.17}
+buggy.S = nil
 
-buggy.front_wheel_xpos = 8
-buggy.rear_wheel_xpos = 8
+if(minetest.get_translator ~= nil) then
+    buggy.S = minetest.get_translator(minetest.get_current_modname())
+
+else
+    buggy.S = function ( s ) return s end
+
+end
+
+local S = buggy.S
 
 dofile(minetest.get_modpath("automobiles_lib") .. DIR_DELIM .. "custom_physics.lua")
 dofile(minetest.get_modpath("automobiles_lib") .. DIR_DELIM .. "control.lua")
 dofile(minetest.get_modpath("automobiles_lib") .. DIR_DELIM .. "fuel_management.lua")
 dofile(minetest.get_modpath("automobiles_lib") .. DIR_DELIM .. "ground_detection.lua")
-dofile(minetest.get_modpath("automobiles_lib") .. DIR_DELIM .. "entities.lua")
 dofile(minetest.get_modpath("automobiles_buggy") .. DIR_DELIM .. "buggy_forms.lua")
 dofile(minetest.get_modpath("automobiles_buggy") .. DIR_DELIM .. "buggy_utilities.lua")
 dofile(minetest.get_modpath("automobiles_buggy") .. DIR_DELIM .. "buggy_entities.lua")

@@ -16,13 +16,15 @@ blockexchange = {
 	pos2 = {} -- name -> pos
 }
 
+assert(mtzip.api_version == 1, "mtzip api compatibility")
+assert(Promise.api_version == 1, "Promise api compatibility")
+
 if not blockexchange.is_online then
 	minetest.log("warning", "[blockexchange] the http api is not enabled, functionality is limited to local operations")
 end
 
 -- http api
 if blockexchange.is_online then
-	loadfile(MP.."/api/util.lua")(http, blockexchange.url)
 	loadfile(MP.."/api/info.lua")(http, blockexchange.url)
 	loadfile(MP.."/api/schema.lua")(http, blockexchange.url)
 	loadfile(MP.."/api/schemapart.lua")(http, blockexchange.url)
@@ -38,9 +40,14 @@ dofile(MP.."/token.lua")
 dofile(MP.."/license.lua")
 dofile(MP.."/hud.lua")
 dofile(MP.."/areas.lua")
--- dofile(MP.."/autosave.lua")
+dofile(MP.."/autosave.lua")
 
 -- utils
+dofile(MP.."/util/pointed.lua")
+dofile(MP.."/util/placer_tool.lua")
+dofile(MP.."/util/placer_entity.lua")
+dofile(MP.."/util/placer_preview.lua")
+dofile(MP.."/util/remove_nodes.lua")
 dofile(MP.."/util/player_area.lua")
 dofile(MP.."/util/compare_area.lua")
 dofile(MP.."/util/ignored_content_ids.lua")
@@ -71,10 +78,12 @@ if blockexchange.is_online then
 	dofile(MP.."/commands/license.lua")
 	dofile(MP.."/commands/user.lua")
 	dofile(MP.."/commands/allocate_chat.lua")
+	dofile(MP.."/commands/placer.lua")
 	dofile(MP.."/commands/save_chat.lua")
 	dofile(MP.."/commands/save_update_chat.lua")
 	dofile(MP.."/commands/load_update_chat.lua")
 	dofile(MP.."/commands/load_chat.lua")
+	dofile(MP.."/commands/autosave.lua")
 end
 dofile(MP.."/commands/pos.lua")
 dofile(MP.."/commands/area.lua")
@@ -89,6 +98,8 @@ dofile(MP.."/commands/save_local_chat.lua")
 dofile(MP.."/commands/emerge.lua")
 dofile(MP.."/commands/emerge_chat.lua")
 dofile(MP.."/commands/protectioncheck.lua")
+dofile(MP.."/commands/cleanup.lua")
+dofile(MP.."/commands/cleanup_chat.lua")
 
 -- worker functions
 dofile(MP.."/worker/load_worker.lua")
@@ -96,6 +107,7 @@ dofile(MP.."/worker/save_worker.lua")
 dofile(MP.."/worker/save_update_worker.lua")
 dofile(MP.."/worker/emerge_worker.lua")
 dofile(MP.."/worker/protectioncheck_worker.lua")
+dofile(MP.."/worker/cleanup_worker.lua")
 
 if minetest.get_modpath("mtt") then
 	dofile(MP .. "/mtt/serialize_spec.lua")

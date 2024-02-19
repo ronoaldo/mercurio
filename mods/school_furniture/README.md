@@ -29,15 +29,16 @@ large industrial model
  
 <h3>school_furniture:table_teacher</h3>  
 A big table for the teacher, simple
-<pre>
+
 recipe
+<pre>
 🪵,🪵,🪵,
 🤘,"",🤘,
 🤘,"",🤘,
  </pre>
  
 <h3>school_furniture:colored_hands #colored</h3>
-Hands drawn and colored the same in children's schools,
+Hands drawn and colored the same in children's schools.
 <pre>
 recipe
 🗞️,🗞️,🗞️,
@@ -47,7 +48,16 @@ recipe
 recipe colored
 ✋, ✏️
 </pre>
-  
+
+<h3>Programmer Block</h3>
+Adds a block that can save the codes of players studying programming.
+<pre>
+recipe
+🪵,🪨,🪵,
+🪵,🪩,🪵,
+🪵,🪵,🪵,
+</pre>
+ 
 <h3>school_cabinet</h3>
   Different colors of school cabinets for decoration
 <pre>

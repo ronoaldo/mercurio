@@ -105,7 +105,7 @@ ju52.plane_properties = {
 	initial_properties = {
 	    physical = true,
         collide_with_objects = false,
-	    collisionbox = {-1.2, -2.31, -1.2, 1.2, 1, 1.2},
+	    collisionbox = {-5, -2.31, -5, 5, 1, 5},
 	    selectionbox = {-5, -2.31, -5, 5, 1, 5},
 	    visual = "mesh",
         backface_culling = false,
@@ -130,6 +130,7 @@ ju52.plane_properties = {
             "ju52_engine.png", "ju52_black.png", --motor
             "ju52_engine.png", "ju52_black.png", --motores
             ju52.skin_texture, --fuselagem
+            "airutils_name_canvas.png",
             "ju52_black.png", -- aros mostradores
             "ju52_climber.png", --climbers
             "ju52_speed.png", --indicadores de velocidade
@@ -249,6 +250,8 @@ ju52.plane_properties = {
     _plane_y_offset_for_bullet = 1,
     _custom_punch_when_attached = ju52._custom_punch_when_attached, --the method to execute click action inside the plane
     _custom_step_additional_function = ju52.step_additional_function,
+    _name_color = 0,
+    _name_hor_aligment = 3.0,
 
     get_staticdata = airutils.get_staticdata,
     on_deactivate = airutils.on_deactivate,

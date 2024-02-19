@@ -1,17 +1,26 @@
 ## Nether Monsters
 
+### Settings
+
+In the init.lua file you can enable or disable the spawning of the netherman and dragon by setting
+nethermobs.NETHERMAN_ENABLED and
+nethermobs.DRAGON_ENABLED
+to true or false.
+
+You can also change the spawn heights for the netherman and dragon (for example to allow them to spawn in the overworld and transform the ground to nether sand).
+
 ### Nether Man
 
-The principal habitant of the nether world, if the nether man go to your world the sand and dirt is comming to transform into nether sand, but the nether monsters take more damage from the water.
+The nether man is the principal habitant of the nether world, it transforms nodes like sand and dirt into nether sand.
 
 ### Nether Dragon
 
-The legendary nether dragon is the nether king and can destroy all the world in a lot of seconds, this drop a special item whit more resistance called nether dragon scale, and dragon egg to spawn The legendary nether dragon (tamed).
+The legendary nether dragon is the nether king and breathes deadly fire upon players. It drops a special item with more resistance, called nether dragon scale, and a dragon egg to spawn a tamed nether dragon.
 
 ### Nether Dragon scales
 
-Whit that item the players can craft dragon armor, dragon blocks and dragon stairs or slabs, more powerful and whit more resistance.
+With that item the players can craft resistant dragon scale blocks (including stairs and slabs) and of course the dragon armor (if using the 3d-armor mod).
 
 ### Tamed Nether dragon
 
-This only can be spawned whit a dragon egg, if you right click that whit a saddle you can start to drive and fly whit the dragon ( only owner can make this ).
+The tamed nether dragon can only be spawned with a dragon egg. If you right click on it with a saddle, you (as the owner) can start to drive and fly with the dragon. You also can catch the dragon using the lasso.

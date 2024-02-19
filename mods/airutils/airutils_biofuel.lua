@@ -1,7 +1,7 @@
 ----------
 --biofuel
 ----------
-
+local S = airutils.S
 local module_name = "airutils"
 
 if minetest.get_modpath("technic") then
@@ -48,7 +48,7 @@ end
 -- biofuel
 local new_gallon_id = "airutils:biofuel"
 minetest.register_craftitem(new_gallon_id,{
-	description = "Bio Fuel",
+	description = S("Bio Fuel"),
 	inventory_image = "airutils_biofuel_inv.png",
 })
 
@@ -83,7 +83,7 @@ local biofueldistiller_formspec = "size[8,9]"
 	.. "image[3.5,1;1,1;gui_furnace_arrow_bg.png^[transformR270]"
 
 minetest.register_node( module_name .. ":biofuel_distiller", {
-	description = "Biofuel Distiller",
+	description = S("Biofuel Distiller"),
 	tiles = {"airutils_black.png", "airutils_aluminum.png", "airutils_copper.png" },
 	drawtype = "mesh",
 	mesh = "airutils_biofuel_distiller.b3d",
@@ -101,7 +101,7 @@ minetest.register_node( module_name .. ":biofuel_distiller", {
 		local meta = minetest.get_meta(pos)
 
 		meta:set_string("formspec", biofueldistiller_formspec)
-		meta:set_string("infotext", "Biofuel Distiller")
+		meta:set_string("infotext", S("Biofuel Distiller"))
 		meta:set_float("status", 0.0)
 
 		local inv = meta:get_inventory()
@@ -181,7 +181,7 @@ minetest.register_node( module_name .. ":biofuel_distiller", {
 		if not inv or inv:is_empty("src") then
 
 			meta:set_float("status", 0.0)
-			meta:set_string("infotext", "Fuel Distiller")
+			meta:set_string("infotext", S("Fuel Distiller"))
 
 			return false
 		end
@@ -220,12 +220,12 @@ minetest.register_node( module_name .. ":biofuel_distiller", {
 
 		-- is there room for additional fermentation?
 		if has_item and not inv:room_for_item("dst", ferment[has_item][2]) then
-			meta:set_string("infotext", "Fuel Distiller (FULL)")
+			meta:set_string("infotext", S("Fuel Distiller (FULL)"))
 			return true
 		end
 
 		if has_group and not inv:room_for_item("dst", new_gallon_id) then
-			meta:set_string("infotext", "Fuel Distiller (FULL)")
+			meta:set_string("infotext", S("Fuel Distiller (FULL)"))
 			return true
 		end
 
@@ -233,7 +233,7 @@ minetest.register_node( module_name .. ":biofuel_distiller", {
 
 		-- fermenting (change status)
 		if status < 100 then
-			meta:set_string("infotext", "Fuel Distiller " .. status .. "% done")
+			meta:set_string("infotext", S("Fuel Distiller @1% done", status))
 			meta:set_float("status", status + 5)
 		else
             if not has_group then
@@ -251,7 +251,7 @@ minetest.register_node( module_name .. ":biofuel_distiller", {
 
 		if inv:is_empty("src") then
 			meta:set_float("status", 0.0)
-			meta:set_string("infotext", "Fuel Distiller")
+			meta:set_string("infotext", S("Fuel Distiller"))
 		end
 
 		return true
@@ -268,8 +268,8 @@ minetest.register_abm({
     interval = 1,
     chance = 1,
     action = function(pos, node)
-        --minetest.env:remove_node(pos)
-        minetest.env:swap_node(pos,{name = module_name..":biofuel_distiller"})
+        --minetest.remove_node(pos)
+        minetest.swap_node(pos,{name = module_name..":biofuel_distiller"})
     end,
 })
 

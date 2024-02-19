@@ -248,13 +248,15 @@ xdecor.register("enchantment_table", {
 })
 
 minetest.register_entity("xdecor:book_open", {
-	visual = "sprite",
-	visual_size = {x=0.75, y=0.75},
-	collisionbox = {0,0,0,0,0,0},
-	pointable = false,
-	physical = false,
-	textures = {"xdecor_book_open.png"},
-	static_save = false,
+	initial_properties = {
+		visual = "sprite",
+		visual_size = {x=0.75, y=0.75},
+		collisionbox = {0,0,0,0,0,0},
+		pointable = false,
+		physical = false,
+		textures = {"xdecor_book_open.png"},
+		static_save = false,
+	},
 })
 
 minetest.register_lbm({

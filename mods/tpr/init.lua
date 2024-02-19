@@ -1,6 +1,8 @@
 --[[
-Allows players to request from another player to be teleported to them, and do much more.
-Copyright (C) 2014-2023 ChaosWormz and contributors
+Allows players to request from another player to be teleported to them.
+Includes many more teleporting features. Built for Minetest.
+
+Copyright (C) 2014-2024 ChaosWormz and contributors
 
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
@@ -19,11 +21,8 @@ USA
 
 ----------------------------------------------------------------------------
 
-Originally made by Traxie21 and released with the WTFPL license.
-Forum link: https://forum.minetest.net/viewtopic.php?id=4457
-
-Updates by Zeno, Panquesito7 and ChaosWormz.
-License: LGPLv2.1+ for code, CC BY-SA 4.0 for sounds.
+Originally made by Traxie21 and released under the WTFPL license.
+Forum link: https://forum.minetest.net/viewtopic.php?t=4457
 --]]
 
 local MP = minetest.get_modpath(minetest.get_current_modname())
@@ -69,5 +68,5 @@ dofile(MP .. "/commands.lua")
 
 -- Log
 if minetest.settings:get_bool("log_mods") then
-	minetest.log("action", S("[Teleport Request] TPS Teleport v@1 Loaded!", tp.version))
+	minetest.log("action", "[MOD] Teleport Request v" .. tp.version .. " loaded!")
 end

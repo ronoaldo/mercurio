@@ -5,7 +5,7 @@ read_globals = {
 	"vector", "ItemStack",
 	"default",
 	"stairs", "doors", "xpanes",
-	"xdecor", "xbg",
+	"xdecor",
 	table = {fields = {"copy"}},
 	string = {fields = {"split"}},
 	"unpack",

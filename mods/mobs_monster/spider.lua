@@ -92,6 +92,7 @@ mobs:register_mob("mobs_monster:spider", {
 	water_damage = 5,
 	lava_damage = 5,
 	light_damage = 0,
+	node_damage = false, -- disable damage_per_second node damage
 	animation = {
 		speed_normal = 15,
 		speed_run = 20,

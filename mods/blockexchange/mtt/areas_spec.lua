@@ -10,7 +10,7 @@ mtt.register("load, query and save areas", function(callback)
         mtime = 1000,
         username = "xyz"
     }
-    blockexchange.register_area(pos1, pos2, username, schema)
+    blockexchange.register_area(pos1, pos2, "singleplayer", username, schema)
 
     local area = blockexchange.get_area({x=-1, y=-1, z=-1})
     assert(not area)
@@ -19,7 +19,7 @@ mtt.register("load, query and save areas", function(callback)
     assert(area)
     assert(vector.equals(area.pos1, pos1))
     assert(vector.equals(area.pos2, pos2))
-    assert(area.schema_id == schema.id)
+    assert(area.schema_uid == schema.uid)
 
     blockexchange.load_areas()
     area = blockexchange.get_area(pos1)

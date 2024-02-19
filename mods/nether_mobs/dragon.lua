@@ -13,35 +13,7 @@ blacklist = { -- this nodes can't be destroyed by the nether dragon fire
 	"nether:portal",
 }
 
--- custom particle effects
-
-local effect = function(pos, amount, texture, min_size, max_size, radius, gravity, glow)
-
-	radius = radius or 2
-	min_size = min_size or 0.5
-	max_size = max_size or 1
-	gravity = gravity or -10
-	glow = glow or 0
-
-	minetest.add_particlespawner({
-		amount = amount,
-		time = 0.25,
-		minpos = pos,
-		maxpos = pos,
-		minvel = {x = -radius, y = -radius, z = -radius},
-		maxvel = {x = radius, y = radius, z = radius},
-		minacc = {x = 0, y = gravity, z = 0},
-		maxacc = {x = -20, y = gravity, z = 15},
-		minexptime = 0.1,
-		maxexptime = 1,
-		minsize = min_size,
-		maxsize = max_size,
-		texture = texture,
-		glow = glow,
-	})
-end
-
-local S = mobs.intllib
+local S = minetest.get_translator("nether_mobs")
 
 -- Dragon Scale
 
@@ -50,7 +22,7 @@ minetest.register_node("nether_mobs:dragon_scale_block", {
 	tiles = {"nether_dragon_scale_block_top.png", "nether_dragon_scale_block_top.png", "nether_dragon_scale_block.png"},
 	paramtype = "facedir",
 	is_ground_content = false,
-	groups = {cracky = 2, level = 2},
+	groups = {cracky = 1, level = 3},
 	sounds = default.node_sound_stone_defaults(),
 
 	on_place = minetest.rotate_node
@@ -59,7 +31,7 @@ minetest.register_node("nether_mobs:dragon_scale_block", {
 stairs.register_stair_and_slab(
 	"nether_dragon_scale_block",
 	"nether_mobs:dragon_scale_block",
-	{cracky = 2, level = 2},
+	{cracky = 1, level = 3},
 	{"nether_dragon_scale_block.png"},
 	"nether dragon scale stair",
 	"nether dragon scale slab",
@@ -94,13 +66,20 @@ minetest.register_craft({
         }
     })
 
+minetest.register_craft({
+				output = "nether_mobs:dragon_scale 4",
+				recipe = {
+					{"nether_mobs:dragon_scale_block"},
+				}
+		})
+
 -- Dragon Scales Armor
 
 if minetest.get_modpath("3d_armor") then
     armor:register_armor("nether_mobs:dragon_helmet", {
         description = S("dragon scales helmet"),
         inventory_image = "nether_dragon_inv_helmet.png",
-        groups = {armor_head=1, armor_heal=15, armor_use=100, armor_fire=10},
+        groups = {armor_head=1, armor_heal=15, armor_use=100, armor_fire=1},
         armor_groups = {fleshy=15},
         damage_groups = {cracky=2, snappy=1, level=3},
         wear = 0,
@@ -109,7 +88,7 @@ if minetest.get_modpath("3d_armor") then
     armor:register_armor("nether_mobs:dragon_chestplate", {
         description = S("dragon scales chestplate"),
         inventory_image = "nether_dragon_inv_chestplate.png",
-        groups = {armor_torso=1, armor_heal=15, armor_use=100, armor_fire=10},
+        groups = {armor_torso=1, armor_heal=15, armor_use=100, armor_fire=1},
         armor_groups = {fleshy=20},
         damage_groups = {cracky=2, snappy=1, level=3},
         wear = 0,
@@ -118,7 +97,7 @@ if minetest.get_modpath("3d_armor") then
     armor:register_armor("nether_mobs:dragon_leggings", {
         description = S("dragon scales leggings"),
         inventory_image = "nether_dragon_inv_leggings.png",
-        groups = {armor_legs=1, armor_heal=15, armor_use=100, armor_fire=10},
+        groups = {armor_legs=1, armor_heal=15, armor_use=100, armor_fire=1},
         armor_groups = {fleshy=20},
         damage_groups = {cracky=2, snappy=1, level=3},
         wear = 0,
@@ -127,7 +106,7 @@ if minetest.get_modpath("3d_armor") then
     armor:register_armor("nether_mobs:dragon_boots", {
         description = S("dragon scales boots"),
         inventory_image = "nether_dragon_inv_boots.png",
-        groups = {armor_feet=1, armor_heal=15, armor_use=100, armor_fire=10, physics_jump=0.5, physics_speed = 1},
+        groups = {armor_feet=1, armor_heal=15, armor_use=100, armor_fire=1, physics_jump=0.5, physics_speed = 1},
         armor_groups = {fleshy=15},
 	damage_groups = {cracky=2, snappy=1, level=3},
         wear = 0,
@@ -136,7 +115,7 @@ if minetest.get_modpath("3d_armor") then
     armor:register_armor("nether_mobs:dragon_shield", {
         description = S("dragon scales shield"),
         inventory_image = "nether_dragon_inven_shield.png",
-        groups = {armor_shield=1, armor_heal=15, armor_use=100, armor_fire=10},
+        groups = {armor_shield=1, armor_heal=15, armor_use=100, armor_fire=2},
         armor_groups = {fleshy=20},
         damage_groups = {cracky=2, snappy=1, level=3},
         wear = 0,
@@ -220,6 +199,23 @@ minetest.register_node("nether_mobs:dragon_fire", {
 	end,
 })
 
+minetest.register_node(":nether_mobs:permanent_dragon_fire", { --only avaible in creative mode
+	description = "Permanent nether dragon fire",
+	drawtype = "firelike",
+	tiles = {{
+		name = "nether_dragon_fire_animated.png",
+		animation = {type = "vertical_frames",
+			aspect_w = 16, aspect_h = 16, length = 1},
+	}},
+	inventory_image = "nether_dragon_fire.png",
+	light_source = 15,
+	groups = {snappy=1},
+	walkable = false,
+	buildable_to = false,
+	damage_per_second = 8,
+})
+
+
 -- Fire Breathing
 
 function fire_breath(pos)
@@ -271,9 +267,9 @@ mobs:register_arrow("nether_mobs:dragon_breath", {
 	-- node hit
 	hit_node = function(self, pos, node)
 		pos.y = pos.y + 0.5
-		effect(pos, 30, "nether_particle.png", 0.1, 2, 3, 5)
+		mobs:effect(pos, 30, "nether_particle.png", 0.1, 2, 3, 5)
 		pos.y = pos.y + 0.25
-		effect(pos, 30, "nether_particle.png", 0.1, 2, 3, 5)
+		mobs:effect(pos, 30, "nether_particle.png", 0.1, 2, 3, 5)
 		for _, blacknode in ipairs(blacklist) do
 			if blacknode == node then
 				pos.y = pos.y + 1
@@ -309,45 +305,45 @@ local animation_land = {
 
 mobs:register_mob("nether_mobs:dragon", {
 	type = "monster",
-	hp_min = 100,
-	hp_max = 200,
+	hp_min = 200,
+	hp_max = 300,
 	armor = 80,
 	passive = false,
 	walk_velocity = 3,
 	run_velocity = 5,
-        walk_chance = 35,
-        jump = false,
-        jump_height = 1.1,
-        stepheight = 1.5,
-        fly = true,
-        fly_in = "air",
-        runaway = false,
-        pushable = false,
-        view_range = 60,
-        knock_back = 0,
-        damage = 34,
-	fear_height = 6,
+	walk_chance = 35,
+	jump = false,
+	jump_height = 1.1,
+	stepheight = 1.5,
+	fly = true,
+	fly_in = "air",
+	runaway = false,
+	pushable = false,
+	view_range = 60,
+	knock_back = 5,
+	damage = 40,
+	--fear_height = 6,
 	fall_speed = -8,
 	fall_damage = 20,
 	water_damage = 5,
-	lava_damage = 1,
+	lava_damage = 0,
 	light_damage = 1,
-        suffocation = false,
-        floats = 1,
-        reach = 5,
-        attack_chance = 30,
-        attack_animals = true,
-        attack_npcs = true,
-        attack_players = true,
-        attacks_monsters = true,
-        attack_type = "dogshoot",
-        shoot_interval = 1,
-	     dogshoot_switch = 2,
-	     dogshoot_count = 0,
-	     dogshoot_count_max =5,
-        arrow = "nether_mobs:dragon_breath",
-        shoot_offset = 1,
-        group_attack = true,
+	suffocation = false,
+	floats = 1,
+	reach = 7,
+	attack_chance = 30,
+	attack_animals = true,
+	attack_npcs = true,
+	attack_players = true,
+	attacks_monsters = false,
+	attack_type = "dogshoot",
+	shoot_interval = 1,
+	dogshoot_switch = 2,
+	dogshoot_count = 0,
+	dogshoot_count_max =5,
+	arrow = "nether_mobs:dragon_breath",
+	shoot_offset = 1,
+	group_attack = true,
 	pathfinding = 1,
 	makes_footstep_sound = true,
 	sounds = {
@@ -357,11 +353,14 @@ mobs:register_mob("nether_mobs:dragon", {
 	blood_texture = "nether_particle.png",
 	drops = {
 		{name = "mobs:meat_raw", chance = 1, min = 5, max = 8},
-		{name = "nether_mobs:dragon_scale", chance = 1, min = 8, max = 15},
-		{name = "nether_mobs:dragon_egg", chance = 1, min = 1, max = 2},
-		{name = "nether:sand", chance = 1, min = 3, max = 5},
+		{name = "nether_mobs:dragon_scale", chance = 1, min = 1, max = 3},
+		{name = "nether_mobs:dragon_egg", chance = 9, min = 1, max = 1},
 		{name = "nether:rack", chance = 3, min = 2, max = 4},
-		{name = "nether:brick", chance = 5, min = 1, max = 2},
+		{name = "nether:rack_deep", chance = 3, min = 1, max = 2},
+		{name = "nether:brick_compressed", chance = 5, min = 1, max = 2},
+		{name = "nether:glowstone", chance = 1, min = 2, max = 6},
+		{name = "nether:glowstone_deep", chance = 2, min = 1, max = 4},
+		{name = "nether:basalt", chance = 2, min = 1, max = 2},
 	},
 	visual = "mesh",
 	visual_size = {x=20, y=20},
@@ -373,7 +372,7 @@ mobs:register_mob("nether_mobs:dragon", {
 		{"mobs_nether_dragon_child.png"},
 	},
 	mesh = "mobs_nether_dragon.b3d",
-	replace_rate = 1/1000,
+	replace_rate = 10, --allow to spawn in the overworld without too much transformation
 	replace_what = {
 			"default:sand",
 			"default:silver_sand",
@@ -388,9 +387,9 @@ mobs:register_mob("nether_mobs:dragon", {
 	animation = animation_fly,
 	on_die = function(self, pos)
 		pos.y = pos.y + 0.5
-		effect(pos, 30, "nether_particle.png", 0.1, 2, 3, 5)
+		mobs:effect(pos, 30, "nether_particle.png", 0.1, 2, 3, 5)
 		pos.y = pos.y + 0.25
-		effect(pos, 30, "nether_particle.png", 0.1, 2, 3, 5)
+		mobs:effect(pos, 30, "nether_particle.png", 0.1, 2, 3, 5)
 	end,
 
 })
@@ -405,38 +404,38 @@ mobs:register_mob("nether_mobs:tamed_dragon", {
 	passive = false,
 	walk_velocity = 3,
 	run_velocity = 5,
-        walk_chance = 35,
-        jump = false,
-        jump_height = 1.1,
-        stepheight = 1.5,
-        fly = true,
-        fly_in = "air",
-        runaway = false,
-        pushable = false,
-        view_range = 60,
-        knock_back = 0,
-        damage = 34,
-	fear_height = 6,
+	walk_chance = 35,
+	jump = false,
+	jump_height = 1.1,
+	stepheight = 1.5,
+	fly = true,
+	fly_in = "air",
+	runaway = false,
+	pushable = false,
+	view_range = 60,
+	knock_back = 5,
+	damage = 34,
+	--fear_height = 6,
 	fall_speed = -8,
 	fall_damage = 20,
 	water_damage = 5,
-	lava_damage = 1,
+	lava_damage = 0,
 	--light_damage = 1,
-        suffocation = false,
-        floats = 1,
-        --reach = 5,
-        attack_chance = 30,
-        attack_animals = false,
-        attack_npcs = false,
-        attacks_monsters = true,
+	suffocation = false,
+	floats = 1,
+	--reach = 7,
+	attack_chance = 30,
+	attack_animals = false,
+	attack_npcs = false,
+	attacks_monsters = true,
 	--owner_loyal = true,
-        attack_type = "dogshoot",
-        shoot_interval = 1,
-	     dogshoot_switch = 2,
-	     dogshoot_count = 0,
-	     dogshoot_count_max =5,
-        arrow = "nether_mobs:dragon_breath",
-        shoot_offset = 1,
+	attack_type = "dogshoot",
+	shoot_interval = 1,
+	dogshoot_switch = 2,
+	dogshoot_count = 0,
+	dogshoot_count_max =5,
+	arrow = "nether_mobs:dragon_breath",
+	shoot_offset = 1,
 	--pathfinding = 1,
 	makes_footstep_sound = true,
 	sounds = {
@@ -446,11 +445,14 @@ mobs:register_mob("nether_mobs:tamed_dragon", {
 	blood_texture = "nether_particle.png",
 	drops = {
 		{name = "mobs:meat_raw", chance = 1, min = 5, max = 8},
-		{name = "nether_mobs:dragon_scale", chance = 1, min = 8, max = 15},
-		{name = "nether_mobs:dragon_egg", chance = 1, min = 1, max = 2},
-		{name = "nether:sand", chance = 1, min = 3, max = 5},
+		{name = "nether_mobs:dragon_scale", chance = 1, min = 1, max = 1}, --less scale dropped by tamed dragon
+		{name = "nether_mobs:dragon_egg", chance = 12, min = 1, max = 1},
 		{name = "nether:rack", chance = 3, min = 2, max = 4},
-		{name = "nether:brick", chance = 5, min = 1, max = 2},
+		{name = "nether:rack_deep", chance = 3, min = 1, max = 2},
+		{name = "nether:brick_compressed", chance = 5, min = 1, max = 2},
+		{name = "nether:glowstone", chance = 1, min = 2, max = 6},
+		{name = "nether:glowstone_deep", chance = 2, min = 1, max = 4},
+		{name = "nether:basalt", chance = 2, min = 1, max = 2},
 	},
 	visual = "mesh",
 	visual_size = {x=20, y=20},
@@ -462,24 +464,24 @@ mobs:register_mob("nether_mobs:tamed_dragon", {
 		{"mobs_nether_dragon_child.png"},
 	},
 	mesh = "mobs_nether_dragon.b3d",
-	replace_rate = 1/1000,
-	replace_what = {
-			"default:sand",
-			"default:silver_sand",
-			"default:dirt_with_grass",
-			"default:dirt_with_snow",
-			"default:dirt_with_dry_grass",
-			"default:dirt_with_rainforest_litter",
-			"default:dirt",
-                    },
-	replace_with = "nether:sand",
-	replace_offset = -5,
+	--replace_rate = 10, --allow to spawn in the overworld without too much transformation
+	--replace_what = {
+		--	"default:sand",
+		--	"default:silver_sand",
+		--	"default:dirt_with_grass",
+		--	"default:dirt_with_snow",
+		--	"default:dirt_with_dry_grass",
+		--	"default:dirt_with_rainforest_litter",
+		--	"default:dirt",
+    --                },
+	--replace_with = "nether:sand",
+	--replace_offset = -5,
 	animation = animation_fly,
 	on_die = function(self, pos)
 		pos.y = pos.y + 0.5
-		effect(pos, 30, "nether_particle.png", 0.1, 2, 3, 5)
+		mobs:effect(pos, 30, "nether_particle.png", 0.1, 2, 3, 5)
 		pos.y = pos.y + 0.25
-		effect(pos, 30, "nether_particle.png", 0.1, 2, 3, 5)
+		mobs:effect(pos, 30, "nether_particle.png", 0.1, 2, 3, 5)
 		if self.driver then
 			minetest.add_item(pos, "mobs:saddle")
 			mobs.detach(self.driver, {x = 1, y = 0, z = 1})
@@ -489,14 +491,18 @@ mobs:register_mob("nether_mobs:tamed_dragon", {
 	do_custom = function(self, dtime)
 
 		-- set needed values if not already present
-		if not self.v2 then
+		if not self.v3 or (self.child ~= self._child) then
 			self.v2 = 0
+			self.v3 = 0
+			self._child = self.child
 			self.max_speed_forward = 12
 			self.max_speed_reverse = 4
 			self.accel = 6
 			self.terrain_type = 2
-			self.driver_attach_at = {x = 3, y = y_off, z = -2}
-			self.driver_eye_offset = {x = 3, y = 3, z = 0}
+			self.driver_attach_at = {x = 0, y = (self.child and 1.3 or 1.25), z = 0}
+			self.driver_eye_offset = {x = 0, y = (self.child and 3 or 31), z = 0}
+			local scale = (self.child and 0.1 or 0.05)
+			self.driver_scale = {x = scale, y = scale} -- shrink driver to fit model
 		end
 
 		-- if driver present allow control of dragon
@@ -564,7 +570,9 @@ self.saddle = true
 		end
 
 		-- used to capture dragon with magic lasso
-		mobs:capture_mob(self, clicker, 0, 0, 80, false, nil)
+		if mobs:capture_mob(self, clicker, nil, nil, 80, false, nil) then
+			return
+		end
 	end
 
 })
@@ -572,21 +580,24 @@ self.saddle = true
 
 mobs:spawn({
 	name = "nether_mobs:dragon",
-	nodes = {"nether:sand", "nether:rack"},
+	nodes = {"nether:rack","nether:rack_deep"},
         neighbours = "air",
-	max_light = 15,
+	max_light = 14, --not in bright daylight
+	max_height = nethermobs.MAX_HEIGHT_DRAGON,
+	min_height = nethermobs.MIN_HEIGHT_DRAGON,
 	interval = 100,
-	chance = 150000,
+	chance = 64000,
 	day_toggle = nil,
 	active_object_count = 2,
 	on_spawn = function(self, pos)
 		pos.y = pos.y + 0.5
-		effect(pos, 30, "nether_particle.png", 0.1, 2, 3, 5)
+		mobs:effect(pos, 30, "nether_particle.png", 0.1, 2, 3, 5)
 		pos.y = pos.y + 0.25
-		effect(pos, 30, "nether_particle.png", 0.1, 2, 3, 5)
+		mobs:effect(pos, 30, "nether_particle.png", 0.1, 2, 3, 5)
 	end,
 })
 
+mobs:register_egg("nether_mobs:tamed_dragon", S("nether dragon"), "mobs_chicken_egg.png^(nether_sand.png^fire_basic_flame.png^[mask:mobs_chicken_egg_overlay.png)", 1)
 mobs:register_egg("nether_mobs:dragon", S("nether dragon"), "nether_sand.png^nether_dragon_fire.png", 1)
 
 -- to spawn childs from eggs

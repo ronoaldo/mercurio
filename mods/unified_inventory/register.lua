@@ -215,7 +215,7 @@ local function stack_image_button(x, y, w, h, buttonname_prefix, item)
 		local group_name = name:sub(7)
 		local group_item = ui.get_group_item(group_name)
 		show_is_group = not group_item.sole
-		displayitem = group_item.item or "unknown"
+		displayitem = group_item.item or name
 		selectitem = group_item.sole and displayitem or name
 	end
 	local label = show_is_group and "G" or ""

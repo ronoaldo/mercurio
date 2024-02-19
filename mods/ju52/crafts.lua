@@ -33,7 +33,7 @@ minetest.register_craftitem("ju52:ju52", {
             ent.owner = owner
 			new_ju52:set_yaw(placer:get_look_horizontal())
 			itemstack:take_item()
-            ent.object:set_acceleration({x=0,y=airutils.gravity,z=0})
+            --ent.object:set_acceleration({x=0,y=airutils.gravity,z=0})
             airutils.create_inventory(ent, ent._trunk_slots, owner)
 		end
 

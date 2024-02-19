@@ -7,7 +7,7 @@
 ]]
 
 
-ethereal = {version = "20230814"}
+ethereal = {version = "20240125"}
 
 
 local function setting(stype, name, default)
@@ -69,6 +69,7 @@ setting("number", "reefs", 1)
 setting("number", "sakura", 1)
 setting("number", "tundra", 1)
 setting("number", "mediterranean", 1)
+setting("number", "logs", 1)
 
 
 local path = minetest.get_modpath("ethereal")

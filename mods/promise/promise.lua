@@ -24,8 +24,6 @@ end
 
 local transition, resolve, run
 
-Promise = {}
-
 local prototype = {
   is_promise = true,
   state = State.PENDING

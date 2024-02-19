@@ -1,10 +1,20 @@
 -- Minetest 5.4.1 : automobiles
 
-local S = minetest.get_translator(minetest.get_current_modname())
 automobiles_lib = {
     storage = minetest.get_mod_storage()
 }
 
+automobiles_lib.S = nil
+
+if(minetest.get_translator ~= nil) then
+    automobiles_lib.S = minetest.get_translator(minetest.get_current_modname())
+
+else
+    automobiles_lib.S = function ( s ) return s end
+
+end
+
+local S = automobiles_lib.S
 local storage = automobiles_lib.storage
 
 automobiles_lib.fuel = {['biofuel:biofuel'] = 1,['biofuel:bottle_fuel'] = 1,
@@ -12,6 +22,7 @@ automobiles_lib.fuel = {['biofuel:biofuel'] = 1,['biofuel:bottle_fuel'] = 1,
                 ['airutils:biofuel'] = 1,}
 
 automobiles_lib.gravity = 9.8
+automobiles_lib.ideal_step = 0.2
 automobiles_lib.is_creative = minetest.settings:get_bool("creative_mode", false)
 
 
@@ -63,6 +74,14 @@ function automobiles_lib.minmax(v,m)
 	return math.min(math.abs(v),m)*minekart.sign(v)
 end
 
+function automobiles_lib.properties_copy(origin_table)
+    local tablecopy = {}
+    for k, v in pairs(origin_table) do
+      tablecopy[k] = v
+    end
+    return tablecopy
+end
+
 --returns 0 for old, 1 for new
 function automobiles_lib.detect_player_api(player)
     local player_proterties = player:get_properties()
@@ -81,6 +100,28 @@ function automobiles_lib.detect_player_api(player)
     end
 
     return 0
+end
+
+function automobiles_lib.seats_create(self)
+    if self.object then
+        local pos = self.object:get_pos()
+        self._passengers_base = {}
+        self._passengers = {}
+        if self._seat_pos then 
+            local max_seats = table.getn(self._seat_pos)
+            for i=1, max_seats do
+                self._passengers_base[i] = minetest.add_entity(pos,'automobiles_lib:pivot_mesh')
+                if not self._seats_rot then
+                    self._passengers_base[i]:set_attach(self.object,'',self._seat_pos[i],{x=0,y=0,z=0})
+                else
+                    self._passengers_base[i]:set_attach(self.object,'',self._seat_pos[i],{x=0,y=self._seats_rot[i],z=0})
+                end
+            end
+
+            self.driver_seat = self._passengers_base[1] --sets pilot seat reference
+            self.passenger_seat = self._passengers_base[2] --sets copilot seat reference
+        end
+    end
 end
 
 -- attach player
@@ -156,103 +197,112 @@ function automobiles_lib.attach_pax(self, player, onside)
     local onside = onside or false
     local name = player:get_player_name()
 
-    if onside == true then
-        if self._passenger == nil then
-            self._passenger = name
+    local eye_y = -4
+    if automobiles_lib.detect_player_api(player) == 1 then
+        eye_y = 2.5
+    end
 
-            -- attach the driver
-            player:set_attach(self.passenger_seat, "", {x = 0, y = 0, z = 0}, {x = 0, y = 0, z = 0})
-            local eye_y = -4
-            if automobiles_lib.detect_player_api(player) == 1 then
-                eye_y = 2.5
-            end
-            player:set_eye_offset({x = 0, y = eye_y, z = 0}, {x = 0, y = eye_y, z = -30})
-            player_api.player_attached[name] = true
-            -- make the pax sit
+    if self._passenger == nil then
+        self._passenger = name
 
-            minetest.after(0.2, function()
-                player = minetest.get_player_by_name(name)
-                if player then
-                    local speed = 30.01
-                    local mesh = player:get_properties().mesh
-                    if mesh then
-                        local character = player_api.registered_models[mesh]
-                        if character and character.animation_speed then
-                            speed = character.animation_speed + 0.01
-                        end
+        -- attach the driver
+        player:set_attach(self.passenger_seat, "", {x = 0, y = 0, z = 0}, {x = 0, y = 0, z = 0})
+        player:set_eye_offset({x = 0, y = eye_y, z = 0}, {x = 0, y = eye_y, z = -30})
+        player_api.player_attached[name] = true
+        -- make the pax sit
+
+        minetest.after(0.2, function()
+            player = minetest.get_player_by_name(name)
+            if player then
+                local speed = 30.01
+                local mesh = player:get_properties().mesh
+                if mesh then
+                    local character = player_api.registered_models[mesh]
+                    if character and character.animation_speed then
+                        speed = character.animation_speed + 0.01
                     end
-                    player_api.set_animation(player, "sit", speed)
-                    if emote then emote.start(player:get_player_name(), "sit") end
                 end
-            end)
-
-
-        end
+                player_api.set_animation(player, "sit", speed)
+                if emote then emote.start(player:get_player_name(), "sit") end
+            end
+        end)
     else
         --randomize the seat
-        --[[local t = {1,2,3,4,5,6,7,8,9,10}
+        local max_seats = table.getn(self._seat_pos) --driver and front passenger
+
+        t = {}    -- new array
+        for i=1, max_seats do --(the first are for the driver
+            t[i] = i
+        end
+
         for i = 1, #t*2 do
             local a = math.random(#t)
             local b = math.random(#t)
             t[a],t[b] = t[b],t[a]
         end
 
-        --for i = 1,10,1 do
         for k,v in ipairs(t) do
             i = t[k]
-            if self._passengers[i] == nil then
+            if self._passengers[i] == nil and i > 2 then
                 --minetest.chat_send_all(self.driver_name)
                 self._passengers[i] = name
                 player:set_attach(self._passengers_base[i], "", {x = 0, y = 0, z = 0}, {x = 0, y = 0, z = 0})
-                if i > 2 then
-                    player:set_eye_offset({x = 0, y = -4, z = 2}, {x = 0, y = 3, z = -30})
-                else
-                    player:set_eye_offset({x = 0, y = -4, z = 0}, {x = 0, y = 3, z = -30})
-                end
+                player:set_eye_offset({x = 0, y = eye_y, z = 0}, {x = 0, y = 3, z = -30})
                 player_api.player_attached[name] = true
-                -- make the driver sit
+                -- make the pax sit
+
                 minetest.after(0.2, function()
                     player = minetest.get_player_by_name(name)
                     if player then
-	                    player_api.set_animation(player, "sit")
-                        --apply_physics_override(player, {speed=0,gravity=0,jump=0})
+                        local speed = 30.01
+                        local mesh = player:get_properties().mesh
+                        if mesh then
+                            local character = player_api.registered_models[mesh]
+                            if character and character.animation_speed then
+                                speed = character.animation_speed + 0.01
+                            end
+                        end
+                        player_api.set_animation(player, "sit", speed)
+                        if emote then emote.start(player:get_player_name(), "sit") end
                     end
                 end)
+
                 break
             end
-        end]]--
+        end
 
     end
 end
 
 function automobiles_lib.dettach_pax(self, player)
-    if player then
-        local name = player:get_player_name() --self._passenger
+    if not player then return end
+    local name = player:get_player_name() --self._passenger
 
-        -- passenger clicked the object => driver gets off the vehicle
-        if self._passenger == name then
-            self._passenger = nil
-        else
-            --[[for i = 10,1,-1
-            do
-                if self._passengers[i] == name then
-                    self._passengers[i] = nil
-                    break
-                end
-            end]]--
-        end
-
-        -- detach the player
-        if player then
-            --player:set_properties({physical=true})
-            player:set_detach()
-            player_api.player_attached[name] = nil
-            player_api.set_animation(player, "stand")
-            player:set_eye_offset({x=0,y=0,z=0},{x=0,y=0,z=0})
-            --remove_physics_override(player, {speed=1,gravity=1,jump=1})
-        end
-    else
+    -- passenger clicked the object => driver gets off the vehicle
+    if self._passenger == name then
         self._passenger = nil
+        self._passengers[2] = nil
+    else
+        local max_seats = table.getn(self._seat_pos)
+        for i = max_seats,1,-1
+        do 
+            if self._passengers[i] == name then
+                self._passengers[i] = nil
+                break
+            end
+        end
+    end
+
+    -- detach the player
+    if player then
+        local pos = player:get_pos()
+        player:set_detach()
+
+        player_api.player_attached[name] = nil
+        player_api.set_animation(player, "stand")
+
+        player:set_eye_offset({x=0,y=0,z=0},{x=0,y=0,z=0})
+        --remove_physics_override(player, {speed=1,gravity=1,jump=1})
     end
 end
 
@@ -268,12 +318,12 @@ function automobiles_lib.setText(self, vehicle_name)
     local properties = self.object:get_properties()
     local formatted = ""
     if self.hp_max then
-        formatted = " Current hp: " .. string.format(
+        formatted = S(" Current hp: ") .. string.format(
            "%.2f", self.hp_max
         )
     end
     if properties then
-        properties.infotext = "Nice ".. vehicle_name .." of " .. self.owner .. "." .. formatted
+        properties.infotext = S("Nice @1 of @2.@3", vehicle_name, self.owner, formatted)
         self.object:set_properties(properties)
     end
 end
@@ -369,6 +419,13 @@ function automobiles_lib.put_light(self)
 
 end
 
+function automobiles_lib.seats_destroy(self)
+    local max_seats = table.getn(self._passengers_base)
+    for i=1, max_seats do
+        if self._passengers_base[i] then self._passengers_base[i]:remove() end
+    end
+end
+
 function automobiles_lib.destroy(self, puncher)
     automobiles_lib.remove_light(self)
     if self.sound_handle then
@@ -408,6 +465,8 @@ function automobiles_lib.destroy(self, puncher)
     if self.reverse_lights then self.reverse_lights:remove() end
     if self.turn_l_light then self.turn_l_light:remove() end
     if self.turn_r_light then self.turn_r_light:remove() end
+
+    automobiles_lib.seats_destroy(self)
 
     automobiles_lib.destroy_inventory(self)
     self.object:remove()
@@ -489,12 +548,12 @@ function automobiles_lib.set_paint(self, puncher, itmstck)
         local color, indx, _
         if split[1] then _,indx = split[1]:find('dye') end
         if indx then
-            for clr,_ in pairs(automobiles_lib.colors) do
+            --[[for clr,_ in pairs(automobiles_lib.colors) do
                 local _,x = split[2]:find(clr)
                 if x then color = clr end
-            end
+            end]]--
             --lets paint!!!!
-	        --local color = item_name:sub(indx+1)
+	        local color = (item_name:sub(indx+1)):gsub(":", "")
 	        local colstr = automobiles_lib.colors[color]
             --minetest.chat_send_all(color ..' '.. dump(colstr))
 	        if colstr then
@@ -553,6 +612,7 @@ end
 function automobiles_lib.get_transmission_state(curr_speed, max_speed)
     local retVal = 1
     if curr_speed >= (max_speed/4) then retVal = 2 end
+    if curr_speed >= (max_speed/2) then retVal = 3 end
     return retVal
 end
 
@@ -579,7 +639,7 @@ minetest.register_craftitem("automobiles_lib:wheel",{
 })
 
 if minetest.get_modpath("default") then
-	minetest.register_craft({
+    minetest.register_craft({
 		output = "automobiles_lib:engine",
 		recipe = {
 			{"default:steel_ingot","default:steel_ingot","default:steel_ingot"},
@@ -620,13 +680,13 @@ initial_properties = {
 })
 
 minetest.register_privilege("valet_parking", {
-    description = "Gives a valet parking priv for a player",
+    description = S("Gives a valet parking priv for a player"),
     give_to_singleplayer = true
 })
 
 minetest.register_chatcommand("transfer_vehicle", {
     params = "<new_owner>",
-    description = "Transfer the property of a vehicle to another player",
+    description = S("Transfer the property of a vehicle to another player"),
     privs = {interact=true},
 	func = function(name, param)
         local player = minetest.get_player_by_name(name)
@@ -641,25 +701,25 @@ minetest.register_chatcommand("transfer_vehicle", {
                     if entity then
                         if entity.owner == name or minetest.check_player_privs(name, {protection_bypass=true}) then
                             entity.owner = param
-                            minetest.chat_send_player(name,core.colorize('#00ff00', " >>> This vehicle now is property of: "..param))
+                            minetest.chat_send_player(name,core.colorize('#00ff00', S(" >>> This vehicle now is property of: ")..param))
                             automobiles_lib.setText(entity, "vehicle")
                         else
-                            minetest.chat_send_player(name,core.colorize('#ff0000', " >>> only the owner or moderators can transfer this vehicle"))
+                            minetest.chat_send_player(name,core.colorize('#ff0000', S(" >>> only the owner or moderators can transfer this vehicle")))
                         end
                     end
                 end
             else
-                minetest.chat_send_player(name,core.colorize('#ff0000', " >>> the target player must be logged in"))
+                minetest.chat_send_player(name,core.colorize('#ff0000', S(" >>> the target player must be logged in")))
             end
 		else
-			minetest.chat_send_player(name,core.colorize('#ff0000', " >>> you are not inside a vehicle to perform the command"))
+			minetest.chat_send_player(name,core.colorize('#ff0000', S(" >>> you are not inside a vehicle to perform the command")))
 		end
 	end
 })
 
 minetest.register_chatcommand("noobfy_the_vehicles", {
     params = "<true/false>",
-    description = "Enable/disable the NOOB mode for the vehicles",
+    description = S("Enable/disable the NOOB mode for the vehicles"),
     privs = {server=true},
     func = function(name, param)
         local command = param
@@ -667,14 +727,38 @@ minetest.register_chatcommand("noobfy_the_vehicles", {
         if command == "false" then
             automobiles_lib.noob_mode = false
             automobiles_lib.extra_stepheight = 0
-            minetest.chat_send_player(name, ">>> Noob mode is disabled - A restart is required to changes take full effect")
+            minetest.chat_send_player(name, S(">>> Noob mode is disabled - A restart is required to changes take full effect"))
         else
             automobiles_lib.noob_mode = true
             automobiles_lib.extra_stepheight = 1
-            minetest.chat_send_player(name, ">>> Noob mode is enabled - A restart is required to changes take full effect")
+            minetest.chat_send_player(name, S(">>> Noob mode is enabled - A restart is required to changes take full effect"))
         end
         local save = 2
         if automobiles_lib.noob_mode == true then save = 1 end
         storage:set_int("noob_mode", save)
     end,
 })
+
+
+local old_entities = {
+    "automobiles_buggy:pivot_mesh",
+    "automobiles_buggy:pointer",
+    "automobiles_catrelle:pivot_mesh",
+    "automobiles_catrelle:pointer",
+    "automobiles_catrelle:catrelle_tl",
+    "automobiles_coupe:pivot_mesh",
+    "automobiles_coupe:pointer",
+    "automobiles_delorean:pivot_mesh",
+    "automobiles_delorean:pointer",
+    "automobiles_roadster:pivot_mesh",
+    "automobiles_trans_am:pivot_mesh",
+    "automobiles_trans_am:pointer",
+    "automobiles_buggy:steering",
+}
+for _,entity_name in ipairs(old_entities) do
+    minetest.register_entity(":"..entity_name, {
+        on_activate = function(self, staticdata)
+            self.object:remove()
+        end,
+    })
+end

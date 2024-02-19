@@ -67,7 +67,7 @@ add_biome("mountain", 140, 31000, 50, 50, 1,
 add_biome("grassland", 3, 71, 45, 65, 1,
 	nil, "default:dirt_with_grass", 1, "default:dirt", 3)
 
-add_biome("grassland_ocean", -192, 1, 45, 65, 1,
+add_biome("grassland_ocean", -192, 2, 45, 65, 1,
 	nil, "default:sand", 1, "default:sand", 3)
 
 minetest.register_biome({
@@ -124,7 +124,7 @@ add_biome("sakura_ocean", -192, 2, 45, 75, ethereal.sakura,
 add_biome("mesa", 1, 71, 25, 28, ethereal.mesa,
 	nil, "default:dirt_with_dry_grass", 1, "bakedclay:orange", 15)
 
-add_biome("mesa_ocean", -192, 1, 25, 28, ethereal.mesa,
+add_biome("mesa_ocean", -192, 2, 25, 28, ethereal.mesa,
 	nil, "default:sand", 1, "default:sand", 2)
 
 
@@ -135,11 +135,11 @@ if not minetest.registered_nodes[tmp] then
 end
 
 -- was 'snowy' biome
-add_biome("coniferous_forest", 4, 40, 10, 40, ethereal.snowy,
+add_biome("coniferous_forest", 5, 40, 10, 40, ethereal.snowy,
 	nil, tmp, 1, "default:dirt", 2)
 
-add_biome("coniferous_forest_ocean", -192, 1, 10, 40, ethereal.snowy,
-	nil, "default:sand", 1, "default:sand", 2)
+add_biome("coniferous_forest_ocean", -192, 1, 10, 40, (ethereal.snowy or ethereal.frost),
+	nil, "default:silver_sand", 1, "default:sand", 2)
 
 if ethereal.snowy then
 	minetest.register_biome({
@@ -157,9 +157,6 @@ end
 
 add_biome("taiga", 40, 140, 10, 40, ethereal.alpine,
 	nil, "default:dirt_with_snow", 1, "default:dirt", 2)
-
-add_biome("taiga_ocean", -192, 1, 10, 40, ethereal.alpine,
-	nil, "default:sand", 1, "default:sand", 2)
 
 if ethereal.alpine then
 	minetest.register_biome({
@@ -180,9 +177,6 @@ add_biome("frost_floatland", 1025, 1750, 10, 40, ethereal.frost,
 
 add_biome("frost", 1, 71, 10, 40, ethereal.frost,
 	nil, "ethereal:crystal_dirt", 1, "default:dirt", 3)
-
-add_biome("frost_ocean", -192, 1, 10, 40, ethereal.frost,
-	nil, "default:sand", 1, "default:sand", 2)
 
 
 add_biome("deciduous_forest", 3, 91, 13, 40, ethereal.grassy,
@@ -218,7 +212,7 @@ end
 add_biome("grayness", 2, 41, 15, 30, ethereal.grayness,
 	nil, "ethereal:gray_dirt", 1, "default:dirt", 3)
 
-add_biome("grayness_ocean", -18, 1, 15, 30, ethereal.grayness,
+add_biome("grayness_ocean", -18, 2, 15, 30, ethereal.grayness,
 	nil, tmp, 2, "default:sand", 2, "ethereal:blue_marble")
 
 if ethereal.grayness then
@@ -238,14 +232,14 @@ end
 add_biome("grassytwo", 1, 91, 15, 40, ethereal.grassytwo,
 	nil, "default:dirt_with_grass", 1, "default:dirt", 3)
 
-add_biome("grassytwo_ocean", -192, 1, 15, 40, ethereal.grassytwo,
+add_biome("grassytwo_ocean", -192, 2, 15, 40, ethereal.grassytwo,
 	nil, "default:sand", 1, "default:sand", 2)
 
 
 add_biome("prairie", 3, 26, 20, 40, ethereal.prairie,
 	nil, "ethereal:prairie_dirt", 1, "default:dirt", 3)
 
-add_biome("prairie_ocean", -192, 1, 20, 40, ethereal.prairie,
+add_biome("prairie_ocean", -192, 2, 20, 40, ethereal.prairie,
 	nil, "default:sand", 1, "default:sand", 2)
 
 
@@ -264,7 +258,7 @@ end
 add_biome("junglee", 1, 71, 30, 60, ethereal.junglee,
 	nil, tmp, 1, "default:dirt", 3)
 
-add_biome("junglee_ocean", -192, 1, 30, 60, ethereal.junglee,
+add_biome("junglee_ocean", -192, 2, 30, 60, ethereal.junglee,
 	nil, "default:sand", 1, "default:sand", 2)
 
 if ethereal.junglee then
@@ -342,7 +336,7 @@ end
 add_biome("savanna", 3, 50, 55, 25, ethereal.savanna,
 	nil, tmp, 1, tmp2, 3)
 
-add_biome("savanna_ocean", -192, 1, 55, 25, ethereal.savanna,
+add_biome("savanna_ocean", -192, 2, 55, 25, ethereal.savanna,
 	nil, "default:sand", 1, "default:sand", 2)
 
 if ethereal.savanna then
@@ -365,7 +359,7 @@ add_biome("fiery", 5, 20, 75, 10, ethereal.fiery,
 add_biome("fiery_beach", 1, 4, 75, 10, ethereal.fiery,
 	nil, "default:desert_sand", 1, "default:sand", 2)
 
-add_biome("fiery_ocean", -192, 0, 75, 10, ethereal.fiery,
+add_biome("fiery_ocean", -192, 2, 75, 10, ethereal.fiery,
 	nil, "default:sand", 1, "default:sand", 2)
 
 if ethereal.fiery then
@@ -389,7 +383,7 @@ add_biome("sandclay", 1, 11, 65, 2, ethereal.sandclay,
 add_biome("swamp", 1, 7, 80, 90, ethereal.swamp,
 	nil, "default:dirt_with_grass", 1, "default:dirt", 3)
 
-add_biome("swamp_ocean", -192, 1, 80, 90, ethereal.swamp,
+add_biome("swamp_ocean", -192, 2, 80, 90, ethereal.swamp,
 	nil, "default:sand", 2, "default:clay", 2)
 
 

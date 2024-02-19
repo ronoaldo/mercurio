@@ -31,7 +31,7 @@ else
 		},
 		groups = {food_banana = 1, fleshy = 3, dig_immediate = 3, flammable = 2},
 		on_use = minetest.item_eat(2),
-		sounds = default.node_sound_leaves_defaults()
+		sounds = farming.sounds.node_sound_leaves_defaults()
 	})
 
 	minetest.register_node(":ethereal:bananaleaves", {
@@ -42,7 +42,7 @@ else
 		paramtype = "light",
 		waving = 1,
 		groups = {snappy = 3, leafdecay = 3, leaves = 1, flammable = 2},
-		sounds = default.node_sound_leaves_defaults()
+		sounds = farming.sounds.node_sound_leaves_defaults()
 	})
 
 	alias("farming_plus:banana_sapling", "default:sapling")
@@ -89,7 +89,7 @@ else
 		},
 		groups = {food_orange = 1, fleshy = 3, dig_immediate = 3, flammable = 2},
 		on_use = minetest.item_eat(4),
-		sounds = default.node_sound_leaves_defaults()
+		sounds = farming.sounds.node_sound_leaves_defaults()
 	})
 
 	alias("farming_plus:orange_item", "ethereal:orange")

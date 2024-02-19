@@ -88,9 +88,10 @@ minetest.register_craft({
 })
 
 minetest.register_craft({
-	output = "xdecor:desertstone_tile",
+	output = "xdecor:desertstone_tile 4",
 	recipe = {
-		{"default:desert_stone_block"},
+		{"default:desert_stone_block", "default:desert_stone_block"},
+		{"default:desert_stone_block", "default:desert_stone_block"},
 	}
 })
 
@@ -205,9 +206,10 @@ minetest.register_craft({
 })
 
 minetest.register_craft({
-	output = "xdecor:stone_tile_x",
+	output = "xdecor:stone_tile_x 4",
 	recipe = {
-		{"default:stone_block"},
+		{"default:stone_block", "default:stone_block"},
+		{"default:stone_block", "default:stone_block"},
 	}
 })
 

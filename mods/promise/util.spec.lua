@@ -65,3 +65,7 @@ mtt.register("Promise.handle_async (no params)", function(callback)
         callback()
     end)
 end)
+
+mtt.register("Promise.mods_loaded", function()
+    return Promise.mods_loaded()
+end)

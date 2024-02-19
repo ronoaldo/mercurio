@@ -1,5 +1,5 @@
 dofile(minetest.get_modpath("airutils") .. DIR_DELIM .. "lib_planes" .. DIR_DELIM .. "global_definitions.lua")
-
+local S = airutils.S
 --------------
 -- Manual --
 --------------
@@ -45,55 +45,63 @@ function airutils.pilot_formspec(name)
     local yaw = "false"
     if ent._yaw_by_mouse then yaw = "true" end
 
+    local eng_status = "false"
+    local eng_status_color = "#ff0000"
+    if ent._engine_running then
+        eng_status = "true"
+        eng_status_color = "#00ff00"
+    end
+
     local ver_pos = 1.0
     local basic_form = ""
-	basic_form = basic_form.."button[1,"..ver_pos..";4,1;turn_on;Start/Stop Engines]"
+	--basic_form = basic_form.."button[1,"..ver_pos..";4,1;turn_on;Start/Stop Engines]"
+    basic_form = basic_form.."checkbox[1,"..ver_pos..";turn_on;"..core.colorize(eng_status_color, S("Start/Stop Engines"))..";"..eng_status.."]"
     ver_pos = ver_pos + 1.1
-	basic_form = basic_form.."button[1,"..ver_pos..";4,1;hud;Show/Hide Gauges]"
+	basic_form = basic_form.."button[1,"..ver_pos..";4,1;hud;" .. S("Show/Hide Gauges") .. "]"
     ver_pos = ver_pos + 1.1
-	basic_form = basic_form.."button[1,"..ver_pos..";4,1;inventory;Show Inventory]"
+	basic_form = basic_form.."button[1,"..ver_pos..";4,1;inventory;" .. S("Show Inventory") .. "]"
     ver_pos = ver_pos + 1.5
 
-    basic_form = basic_form.."checkbox[1,"..ver_pos..";yaw;Yaw by mouse;"..yaw.."]"
+    basic_form = basic_form.."checkbox[1,"..ver_pos..";yaw;" .. S("Yaw by mouse") .. ";"..yaw.."]"
     ver_pos = ver_pos + 0.5
 
-	basic_form = basic_form.."button[1,"..ver_pos..";4,1;go_out;Go Out!]"
+	basic_form = basic_form.."button[1,"..ver_pos..";4,1;go_out;" .. S("Go Out!") .. "]"
 
     --form second part
     local expand_form = false
     ver_pos = 1.2 --restart in second collumn
     if have_flaps then
-        basic_form = basic_form.."checkbox[6,"..ver_pos..";flap_is_down;Flaps down;"..flap_is_down.."]"
+        basic_form = basic_form.."checkbox[6,"..ver_pos..";flap_is_down;" .. S("Flaps down") .. ";"..flap_is_down.."]"
         ver_pos = ver_pos + 0.5
         expand_form = true
     end
 
     if ent._have_landing_lights then
-        basic_form = basic_form.."checkbox[6,"..ver_pos..";light;Landing Light;"..light.."]"
+        basic_form = basic_form.."checkbox[6,"..ver_pos..";light;" .. S("Landing Light") .. ";"..light.."]"
         ver_pos = ver_pos + 0.5
         expand_form = true
     end
 
     if ent._have_auto_pilot then
-        basic_form = basic_form.."checkbox[6,"..ver_pos..";turn_auto_pilot_on;Autopilot;"..autopilot.."]"
+        basic_form = basic_form.."checkbox[6,"..ver_pos..";turn_auto_pilot_on;" .. S("Autopilot") .. ";"..autopilot.."]"
         ver_pos = ver_pos + 0.5
         expand_form = true
     end
     
     if ent._have_copilot and name == ent.driver_name then
-        basic_form = basic_form.."button[6,"..ver_pos..";4,1;copilot_form;Co-pilot Manager]"
+        basic_form = basic_form.."button[6,"..ver_pos..";4,1;copilot_form;" .. S("Co-pilot Manager") .. "]"
         ver_pos = ver_pos + 1.25
         expand_form = true
     end
 
     if ent._have_adf then
-        basic_form = basic_form.."button[6,"..ver_pos..";4,1;adf_form;Adf Manager]"
+        basic_form = basic_form.."button[6,"..ver_pos..";4,1;adf_form;" .. S("Adf Manager") .. "]"
         ver_pos = ver_pos + 1.1
         expand_form = true
     end
 
     if ent._have_manual then
-    	basic_form = basic_form.."button[6,5.2;4,1;manual;Manual]"
+    	basic_form = basic_form.."button[6,5.2;4,1;manual;" .. S("Manual") .. "]"
         expand_form = true
     end
 
@@ -125,14 +133,14 @@ function airutils.manage_copilot_formspec(name)
         "size[6,4.5]",
 	}, "")
 
-    basic_form = basic_form.."label[1,1.0;Bring a copilot:]"
+    basic_form = basic_form.."label[1,1.0;" .. S("Bring a copilot") .. ":]"
 
     local max_seats = table.getn(ent._seats)
     if ent._have_copilot and max_seats > 2 then --no need to select if there are only 2 occupants
         basic_form = basic_form.."dropdown[1,1.5;4,0.6;copilot;"..pass_list..";0;false]"
     end
 
-    basic_form = basic_form.."button[1,2.5;4,1;pass_control;Pass the Control]"
+    basic_form = basic_form.."button[1,2.5;4,1;pass_control;" .. S("Pass the Control") .. "]"
 
     minetest.show_formspec(name, "lib_planes:manage_copilot", basic_form)
 end
@@ -169,10 +177,10 @@ function airutils.adf_formspec(name)
         "size[6,3.5]",
 	}, "")
 
-    basic_form = basic_form.."checkbox[1.0,1.0;adf;Auto Direction Find;"..adf.."]"
+    basic_form = basic_form.."checkbox[1.0,1.0;adf;" .. S("Auto Direction Find") .. ";"..adf.."]"
     basic_form = basic_form.."field[1.0,1.7;1.5,0.6;adf_x;pos x;"..x.."]"
     basic_form = basic_form.."field[2.8,1.7;1.5,0.6;adf_z;pos z;"..z.."]"
-    basic_form = basic_form.."button[4.5,1.7;0.6,0.6;save_adf;OK]"
+    basic_form = basic_form.."button[4.5,1.7;0.6,0.6;save_adf;" .. S("OK") .. "]"
 
     minetest.show_formspec(name, "lib_planes:adf_main", basic_form)
 end
@@ -183,8 +191,8 @@ function airutils.pax_formspec(name)
         "size[6,5]",
 	}, "")
 
-	basic_form = basic_form.."button[1,1.0;4,1;new_seat;Change Seat]"
-	basic_form = basic_form.."button[1,2.5;4,1;go_out;Go Offboard]"
+	basic_form = basic_form.."button[1,1.0;4,1;new_seat;" .. S("Change Seat") .. "]"
+	basic_form = basic_form.."button[1,2.5;4,1;go_out;" .. S("Go Offboard") .. "]"
 
     minetest.show_formspec(name, "lib_planes:passenger_main", basic_form)
 end
@@ -195,9 +203,9 @@ function airutils.go_out_confirmation_formspec(name)
         "size[7,2.2]",
 	}, "")
 
-    basic_form = basic_form.."label[0.5,0.5;Do you really want to go offboard now?]"
-	basic_form = basic_form.."button[1.3,1.0;2,0.8;no;No]"
-	basic_form = basic_form.."button[3.6,1.0;2,0.8;yes;Yes]"
+    basic_form = basic_form.."label[0.5,0.5;" .. S("Do you really want to go offboard now?") .. "]"
+	basic_form = basic_form.."button[1.3,1.0;2,0.8;no;" .. S("No") .. "]"
+	basic_form = basic_form.."button[3.6,1.0;2,0.8;yes;" .. S("Yes") .. "]"
 
     minetest.show_formspec(name, "lib_planes:go_out_confirmation_form", basic_form)
 end
@@ -222,7 +230,7 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
         local name = player:get_player_name()
         local plane_obj = airutils.getPlaneFromPlayer(player)
         if plane_obj == nil then
-            minetest.chat_send_player(name, core.colorize('#ff0000', " >>> There is something wrong with the plane..."))
+            minetest.chat_send_player(name, core.colorize('#ff0000', S(" >>> There is something wrong with the plane...")))
             minetest.close_formspec(name, "lib_planes:adf_main")
             return
         end
@@ -231,10 +239,10 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
             if fields.adf then
                 if ent._adf == true then
                     ent._adf = false
-                    minetest.chat_send_player(name, core.colorize('#0000ff', " >>> ADF deactivated."))
+                    minetest.chat_send_player(name, core.colorize('#0000ff', S(" >>> ADF deactivated.")))
                 else
                     ent._adf = true
-                    minetest.chat_send_player(name, core.colorize('#00ff00', " >>> ADF activated."))
+                    minetest.chat_send_player(name, core.colorize('#00ff00', S(" >>> ADF activated.")))
                 end
             end
             if fields.save_adf then
@@ -244,17 +252,17 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
                         if tonumber(fields.adf_x, 10) ~= nil and tonumber(fields.adf_z, 10) ~= nil then
                             ent._adf_destiny.x = tonumber(fields.adf_x, 10)
                             ent._adf_destiny.z = tonumber(fields.adf_z, 10)
-                            minetest.chat_send_player(name, core.colorize('#00ff00', " >>> Destination written successfully."))
+                            minetest.chat_send_player(name, core.colorize('#00ff00', S(" >>> Destination written successfully.")))
                         else
-                            minetest.chat_send_player(name, core.colorize('#ff0000', " >>> There is something wrong with the ADF fields values."))
+                            minetest.chat_send_player(name, core.colorize('#ff0000', S(" >>> There is something wrong with the ADF fields values.")))
                         end
                     else
-                        minetest.chat_send_player(name, core.colorize('#ff0000', " >>> Both ADF fields must be given to complete the operation."))
+                        minetest.chat_send_player(name, core.colorize('#ff0000', S(" >>> Both ADF fields must be given to complete the operation.")))
                     end
                 end
             end
         else
-            minetest.chat_send_player(name, core.colorize('#ff0000', " >>> There is something wrong on ADF saving..."))
+            minetest.chat_send_player(name, core.colorize('#ff0000', S(" >>> There is something wrong on ADF saving...")))
         end
         minetest.close_formspec(name, "lib_planes:adf_main")
 	end

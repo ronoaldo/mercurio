@@ -310,8 +310,12 @@ add_node({"ethereal:cold_dirt", "default:dirt_with_coniferous_litter"},
 add_node({"default:dirt_with_snow"}, 0.8, {"taiga"}, 40, 140,
 	{"default:snow"}, nil, nil, nil, ethereal.alpine)
 
+-- Check onion setting
+local abundant = minetest.settings:get_bool("ethereal.abundant_onions") ~= false
+local onion_rate = abundant and 0.025 or 0.005
+
 -- wild onion
-add_node({"default:dirt_with_grass", "ethereal:prairie_dirt"}, 0.025,
+add_node({"default:dirt_with_grass", "ethereal:prairie_dirt"}, onion_rate,
 	{"deciduous_forest", "grassytwo", "jumble", "prairie"}, 1, 100,
 	{"ethereal:onion_4"}, nil, nil, nil, 1)
 

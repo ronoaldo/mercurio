@@ -9,7 +9,7 @@ local command_blacklist = {
 local function on_chat_message(name, message)
     if (cache[name] and cache[name]==message) then
         local command = message:split(" ")[1]
-        if(minetest.registered_chatcommands[command:sub(2)] and not command_blacklist[command]) then
+        if(command and minetest.registered_chatcommands[command:sub(2)] and not command_blacklist[command]) then
             cache[name] = nil
             return false
         end

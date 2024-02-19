@@ -53,12 +53,13 @@ Local commands, they don't need the http-api and make no calls "home"
 * **/bx_hud [on|off]** enables or disables the blockexchange hud
 * **/bx_pos1** mark position 1
 * **/bx_pos2** mark position 2
+* **/bx_cleanup** cleans up stray metadata and invalid param2 values
 * **/bx_area_remove [area_id?]** removes the area information (not the build)
 * **/bx_area_mark [area_id?]** marks the area
 * **/bx_emerge** emerge the selected area
-* **/bx_save_local [schemaname]** saves a local schema to `<worldmods>/bxschems`
-* **/bx_load_local [schemaname]** loads a local schema from `<worldmods>/bxschems`
-* **/bx_allocate_local [schemaname]** allocates a local schema
+* **/bx_save_local [schematic-name]** saves a local schematic to `<worldmods>/bxschems`
+* **/bx_load_local [schematic-name]** loads a local schematic from `<worldmods>/bxschems`
+* **/bx_allocate_local [schematic-name]** allocates a local schema
 
 ## Online
 
@@ -68,16 +69,18 @@ Online commands, they call the remote-server with the http api
 
 * **/bx_info** shows infos about the connected blockexchange server
 * **/bx_license** sets or displays the license of your uploaded schematics (defaults to CC0)
-* **/bx_load [username] [schemaname]** load a schema by name onto pos1
+* **/bx_load [username] [schematic-name]** load a schematic by name onto pos1
+* **/bx_placer [username] [schematic-name]** creates a placement tool for the schematic
 * **/bx_load_update [area_id?]** loads the changes of a loaded area
-* **/bx_allocate [username] [schemaname]** allocates a schema by name
+* **/bx_allocate [username] [schematic-name]** allocates a schematic by name
 * **/bx_login [username] [access_token]** logs in with the username and token
 * **/bx_cancel** Cancels an active job
 
 ### Write (needs a login)
 
-* **/bx_save [schemaname]** saves/uploads the selected area as a new schema
-* **/bx_save_update [area_id?]** saves the changes of a loaded area (use it with the position markers)
+* **/bx_save [schematic-name]** saves/uploads the selected area as a new schematic
+* **/bx_save_update [area_id?]** saves the changes of a loaded area (use it with the position markers or it will upload the whole schematic)
+* **/bx_autosave [area_id?]** toggles the autosave flag for the area
 * **/bx_logout** logs out
 * **/bx_login** shows the login status
 

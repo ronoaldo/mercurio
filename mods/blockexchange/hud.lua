@@ -55,11 +55,21 @@ local function update_player_hud(player)
 			icon_name = "blockexchange_upload.png"
 			text = "Updating upload, progress: " .. ctx.progress_percent .. " %"
 
+		elseif ctx.type == "cleanup" then
+			icon_name = "blockexchange_cleanup.png"
+			text = "Cleanup, progress: " .. ctx.progress_percent .. " %"
+
 		end
 
 	elseif area then
 		icon_name = "blockexchange_info.png"
 		text = string.format("BX-Area: '%s' Schema: %s/%s", area.id, area.username, area.name)
+		if area.autosave then
+			text = text .. " [Autosave]"
+		end
+		if blockexchange.is_area_autosaving(area.id) then
+			icon_name = "blockexchange_upload.png"
+		end
 	end
 
 	if icon_name ~= "" and text ~= "" then
@@ -135,24 +145,31 @@ minetest.register_on_leaveplayer(remove_hud)
 -- create on join
 minetest.register_on_joinplayer(create_hud)
 
+function blockexchange.set_player_hud(playername, enabled)
+	local player = minetest.get_player_by_name(playername)
+	if not player then
+		return
+	end
+
+	local meta = player:get_meta()
+	if enabled then
+		meta:set_int("bx_hud", 1)
+		create_hud(player)
+		return true, "Hud enabled"
+	else
+		meta:set_int("bx_hud", 0)
+		remove_hud(player)
+		return true, "Hud disabled"
+	end
+end
+
 minetest.register_chatcommand("bx_hud", {
 	description = "Enables or disables the blockexchange hud",
 	params = "bx_hud [on|off]",
 	func = function(name, param)
-		local player = minetest.get_player_by_name(name)
-		if not player then
-			return
-		end
+		local enabled = param == "on"
+		blockexchange.set_player_hud(name, enabled)
 
-		local meta = player:get_meta()
-		if param == "on" then
-			meta:set_int("bx_hud", 1)
-			create_hud(player)
-			return true, "Hud enabled"
-		else
-			meta:set_int("bx_hud", 0)
-			remove_hud(player)
-			return true, "Hud disabled"
-		end
+		return true, enabled and "Hud enabled" or "Hud disabled"
   end
 })

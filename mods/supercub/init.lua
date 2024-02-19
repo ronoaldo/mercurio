@@ -104,6 +104,7 @@ supercub.plane_properties = {
                     "supercub_panel.png", --painel
                     "supercub_painting.png", --pintura inferior
                     "airutils_painting_2.png", --pintura superior
+                    "airutils_name_canvas.png",
                     "supercub_glass.png", --para brisa frontal
                     "supercub_glass.png", --janelas
                     "airutils_black.png", --nacele motor
@@ -207,6 +208,8 @@ supercub.plane_properties = {
     _register_parts_method = supercub.register_parts_method, --the method to register plane parts
     _destroy_parts_method = supercub.destroy_parts_method,
     _plane_y_offset_for_bullet = 1,
+    _name_color = 0,
+    _name_hor_aligment = 3.0,
     --_custom_punch_when_attached = ww1_planes_lib._custom_punch_when_attached, --the method to execute click action inside the plane
     _custom_pilot_formspec = airutils.pilot_formspec,
     --_custom_pilot_formspec = supercub.pilot_formspec,

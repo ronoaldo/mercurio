@@ -21,6 +21,7 @@ minetest.register_node("computers:vanio", {
 	tiles = {"computers_laptop.png"},
 	paramtype = "light",
 	paramtype2 = "facedir",
+	use_texture_alpha = "clip",
 	light_source = 4,
 	groups = {snappy=3},
 	walkable = false,
@@ -41,6 +42,7 @@ minetest.register_node("computers:vanio_off", {
 	tiles = {"computers_laptop.png"},
 	paramtype = "light",
 	paramtype2 = "facedir",
+	use_texture_alpha = "clip",
 	groups = {snappy=3, not_in_creative_inventory=1},
 	walkable = false,
 	selection_box = {
@@ -171,6 +173,7 @@ minetest.register_node("computers:router", {
 	}, --"computers_router_f.png"},
 	paramtype = "light",
 	paramtype2 = "facedir",
+	use_texture_alpha = "clip",
 	walkable = false,
 	groups = {snappy=3},
 	sound = default and default.node_sound_wood_defaults() or nil,
@@ -221,6 +224,7 @@ minetest.register_node("computers:server", {
 	inventory_image = "computers_server_inv.png",
 	paramtype = "light",
 	paramtype2 = "facedir",
+	use_texture_alpha = "clip",
 	groups = {snappy=3},
 	selection_box = {
 		type = "fixed",
@@ -260,6 +264,7 @@ minetest.register_node("computers:server_on", {
 	inventory_image = "computers_server_inv.png",
 	paramtype = "light",
 	paramtype2 = "facedir",
+	use_texture_alpha = "clip",
 	groups = {snappy=3,not_in_creative_inventory=1},
 	selection_box = {
 		type = "fixed",
@@ -287,6 +292,7 @@ minetest.register_node("computers:printer", {
 			"computers_printer_r.png","computers_printer_b.png","computers_printer_f.png"},
 	paramtype = "light",
 	paramtype2 = "facedir",
+	use_texture_alpha = "clip",
 	walkable = true,
 	groups = {snappy=3},
 	sound = default and default.node_sound_wood_defaults() or nil,

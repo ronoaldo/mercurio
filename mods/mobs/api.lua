@@ -14,7 +14,7 @@ local use_vh1 = minetest.get_modpath("visual_harm_1ndicators")
 -- Global
 mobs = {
 	mod = "redo",
-	version = "20231202",
+	version = "20240201",
 	translate = S,
 	invis = minetest.global_exists("invisibility") and invisibility or {},
 	node_snow = minetest.registered_aliases["mapgen_snow"]
@@ -146,6 +146,7 @@ mobs.mob_class = {
 	lava_damage = 4,
 	fire_damage = 4,
 	air_damage = 0,
+	node_damage = true,
 	suffocation = 2,
 	fall_damage = 1,
 	fall_speed = -10, -- must be lower than -2 (default: -10)
@@ -654,6 +655,9 @@ function mob_class:update_tag(newname)
 	local prop = self.object:get_properties()
 	local qua = prop.hp_max / 6
 
+	local old_nametag = prop.nametag
+	local old_nametag_color = self.nametag_col
+
 	-- backwards compatibility
 	if self.nametag and self.nametag ~= "" then
 		newname = self.nametag
@@ -666,20 +670,23 @@ function mob_class:update_tag(newname)
 
 		-- choose tag colour depending on mob health
 		if self.health <= qua then
-			col = "#FF0000"
+			self.nametag_col = "#FF0000"
 		elseif self.health <= (qua * 2) then
-			col = "#FF7A00"
+			self.nametag_col = "#FF7A00"
 		elseif self.health <= (qua * 3) then
-			col = "#FFB500"
+			self.nametag_col = "#FFB500"
 		elseif self.health <= (qua * 4) then
-			col = "#FFFF00"
+			self.nametag_col = "#FFFF00"
 		elseif self.health <= (qua * 5) then
-			col = "#B4FF00"
+			self.nametag_col = "#B4FF00"
 		elseif self.health > (qua * 5) then
-			col = "#00FF00"
+			self.nametag_col = "#00FF00"
 		end
 
-		self.object:set_properties({nametag = self._nametag, nametag_color = col})
+		if self._nametag ~= old_nametag or self.nametag_col ~= old_nametag_color then
+			self.object:set_properties({
+					nametag = self._nametag, nametag_color = self.nametag_col})
+		end
 	end
 
 	local text = ""
@@ -708,7 +715,9 @@ function mob_class:update_tag(newname)
 		.. text
 
 	-- set infotext changes
-	self.object:set_properties({infotext = self.infotext})
+	if self.infotext ~= prop.infotext then
+		self.object:set_properties({infotext = self.infotext})
+	end
 end
 
 
@@ -1088,7 +1097,7 @@ function mob_class:do_env_damage()
 		end
 
 	-- damage_per_second node check (not fire and lava)
-	elseif nodef.damage_per_second and nodef.damage_per_second ~= 0
+	elseif self.node_damage and nodef.damage_per_second and nodef.damage_per_second ~= 0
 	and nodef.groups.lava == nil and nodef.groups.fire == nil then
 
 		self.health = self.health - nodef.damage_per_second
@@ -3124,6 +3133,21 @@ function mob_class:mob_staticdata()
 end
 
 
+local is_property_name = {
+	hp_max = true,
+	physical = true,
+	collide_with_objects = true,
+	collisionbox = true,
+	selectionbox = true,
+	pointable = true,
+	visual_size = true,
+	textures = true,
+	is_visible = true,
+	stepheight = true,
+	glow = true,
+	show_on_minimap = true,
+}
+
 -- activate mob and reload settings
 function mob_class:mob_activate(staticdata, def, dtime)
 
@@ -3161,7 +3185,13 @@ function mob_class:mob_activate(staticdata, def, dtime)
 			t = type(stat)
 
 			if t ~= "function" and t ~= "nil" and t ~= "userdata" then
-				self[_] = stat
+
+				if is_property_name[_] then
+
+					self.object:set_properties({[_] = stat})
+				else
+					self[_] = stat
+				end
 			end
 		end
 	end
@@ -3569,6 +3599,7 @@ minetest.register_entity(":" .. name, setmetatable({
 
 	name = name,
 	type = def.type,
+	_nametag = def.nametag,
 	attack_type = def.attack_type,
 	fly = def.fly,
 	fly_in = def.fly_in,
@@ -3600,6 +3631,7 @@ minetest.register_entity(":" .. name, setmetatable({
 	lava_damage = def.lava_damage,
 	fire_damage = def.fire_damage,
 	air_damage = def.air_damage,
+	node_damage = def.node_damage,
 	suffocation = def.suffocation,
 	fall_damage = def.fall_damage,
 	fall_speed = def.fall_speed,
@@ -4792,7 +4824,7 @@ function mobs:feed_tame(self, clicker, feed_count, breed, tame)
 		local esc = minetest.formspec_escape
 
 		minetest.show_formspec(name, "mobs_nametag", "size[8,4]"
-			.. "field[0.5,1;7.5,0;name;" .. esc(FS("Enter name:")) .. ";" .. tag .. "]"
+			.. "field[0.5,1;7.5,0;name;" .. esc(FS("Enter name:")) .. ";" .. esc(tag) .. "]"
 			.. "button_exit[2.5,3.5;3,1;mob_rename;" .. esc(FS("Rename")) .. "]")
 
 		return true

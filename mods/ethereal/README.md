@@ -97,6 +97,13 @@ several examples are at the documentation of [api.txt](api.txt) file.
 A huge thanks to Chinchow who was the inspiration behind Ethereal and everyone
 who helped make this mod bigger and better throughout it's release :)
 
+### 1.31
+ - Fix fishing biome checks
+ - Increase bamboo leaf decay radius
+ - Switch ethereal coral to new plantlike_rooted drawtype (thanks Niklp)
+ - Switch seaweed to new plantlike_rooted drawtype (thanks Niklp)
+ - Added 'ethereal.logs' setting that adds decorative fallen tree logs to biomes
+
 ### 1.30
  - New fish textures by SirroBzeroone and BlueTangs Rock
  - New fish added along with food recipes (thanks BlueTangs Rock)
@@ -105,6 +112,7 @@ who helped make this mod bigger and better throughout it's release :)
  - Add 11 new lucky blocks
  - Caverealms' glow bait reduces wait time when fishing
  - Add Basandra Bush and wood items, Add Spore Grass
+ - Add 'ethereal.abundant_onions' setting (default: true)
 
 #### 1.29
  - Use "stratum" to generate mesa biome for stripey goodness

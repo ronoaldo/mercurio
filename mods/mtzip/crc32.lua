@@ -35,6 +35,8 @@ local function GenerateXorTable()
 	end
 end
 
+GenerateXorTable()
+
 local _crc_table0 = {
 	[0]=0,150,44,186,25,143,53,163,50,164,30,136,43,189,7,145,100,242,72,222,
 	125,235,81,199,86,192,122,236,79,217,99,245,200,94,228,114,209,71,253,107,
@@ -97,12 +99,9 @@ local _crc_table3 = {
 -- @param init_value [nil/integer] The initial crc32 value. If nil, use 0
 -- @return [integer] The CRC-32 checksum, which is greater or equal to 0,
 -- and less than 2^32 (4294967296).
-return function(str, init_value)
+function mtzip.crc32(str, init_value)
 	-- TODO: Check argument
 	local crc = (init_value or 0) % 4294967296
-	if not _xor8_table then
-		GenerateXorTable()
-	end
 	-- The value of bytes of crc32
 	-- crc0 is the least significant byte
 	-- crc3 is the most significant byte

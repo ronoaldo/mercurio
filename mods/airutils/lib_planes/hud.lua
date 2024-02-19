@@ -1,4 +1,5 @@
 airutils.hud_list = {}
+local S = airutils.S
 
 function airutils.animate_gauge(player, ids, prefix, x, y, angle)
     local angle_in_rad = math.rad(angle + 180)
@@ -58,7 +59,7 @@ function airutils.update_hud(player, climb, speed, power, fuel)
             hud_elem_type = "text",
             position  = {x = 0, y = 1},
             offset    = {x = screen_pos_x +140, y = screen_pos_y -100},
-            text      = "Flight Information",
+            text      = S("Flight Information"),
             alignment = 0,
             scale     = { x = 100, y = 30},
             number    = 0xFFFFFF,

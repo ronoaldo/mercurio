@@ -121,6 +121,7 @@ pa28.plane_properties = {
                     "airutils_painting_2.png", --topo fuselagem
                     "pa28_painting.png", --fuselagem
                     "pa28_black.png", --motor
+                    "airutils_name_canvas.png",
                     "pa28_glass.png", --vidros
                     "pa28_interior.png", -- interior
                     "airutils_painting_2.png", -- sup controle
@@ -203,7 +204,7 @@ pa28.plane_properties = {
     _rudder_pos = {x=0,y=0,z=0},
     _aileron_r_pos = {x=0,y=0,z=0},
     _aileron_l_pos = {x=0,y=0,z=0},
-    _color = "#0063b0",
+    _color = "#5AA3FF",
     _color_2 = "#FFFFFF",
     _rudder_angle = 0,
     _acceleration = 0,
@@ -232,6 +233,8 @@ pa28.plane_properties = {
     _register_parts_method = pa28.register_parts_method, --the method to register plane parts
     _destroy_parts_method = pa28.destroy_parts_method,
     _plane_y_offset_for_bullet = 1,
+    _name_color = 0,
+    _name_hor_aligment = 3.0,
     --_custom_punch_when_attached = ww1_planes_lib._custom_punch_when_attached, --the method to execute click action inside the plane
     _custom_pilot_formspec = airutils.pilot_formspec,
     --_custom_pilot_formspec = pa28.pilot_formspec,
