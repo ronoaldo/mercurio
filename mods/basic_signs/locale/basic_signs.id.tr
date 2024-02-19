@@ -1,0 +1,14 @@
+# textdomain: basic_signs
+Locked Sign=Penanda Terkunci
+Glass Sign=Penanda Kaca
+Obsidian Glass Sign=Penanda Kaca Obsidian
+Plastic Sign=Penanda Plastik
+green=hijau
+yellow=kuning
+red=merah
+white_red=putih_merah
+white_black=putih_hitam
+orange=oranye
+blue=biru
+brown=cokelat
+Sign (@1, steel)=Penanda (@1, baja)

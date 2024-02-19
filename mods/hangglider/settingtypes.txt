@@ -1,0 +1,11 @@
+# The number of times the hangglider can be used before breaking. Set to 0 for infinite uses.
+hangglider.uses (Hangglider uses) int 250
+
+# If true, an image of the hangglider struts is shown on the hud when gliding.
+hangglider.enable_hud_overlay (Enable overlay) bool true
+
+# If enabled, and the `areas` mod is installed, enables airspace restrictions to be added to areas.
+hangglider.enable_flak (Enable flak) bool true
+
+# Time in seconds before hanggliders get shot down when flying in restricted airspace
+hangglider.flak_warning_time (Flak warning time) float 2

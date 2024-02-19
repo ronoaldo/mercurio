@@ -1,0 +1,4 @@
+# textdomain: trike
+trike wing=
+trike fuselage=
+Ultralight Trike=
