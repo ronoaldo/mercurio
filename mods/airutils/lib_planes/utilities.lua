@@ -217,6 +217,7 @@ function airutils.dettach_pax(self, player, is_flying)
     if not player then return end
     is_flying = is_flying or false
     local name = player:get_player_name() --self._passenger
+    airutils.remove_hud(player)
 
     --check for external attachment of the vehicle
     local extern_attach = self.object:get_attach()

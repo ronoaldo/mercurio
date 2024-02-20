@@ -14,7 +14,7 @@ local use_vh1 = minetest.get_modpath("visual_harm_1ndicators")
 -- Global
 mobs = {
 	mod = "redo",
-	version = "20240201",
+	version = "20240220",
 	translate = S,
 	invis = minetest.global_exists("invisibility") and invisibility or {},
 	node_snow = minetest.registered_aliases["mapgen_snow"]
@@ -2869,6 +2869,11 @@ function mob_class:on_punch(hitter, tflp, tool_capabilities, dir, damage)
 
 	-- toolrank support
 	local wear = floor((punch_interval / 75) * 9000)
+
+	-- check for punch_attack_uses being 0 to negate wear
+	if tool_capabilities.punch_attack_uses == 0 then
+		wear = 0
+	end
 
 	if mobs.is_creative(hitter:get_player_name()) then
 		wear = tr and 1 or 0
