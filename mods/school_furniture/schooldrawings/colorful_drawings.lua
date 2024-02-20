@@ -27,10 +27,10 @@ minetest.register_node("school_furniture:colored_hands",{
     groups = {snappy = 3, flammable = 2, leaves = 1, hedge = 1},
 }) 
 
-minetest.register_craft({output = "school_furniture:colored_hands 1",
-	recipe = {{"default:dirt","default:dirt","default:dirt",},
-              {"default:dirt","flowers:dandelion_white","default:dirt",},
-              {"default:dirt","default:dirt","default:dirt",},},})
+minetest.register_craft({output = "school_furniture:colored_hands 9",
+	recipe = {{"default:paper","default:paper","default:paper",},
+              {"default:paper","flowers:dandelion_white","default:paper",},
+              {"default:paper","default:paper","default:paper",},},})
 
 
 

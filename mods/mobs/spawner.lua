@@ -20,7 +20,9 @@ minetest.register_node("mobs:spawner", {
 	paramtype = "light",
 	walkable = true,
 	description = S("Mob Spawner"),
-	groups = {cracky = 1},
+	groups = {cracky = 1, pickaxey = 3},
+	_mcl_hardness = 1,
+	_mcl_blast_resistance = 5,
 
 	on_construct = function(pos)
 

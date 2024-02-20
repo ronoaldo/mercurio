@@ -53,4 +53,3 @@ Teleporting to @1.=
 There is no place by that name. Keep in mind this is case-sensitive.=
 Accept teleport/area requests from another player=
 Deny teleport/area requests from another player=
-[Teleport Request] TPS Teleport v@1 Loaded!=

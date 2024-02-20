@@ -52,5 +52,4 @@ Usage: /tpp <place>=Uso: /tpp <lugar>
 Teleporting to @1.=Teletransportandose a @1.
 There is no place by that name. Keep in mind this is case-sensitive.=No hay lugar con ese nombre. Tenga en cuenta que esto es caso-sensitivo.
 Accept teleport/area requests from another player=Aceptar solicitudes de otro jugador
-Deny teleport/area requests from another player=Denegar solicitudos de otro jugador
-[Teleport Request] TPS Teleport v@1 Loaded!=[Teleport Request] Solicitud de teletransporte v@1 Cargado!
+Deny teleport/area requests from another player=Denegar solicitudes de otro jugador

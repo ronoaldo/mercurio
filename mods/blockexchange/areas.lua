@@ -1,4 +1,5 @@
 local has_mapsync = minetest.get_modpath("mapsync")
+local area_storage_key = "areas_v3"
 
 local area_store
 
@@ -21,7 +22,11 @@ function blockexchange.load_areas()
 
     if not area_map then
         -- load bx-areas from mod-storage or create an empty table
-        area_map = minetest.deserialize(blockexchange.mod_storage:get_string("areas_v2")) or {}
+        local json = blockexchange.mod_storage:get_string(area_storage_key)
+        if not json or json == "" then
+            json = "{}"
+        end
+        area_map = minetest.parse_json(json) or {}
     end
     for area_id, persisted_area in pairs(area_map) do
         area_store:insert_area(
@@ -37,7 +42,7 @@ minetest.register_on_mods_loaded(blockexchange.load_areas)
 
 function blockexchange.save_areas()
     -- save to mod-storage
-    blockexchange.mod_storage:set_string("areas_v2", minetest.serialize(area_map))
+    blockexchange.mod_storage:set_string(area_storage_key, minetest.write_json(area_map))
 
     if has_mapsync then
         -- persist to mapsync too
@@ -50,21 +55,34 @@ function blockexchange.clear_areas()
     blockexchange.save_areas()
 end
 
-function blockexchange.register_area(pos1, pos2, username, schema)
+function blockexchange.register_area(pos1, pos2, playername, username, schema)
     local area_id = create_area_id()
     local data = {
         id = area_id,
         pos1 = pos1,
         pos2 = pos2,
-        schema_id = schema.id,
+        schema_uid = schema.uid,
         mtime = schema.mtime,
         name = schema.name,
         username = username,
-        sync = "off" -- off,load,save,both
+        playername = playername,
+        autosave = false,
+        autoload = false
     }
     area_map[area_id] = data
     area_store:insert_area(pos1, pos2, area_id)
     blockexchange.save_areas()
+end
+
+function blockexchange.get_areas_in_area(pos1, pos2)
+    local areas = area_store:get_areas_in_area(pos1, pos2, true, true, true)
+    local list = {}
+    for _, area in pairs(areas) do
+        if area_map[area.data] then
+            table.insert(list, area_map[area.data])
+        end
+    end
+    return list
 end
 
 function blockexchange.get_area(pos)

@@ -24,9 +24,9 @@ function airutils.physics(self)
 	if surface then				-- standing in liquid
         self.isinliquid = true
     end
-    local last_accel = nil
+    local last_accel = new
     if self._last_accel then
-        last_accel = airutils.properties_copy(self._last_accel)
+        last_accel = vector.new(self._last_accel)
     end
 
     if self.isinliquid then

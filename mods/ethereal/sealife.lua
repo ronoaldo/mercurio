@@ -22,18 +22,136 @@ minetest.register_node("ethereal:seaweed", {
 	on_use = minetest.item_eat(1),
 	sounds = default.node_sound_leaves_defaults(),
 
-	after_dig_node = function(pos, node, metadata, digger)
-		default.dig_up(pos, node, digger)
+	on_place = function(itemstack, placer, pointed_thing)
+
+		local pname = placer:get_player_name()
+		local pos = pointed_thing.above
+		local pos_up = {x = pos.x, y = pos.y + 1, z = pos.z}
+		local pos_down = {x = pos.x, y = pos.y - 1, z = pos.z}
+		local def_up = minetest.registered_nodes[minetest.get_node(pos_up).name] or {}
+		local def_down = minetest.registered_nodes[minetest.get_node(pos_down).name] or {}
+
+		if def_up.liquidtype == nil or def_up.liquidtype ~= "none" then
+
+			if minetest.is_protected(pos, pname) then
+				return
+			end
+
+			if def_down.name ~= "default:sand" and def_down.name ~= "ethereal:sandy" then
+				return
+			end
+
+			if minetest.get_node(pos_up).name == "default:water_source" then
+
+				minetest.set_node(pos_down, {name = "ethereal:seaweed_rooted",
+						param2 = 16})
+
+				if not ethereal.check_creative(pname) then
+					itemstack:take_item()
+				end
+			end
+
+			return itemstack
+		end
+
+		return minetest.item_place_node(itemstack, placer, pointed_thing)
 	end
 })
 
-minetest.register_craft( {
-	type = "shapeless",
-	output = "dye:dark_green 3",
-	recipe = {"ethereal:seaweed"}
+minetest.register_node("ethereal:seaweed_rooted", {
+	description = S("Seaweed"),
+	drop = "ethereal:seaweed",
+	drawtype = "plantlike_rooted",
+	tiles = {"default_sand.png"},
+	special_tiles = {{name = "ethereal_seaweed.png", tileable_vertical = true}},
+	inventory_image = "ethereal_seaweed.png",
+	wield_image = "ethereal_seaweed.png",
+	paramtype = "light",
+	paramtype2 = "leveled",
+	light_source = 3,
+	selection_box = {
+		type = "fixed",
+		fixed = {
+				{-0.5, -0.5, -0.5, 0.5, 0.5, 0.5},
+				{-2/16, 0.5, -2/16, 2/16, 3.5, 2/16},
+		},
+	},
+	node_dig_prediction = "default:sand",
+	node_placement_prediction = "",
+	post_effect_color = {a = 64, r = 100, g = 100, b = 200},
+	groups = {food_seaweed = 1, snappy = 3, flammable = 3, not_in_creative_inventory = 1},
+	on_use = minetest.item_eat(1),
+	sounds = default.node_sound_leaves_defaults(),
+
+	after_dig_node = function(pos, node, metadata, digger)
+		minetest.set_node(pos, {name = "default:sand"})
+	end,
+
+	on_place = function(itemstack, placer, pointed_thing) -- do not place rooted seaweed
+		return itemstack
+	end,
+
+	on_dig = function(pos, node, digger)
+
+		local p2 = node.param2 or 16
+		local num = math.max(1, math.floor(p2 / 16))
+		local inv = digger and digger:get_inventory()
+
+		if not inv then return end
+
+		local stack = ItemStack("ethereal:seaweed " .. tonumber(num))
+		local leftover = inv:add_item("main", stack)
+		local count = leftover:get_count()
+
+		minetest.set_node(pos, {name = "default:sand"})
+
+		if count > 0 then
+			pos.y = pos.y + 1
+			minetest.add_item(pos, "ethereal:seaweed " .. tonumber(count))
+		end
+	end
 })
 
 
+minetest.register_lbm({
+	label = "[ethereal] Upgrade seaweed",
+	name = "ethereal:upgrade_seaweed",
+	nodenames = {"ethereal:seaweed"},
+	run_at_every_load = false,
+
+	action = function(pos, node)
+
+		local pos_up = {x = pos.x, y = pos.y + 1, z = pos.z}
+		local pos_down = {x = pos.x, y = pos.y - 1, z = pos.z}
+		local def_up = minetest.registered_nodes[minetest.get_node(pos_up).name] or {}
+		local def_down = minetest.registered_nodes[minetest.get_node(pos_down).name] or {}
+
+		if def_down.name == "default:sand" or def_down.name == "ethereal:sandy" then
+
+			local height = 0
+
+			while height < 14
+			and minetest.get_node(pos_up).name == "ethereal:seaweed" do
+				minetest.remove_node(pos_up)
+				height = height + 1
+				pos_up.y = pos_up.y + 1
+			end
+
+			minetest.remove_node(pos)
+
+			minetest.set_node(pos_down, {name = "ethereal:seaweed_rooted",
+					param2 = (height + 1) * 16})
+		end
+	end
+})
+
+
+-- seaweed to d.green dye
+minetest.register_craft( {
+	output = "dye:dark_green 3",
+	recipe = {{"ethereal:seaweed"}}
+
+})
 -- agar powder
 minetest.register_craftitem("ethereal:agar_powder", {
 	description = S("Agar Powder"),
@@ -54,22 +172,119 @@ minetest.register_craft({
 })
 
 
--- Blue Coral
-minetest.register_node("ethereal:coral2", {
-	description = S("Blue Glow Coral"),
-	drawtype = "plantlike",
-	tiles = {"ethereal_coral_blue.png"},
-	inventory_image = "ethereal_coral_blue.png",
-	wield_image = "ethereal_coral_blue.png",
-	paramtype = "light",
-	selection_box = {
-		type = "fixed",
-		fixed = {-6 / 16, -0.5, -6 / 16, 6 / 16, 1 / 4, 6 / 16}
-	},
-	light_source = 3,
-	groups = {snappy = 3},
-	sounds = default.node_sound_leaves_defaults()
+-- Corals
+local coral_nodes = {}
+
+local function register_coral(name, description, texture)
+
+	local function plantlike_on_place(itemstack, placer, pointed_thing)
+
+		local pname = placer:get_player_name()
+		local pos = pointed_thing.above
+		local pos_up = {x = pos.x, y = pos.y + 1, z = pos.z}
+		local pos_down = {x = pos.x, y = pos.y - 1, z = pos.z}
+		local def_up = minetest.registered_nodes[minetest.get_node(pos_up).name] or {}
+		local def_down = minetest.registered_nodes[minetest.get_node(pos_down).name] or {}
+
+		if def_up.liquidtype == nil or def_up.liquidtype ~= "none" then
+
+			if minetest.is_protected(pos, pname) then
+				return
+			end
+
+			if def_down.name ~= "default:sand" then
+				return
+			end
+
+			minetest.set_node(pos_down, {name = "ethereal:" .. name .. "_rooted"})
+
+			if not ethereal.check_creative(pname) then
+				itemstack:take_item()
+			end
+
+			return itemstack
+		end
+
+		return minetest.item_place_node(itemstack, placer, pointed_thing)
+	end
+
+	local function rooted_on_dig(pos, node, digger)
+
+		local res = minetest.node_dig(pos, node, digger)
+
+		if res == true then
+			minetest.set_node(pos, {name = "default:sand"})
+		end
+
+		return res
+	end
+
+	minetest.register_node("ethereal:" .. name, {
+		description = description,
+		drawtype = "plantlike",
+		tiles = {texture},
+		inventory_image = texture,
+		wield_image = texture,
+		paramtype = "light",
+		selection_box = {
+			type = "fixed",
+			fixed = {-6 / 16, -0.5, -6 / 16, 6 / 16, 1 / 4, 6 / 16}
+		},
+		light_source = 3,
+		groups = {snappy = 3},
+		sounds = default.node_sound_leaves_defaults(),
+		on_place = plantlike_on_place
+	})
+
+	minetest.register_node("ethereal:" .. name .. "_rooted", {
+		description = description,
+		drop = "ethereal:" .. name,
+		drawtype = "plantlike_rooted",
+		tiles = {"default_sand.png"},
+		special_tiles = {{name = texture, tileable_vertical = true}},
+		inventory_image = texture,
+		wield_image = texture,
+		paramtype = "light",
+		selection_box = {
+			type = "fixed",
+			fixed = {-6 / 16, 0.5, -6 / 16, 6 / 16, 1.25, 6 / 16}
+		},
+		light_source = 3,
+		groups = {snappy = 3, not_in_creative_inventory = 1},
+		sounds = default.node_sound_leaves_defaults(),
+		on_dig = rooted_on_dig
+	})
+
+	table.insert(coral_nodes, "ethereal:" .. name)
+end
+
+
+minetest.register_lbm({
+	label = "[ethereal] Upgrade corals",
+	name = "ethereal:upgrade_corals",
+	nodenames = coral_nodes,
+	run_at_every_load = false,
+
+	action = function(pos, node)
+
+		local pos_up = {x = pos.x, y = pos.y + 1, z = pos.z}
+		local pos_down = {x = pos.x, y = pos.y - 1, z = pos.z}
+		local def_up = minetest.registered_nodes[minetest.get_node(pos_up).name] or {}
+		local def_down = minetest.registered_nodes[minetest.get_node(pos_down).name] or {}
+
+		if (def_up.liquidtype == nil or def_up.liquidtype ~= "none")
+		and (def_down.name == "default:sand" or def_down.name == "ethereal:sandy") then
+
+			minetest.set_node(pos_down, {name = node.name .. "_rooted"})
+
+			minetest.remove_node(pos)
+		end
+	end
 })
+
+
+-- Blua Coral
+register_coral("coral2", S("Blue Glow Coral"), "ethereal_coral_blue.png")
 
 minetest.register_craft( {
 	output = "dye:cyan 3",
@@ -78,21 +293,7 @@ minetest.register_craft( {
 
 
 -- Orange Coral
-minetest.register_node("ethereal:coral3", {
-	description = S("Orange Glow Coral"),
-	drawtype = "plantlike",
-	tiles = {"ethereal_coral_orange.png"},
-	inventory_image = "ethereal_coral_orange.png",
-	wield_image = "ethereal_coral_orange.png",
-	paramtype = "light",
-	selection_box = {
-		type = "fixed",
-		fixed = {-6 / 16, -0.5, -6 / 16, 6 / 16, 1 / 4, 6 / 16}
-	},
-	light_source = 3,
-	groups = {snappy = 3},
-	sounds = default.node_sound_leaves_defaults()
-})
+register_coral("coral3", S("Orange Glow Coral"), "ethereal_coral_orange.png")
 
 minetest.register_craft( {
 	output = "dye:orange 3",
@@ -101,21 +302,7 @@ minetest.register_craft( {
 
 
 -- Pink Coral
-minetest.register_node("ethereal:coral4", {
-	description = S("Pink Glow Coral"),
-	drawtype = "plantlike",
-	tiles = {"ethereal_coral_pink.png"},
-	inventory_image = "ethereal_coral_pink.png",
-	wield_image = "ethereal_coral_pink.png",
-	paramtype = "light",
-	selection_box = {
-		type = "fixed",
-		fixed = {-6 / 16, -0.5, -6 / 16, 6 / 16, 8 / 16, 6 / 16}
-	},
-	light_source = 3,
-	groups = {snappy = 3},
-	sounds = default.node_sound_leaves_defaults()
-})
+register_coral("coral4", S("Pink Glow Coral"), "ethereal_coral_pink.png")
 
 minetest.register_craft( {
 	output = "dye:pink 3",
@@ -124,21 +311,7 @@ minetest.register_craft( {
 
 
 -- Green Coral
-minetest.register_node("ethereal:coral5", {
-	description = S("Green Glow Coral"),
-	drawtype = "plantlike",
-	tiles = {"ethereal_coral_green.png"},
-	inventory_image = "ethereal_coral_green.png",
-	wield_image = "ethereal_coral_green.png",
-	paramtype = "light",
-	selection_box = {
-		type = "fixed",
-		fixed = {-6 / 16, -0.5, -6 / 16, 6 / 16, 3 / 16, 6 / 16}
-	},
-	light_source = 3,
-	groups = {snappy = 3},
-	sounds = default.node_sound_leaves_defaults()
-})
+register_coral("coral5", S("Green Glow Coral"), "ethereal_coral_green.png")
 
 minetest.register_craft( {
 	output = "dye:green 3",
@@ -164,52 +337,58 @@ if ethereal.sealife == 1 then
 
 	minetest.register_abm({
 		label = "Grow coral/seaweed",
-		nodenames = {"ethereal:sandy"},
+		nodenames = {"ethereal:sandy", "ethereal:seaweed_rooted"},
 		neighbors = {"group:water"},
 		interval = 15,
 		chance = 10,
 		catch_up = false,
+
 		action = function(pos, node)
 
-			local sel = math.random(6)
+			-- grow new seaweed using param2 values
+			if node.name == "ethereal:seaweed_rooted" then
 
-			pos.y = pos.y + 1
+				local p2 = node.param2 or 16
+				local height = math.max(1, math.floor(p2 / 16))
 
-			local nod = minetest.get_node(pos).name
-
-			if nod == "default:water_source"
-			and sel == 6 then
-
-				minetest.swap_node(pos, {name = "ethereal:sponge_wet"})
-
-				return
-			end
-
-			if nod == "default:water_source"
-			and sel > 1 then
-
-				minetest.swap_node(pos, {name = "ethereal:coral" .. sel})
-
-				return
-			end
-
-			if nod == "ethereal:seaweed"
-			or sel == 1 then
-
-				local height = 0
-				local high = 14
-
-				while height < high
-				and minetest.get_node(pos).name == "ethereal:seaweed" do
-					height = height + 1
-					pos.y = pos.y + 1
+				if height > 13 then
+					return
 				end
 
-				if pos.y < 1
-				and height < high
-				and minetest.get_node(pos).name == "default:water_source" then
+				height = height + 1
 
-					minetest.swap_node(pos, {name = "ethereal:seaweed"})
+				local tpos = {x = pos.x, y = pos.y + height + 1, z = pos.z}
+
+				if minetest.get_node(tpos).name ~= "default:water_source" then
+					return
+				end
+
+				minetest.set_node(pos, {name = "ethereal:seaweed_rooted",
+						param2 = (height * 16)})
+
+				return
+			end
+
+			local sel = math.random(6)
+			local pos_up = {x = pos.x, y = pos.y + 1, z = pos.z}
+			local nod = minetest.get_node(pos_up).name
+
+			if nod == "default:water_source" then
+
+				if sel == 1 then
+
+					local height = math.random(1, 6)
+
+					minetest.set_node(pos, {name = "ethereal:seaweed_rooted",
+							param2 = (height * 16)})
+
+				elseif sel == 6 then
+
+					minetest.set_node(pos_up, {name = "ethereal:sponge_wet"})
+
+				elseif sel > 1 then
+
+					minetest.set_node(pos, {name = "ethereal:coral" .. sel .. "_rooted"})
 				end
 			end
 		end
@@ -256,8 +435,7 @@ minetest.register_node("ethereal:sponge", {
 		-- get water nodes within range
 		local num = minetest.find_nodes_in_area(
 			{x = pos.x - 3, y = pos.y - 3, z = pos.z - 3},
-			{x = pos.x + 3, y = pos.y + 3, z = pos.z + 3},
-			{"group:water"})
+			{x = pos.x + 3, y = pos.y + 3, z = pos.z + 3}, {"group:water"})
 
 		-- no water
 		if #num == 0 then return end
@@ -266,12 +444,12 @@ minetest.register_node("ethereal:sponge", {
 		for _, w in pairs(num) do
 
 			if not minetest.is_protected(pos, name) then
-				minetest.swap_node(w, {name = "ethereal:sponge_air"})
+				minetest.set_node(w, {name = "ethereal:sponge_air"})
 			end
 		end
 
 		-- replace dry sponge with wet sponge
-		minetest.swap_node(pos, {name = "ethereal:sponge_wet"})
+		minetest.set_node(pos, {name = "ethereal:sponge_wet"})
 	end
 })
 

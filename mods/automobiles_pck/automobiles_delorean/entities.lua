@@ -1,3 +1,28 @@
+local S = delorean.S
+
+function delorean.set_kit(self)
+    local normal_kit = nil
+    if self.normal_kit then self.normal_kit:remove() end
+    local pos = self.object:get_pos()
+    if self._car_type == 0 or self._car_type == nil then
+        normal_kit = minetest.add_entity(pos,'automobiles_delorean:normal_kit')
+        normal_kit:set_attach(self.object,'',{x=0,y=0,z=0},{x=0,y=0,z=0})
+        self.normal_kit = normal_kit
+        self.normal_kit:set_properties({is_visible=true})
+    elseif self._car_type == 1 then
+        --time machine
+        normal_kit = minetest.add_entity(pos,'automobiles_delorean:time_machine_kit')
+        normal_kit:set_attach(self.object,'',{x=0,y=0,z=0},{x=0,y=0,z=0})
+        self.normal_kit = normal_kit
+        self.normal_kit:set_properties({is_visible=true})
+
+        local instruments = minetest.add_entity(pos,'automobiles_delorean:time_machine_kit_instruments')
+        instruments:set_attach(self.object,'',{x=0,y=0,z=0},{x=0,y=0,z=0})
+        self.instruments = instruments
+        self.instruments:set_properties({is_visible=true})
+    end
+end
+
 --
 -- entity
 --
@@ -306,50 +331,6 @@ initial_properties = {
 	
 })
 
-minetest.register_entity('automobiles_delorean:pivot_mesh',{
-initial_properties = {
-	physical = false,
-	collide_with_objects=false,
-	pointable=false,
-	visual = "mesh",
-	mesh = "automobiles_pivot_mesh.b3d",
-    textures = {"automobiles_black.png",},
-	},
-	
-    on_activate = function(self,std)
-	    self.sdata = minetest.deserialize(std) or {}
-	    if self.sdata.remove then self.object:remove() end
-    end,
-	    
-    get_staticdata=function(self)
-      self.sdata.remove=true
-      return minetest.serialize(self.sdata)
-    end,
-	
-})
-
-minetest.register_entity('automobiles_delorean:pointer',{
-initial_properties = {
-	physical = false,
-	collide_with_objects=false,
-	pointable=false,
-	visual = "mesh",
-	mesh = "automobiles_pointer.b3d",
-    visual_size = {x = 0.5, y = 0.5, z = 0.5},
-	textures = {"automobiles_white.png"},
-	},
-	
-    on_activate = function(self,std)
-	    self.sdata = minetest.deserialize(std) or {}
-	    if self.sdata.remove then self.object:remove() end
-    end,
-	    
-    get_staticdata=function(self)
-      self.sdata.remove=true
-      return minetest.serialize(self.sdata)
-    end,
-})
-
 minetest.register_entity("automobiles_delorean:delorean", {
 	initial_properties = {
 	    physical = true,
@@ -389,7 +370,7 @@ minetest.register_entity("automobiles_delorean:delorean", {
 	sound_handle = nil,
     owner = "",
     static_save = true,
-    infotext = "A very nice delorean!",
+    infotext = S("A very nice delorean!"),
     hp = 50,
     buoyancy = 2,
     physics = automobiles_lib.physics,
@@ -420,7 +401,7 @@ minetest.register_entity("automobiles_delorean:delorean", {
     _inv_id = "",
     _change_color = automobiles_lib.paint,
     _intensity = 4,
-    _delorean_type = 0,
+    _car_type = 0,
     _car_gravity = -automobiles_lib.gravity,
     _is_flying = 0,
     _trunk_slots = 8,
@@ -429,155 +410,58 @@ minetest.register_entity("automobiles_delorean:delorean", {
     _formspec_function = delorean.driver_formspec,
     _destroy_function = delorean.destroy,
 
-    get_staticdata = function(self) -- unloaded/unloads ... is now saved
-        return minetest.serialize({
-            stored_owner = self.owner,
-            stored_hp = self.hp,
-            stored_color = self._color,
-            stored_steering = self._steering_angle,
-            stored_energy = self._energy,
-            --race data
-            stored_last_checkpoint = self._last_checkpoint,
-            stored_total_laps = self._total_laps,
-            stored_race_id = self._race_id,
-            stored_rag = self._show_rag,
-            stored_pitch = self._pitch,
-            stored_light_old_pos = self._light_old_pos,
-            stored_inv_id = self._inv_id,
-            stored_delorean_type = self._delorean_type,
-            stored_car_gravity = self._car_gravity,
-        })
-    end,
+    _vehicle_name = S("Delorean"),
+    _drive_wheel_pos = {x=-4.66, y=6.31, z=15.69},
+    _drive_wheel_angle = 15,
+    _seat_pos = {{x=-4.65,y=0.48,z=9.5},{x=4.65,y=0.48,z=9.5}},
+
+    _front_suspension_ent = 'automobiles_delorean:front_suspension',
+    _front_suspension_pos = {x=0,y=1.5,z=27.7057},
+    _front_wheel_ent = 'automobiles_delorean:wheel',
+    _front_wheel_xpos = 9.5,
+    _front_wheel_frames = {x = 1, y = 49},
+    _rear_suspension_ent = 'automobiles_delorean:rear_suspension',
+    _rear_suspension_pos = {x=0,y=1.5,z=0},
+    _rear_wheel_ent = 'automobiles_delorean:wheel',
+    _rear_wheel_xpos = 9.5,
+    _rear_wheel_frames = {x = 1, y = 49},
+
+    _fuel_gauge_pos = {x=-4.66,y=6.2,z=17.9},
+    _front_lights = 'automobiles_delorean:f_lights',
+    _rear_lights = 'automobiles_delorean:r_lights',
+    _reverse_lights = 'automobiles_delorean:reverse_lights',
+    _turn_left_lights = 'automobiles_delorean:turn_left_light',
+    _turn_right_lights = 'automobiles_delorean:turn_right_light',
+    _textures_turn_lights_off = {"automobiles_turn.png", },
+    _textures_turn_lights_on = { "automobiles_turn_on.png", },
+    _extra_items_function = delorean.set_kit, --uses _car_type do change "skin"
+
+    _setmode = delorean.set_mode,
+    _control_function = delorean.control,
+
+    _LONGIT_DRAG_FACTOR = 0.12*0.12,
+    _LATER_DRAG_FACTOR = 8.0,
+    _max_acc_factor = 8.0,
+    _max_speed = 30,
+    _min_later_speed = 4.5,
+
+    get_staticdata = automobiles_lib.get_staticdata,
 
 	on_deactivate = function(self)
         automobiles_lib.save_inventory(self)
 	end,
 
-	on_activate = function(self, staticdata, dtime_s)
-        if staticdata ~= "" and staticdata ~= nil then
-            local data = minetest.deserialize(staticdata) or {}
-            self.owner = data.stored_owner
-            self.hp = data.stored_hp
-            self._color = data.stored_color
-            self._steering_angle = data.stored_steering
-            self._energy = data.stored_energy
-            --minetest.debug("loaded: ", self.energy)
-            --race data
-            self._last_checkpoint = data.stored_last_checkpoint
-            self._total_laps = data.stored_total_laps
-            self._race_id = data.stored_race_id
-            self._show_rag = data.stored_rag
-            self._pitch = data.stored_pitch
-            self._light_old_pos = data.stored_light_old_pos
-            self._inv_id = data.stored_inv_id
+    on_activate = automobiles_lib.on_activate,
 
-            self._delorean_type = data.stored_delorean_type
-            self._car_gravity = data.stored_car_gravity or -automobiles_lib.gravity
-
-            automobiles_lib.setText(self, "Delorean")
-        end
-
-        self.object:set_animation({x = 1, y = 8}, 0, 0, true)
-
-        automobiles_lib.paint(self, self._color)
-        local pos = self.object:get_pos()
-
-        local front_suspension=minetest.add_entity(self.object:get_pos(),'automobiles_delorean:front_suspension')
-	    front_suspension:set_attach(self.object,'',{x=0,y=1.5,z=27.7057},{x=0,y=0,z=0})
-	    self.front_suspension = front_suspension
-
-	    local lf_wheel=minetest.add_entity(pos,'automobiles_delorean:wheel')
-	    lf_wheel:set_attach(self.front_suspension,'',{x=-delorean.front_wheel_xpos,y=0,z=0},{x=0,y=0,z=0})
-		-- set the animation once and later only change the speed
-        lf_wheel:set_animation({x = 1, y = 49}, 0, 0, true)
-	    self.lf_wheel = lf_wheel
-
-	    local rf_wheel=minetest.add_entity(pos,'automobiles_delorean:wheel')
-	    rf_wheel:set_attach(self.front_suspension,'',{x=delorean.front_wheel_xpos,y=0,z=0},{x=0,y=180,z=0})
-		-- set the animation once and later only change the speed
-        rf_wheel:set_animation({x = 1, y = 49}, 0, 0, true)
-	    self.rf_wheel = rf_wheel
-
-        local rear_suspension=minetest.add_entity(self.object:get_pos(),'automobiles_delorean:rear_suspension')
-	    rear_suspension:set_attach(self.object,'',{x=0,y=1.5,z=0},{x=0,y=0,z=0})
-	    self.rear_suspension = rear_suspension
-
-	    local lr_wheel=minetest.add_entity(pos,'automobiles_delorean:wheel')
-	    lr_wheel:set_attach(self.rear_suspension,'',{x=-delorean.rear_wheel_xpos,y=0,z=0},{x=0,y=0,z=0})
-		-- set the animation once and later only change the speed
-        lr_wheel:set_animation({x = 1, y = 49}, 0, 0, true)
-	    self.lr_wheel = lr_wheel
-
-	    local rr_wheel=minetest.add_entity(pos,'automobiles_delorean:wheel')
-	    rr_wheel:set_attach(self.rear_suspension,'',{x=delorean.rear_wheel_xpos,y=0,z=0},{x=0,y=180,z=0})
-		-- set the animation once and later only change the speed
-        rr_wheel:set_animation({x = 1, y = 49}, 0, 0, true)
-	    self.rr_wheel = rr_wheel
-
-        self.object:set_bone_position("drive_adjust", {x=-4.66, y=6.31, z=15.69}, {x=15, y=0, z=0}) 
-
-	    local driver_seat=minetest.add_entity(pos,'automobiles_delorean:pivot_mesh')
-        driver_seat:set_attach(self.object,'',{x=-4.65,y=0.48,z=9.5},{x=0,y=0,z=0})
-	    self.driver_seat = driver_seat
-
-	    local passenger_seat=minetest.add_entity(pos,'automobiles_delorean:pivot_mesh')
-        passenger_seat:set_attach(self.object,'',{x=4.65,y=0.48,z=9.5},{x=0,y=0,z=0})
-	    self.passenger_seat = passenger_seat
-
-        local fuel_gauge=minetest.add_entity(pos,'automobiles_delorean:pointer')
-        fuel_gauge:set_attach(self.object,'',DELOREAN_GAUGE_FUEL_POSITION,{x=0,y=0,z=0})
-        self.fuel_gauge = fuel_gauge
-
-        local lights = minetest.add_entity(pos,'automobiles_delorean:f_lights')
-	    lights:set_attach(self.object,'',{x=0,y=0,z=0},{x=0,y=0,z=0})
-	    self.lights = lights
-        self.lights:set_properties({is_visible=true})
-
-        --normal or time machine?
-        delorean.set_kit(self)
-
-        local r_lights = minetest.add_entity(pos,'automobiles_delorean:r_lights')
-	    r_lights:set_attach(self.object,'',{x=0,y=0,z=0},{x=0,y=0,z=0})
-	    self.r_lights = r_lights
-        self.r_lights:set_properties({is_visible=true})
-
-        local reverse_lights = minetest.add_entity(pos,'automobiles_delorean:reverse_lights')
-	    reverse_lights:set_attach(self.object,'',{x=0,y=0,z=0},{x=0,y=0,z=0})
-	    self.reverse_lights = reverse_lights
-        self.reverse_lights:set_properties({is_visible=true})
-
-        local turn_l_light = minetest.add_entity(pos,'automobiles_delorean:turn_left_light')
-	    turn_l_light:set_attach(self.object,'',{x=0,y=0,z=0},{x=0,y=0,z=0})
-	    self.turn_l_light = turn_l_light
-        self.turn_l_light:set_properties({is_visible=true})
-
-        local turn_r_light = minetest.add_entity(pos,'automobiles_delorean:turn_right_light')
-	    turn_r_light:set_attach(self.object,'',{x=0,y=0,z=0},{x=0,y=0,z=0})
-	    self.turn_r_light = turn_r_light
-        self.turn_r_light:set_properties({is_visible=true})
-
-		self.object:set_armor_groups({immortal=1})
-
-		local inv = minetest.get_inventory({type = "detached", name = self._inv_id})
-		-- if the game was closed the inventories have to be made anew, instead of just reattached
-		if not inv then
-            automobiles_lib.create_inventory(self, self._trunk_slots)
-		else
-		    self.inv = inv
-        end
-
-
-        automobiles_lib.actfunc(self, staticdata, dtime_s)
-	end,
-
-	on_step = function(self, dtime)
+    on_step = automobiles_lib.on_step,
+	--[[on_step = function(self, dtime)
         automobiles_lib.stepfunc(self, dtime)
-        --[[sound play control]]--
+        --sound play control--
         self._last_time_collision_snd = self._last_time_collision_snd + dtime
         if self._last_time_collision_snd > 1 then self._last_time_collision_snd = 1 end
         self._last_time_drift_snd = self._last_time_drift_snd + dtime
         if self._last_time_drift_snd > 1 then self._last_time_drift_snd = 1 end
-        --[[end sound control]]--
+        --end sound control--
 
         local rotation = self.object:get_rotation()
         local yaw = rotation.y
@@ -678,9 +562,6 @@ minetest.register_entity("automobiles_delorean:delorean", {
                         pitch = 1.0,
                     })
                 end
-                --[[if self.damage > 100 then --if acumulated damage is greater than 100, adieu
-                    automobiles_lib.destroy(self)
-                end]]--
             end
 
             --control
@@ -766,11 +647,9 @@ minetest.register_entity("automobiles_delorean:delorean", {
             self._turn_light_timer = 1
         end
         
-        --[[
-        accell correction
-        under some circunstances the acceleration exceeds the max value accepted by set_acceleration and
-        the game crashes with an overflow, so limiting the max acceleration in each axis prevents the crash
-        ]]--
+        --accell correction
+        --under some circunstances the acceleration exceeds the max value accepted by set_acceleration and
+        --the game crashes with an overflow, so limiting the max acceleration in each axis prevents the crash
         local max_factor = 25
         local acc_adjusted = 10
         if accel.x > max_factor then accel.x = acc_adjusted end
@@ -802,7 +681,7 @@ minetest.register_entity("automobiles_delorean:delorean", {
         end
 
         local energy_indicator_angle = automobiles_lib.get_gauge_angle(self._energy)
-        self.fuel_gauge:set_attach(self.object,'',DELOREAN_GAUGE_FUEL_POSITION,{x=0,y=0,z=energy_indicator_angle})
+        self.fuel_gauge:set_attach(self.object,'',self._fuel_gauge_pos,{x=0,y=0,z=energy_indicator_angle})
         ----------------------------
         -- end energy consumption --
 
@@ -854,7 +733,7 @@ minetest.register_entity("automobiles_delorean:delorean", {
         self.lastvelocity = self.object:get_velocity()
         self._longit_speed = longit_speed
 
-	end,
+	end,]]--
 
 	on_punch = automobiles_lib.on_punch,
 	on_rightclick = automobiles_lib.on_rightclick,

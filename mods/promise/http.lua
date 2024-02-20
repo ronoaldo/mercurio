@@ -1,4 +1,16 @@
 
+local function response_wrapper(res)
+    return {
+        code = res.code,
+        json = function()
+            return Promise.resolved(minetest.parse_json(res.data))
+        end,
+        text = function()
+            return Promise.resolved(res.data)
+        end
+    }
+end
+
 function Promise.http(http, url, opts)
     assert(http, "http instance is nil")
     assert(url, "no url given")
@@ -27,17 +39,10 @@ function Promise.http(http, url, opts)
             method = opts.method or "GET",
             data = data
         }, function(res)
-            if res.succeeded and res.code >= 200 and res.code < 400 then
-                if opts.json and res.data and #res.data > 0 then
-                    resolve(minetest.parse_json(res.data))
-                else
-                    resolve(res.data)
-                end
+            if res.succeeded then
+                resolve(response_wrapper(res))
             else
-                reject({
-                    code = res.code or 0,
-                    data = res.data
-                })
+                reject(res)
             end
         end)
     end)

@@ -47,7 +47,7 @@ mobs:register_mob("people:medwarrior", {
 	lava_damage = 2,
 	light_damage = 0,
 	follow = {"farming:baked_potato", "farming:sunflower_bread", "farming:pumpkin_bread", "farming:garlic_bread", "farming:tomato_soup", "pie:brpd_0", "farming:bread", "farming:bread_multigrain", "farming:spanish_potatoes", "farming:beetroot_soup", "farming:blueberry_pie", "farming:porridge", "farming:bibimbap", "farming:burger", "farming:paella", "farming:mac_and_cheese", "livingcaves:healingsoup", "farming:spaghetti", "animalworld:escargots", "farming:rhubarb_pie", "farming:potato_omlet", "farming:potato_salad"},
-	view_range = 12,
+	view_range = 20,
 	owner = "",
 	order = "stand",
 	fear_height = 3,

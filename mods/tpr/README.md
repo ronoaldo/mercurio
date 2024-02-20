@@ -1,10 +1,23 @@
 # Teleport Request
 
 [![LuaCheck status](https://github.com/minetest-mods/teleport-request/workflows/luacheck/badge.svg)](https://github.com/minetest-mods/teleport-request/actions)
-[![License](https://img.shields.io/badge/license-LGPLv2.1%2B-blue.svg)](https://www.gnu.org/licenses/old-licenses/lgpl-2.1.en.html)
 [![ContentDB](https://content.minetest.net/packages/Traxie21/tpr/shields/downloads/)](https://content.minetest.net/packages/Traxie21/tpr/)
 
-Allows players to request from another player to be teleported to them.
+Allows players to send a request to other players to teleport to them. Includes many more teleporting features.
+
+## Installation
+
+- Unzip the archive, rename the folder to `tpr` and
+place it in `.. minetest/mods/`
+
+- GNU/Linux: If you use a system-wide installation place
+    it in `~/.minetest/mods/`.
+
+- If you only want this to be used in a single world, place
+    the folder in `.. worldmods/` in your world directory.
+
+For further information or help, see:\
+<https://wiki.minetest.net/Installing_Mods>
 
 ## Privileges
 
@@ -30,7 +43,7 @@ Note there must be 2 players in order to make the commands to work: a player mus
 
 There are two ways of sending a request:
 
-1. A request which teleports you to the specified player (command `/tpr <player>`).\
+1. A request which teleports you to the specified player (command `/tpr <player>`).
 2. A request which teleports the specified player to you (command `/tphr <player>`).
 
 To accept a request some sent you, you must use `/tpy`.\
@@ -84,45 +97,6 @@ These are the following commands available in-game:
 - **Description:** Deny a user's request to teleport to you or teleport you to them.
 - **Required privileges:** `interact, tp`
 
-## Optional dependencies
-
-- [areas](https://github.com/minetest-mods/areas)
-- [beerchat](https://github.com/minetest-beerchat/beerchat)
-- [chat2](https://github.com/minetest-mods/chat2)
-- [gamehub](https://github.com/shivajiva101/minetest-gamehub)
-
-## Requirements
-
-This mod requires MT 5.0.0+ to run.\
-Older versions not supported.
-
-## Issues, suggestions, features & bugfixes
-
-Report bugs or suggest ideas by [creating an issue](https://github.com/ChaosWormz/teleport-request/issues/new).\
-If you know how to fix an issue, or want something to be added, consider opening a [pull request](https://github.com/ChaosWormz/teleport-request/compare).
-
-## License
-
-Copyright (C) 2014-2023 ChaosWormz and contributors.
-
-Teleport Request code is licensed under LGPLv2.1+, see [`LICENSE.md`](LICENSE.md).\
-[`tpr_warp.ogg`](sounds/tpr_warp.ogg) is licensed under [CC BY-SA 4.0 International](https://creativecommons.org/licenses/by-sa/4.0/).
-
-## Contributors
-
-List of contributors (in no particular order):
-
-- [RobbieF](https://minetest.tv) | [GitHub](https://github.com/Cat5TV)
-- [DonBatman](https://github.com/donbatman)
-- [NathanS21](http://nathansalapat.com/) | [GitHub](https://github.com/NathanSalapat)
-- [ChaosWormz](https://github.com/ChaosWormz)
-- [Panquesito7](https://github.com/Panquesito7)
-- [coil0](https://github.com/coil0)
-- [Zeno-](https://github.com/Zeno-)
-- [indriApollo](https://github.com/indriApollo)
-- [Billy-S](https://github.com/Billy-S)
-- Traxie21, the original creator of this mod (however, he/she does not have a GitHub account anymore).
-
 ## Configuring the mod
 
 Open your `minetest.conf` located in your Minetest directory.\
@@ -140,20 +114,6 @@ Those values are the default values of the mod.\
 You can also go to your Minetest, Settings tab, All settings, Mods, and you'll find `tpr` there.\
 Or another way to do it, is changing the values in `settingtypes.txt`.
 
-## Installation
-
-- Unzip the archive, rename the folder to `tpr` and
-place it in .. minetest/mods/
-
-- GNU/Linux: If you use a system-wide installation place
-    it in ~/.minetest/mods/.
-
-- If you only want this to be used in a single world, place
-    the folder in .. worldmods/ in your world directory.
-
-For further information or help, see:\
-<https://wiki.minetest.net/Installing_Mods>
-
 ## TODO
 
 - Add limitations to /tpc which only allow a user to teleport X number of blocks. Prevents users from teleporting to the edge of the world.
@@ -161,4 +121,8 @@ For further information or help, see:\
 - Rewrite to place all chat commands into one single command much like how /teleport works.
 - Make evade respect land: no teleporting inside land, but instead make sure player is standing on surface or in water.
 
-If you think something else should be added to this list, [submit an issue](https://github.com/ChaosWormz/teleport-request/issues/new).
+If you think something else should be added to this list, [submit an issue](https://github.com/minetest-mods/teleport-request/issues/new).
+
+## License
+
+See [`LICENSE.txt`](LICENSE.txt) for full license information and [`AUTHORS.md`](AUTHORS.md) for all the contributors.

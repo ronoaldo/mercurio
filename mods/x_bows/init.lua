@@ -1,6 +1,6 @@
 --[[
     X Bows. Adds bow and arrows with API.
-    Copyright (C) 2023 SaKeL <juraj.vajda@gmail.com>
+    Copyright (C) 2024 SaKeL
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Lesser General Public
@@ -15,14 +15,6 @@
     You should have received a copy of the GNU Lesser General Public
     License along with this library; if not, write to juraj.vajda@gmail.com
 --]]
-
-minetest = minetest.global_exists('minetest') and minetest or {} --[[@as Minetest]]
-ItemStack = minetest.global_exists('ItemStack') and ItemStack or {} --[[@as ItemStack]]
-vector = minetest.global_exists('vector') and vector or {} --[[@as Vector]]
-default = minetest.global_exists('default') and default or {} --[[@as MtgDefault]]
-sfinv = minetest.global_exists('sfinv') and sfinv or {} --[[@as Sfinv]]
-unified_inventory = minetest.global_exists('unified_inventory') and unified_inventory or {} --[[@as UnifiedInventory]]
-player_api = minetest.global_exists('player_api') and player_api or {} --[[@as MtgPlayerApi]]
 
 math.randomseed(tonumber(tostring(os.time()):reverse():sub(1, 9))--[[@as number]] )
 
@@ -134,7 +126,7 @@ minetest.register_allow_player_inventory_action(function(player, action, invento
         else
             return 0
         end
-    elseif action == 'move' and inventory_info.from_list == 'x_bows:arrow_inv' then
+    elseif action == 'move' and inventory_info.from_list == 'x_bows:arrow_inv' and inventory_info.to_list ~= 'x_bows:quiver_inv' then
         local stack = inventory:get_stack(inventory_info.from_list, inventory_info.from_index)
 
         if minetest.get_item_group(stack:get_name(), 'arrow') ~= 0 then

@@ -10,6 +10,12 @@ end
 function blockexchange.save_update_worker(ctx)
 	if ctx.cancel then
 		ctx.promise:reject("canceled")
+		return
+	end
+
+	if not ctx.token then
+		ctx.promise:reject("no token found")
+		return
 	end
 
 	if not ctx.current_pos then
@@ -19,11 +25,11 @@ function blockexchange.save_update_worker(ctx)
 			table.insert(mod_names, k)
 		end
 
-		blockexchange.api.create_schemamods(ctx.token, ctx.schema_id, mod_names):next(function()
+		blockexchange.api.create_schemamods(ctx.token, ctx.schema_uid, mod_names):next(function()
 			local msg = "[blockexchange] Save-update complete with " .. ctx.total_parts .. " parts"
 			minetest.log("action", msg)
 			-- update screenshot
-			return blockexchange.api.update_screenshot(ctx.token, ctx.schema_id)
+			return blockexchange.api.update_screenshot(ctx.token, ctx.schema_uid)
 		end):next(function()
 			ctx.promise:resolve(ctx.total_parts)
 		end):catch(function(http_code)
@@ -51,7 +57,7 @@ function blockexchange.save_update_worker(ctx)
 
 	-- package data properly over the wire
 	local schemapart = {
-		schema_id = ctx.schema_id,
+		schema_uid = ctx.schema_uid,
 		offset_x = relative_pos.x,
 		offset_y = relative_pos.y,
 		offset_z = relative_pos.z,

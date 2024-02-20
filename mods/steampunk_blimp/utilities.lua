@@ -227,7 +227,8 @@ function steampunk_blimp.textures_copy()
     return tablecopy
 end
 
-local function paint(self)
+local function paint(self, write_prefix)
+    write_prefix = write_prefix or false
     local l_textures = steampunk_blimp.textures_copy()
     for _, texture in ipairs(l_textures) do
         local indx = texture:find('wool_blue.png')
@@ -241,6 +242,12 @@ local function paint(self)
         indx = texture:find('steampunk_blimp_alpha_logo.png')
         if indx then
             l_textures[_] = self.logo
+        end
+        if airutils._use_signs_api and write_prefix == true then
+            indx = texture:find('airutils_name_canvas.png')
+            if indx then
+                l_textures[_] = "airutils_name_canvas.png^"..airutils.convert_text_to_texture(self._ship_name, self._name_color or 0, self._name_hor_aligment or 0.8)
+            end
         end
     end
     self.object:set_properties({textures=l_textures})
@@ -265,7 +272,7 @@ end
 function steampunk_blimp.paint2(self, colstr)
     if colstr then
         self.color2 = colstr
-        paint(self)
+        paint(self,true)
     end
 end
 

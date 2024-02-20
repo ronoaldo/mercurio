@@ -338,7 +338,7 @@ local cuttable_nodes = {}
 for nodename, def in pairs(minetest.registered_nodes) do
 	local nodenamesplit = string.split(nodename, ":")
 	local modname = nodenamesplit[1]
-	if xdecor.stairs_valid_def(def) then
+	if (modname == "xdecor" or modname == "default") and xdecor.stairs_valid_def(def) then
 		cuttable_nodes[#cuttable_nodes + 1] = nodename
 		registered_cuttable_nodes[nodename] = true
 	end

@@ -54,3 +54,12 @@ function Promise.dynamic_add_media(options)
         end
     end)
 end
+
+local mods_loaded_promise = Promise.new()
+function Promise.mods_loaded()
+    return mods_loaded_promise
+end
+
+minetest.register_on_mods_loaded(function()
+    mods_loaded_promise:resolve()
+end)

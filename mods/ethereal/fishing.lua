@@ -13,7 +13,7 @@ local fish_items = {
 	"ethereal:fish_plaice",
 	"ethereal:fish_salmon",
 	{"ethereal:fish_clownfish", "savanna"},
-	{"ethereal:fish_pike", "grassy"},
+	{"ethereal:fish_pike", "grassland_ocean"},
 	{"ethereal:fish_flathead", "jungle"},
 	{"ethereal:fish_pufferfish", "desert_ocean"},
 	{"ethereal:fish_cichlid", "junglee_ocean"},
@@ -25,7 +25,7 @@ local fish_items = {
 	{"ethereal:fish_seahorse", "ocean"},
 	{"ethereal:fish_seahorse_green", "junglee_ocean"},
 	{"ethereal:fish_seahorse_pink", "mushroom_ocean"},
-	{"ethereal:fish_seahorse_blue", "frost_ocean"},
+	{"ethereal:fish_seahorse_blue", "coniferous_forest_ocean"},
 	{"ethereal:fish_seahorse_yellow", "desert_ocean"},
 	{"ethereal:fish_parrot", "desert"},
 	{"ethereal:fish_piranha", "jungle"},
@@ -36,7 +36,9 @@ local fish_items = {
 	{"ethereal:fish_redsnapper", "ocean"},
 	{"ethereal:fish_squid", "ocean"},
 	{"ethereal:fish_shrimp", "ocean"},
-	{"ethereal:fish_carp", "swamp"}
+	{"ethereal:fish_carp", "swamp"},
+	{"ethereal:fish_tetra", "grayness_ocean"},
+	{"ethereal:fish_mackerel", "glacier"}
 }
 -- grassland_ocean, desert_ocean, sakura_ocean, mesa_ocean, coniferous_forest_ocean,
 -- taiga_ocean, frost_ocean, deciduous_forest_ocean, grayness_ocean, grassytwo_ocean,
@@ -121,12 +123,15 @@ end
 -- fishing bob entity
 minetest.register_entity("ethereal:bob_entity", {
 
-	textures = {"ethereal_fishing_bob.png"},
-	visual_size = {x = 0.5, y = 0.5},
-	collisionbox = {-0.1, -0.1, -0.1, 0.1, 0.1, 0.1},
-	physical = false,
-	pointable = false,
-	static_save = false,
+	initial_properties = {
+		textures = {"ethereal_fishing_bob.png"},
+		visual_size = {x = 0.5, y = 0.5},
+		collisionbox = {-0.1, -0.1, -0.1, 0.1, 0.1, 0.1},
+		physical = false,
+		pointable = false,
+		static_save = false
+	},
+
 	timer = 0,
 
 	on_step = function(self, dtime)
@@ -262,7 +267,7 @@ else -- already cast and waiting for fish
 				else
 					-- waiting over, bob that bobber and play splash sound
 					self.bob = true
-					self.patience = 1.5 -- timeframe to catch fish after bob
+					self.patience = 1.4 -- timeframe to catch fish after bob
 					self.timer = 0
 
 					self.object:set_velocity({x = 0, y = -1, z = 0})
@@ -301,6 +306,8 @@ local find_item = function(list, pos)
 	local items = {}
 	local data= minetest.get_biome_data(pos)
 	local biome = data and minetest.get_biome_name(data.biome) or ""
+
+--print("--biome", biome)
 
 	for n = 1, #list do
 
@@ -352,18 +359,22 @@ local use_rod = function(itemstack, player, pointed_thing)
 
 				local item
 				local r = random(100)
+				local rodpos = ent.object:get_pos() or pos
+
+				-- lower position to be in water
+				rodpos.y = rodpos.y - 1
 
 				if r < 86 then
 
-					item = find_item(fish_items, pos)
+					item = find_item(fish_items, rodpos)
 
 				elseif r > 85 and r < 96 then
 
-					item = find_item(junk_items, pos)
+					item = find_item(junk_items, rodpos)
 
 				else
 
-					item = find_item(bonus_items, pos)
+					item = find_item(bonus_items, rodpos)
 				end
 
 				-- split into name and number (wear level or number of items)

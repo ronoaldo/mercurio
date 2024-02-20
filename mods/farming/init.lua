@@ -7,7 +7,7 @@
 
 farming = {
 	mod = "redo",
-	version = "20231125",
+	version = "20231206",
 	path = minetest.get_modpath("farming"),
 	select = {
 		type = "fixed",
@@ -29,10 +29,11 @@ farming = {
 
 -- default sound functions just incase
 function farming.sounds.node_sound_defaults() end
-function farming.sounds.node_sound_leaves_defaults() end
 function farming.sounds.node_sound_glass_defaults() end
-function farming.sounds.node_sound_wood_defaults() end
 function farming.sounds.node_sound_gravel_defaults() end
+function farming.sounds.node_sound_leaves_defaults() end
+function farming.sounds.node_sound_stone_defaults() end
+function farming.sounds.node_sound_wood_defaults() end
 
 -- sounds check
 if farming.mtg then farming.sounds = default end
@@ -755,7 +756,7 @@ end
 dofile(farming.path .. "/items.lua")
 
 -- important items
-if not farming.mcl then
+if minetest.get_modpath("default") then
 	dofile(farming.path .. "/soil.lua")
 	dofile(farming.path .. "/hoes.lua")
 end

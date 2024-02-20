@@ -1,6 +1,6 @@
 minetest.register_chatcommand("bx_save_update", {
     params = "[area_id?]",
-    description = "uploads changes",
+    description = "uploads selected changes or the whole area",
     func = function(name, area_id)
         local area, err_msg = blockexchange.select_player_area(name, area_id)
         if err_msg then
@@ -20,20 +20,25 @@ minetest.register_chatcommand("bx_save_update", {
         local pos2 = blockexchange.get_pos(2, name)
 
         if not pos1 or not pos2 then
-            return true, "Please mark the to be updated area of your schematic"
+            -- upload everything
+            pos1 = area.pos1
+            pos2 = area.pos2
         end
 
         -- partial update with the marked area
         pos1, pos2 = blockexchange.sort_pos(pos1, pos2)
         local promise, ctx = blockexchange.save_update_area(
-            name, area.pos1, area.pos2, pos1, pos2, claims.username, area.schema_id
+            name, area.pos1, area.pos2, pos1, pos2, claims.username, area.schema_uid
         )
 
         blockexchange.set_job_context(name, ctx)
         promise:next(function()
             -- fetch updated schema
-            return blockexchange.api.get_schema_by_id(area.schema_id)
+            return blockexchange.api.get_schema_by_uid(area.schema_uid)
         end):next(function(schema)
+            if not schema then
+                return Promise.rejected("schema not found: " .. areas.schema_uid)
+            end
             -- update mtime in local area
             area.mtime = schema.mtime
             blockexchange.save_areas()

@@ -1,31 +1,24 @@
 # textdomain: computers
-
-
-### computers.lua ###
-
-Admiral128=
+SheFriendSOO=
+Pony Vanio=
+SX Specter=
+Snapple Piepad=
 Admiral64=
-Computer Tower=Sistem Unit
-HUEG Box=
+Admiral128=
 Monitor and keyboard=Monitor dan Papan Kekunci
-Nientiendo Wee=
+WIFI Router=Penghala WIFI
+Computer Tower=Sistem Unit
+Rack Server=Rak Pelayan
 Not enough vertical space to place a server!=Tidak cukup ruang menegak untuk letak rak pelayan!
+Printer-Scanner Combo=Pencetak Semua Dalam Satu
 Pony SlayStation=
 Pony SlayStation 2=
-Pony Vanio=
-Rack Server=Rak Pelayan
-SX Specter=
-SheFriendSOO=
-Snapple Piepad=
-WIFI Router=Penghala WIFI
-Printer-Scanner Combo=Pencetak Semua Dalam Satu
-
-### tetris.lua ###
-
+Nientiendo Wee=
+HUEG Box=
 L=
+R=
 New Game=Main Baru
 Next...=Seterusnya...
-No room for place the Arcade!=Tiada ruang untuk letak Arked!
-R=
 Score: =Markah:
 Tetris Arcade=Arked Tetris
+No room for place the Arcade!=Tiada ruang untuk letak Arked!

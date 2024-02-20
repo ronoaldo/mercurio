@@ -13,7 +13,6 @@ local materials = {
 	water_bucket = "bucket:bucket_water",
 	empty_bucket = "bucket:bucket_empty",
 	dye_dark_grey = "dye:dark_grey",
-	silicon = "mesecons_materials:silicon",
 }
 
 if minetest.get_modpath("moreores") then
@@ -52,8 +51,10 @@ if minetest.get_modpath("mcl_core") then
 		copper_ingot = "mcl_core:iron_ingot",
 		tin_ingot = "mcl_core:iron_ingot",
 		silver_ingot = "mcl_core:iron_ingot",
-		silicon = "mesecons_materials:silicon",
 	}
+	if minetest.get_modpath("mcl_copper") then
+		materials.copper_ingot = "mcl_copper:copper_ingot"
+	end
 elseif minetest.get_modpath("fl_ores") and minetest.get_modpath("fl_stone") then
 	materials = {
 		dirt = "fl_topsoil:dirt",
@@ -71,7 +72,6 @@ elseif minetest.get_modpath("fl_ores") and minetest.get_modpath("fl_stone") then
 		copper_ingot = "fl_ores:copper_ingot",
 		tin_ingot = "fl_ores:tin_ingot",
 		silver_ingot = "fl_ores:iron_ingot",
-		silicon = "mesecons_materials:silicon",
 	}
 elseif minetest.get_modpath("rp_default") then
 	materials = {
@@ -90,7 +90,6 @@ elseif minetest.get_modpath("rp_default") then
 		copper_ingot = "rp_default:ingot_copper",
 		tin_ingot = "rp_default:ingot_tin",
 		silver_ingot = "rp_default:ingot_steel",
-		silicon = "rp_default:ingot_steel",
 	}
 elseif minetest.get_modpath("hades_core") then
 	materials = {
@@ -114,7 +113,6 @@ elseif minetest.get_modpath("hades_core") then
 		empty_bucket = "hades_core:fertile_sand",
 		-- Set this to steel unless hadesextraores is present
 		silver_ingot = "hades_core:steel_ingot",
-		silicon = "hades_materials:silicon",
 	}
 
 	if minetest.get_modpath("hades_bucket") then
@@ -524,7 +522,7 @@ register_craft({
 
 if not have_hades_materials then
 	register_craft( {
-		output = materials.silicon.." 4",
+		output = "basic_materials:silicon 4",
 		recipe = {
 			{materials.sand, materials.sand},
 			{materials.sand, materials.steel_ingot},
@@ -535,8 +533,8 @@ end
 register_craft( {
 	output = "basic_materials:ic 4",
 	recipe = {
-		{materials.silicon, materials.silicon},
-		{materials.silicon, materials.copper_ingot},
+		{"basic_materials:silicon", "basic_materials:silicon"},
+		{"basic_materials:silicon", materials.copper_ingot},
 	},
 })
 

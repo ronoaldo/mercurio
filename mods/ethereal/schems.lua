@@ -108,7 +108,7 @@ add_schem({"ethereal:gray_dirt"}, 0.02, {"grayness"}, 1, 100,
 
 -- default large pine tree for lower elevation
 add_schem({"ethereal:cold_dirt", "default:dirt_with_coniferous_litter"},
-	0.025, {"coniferous_forest"}, 10, 40, ethereal.pinetree, ethereal.snowy)
+	0.025, {"coniferous_forest"}, 10, 40, dpath .. "pine_tree.mts", ethereal.snowy)
 
 -- small pine for higher elevation
 add_schem({"default:dirt_with_snow"}, 0.025, {"taiga"}, 40, 140,
@@ -335,3 +335,147 @@ if ethereal.reefs == 1 then
 		rotation = "random"
 	})
 end
+
+
+-- tree logs
+if ethereal.logs == 1 then
+
+if ethereal.grassy == 1 or ethereal.prairie == 1 then
+minetest.register_decoration({
+		name = "default:apple_log",
+		deco_type = "schematic",
+		place_on = {"default:dirt_with_grass", "ethereal:prairie_dirt"},
+		place_offset_y = 1,
+		sidelen = 16,
+		fill_ratio = 0.001,
+		biomes = {"deciduous_forest", "jumble", "swamp", "prairie"},
+		y_max = 100,
+		y_min = 1,
+		schematic = dpath .. "apple_log.mts",
+		flags = "place_center_x",
+		rotation = "random",
+		spawn_by = {"default:dirt_with_grass", "ethereal:prairie_dirt"},
+		num_spawn_by = 8
+	})
+end
+
+if ethereal.junglee == 1 then
+	minetest.register_decoration({
+		name = "default:jungle_log",
+		deco_type = "schematic",
+		place_on = {"default:dirt_with_rainforest_litter"},
+		place_offset_y = 1,
+		sidelen = 80,
+		fill_ratio = 0.005,
+		biomes = {"junglee"},
+		y_max = 100,
+		y_min = 1,
+		schematic = dpath .. "jungle_log.mts",
+		flags = "place_center_x",
+		rotation = "random",
+		spawn_by = "default:dirt_with_rainforest_litter",
+		num_spawn_by = 8
+	})
+end
+
+if ethereal.snowy == 1 then
+	minetest.register_decoration({
+		name = "default:pine_log",
+		deco_type = "schematic",
+		place_on = {"default:dirt_with_snow", "default:dirt_with_coniferous_litter"},
+		place_offset_y = 1,
+		sidelen = 80,
+		fill_ratio = 0.0018,
+		biomes = {"taiga", "coniferous_forest"},
+		y_max = 100,
+		y_min = 4,
+		schematic = dpath .. "pine_log.mts",
+		flags = "place_center_x",
+		rotation = "random",
+		spawn_by = {"default:dirt_with_snow", "default:dirt_with_coniferous_litter"},
+		num_spawn_by = 8
+	})
+end
+
+if ethereal.savanna == 1 then
+	minetest.register_decoration({
+		name = "default:acacia_log",
+		deco_type = "schematic",
+		place_on = {"default:dry_dirt_with_dry_grass"},
+		place_offset_y = 1,
+		sidelen = 16,
+		noise_params = {
+			offset = 0,
+			scale = 0.001,
+			spread = {x = 250, y = 250, z = 250},
+			seed = 2,
+			octaves = 3,
+			persist = 0.66
+		},
+		biomes = {"savanna"},
+		y_max = 100,
+		y_min = 1,
+		schematic = dpath .. "acacia_log.mts",
+		flags = "place_center_x",
+		rotation = "random",
+		spawn_by = "default:dry_dirt_with_dry_grass",
+		num_spawn_by = 8
+	})
+end
+
+if ethereal.plains == 1 then
+	minetest.register_decoration({
+		name = "ethereal:scorched_log",
+		deco_type = "schematic",
+		place_on = {"ethereal:dry_dirt"},
+		place_offset_y = 1,
+		sidelen = 80,
+		fill_ratio = 0.0018,
+		biomes = {"plains"},
+		y_max = 100,
+		y_min = 4,
+
+		schematic = {
+			size = {x = 3, y = 1, z = 1},
+			data = {
+				{name = "ethereal:scorched_tree", param1 = 201, param2 = 16},
+				{name = "ethereal:scorched_tree", param1 = 255, param2 = 16},
+				{name = "ethereal:scorched_tree", param1 = 255, param2 = 16}
+			}
+		},
+		flags = "place_center_x",
+		rotation = "random",
+		spawn_by = "ethereal:dry_dirt",
+		num_spawn_by = 8
+	})
+end
+
+if ethereal.grove == 1 then
+	minetest.register_decoration({
+		name = "ethereal:banana_log",
+		deco_type = "schematic",
+		place_on = {"ethereal:grove_dirt"},
+		place_offset_y = 1,
+		sidelen = 80,
+		fill_ratio = 0.0018,
+		biomes = {"grove"},
+		y_max = 100,
+		y_min = 4,
+
+		schematic = {
+			size = {x = 3, y = 1, z = 1},
+			data = {
+				{name = "ethereal:banana_trunk", param1 = 255, param2 = 16},
+				{name = "ethereal:banana_trunk", param1 = 255, param2 = 16},
+				{name = "ethereal:banana_trunk", param1 = 201, param2 = 16}
+			}
+		},
+		flags = "place_center_x",
+		rotation = "random",
+		spawn_by = "ethereal:grove_dirt",
+		num_spawn_by = 8
+	})
+end
+
+end
+

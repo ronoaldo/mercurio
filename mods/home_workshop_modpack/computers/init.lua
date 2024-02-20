@@ -11,6 +11,7 @@ computers.register = function (name, def)
 		drawtype = "nodebox",
 		paramtype = "light",
 		paramtype2 = "facedir",
+		use_texture_alpha = "clip",
 		description = cdef.description,
 		inventory_image = cdef.inventory_image,
 		groups = {snappy=2, choppy=2, oddly_breakable_by_hand=2},
@@ -37,6 +38,7 @@ computers.register = function (name, def)
 		drawtype = "nodebox",
 		paramtype = "light",
 		paramtype2 = "facedir",
+		use_texture_alpha = "clip",
 		groups = {snappy=2, choppy=2, oddly_breakable_by_hand=2, not_in_creative_inventory=1},
 		tiles = {
 			(TEXPFX.."tp"..(cdef.tiles_off.top    and "_off" or "")..".png"),

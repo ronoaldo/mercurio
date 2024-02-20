@@ -3,6 +3,9 @@
 set -e
 world_dir=/root/.minetest/worlds/world
 
+# cleanup
+rm -f ${world_dir}/stage1.zip test.txt
+
 minetestserver --config /minetest.conf
 
 echo "Checking generated zip file"

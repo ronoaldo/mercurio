@@ -40,7 +40,14 @@ function airutils.consumptionCalc(self, accel)
     if self._energy > 0 and self._engine_running and accel ~= nil then
         local divisor = 700000
         if self._fuel_consumption_divisor then divisor = self._fuel_consumption_divisor end
-        local consumed_power = self._power_lever/divisor
+        local consumed_power = 0
+        if self._rotor_speed then
+            --is an helicopter
+            consumed_power = 50/divisor --fixed rpm
+        else
+            --is a normal plane
+            consumed_power = self._power_lever/divisor
+        end
         --minetest.chat_send_all('consumed: '.. consumed_power)
         self._energy = self._energy - consumed_power;
 

@@ -582,7 +582,7 @@ if minetest.registered_nodes["default:dirt_with_rainforest_litter"] then
 	default.register_leafdecay({
 		trunks = {"ethereal:bamboo"},
 		leaves = {"ethereal:bamboo_leaves"},
-		radius = 2
+		radius = 3
 	})
 
 	default.register_leafdecay({

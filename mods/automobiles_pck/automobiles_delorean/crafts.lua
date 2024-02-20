@@ -1,4 +1,4 @@
-local S = minetest.get_translator(minetest.get_current_modname())
+local S = delorean.S
 
 --
 -- items
@@ -29,12 +29,12 @@ minetest.register_craftitem("automobiles_delorean:delorean", {
             local owner = placer:get_player_name()
             if ent then
                 ent.owner = owner
-                ent._delorean_type = 0
+                ent._car_type = 0
                 --minetest.chat_send_all("owner: " .. ent.owner)
 		        car:set_yaw(placer:get_look_horizontal())
 		        itemstack:take_item()
                 ent.object:set_acceleration({x=0,y=-automobiles_lib.gravity,z=0})
-                automobiles_lib.setText(ent, "Delorean")
+                automobiles_lib.setText(ent, S("Delorean"))
                 automobiles_lib.create_inventory(ent, ent._trunk_slots, owner)
             end
 		end
@@ -62,8 +62,8 @@ minetest.register_craftitem("automobiles_delorean:time_machine", {
             local owner = placer:get_player_name()
             if ent then
                 ent.owner = owner
-                ent._delorean_type = 1
-                --minetest.chat_send_all("delorean: " .. ent._delorean_type)
+                ent._car_type = 1
+                --minetest.chat_send_all("delorean: " .. ent._car_type)
                 --minetest.chat_send_all("owner: " .. ent.owner)
 		        car:set_yaw(placer:get_look_horizontal())
 		        itemstack:take_item()

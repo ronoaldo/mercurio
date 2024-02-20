@@ -80,7 +80,7 @@ fix-perms:
 	sudo chmod g+rwx .minetest
 
 updated-mods:
-	git status --short | grep mods/ | cut -f 2 -d/ | sort | uniq
+	@git status --short | grep mods/ | cut -f 2 -d/ | sort | uniq
 
 connection-list:
 	grep 'joins game' .minetest/logs/debug* |\

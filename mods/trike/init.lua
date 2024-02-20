@@ -6,6 +6,18 @@ local TRIKE_GAUGE_FUEL_POSITION = {x=1.5,y=6.2,z=15.2}
 local TRIKE_GAUGE_POWER_POSITION = {x=1.5,y=7.7,z=15.2}
 local TRIKE_GAUGE_CLIMBER_POSITION = {x=-1.2,y=7.55,z=15.2}
 
+trike.S = nil
+
+if(minetest.get_translator ~= nil) then
+    trike.S = minetest.get_translator(minetest.get_current_modname())
+
+else
+    trike.S = function ( s ) return s end
+
+end
+
+local S = trike.S
+
 function trike.register_parts_method(self)
     local pos = self.object:get_pos()
 

@@ -2,17 +2,19 @@
 -- constants
 --
 delorean={}
-delorean.LONGIT_DRAG_FACTOR = 0.12*0.12
-delorean.LATER_DRAG_FACTOR = 8.0
 delorean.gravity = automobiles_lib.gravity
-delorean.max_speed = 30
-delorean.max_acc_factor = 8
-delorean.ideal_step = 0.2
 
-DELOREAN_GAUGE_FUEL_POSITION =  {x=-4.66,y=6.2,z=17.9}
+delorean.S = nil
 
-delorean.front_wheel_xpos = 9.5
-delorean.rear_wheel_xpos = 9.5
+if(minetest.get_translator ~= nil) then
+    delorean.S = minetest.get_translator(minetest.get_current_modname())
+
+else
+    delorean.S = function ( s ) return s end
+
+end
+
+local S = delorean.S
 
 dofile(minetest.get_modpath("automobiles_lib") .. DIR_DELIM .. "custom_physics.lua")
 dofile(minetest.get_modpath("automobiles_lib") .. DIR_DELIM .. "fuel_management.lua")

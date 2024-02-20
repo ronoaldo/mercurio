@@ -1,31 +1,24 @@
 # textdomain: computers
-
-
-### computers.lua ###
-
-Admiral128=
+SheFriendSOO=
+Pony Vanio=
+SX Specter=
+Snapple Piepad=
 Admiral64=
-Computer Tower=Ordinateur (tour)
-HUEG Box=
+Admiral128=
 Monitor and keyboard=Écran et clavier
-Nientiendo Wee=
+WIFI Router=Routeur WiFi
+Computer Tower=Ordinateur (tour)
+Rack Server=Serveur en rack
 Not enough vertical space to place a server!=Pas assez d'espace vertical pour placer un serveur !
+Printer-Scanner Combo=Imprimante multi-fonction
 Pony SlayStation=
 Pony SlayStation 2=
-Pony Vanio=
-Rack Server=Serveur en rack
-SX Specter=
-SheFriendSOO=
-Snapple Piepad=
-WIFI Router=Routeur WiFi
-Printer-Scanner Combo=Imprimante multi-fonction
-
-### tetris.lua ###
-
+Nientiendo Wee=
+HUEG Box=
 L=G
+R=D
 New Game=Nouveau Jeu
 Next...=Suivant…
-No room for place the Arcade!=Pas assez de place pour placer la borne d'arcade !
-R=D
 Score: =Score : 
 Tetris Arcade=Borne Tetris
+No room for place the Arcade!=Pas assez de place pour placer la borne d'arcade !
