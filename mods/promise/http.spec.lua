@@ -1,5 +1,7 @@
 local http = ...
 
+local toJson = function(res) return res.json() end
+
 mtt.register("Promise.http GET", function(callback)
     Promise.http(http, "https://api.chucknorris.io/jokes/random"):next(function(res)
         return res.json()
@@ -11,8 +13,21 @@ mtt.register("Promise.http GET", function(callback)
     end)
 end)
 
+mtt.register("Promise.http GET with async/await", function()
+    return Promise.async(function(await)
+        local joke = await(Promise.http(http, "https://api.chucknorris.io/jokes/random"):next(toJson))
+        assert(type(joke.value) == "string")
+    end)
+end)
+
+mtt.register("Promise.json GET with async/await", function()
+    return Promise.async(function(await)
+        local joke = await(Promise.json(http, "https://api.chucknorris.io/jokes/random"))
+        assert(type(joke.value) == "string")
+    end)
+end)
+
 mtt.register("Promise.http/all GET", function(callback)
-    local toJson = function(res) return res.json() end
     local p1 = Promise.http(http, "https://api.chucknorris.io/jokes/random"):next(toJson)
     local p2 = Promise.http(http, "https://api.chucknorris.io/jokes/random"):next(toJson)
 
@@ -36,13 +51,22 @@ mtt.register("Promise.http GET not found", function(callback)
     end)
 end)
 
-mtt.register("Promise.http GET internal erorr", function(callback)
+mtt.register("Promise.http GET internal error", function(callback)
     Promise.http(http, "https://httpbin.org/status/500"):next(function(res)
         assert(res)
         assert(res.code == 500)
         callback()
     end):catch(function(e)
         callback(e)
+    end)
+end)
+
+mtt.register("Promise.json GET internal error", function(callback)
+    Promise.json(http, "https://httpbin.org/status/500"):next(function()
+        callback("unexpected success")
+    end, function(e)
+        assert(e == "unexpected status-code: 500")
+        callback()
     end)
 end)
 

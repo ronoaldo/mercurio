@@ -1,14 +1,14 @@
 
-local S = ethereal.translate
-
+local S = minetest.get_translator("ethereal")
 
 -- Ice Brick
+
 minetest.register_node("ethereal:icebrick", {
 	description = S("Ice Brick"),
 	tiles = {"ethereal_brick_ice.png"},
 	paramtype = "light",
 	is_ground_content = false,
-	groups = {cracky = 3, puts_out_fire = 1, cools_lava = 1},
+	groups = {cracky = 3, puts_out_fire = 1, cools_lava = 1, slippery = 3},
 	sounds = default.node_sound_glass_defaults()
 })
 
@@ -20,8 +20,8 @@ minetest.register_craft({
 	}
 })
 
-
 -- Snow Brick
+
 minetest.register_node("ethereal:snowbrick", {
 	description = S("Snow Brick"),
 	tiles = {"ethereal_brick_snow.png"},
@@ -43,8 +43,8 @@ minetest.register_craft({
 	}
 })
 
+-- If Crystal Spike or Snow near Water, change Water to Ice
 
--- If Crystal Spike, Snow near Water, change Water to Ice
 minetest.register_abm({
 	label = "Ethereal freeze water",
 	nodenames = {
@@ -59,7 +59,7 @@ minetest.register_abm({
 	action = function(pos, node)
 
 		local near = minetest.find_node_near(pos, 1,
-			{"default:water_source", "default:river_water_source"})
+				{"default:water_source", "default:river_water_source"})
 
 		if near then
 			minetest.swap_node(near, {name = "default:ice"})
@@ -67,8 +67,8 @@ minetest.register_abm({
 	end
 })
 
-
 -- If Heat Source near Ice or Snow then melt.
+
 minetest.register_abm({
 	label = "Ethereal melt snow/ice",
 	nodenames = {
@@ -109,8 +109,8 @@ minetest.register_abm({
 	end
 })
 
-
 -- If Water Source near Dry Dirt, change to normal Dirt
+
 minetest.register_abm({
 	label = "Ethereal wet dry dirt",
 	nodenames = {
@@ -135,8 +135,8 @@ minetest.register_abm({
 	end
 })
 
-
 -- when enabled, drop torches that are touching water
+
 if ethereal.torchdrop == true and not minetest.get_modpath("real_torch") then
 
 	minetest.register_abm({
@@ -150,21 +150,21 @@ if ethereal.torchdrop == true and not minetest.get_modpath("real_torch") then
 		action = function(pos, node)
 
 			local num = #minetest.find_nodes_in_area(
-				{x = pos.x - 1, y = pos.y, z = pos.z},
-				{x = pos.x + 1, y = pos.y, z = pos.z}, {"group:water"})
+					{x = pos.x - 1, y = pos.y, z = pos.z},
+					{x = pos.x + 1, y = pos.y, z = pos.z}, {"group:water"})
 
 			if num == 0 then
 
 				num = num + #minetest.find_nodes_in_area(
-					{x = pos.x, y = pos.y, z = pos.z - 1},
-					{x = pos.x, y = pos.y, z = pos.z + 1}, {"group:water"})
+						{x = pos.x, y = pos.y, z = pos.z - 1},
+						{x = pos.x, y = pos.y, z = pos.z + 1}, {"group:water"})
 			end
 
 			if num == 0 then
 
 				num = num + #minetest.find_nodes_in_area(
-					{x = pos.x, y = pos.y + 1, z = pos.z},
-					{x = pos.x, y = pos.y + 1, z = pos.z}, {"group:water"})
+						{x = pos.x, y = pos.y + 1, z = pos.z},
+						{x = pos.x, y = pos.y + 1, z = pos.z}, {"group:water"})
 			end
 
 			if num > 0 then

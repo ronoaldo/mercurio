@@ -1,4 +1,6 @@
 
+local S = hangglider.translator
+
 local has_unifieddyes = minetest.get_modpath("unifieddyes")
 
 local dye_colors = {
@@ -19,6 +21,24 @@ local dye_colors = {
 	pink       = "ff7f9f",
 }
 
+local translated_colors = {
+	white      = S("White"),
+	grey       = S("Grey"),
+	dark_grey  = S("Dark_grey"),
+	black      = S("Black"),
+	violet     = S("Violet"),
+	blue       = S("Blue"),
+	cyan       = S("Cyan"),
+	dark_green = S("Dark_green"),
+	green      = S("Green"),
+	yellow     = S("Yellow"),
+	brown      = S("Brown"),
+	orange     = S("Orange"),
+	red        = S("Red"),
+	magenta    = S("Magenta"),
+	pink       = S("Pink"),
+}
+
 local function get_dye_color(name)
 	local color
 	if has_unifieddyes then
@@ -35,15 +55,21 @@ end
 
 local function get_color_name(name)
 	name = string.gsub(name, "^dye:", "")
-	name = string.gsub(name, "_", " ")
-	name = string.gsub(name, "(%l)(%w*)", function(a, b) return string.upper(a)..b end)
-	return name
+	return translated_colors[name]
+end
+
+local function get_color_name_from_color(color)
+	for name, color_hex in pairs(dye_colors) do
+		if color == color_hex then
+			return translated_colors[name]
+		end
+	end
 end
 
 -- This recipe is just a placeholder
 do
 	local item = ItemStack("hangglider:hangglider")
-	item:get_meta():set_string("description", "Colored Glider")
+	item:get_meta():set_string("description", S("Colored Glider"))
 	minetest.register_craft({
 		output = item:to_string(),
 		recipe = {"hangglider:hangglider", "group:dye"},
@@ -61,9 +87,15 @@ minetest.register_on_craft(function(crafted_item, _, old_craft_grid)
 		local name = stack:get_name()
 		if name == "hangglider:hangglider" then
 			wear = stack:get_wear()
+			color = stack:get_meta():get("hangglider_color")
+			color_name = get_color_name_from_color(color)
 		elseif minetest.get_item_group(name, "dye") ~= 0 then
 			color = get_dye_color(name)
 			color_name = get_color_name(name)
+		elseif "wool:white" == stack:get_name()
+			or "default:paper" == stack:get_name()
+		then
+			wear = 0
 		end
 	end
 	if wear and color and color_name then
@@ -71,7 +103,7 @@ minetest.register_on_craft(function(crafted_item, _, old_craft_grid)
 			return ItemStack({name = "hangglider:hangglider", wear = wear})
 		end
 		local meta = crafted_item:get_meta()
-		meta:set_string("description", color_name.." Glider")
+		meta:set_string("description", S("@1 Glider", color_name))
 		meta:set_string("inventory_image", "hangglider_item.png^(hangglider_color.png^[multiply:#"..color..")")
 		meta:set_string("hangglider_color", color)
 		crafted_item:set_wear(wear)

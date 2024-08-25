@@ -2,8 +2,6 @@
 -- Reindeer --
 --------------
 
-local random = math.random
-
 creatura.register_mob("animalia:reindeer", {
 	-- Engine Props
 	visual_size = {x = 10, y = 10},
@@ -20,7 +18,23 @@ creatura.register_mob("animalia:reindeer", {
 	max_boids = 4,
 	despawn_after = 500,
 	stepheight = 1.1,
-	--sound = {},
+	sounds = {
+		random = {
+			name = "animalia_reindeer",
+			gain = 0.5,
+			distance = 8
+		},
+		hurt = {
+			name = "animalia_reindeer_hurt",
+			gain = 0.5,
+			distance = 8
+		},
+		death = {
+			name = "animalia_reindeer_death",
+			gain = 0.5,
+			distance = 8
+		}
+	},
 	hitbox = {
 		width = 0.45,
 		height = 0.9
@@ -37,8 +51,11 @@ creatura.register_mob("animalia:reindeer", {
 		{name = "animalia:leather", min = 1, max = 3, chance = 2}
 	},
 
+	-- Behavior Parameters
+	is_grazing_mob = true,
+	is_herding_mob = true,
+
 	-- Animalia Props
-	group_wander = true,
 	flee_puncher = true,
 	catch_with_net = true,
 	catch_with_lasso = true,
@@ -53,7 +70,7 @@ creatura.register_mob("animalia:reindeer", {
 		}
 	},
 	head_data = {
-		offset = {x = 0, y = 0.7, z = 0},
+		offset = {x = 0, y = 0.55, z = 0},
 		pitch_correction = -45,
 		pivot_h = 1,
 		pivot_v = 1
@@ -61,46 +78,11 @@ creatura.register_mob("animalia:reindeer", {
 
 	-- Functions
 	utility_stack = {
-		{
-			utility = "animalia:wander",
-			step_delay = 0.25,
-			get_score = function(self)
-				return 0.1, {self}
-			end
-		},
-		{
-			utility = "animalia:eat_turf",
-			step_delay = 0.25,
-			get_score = function(self)
-				if random(64) < 2 then
-					return 0.2, {self}
-				end
-				return 0
-			end
-		},
-		{
-			utility = "animalia:swim_to_land",
-			step_delay = 0.25,
-			get_score = function(self)
-				if self.in_liquid then
-					return 0.3, {self}
-				end
-				return 0
-			end
-		},
-		animalia.global_utils.basic_follow,
-		{
-			utility = "animalia:breed",
-			step_delay = 0.25,
-			get_score = function(self)
-				if self.breeding
-				and animalia.get_nearby_mate(self, self.name) then
-					return 0.5, {self}
-				end
-				return 0
-			end
-		},
-		animalia.global_utils.basic_flee
+		animalia.mob_ai.basic_wander,
+		animalia.mob_ai.swim_seek_land,
+		animalia.mob_ai.tamed_follow_owner,
+		animalia.mob_ai.basic_breed,
+		animalia.mob_ai.basic_flee
 	},
 
 	activate_func = function(self)
@@ -113,6 +95,7 @@ creatura.register_mob("animalia:reindeer", {
 		animalia.head_tracking(self)
 		animalia.do_growth(self, 60)
 		animalia.update_lasso_effects(self)
+		animalia.random_sound(self)
 	end,
 
 	death_func = animalia.death_func,

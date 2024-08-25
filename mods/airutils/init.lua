@@ -41,6 +41,7 @@ if load_blast_damage == 2 then airutils.blast_damage = false end
 
 airutils.is_minetest = minetest.get_modpath("player_api")
 airutils.is_mcl = minetest.get_modpath("mcl_player")
+airutils.is_repixture = minetest.get_modpath("rp_player")
 
 airutils.fuel = {['biofuel:biofuel'] = 1,['biofuel:bottle_fuel'] = 1,
                 ['biofuel:phial_fuel'] = 0.25, ['biofuel:fuel_can'] = 10,
@@ -59,13 +60,21 @@ if not minetest.settings:get_bool('airutils_disable_repair') then
     dofile(minetest.get_modpath("airutils") .. DIR_DELIM .. "airutils_repair.lua")
 end
 
+airutils.splash_texture = "airutils_splash.png"
+airutils.use_water_particles = false
+if minetest.settings:get_bool('airutils_enable_water_particles', false) then
+    airutils.use_water_particles = true
+end
+
 airutils._use_signs_api = true
 if not minetest.get_modpath("signs_lib") then airutils._use_signs_api = false end
 if minetest.settings:get_bool('airutils_disable_signs_api') then airutils._use_signs_api = false end
 
 airutils.get_wind = dofile(minetest.get_modpath("airutils") .. DIR_DELIM ..'/wind.lua')
+dofile(minetest.get_modpath("airutils") .. DIR_DELIM .. "uuid_manager.lua")
 dofile(minetest.get_modpath("airutils") .. DIR_DELIM .. "common_entities.lua")
 dofile(minetest.get_modpath("airutils") .. DIR_DELIM .. "airutils_wind.lua")
+dofile(minetest.get_modpath("airutils") .. DIR_DELIM .. "water_splash.lua")
 dofile(minetest.get_modpath("airutils") .. DIR_DELIM .. "inventory_management.lua")
 dofile(minetest.get_modpath("airutils") .. DIR_DELIM .. "light.lua")
 dofile(minetest.get_modpath("airutils") .. DIR_DELIM .. "physics_lib.lua")
@@ -79,8 +88,8 @@ local is_biofuel_installed = false
 if biomass then
     if biomass.convertible_groups then is_biofuel_installed = true end
 end
-local enable_internal_bioduel = minetest.settings:get_bool('airutils.force_enable_biofuel')
-if not is_biofuel_installed or enable_internal_bioduel then
+local enable_internal_biofuel = minetest.settings:get_bool('airutils.force_enable_biofuel')
+if not is_biofuel_installed or enable_internal_biofuel then
     dofile(minetest.get_modpath("airutils") .. DIR_DELIM .. "airutils_biofuel.lua")
 end
 

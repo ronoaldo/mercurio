@@ -1,5 +1,5 @@
 local S = emote.S
-local facedir_to_look_horizontal = emote.facedir_to_look_horizontal
+local facedir_to_look_horizontal = emote.util.facedir_to_look_horizontal
 local vector_rotate_xz = emote.util.vector_rotate_xz
 
 emote.emotes = {}
@@ -13,16 +13,16 @@ function emote.register_emote(name, def)
     emote.emotes[name] = def
 
 	minetest.register_chatcommand(name, {
-		description = S(("Makes your character perform the %s emote"):format(name)),
+		description = S("Makes your character perform the @1 emote", name),
 		func = function(playername)
 			local player = minetest.get_player_by_name(playername)
 			if emote.start(player, name) then
 				if not emote.settings.announce_in_chat then
-					return true, S(("you %s"):format(name))
+					return true, S("You @1", name)
 				end
 			else
 				if not emote.settings.announce_in_chat then
-					return false, S(("you fail to %s"):format(name))
+					return false, S("You failed to @1", name)
 				end
 			end
 		end,
@@ -105,13 +105,13 @@ function emote.attach_to_node(player, pos, locked)
 	local rotation = look_horizontal + emotedef.look_horizontal_offset
 	local new_pos = vector.add(pos, offset)
 
-	emote.set_animation(player, emotedef.emotestring)
+	emote.start(player, emotedef.emotestring)
 
 	if locked then
 		local object = minetest.add_entity(new_pos, "emote:attacher")
 		if object then
 			object:get_luaentity():init(player)
-			object:setyaw(rotation)
+			object:set_yaw(rotation)
 
 			player:set_attach(object, "", emotedef.eye_offset, minetest.facedir_to_dir(node.param2))
 
@@ -119,9 +119,7 @@ function emote.attach_to_node(player, pos, locked)
 		end
 
 	else
-		emote.set_animation(player, emotedef.emotestring)
-
-		player:setpos(new_pos)
+		player:set_pos(new_pos)
 		player:set_eye_offset(emotedef.eye_offset, {x = 0, y = 0, z = 0})
 	end
 

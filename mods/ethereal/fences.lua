@@ -1,10 +1,12 @@
 
-local S = ethereal.translate
+-- translation and mod check
 
+local S = minetest.get_translator("ethereal")
 local door_mod = minetest.get_modpath("doors")
 
+-- fence registration helper (fence, rail, gate, mese post)
 
-local add_fence = function(name, node, desc, texture)
+local function add_fence(name, node, desc, texture)
 
 	if default.register_fence then
 
@@ -49,6 +51,7 @@ local add_fence = function(name, node, desc, texture)
 	end
 end
 
+-- add wooden fences, gates and mese posts
 
 add_fence("scorched", "scorched_tree", "Scorched", "ethereal_scorched_tree")
 add_fence("frostwood", "frost_wood", "Frost", "ethereal_frost_wood")
@@ -64,21 +67,19 @@ add_fence("olive", "olive_wood", "Olive", "ethereal_olive_wood")
 add_fence("basandra", "basandra_wood", "Basandra", "ethereal_basandra_bush_wood")
 
 
--- add compatibility for ethereal's to default wooden gates
+-- add compatibility for previous ethereal gates
+
 minetest.register_alias("ethereal:fencegate_wood_open", "doors:gate_wood_open")
 minetest.register_alias("ethereal:fencegate_wood_closed", "doors:gate_wood_closed")
-
 minetest.register_alias("ethereal:fencegate_acacia_open", "doors:gate_acacia_wood_open")
 minetest.register_alias("ethereal:fencegate_acacia_closed", "doors:gate_acacia_wood_closed")
-
 minetest.register_alias("ethereal:fencegate_junglewood_open", "doors:gate_junglewood_open")
 minetest.register_alias("ethereal:fencegate_junglewood_closed", "doors:gate_junglewood_closed")
-
 minetest.register_alias("ethereal:fencegate_pine_open", "doors:gate_pine_wood_open")
 minetest.register_alias("ethereal:fencegate_pine_closed", "doors:gate_pine_wood_closed")
 
-
 -- sakura door
+
 if door_mod then
 
 	doors.register("ethereal:door_sakura", {

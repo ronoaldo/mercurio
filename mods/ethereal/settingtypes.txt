@@ -38,9 +38,13 @@ ethereal.sakura (Sakura biome, 1 = Enable / 0 = Disable) int 1
 ethereal.tundra (Tundra biome, 1 = Enable / 0 = Disable) int 1
 ethereal.mediterranean (Mediterranean biome, 1 = Enable / 0 = Disable) int 1
 ethereal.logs (Tree log decor, 1 = Enable / 0 = Disable) int 1
+ethereal.wood_rotate (Enable directional placement of wood) bool true
 
 ethereal.flightpotion_duration (Flight Potion Duration) int 300
 
 ethereal.clear_default_biomes (Clear Default Biomes and Decoration) bool true
 
 ethereal.abundant_onions (Abundant Onions) bool true
+
+ethereal.sapling_protection_check (Check for area protection before placing sapling) bool false
+

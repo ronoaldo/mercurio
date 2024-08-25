@@ -22,7 +22,6 @@ function xdecor.sit(pos, node, clicker, pointed_thing)
 
 	if player_api.player_attached[player_name] then
 		clicker:set_pos(pos)
-		clicker:set_eye_offset(vector.new(), vector.new())
 		if mod_playerphysics then
 			playerphysics.remove_physics_factor(clicker, "speed", "xdecor:sit_speed")
 			playerphysics.remove_physics_factor(clicker, "jump", "xdecor:sit_jump")
@@ -35,7 +34,6 @@ function xdecor.sit(pos, node, clicker, pointed_thing)
 	elseif not player_api.player_attached[player_name] and node.param2 <= 3 and
 			not ctrl.sneak and vector.equals(vel, vector.new()) then
 
-		clicker:set_eye_offset({x = 0, y = -7, z = 2}, vector.new())
 		if mod_playerphysics then
 			playerphysics.add_physics_factor(clicker, "speed", "xdecor:sit_speed", 0)
 			playerphysics.add_physics_factor(clicker, "jump", "xdecor:sit_jump", 0)

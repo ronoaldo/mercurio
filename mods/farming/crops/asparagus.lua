@@ -1,18 +1,23 @@
 
-local S = farming.translate
+local S = minetest.get_translator("farming")
 
--- asparagus
+-- item/seed
+
 minetest.register_craftitem("farming:asparagus", {
 	description = S("Asparagus"),
 	inventory_image = "farming_asparagus.png",
-	groups = {compostability = 48, seed = 2, food_asparagus = 1, flammable = 2},
+	groups = {compostability = 48, seed = 2, food_asparagus = 1},
+	on_use = minetest.item_eat(1),
+
 	on_place = function(itemstack, placer, pointed_thing)
 		return farming.place_seed(itemstack, placer, pointed_thing, "farming:asparagus_1")
-	end,
-	on_use = minetest.item_eat(1)
+	end
 })
 
--- asparagus definition
+farming.add_eatable("farming:asparagus", 1)
+
+-- crop definition
+
 local def = {
 	drawtype = "plantlike",
 	tiles = {"farming_asparagus_1.png"},
@@ -29,21 +34,27 @@ local def = {
 		handy = 1, snappy = 3, flammable = 2, plant = 1, attached_node = 1,
 		not_in_creative_inventory = 1, growing = 1
 	},
-	sounds = farming.sounds.node_sound_leaves_defaults()
+	_mcl_hardness = farming.mcl_hardness,
+	is_ground_content = false,
+	sounds = farming.node_sound_leaves_defaults()
 }
 
 -- stage 1
+
 minetest.register_node("farming:asparagus_1", table.copy(def))
 
 -- stage 2
+
 def.tiles = {"farming_asparagus_2.png"}
 minetest.register_node("farming:asparagus_2", table.copy(def))
 
 -- stage 3
+
 def.tiles = {"farming_asparagus_3.png"}
 minetest.register_node("farming:asparagus_3", table.copy(def))
 
 -- stage 4
+
 def.tiles = {"farming_asparagus_4.png"}
 def.drop = {
 	items = {
@@ -52,7 +63,8 @@ def.drop = {
 }
 minetest.register_node("farming:asparagus_4", table.copy(def))
 
--- stage 5
+-- stage 5 (final)
+
 def.tiles = {"farming_asparagus_5.png"}
 def.groups.growing = nil
 def.selection_box = farming.select_final
@@ -65,6 +77,7 @@ def.drop = {
 minetest.register_node("farming:asparagus_5", table.copy(def))
 
 -- add to registered_plants
+
 farming.registered_plants["farming:asparagus"] = {
 	crop = "farming:asparagus",
 	seed = "farming:asparagus",
@@ -74,6 +87,7 @@ farming.registered_plants["farming:asparagus"] = {
 }
 
 -- mapgen
+
 minetest.register_decoration({
 	name = "farming:asparagus_5",
 	deco_type = "simple",

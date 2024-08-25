@@ -132,11 +132,14 @@ minetest.register_entity("steampunk_blimp:blimp", {
             stored_passengers = self._passengers, --passengers list
             stored_passengers_locked = self._passengers_locked,
             stored_ship_name = self._ship_name,
+            remove = self._remove or false,
         })
     end,
 
 	on_deactivate = function(self)
-        airutils.save_inventory(self)
+        if self._remove ~= true then
+            airutils.save_inventory(self)
+        end
         if self.sound_handle then minetest.sound_stop(self.sound_handle) end
         if self.sound_handle_pistons then minetest.sound_stop(self.sound_handle_pistons) end
 	end,
@@ -152,7 +155,7 @@ minetest.register_entity("steampunk_blimp:blimp", {
             self._boiler_pressure = data.stored_boiler_pressure or 0
             self.owner = data.stored_owner or ""
             self._shared_owners = data.stored_shared_owners or {}
-            self.hp = data.stored_hp or 50
+            self.hp = 50 --data.stored_hp or 50
             self.color = data.stored_color or "blue"
             self.color2 = data.stored_color2 or "white"
             self.logo = data.stored_logo or "steampunk_blimp_alpha_logo.png"
@@ -160,14 +163,23 @@ minetest.register_entity("steampunk_blimp:blimp", {
             self.buoyancy = data.stored_buoyancy or 0.15
             self.hull_integrity = data.stored_hull_integrity
             self.item = data.stored_item
-            self._inv_id = data.stored_inv_id
             self._passengers = data.stored_passengers or steampunk_blimp.copy_vector({[1]=nil, [2]=nil, [3]=nil, [4]=nil, [5]=nil, [6]=nil, [7]=nil})
             self._passengers_locked = data.stored_passengers_locked
             self._ship_name = data.stored_ship_name
+            self._remove = data.remove or false
+            if self._remove ~= true then
+                self._inv_id = data.stored_inv_id
+            end
             --minetest.debug("loaded: ", self._energy)
             local properties = self.object:get_properties()
             properties.infotext = data.stored_owner .. " nice blimp"
             self.object:set_properties(properties)
+
+            if self._remove == true then
+                airutils.destroy_inventory(self)
+                self.object:remove()
+                return
+            end
         end
 
         local colstr = steampunk_blimp.colors[self.color]
@@ -206,12 +218,14 @@ minetest.register_entity("steampunk_blimp:blimp", {
 
         self.object:set_armor_groups({immortal=1})
 
-		local inv = minetest.get_inventory({type = "detached", name = self._inv_id})
-		-- if the game was closed the inventories have to be made anew, instead of just reattached
-		if not inv then
-            airutils.create_inventory(self, steampunk_blimp.trunk_slots)
-		else
-		    self.inv = inv
+        if self._remove ~= true then
+		    local inv = minetest.get_inventory({type = "detached", name = self._inv_id})
+		    -- if the game was closed the inventories have to be made anew, instead of just reattached
+		    if not inv then
+                airutils.create_inventory(self, steampunk_blimp.trunk_slots)
+		    else
+		        self.inv = inv
+            end
         end
 
         steampunk_blimp.engine_step(self, 0)
@@ -281,7 +295,7 @@ minetest.register_entity("steampunk_blimp:blimp", {
         --fire
         if self.fire then
             if self._engine_running == true then
-                self.fire:set_properties({textures={"default_furnace_fire_fg.png"},glow=15})
+                self.fire:set_properties({textures={steampunk_blimp.fire_tex},glow=15})
             else
                 self.fire:set_properties({textures={"steampunk_blimp_alpha.png"},glow=0})
             end
@@ -360,10 +374,16 @@ minetest.register_entity("steampunk_blimp:blimp", {
         self.object:add_velocity(vector.multiply(accel,self.dtime))
         self.object:set_rotation({x=newpitch,y=newyaw,z=newroll})
 
+        local compass_angle = newyaw
+        local rem_obj = self.object:get_attach()
+        if rem_obj then
+            compass_angle = rem_obj:get_rotation().y
+        end
+
         self.object:set_bone_position("low_rudder", {x=0,y=0,z=0}, {x=0,y=self._rudder_angle,z=0})
         self.object:set_bone_position("rudder", {x=0,y=97,z=-148}, {x=0,y=self._rudder_angle,z=0})
         self.object:set_bone_position("timao", {x=0,y=27,z=-25}, {x=0,y=0,z=self._rudder_angle*8})
-        self.object:set_bone_position("compass_axis", {x=0,y=30.2,z=-21.243}, {x=0, y=(math.deg(newyaw)), z=0})
+        self.object:set_bone_position("compass_axis", {x=0,y=30.2,z=-21.243}, {x=0, y=(math.deg(compass_angle)), z=0})
 
         --saves last velocy for collision detection (abrupt stop)
         self._last_vel = self.object:get_velocity()
@@ -388,6 +408,7 @@ minetest.register_entity("steampunk_blimp:blimp", {
         local itmstck=puncher:get_wielded_item()
         local item_name = ""
         if itmstck then item_name = itmstck:get_name() end
+        --minetest.chat_send_all(item_name)
 
         if is_attached == true then
             --refuel
@@ -406,11 +427,15 @@ minetest.register_entity("steampunk_blimp:blimp", {
 
         -- deal with painting or destroying
         if itmstck then
-            local _,indx = item_name:find('dye:')
+            local find_str = 'dye:'
+            local _,indx = item_name:find(find_str)
             if indx then
 
                 --lets paint!!!!
-                local color = item_name:sub(indx+1)
+                local color = nil
+                if not airutils.is_repixture then
+                    color = item_name:sub(indx+1)
+                end
                 local colstr = steampunk_blimp.colors[color]
                 --minetest.chat_send_all(color ..' '.. dump(colstr))
                 if colstr and (name == self.owner or minetest.check_player_privs(puncher, {protection_bypass=true})) then
@@ -441,11 +466,7 @@ minetest.register_entity("steampunk_blimp:blimp", {
             if not has_passengers and toolcaps and toolcaps.damage_groups and
                     toolcaps.groupcaps and (toolcaps.groupcaps.choppy or toolcaps.groupcaps.axey_dig) then
 
-                local is_empty = true --[[false
-                local inventory = airutils.get_inventory(self)
-                if inventory then
-                    if inventory:is_empty("main") then is_empty = true end
-                end]]--
+                local is_empty = true
 
                 --airutils.make_sound(self,'hit')
                 if is_empty == true then

@@ -30,11 +30,15 @@ minetest.register_alias("digilines_rtc:rtc", "digilines:rtc")
 minetest.register_node("digilines:rtc", {
 	description = S("Digiline Real Time Clock (RTC)"),
 	drawtype = "nodebox",
-	tiles = {"digilines_rtc.png"},
+	tiles = {
+		"digilines_rtc.png", "digilines_rtc_bottom.png", "digilines_rtc.png",
+		"digilines_rtc.png", "digilines_rtc.png", "digilines_rtc.png"
+	},
 
 	paramtype = "light",
 	paramtype2 = "facedir",
 	groups = {dig_immediate=2},
+	is_ground_content = false,
 	_mcl_blast_resistance = 1,
 	_mcl_hardness = 0.8,
 	selection_box = rtc_selbox,

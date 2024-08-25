@@ -18,6 +18,7 @@ Etherium Dust=
 Etherium Ore=
 Bamboo Floor=
 Bamboo Block=
+Paper Wall=
 Palm Wax=
 Bowl=
 Stone Ladder=

@@ -1,8 +1,8 @@
 
-local S = ethereal.translate
+local S = minetest.get_translator("ethereal")
 
+-- set leaftype (0 for block, 1 for plantlike)
 
--- set leaftype (value inside init.lua)
 local leaftype = "plantlike"
 local leafscale = 1.4
 
@@ -12,6 +12,7 @@ if ethereal.leaftype ~= 0 then
 end
 
 -- default apple tree leaves
+
 minetest.override_item("default:leaves", {
 	drawtype = leaftype,
 	visual_scale = leafscale,
@@ -21,12 +22,14 @@ minetest.override_item("default:leaves", {
 })
 
 -- ability to craft big tree sapling
+
 minetest.register_craft({
 	recipe = {{"default:sapling", "default:sapling", "default:sapling"}},
 	output = "ethereal:big_tree_sapling"
 })
 
 -- default jungle tree leaves
+
 minetest.override_item("default:jungleleaves", {
 	drawtype = leaftype,
 	visual_scale = leafscale,
@@ -36,6 +39,7 @@ minetest.override_item("default:jungleleaves", {
 })
 
 -- default pine tree leaves
+
 minetest.override_item("default:pine_needles", {
 	drawtype = leaftype,
 	visual_scale = leafscale,
@@ -53,6 +57,7 @@ minetest.override_item("default:pine_needles", {
 })
 
 -- default acacia tree leaves
+
 minetest.override_item("default:acacia_leaves", {
 	drawtype = leaftype,
 	inventory_image = "default_acacia_leaves.png",
@@ -62,6 +67,7 @@ minetest.override_item("default:acacia_leaves", {
 })
 
 -- default aspen tree leaves
+
 minetest.override_item("default:aspen_leaves", {
 	drawtype = leaftype,
 	inventory_image = "default_aspen_leaves.png",
@@ -71,6 +77,7 @@ minetest.override_item("default:aspen_leaves", {
 })
 
 -- willow twig
+
 minetest.register_node("ethereal:willow_twig", {
 	description = S("Willow Twig"),
 	drawtype = "plantlike",
@@ -94,6 +101,7 @@ minetest.register_node("ethereal:willow_twig", {
 })
 
 -- redwood leaves
+
 minetest.register_node("ethereal:redwood_leaves", {
 	description = S("Redwood Leaves"),
 	drawtype = leaftype,
@@ -117,6 +125,7 @@ minetest.register_node("ethereal:redwood_leaves", {
 })
 
 -- orange tree leaves
+
 minetest.register_node("ethereal:orange_leaves", {
 	description = S("Orange Leaves"),
 	drawtype = leaftype,
@@ -140,6 +149,7 @@ minetest.register_node("ethereal:orange_leaves", {
 })
 
 -- banana tree leaves
+
 minetest.register_node("ethereal:bananaleaves", {
 	description = S("Banana Leaves"),
 	drawtype = leaftype,
@@ -163,6 +173,7 @@ minetest.register_node("ethereal:bananaleaves", {
 })
 
 -- healing tree leaves
+
 minetest.register_node("ethereal:yellowleaves", {
 	description = S("Healing Tree Leaves"),
 	drawtype = leaftype,
@@ -173,7 +184,7 @@ minetest.register_node("ethereal:yellowleaves", {
 	paramtype = "light",
 	walkable = ethereal.leafwalk,
 	waving = 1,
-	groups = {snappy = 3, leafdecay = 3, leaves = 1},
+	groups = {snappy = 3, leafdecay = 3, leaves = 1, eatable = 1},
 	drop = {
 		max_items = 1,
 		items = {
@@ -181,7 +192,6 @@ minetest.register_node("ethereal:yellowleaves", {
 			{items = {"ethereal:yellowleaves"}}
 		}
 	},
-	-- one leaf heals half a heart when eaten
 	on_use = minetest.item_eat(1),
 	sounds = default.node_sound_leaves_defaults(),
 	after_place_node = default.after_place_leaves,
@@ -189,6 +199,7 @@ minetest.register_node("ethereal:yellowleaves", {
 })
 
 -- palm tree leaves
+
 minetest.register_node("ethereal:palmleaves", {
 	description = S("Palm Leaves"),
 	drawtype = leaftype,
@@ -212,6 +223,7 @@ minetest.register_node("ethereal:palmleaves", {
 })
 
 -- birch tree leaves
+
 minetest.register_node("ethereal:birch_leaves", {
 	description = S("Birch Leaves"),
 	drawtype = leaftype,
@@ -235,6 +247,7 @@ minetest.register_node("ethereal:birch_leaves", {
 })
 
 -- frost tree leaves
+
 minetest.register_node("ethereal:frost_leaves", {
 	description = S("Frost Leaves"),
 	drawtype = leaftype,
@@ -259,6 +272,7 @@ minetest.register_node("ethereal:frost_leaves", {
 })
 
 -- bamboo stalk leaves
+
 minetest.register_node("ethereal:bamboo_leaves", {
 	description = S("Bamboo Leaves"),
 	drawtype = leaftype,
@@ -282,6 +296,7 @@ minetest.register_node("ethereal:bamboo_leaves", {
 })
 
 -- sakura leaves
+
 minetest.register_node("ethereal:sakura_leaves", {
 	description = S("Sakura Leaves"),
 	drawtype = leaftype,
@@ -327,6 +342,7 @@ minetest.register_node("ethereal:sakura_leaves2", {
 })
 
 -- lemon tree leaves
+
 minetest.register_node("ethereal:lemon_leaves", {
 	description = S("Lemon Tree Leaves"),
 	drawtype = leaftype,
@@ -350,6 +366,7 @@ minetest.register_node("ethereal:lemon_leaves", {
 })
 
 -- olive tree leaves
+
 minetest.register_node("ethereal:olive_leaves", {
 	description = S("Olive Tree Leaves"),
 	drawtype = leaftype,
@@ -372,7 +389,8 @@ minetest.register_node("ethereal:olive_leaves", {
 	after_place_node = default.after_place_leaves
 })
 
--- mushroom tops
+-- red mushroom top
+
 minetest.register_node("ethereal:mushroom", {
 	description = S("Mushroom Cap"),
 	tiles = {"ethereal_mushroom_block.png"},
@@ -393,7 +411,30 @@ minetest.register_craft({
 	burntime = 10
 })
 
+-- brown mushroom top
+
+minetest.register_node("ethereal:mushroom_brown", {
+	description = S("Brown Mushroom Cap"),
+	tiles = {"ethereal_mushroom_block_brown.png"},
+	groups = {choppy = 2, oddly_breakable_by_hand = 1, flammable = 2, leafdecay = 3},
+	drop = {
+		max_items = 1,
+		items = {
+			{items = {"ethereal:mushroom_brown_sapling"}, rarity = 15},
+			{items = {"ethereal:mushroom_brown"}}
+		}
+	},
+	sounds = default.node_sound_wood_defaults()
+})
+
+minetest.register_craft({
+	type = "fuel",
+	recipe = "ethereal:mushroom_brown",
+	burntime = 10
+})
+
 -- mushroom pore (spongelike material found inside giant shrooms)
+
 minetest.register_node("ethereal:mushroom_pore", {
 	description = S("Mushroom Pore"),
 	tiles = {"ethereal_mushroom_pore.png"},
@@ -412,6 +453,7 @@ minetest.register_craft({
 })
 
 -- hedge block
+
 minetest.register_node("ethereal:bush", {
 	description = S("Bush"),
 	tiles = {"ethereal_bush.png"},
@@ -436,6 +478,7 @@ minetest.register_craft({
 })
 
 -- bush block #2
+
 minetest.register_node("ethereal:bush2", {
 	drawtype = "allfaces_optional",
 	description = S("Bush #2"),
@@ -462,6 +505,7 @@ minetest.register_craft({
 })
 
 -- bush block #3
+
 minetest.register_node("ethereal:bush3", {
 	drawtype = "allfaces_optional",
 	description = S("Bush #3"),
@@ -488,6 +532,7 @@ minetest.register_craft({
 })
 
 -- basandra bush stem, leaves
+
 minetest.register_node("ethereal:basandra_bush_stem", {
 	description = S("Basandra Bush Stem"),
 	drawtype = "plantlike",
@@ -502,8 +547,7 @@ minetest.register_node("ethereal:basandra_bush_stem", {
 	groups = {choppy = 2, oddly_breakable_by_hand = 1, flammable = 2},
 	sounds = default.node_sound_wood_defaults(),
 	selection_box = {
-		type = "fixed",
-		fixed = {-7 / 16, -0.5, -7 / 16, 7 / 16, 0.5, 7 / 16},
+		type = "fixed", fixed = {-7 / 16, -0.5, -7 / 16, 7 / 16, 0.5, 7 / 16},
 	}
 })
 
@@ -523,83 +567,38 @@ minetest.register_node("ethereal:basandra_bush_leaves", {
 	sounds = default.node_sound_leaves_defaults()
 })
 
--- compatibility check for new mt version with leafdecay function
-if minetest.registered_nodes["default:dirt_with_rainforest_litter"] then
+-- leafdecay helper function
 
-	default.register_leafdecay({
-		trunks = {"default:tree"},
-		leaves = {
-			"default:apple", "default:leaves",
-			"ethereal:orange", "ethereal:orange_leaves",
-			"ethereal:lemon", "ethereal:lemon_leaves",
-			"ethereal:vine"
-		},
-		radius = 3
-	})
-
-	default.register_leafdecay({
-		trunks = {"ethereal:willow_trunk"},
-		leaves = {"ethereal:willow_twig"},
-		radius = 3
-	})
-
-	default.register_leafdecay({
-		trunks = {"ethereal:redwood_trunk"},
-		leaves = {"ethereal:redwood_leaves"},
-		radius = 3
-	})
-
-	default.register_leafdecay({
-		trunks = {"ethereal:frost_tree"},
-		leaves = {"ethereal:frost_leaves"},
-		radius = 3
-	})
-
-	default.register_leafdecay({
-		trunks = {"ethereal:yellow_trunk"},
-		leaves = {"ethereal:yellowleaves", "ethereal:golden_apple"},
-		radius = 3
-	})
-
-	default.register_leafdecay({
-		trunks = {"ethereal:palm_trunk"},
-		leaves = {"ethereal:palmleaves", "ethereal:coconut"},
-		radius = 3
-	})
-
-	default.register_leafdecay({
-		trunks = {"ethereal:banana_trunk"},
-		leaves = {"ethereal:bananaleaves", "ethereal:banana", "ethereal:banana_bunch"},
-		radius = 3
-	})
-
-	default.register_leafdecay({
-		trunks = {"ethereal:birch_trunk"},
-		leaves = {"ethereal:birch_leaves"},
-		radius = 3
-	})
-
-	default.register_leafdecay({
-		trunks = {"ethereal:bamboo"},
-		leaves = {"ethereal:bamboo_leaves"},
-		radius = 3
-	})
-
-	default.register_leafdecay({
-		trunks = {"ethereal:sakura_trunk"},
-		leaves = {"ethereal:sakura_leaves", "ethereal:sakura_leaves2"},
-		radius = 3
-	})
-
-	default.register_leafdecay({
-		trunks = {"ethereal:olive_trunk"},
-		leaves = {"ethereal:olive_leaves", "ethereal:olive"},
-		radius = 3
-	})
-
-	default.register_leafdecay({
-		trunks = {"ethereal:mushroom_trunk"},
-		leaves = {"ethereal:mushroom", "ethereal:mushroom_pore"},
-		radius = 3
-	})
+local function decay(tru, lea, rad)
+	default.register_leafdecay({trunks = tru, leaves = lea, radius = rad})
 end
+
+-- add leafdecay registrations
+
+decay({"default:tree"}, {"default:apple", "default:leaves", "ethereal:orange",
+		"ethereal:orange_leaves", "ethereal:lemon", "ethereal:lemon_leaves",
+		"ethereal:vine"}, 3)
+
+decay({"ethereal:willow_trunk"}, {"ethereal:willow_twig"}, 3)
+
+decay({"ethereal:redwood_trunk"}, {"ethereal:redwood_leaves"}, 3)
+
+decay({"ethereal:frost_tree"}, {"ethereal:frost_leaves"}, 3)
+
+decay({"ethereal:yellow_trunk"}, {"ethereal:yellowleaves", "ethereal:golden_apple"}, 3)
+
+decay({"ethereal:palm_trunk"}, {"ethereal:palmleaves", "ethereal:coconut"}, 3)
+
+decay({"ethereal:banana_trunk"}, {"ethereal:bananaleaves", "ethereal:banana",
+		"ethereal:banana_bunch"}, 3)
+
+decay({"ethereal:birch_trunk"}, {"ethereal:birch_leaves"}, 3)
+
+decay({"ethereal:bamboo"}, {"ethereal:bamboo_leaves"}, 3)
+
+decay({"ethereal:sakura_trunk"}, {"ethereal:sakura_leaves", "ethereal:sakura_leaves2"}, 3)
+
+decay({"ethereal:olive_trunk"}, {"ethereal:olive_leaves", "ethereal:olive"}, 3)
+
+decay({"ethereal:mushroom_trunk"}, {"ethereal:mushroom", "ethereal:mushroom_brown",
+		"ethereal:mushroom_pore", "ethereal:lightstring"}, 4)

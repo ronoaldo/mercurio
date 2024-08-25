@@ -1,8 +1,26 @@
 
-local S = ethereal.translate
+local S = minetest.get_translator("ethereal")
 
+-- Crystal Ingot and recipe
+
+minetest.register_craftitem("ethereal:crystal_ingot", {
+	description = S("Crystal Ingot"),
+	inventory_image = "ethereal_crystal_ingot.png",
+	wield_image = "ethereal_crystal_ingot.png"
+})
+
+minetest.register_craft({
+	output = "ethereal:crystal_ingot",
+	recipe = {
+		{"default:mese_crystal", "ethereal:crystal_spike"},
+		{"ethereal:crystal_spike", "default:mese_crystal"},
+		{"bucket:bucket_water", ""}
+	},
+	replacements = {{"bucket:bucket_water", "bucket:bucket_empty"}}
+})
 
 -- Crystal Spike (Hurts if you touch it)
+
 minetest.register_node("ethereal:crystal_spike", {
 	description = S("Crystal Spike"),
 	drawtype = "plantlike",
@@ -21,83 +39,55 @@ minetest.register_node("ethereal:crystal_spike", {
 	},
 	node_box = {
 		type = "fixed", fixed = {-5 / 16, -0.5, -5 / 16, 5 / 16, 0, 5 / 16}
-	}
-})
+	},
 
+	dropped_step = function(self, pos, dtime) -- custom function for builtin_item use
 
--- Crystal Ingot
-minetest.register_craftitem("ethereal:crystal_ingot", {
-	description = S("Crystal Ingot"),
-	inventory_image = "ethereal_crystal_ingot.png",
-	wield_image = "ethereal_crystal_ingot.png"
-})
+		self.ctimer = (self.ctimer or 0) + dtime
+		if self.ctimer < 5.0 then return end -- 5 second timer
+		self.ctimer = 0
 
--- Check for builtin_item mod and add custom drop code to crystal spikes
-if minetest.get_modpath("builtin_item") then
+		if self.node_inside and self.node_inside.name ~= "default:water_source" then
+			return
+		end
 
-	minetest.override_item("ethereal:crystal_spike", {
+		local objs = minetest.get_objects_inside_radius(pos, 0.8)
 
-		dropped_step = function(self, pos, dtime)
+		if not objs or #objs ~= 2 then return end
 
-			self.ctimer = (self.ctimer or 0) + dtime
-			if self.ctimer < 5.0 then return end
-			self.ctimer = 0
+		local crystal, mese, ent = nil, nil, nil
 
-			if self.node_inside
-			and self.node_inside.name ~= "default:water_source" then
-				return
-			end
+		for k, obj in pairs(objs) do
 
-			local objs = minetest.get_objects_inside_radius(pos, 0.8)
+			ent = obj:get_luaentity()
 
-			if not objs or #objs ~= 2 then return end
+			if ent and ent.name == "__builtin:item" then
 
-			local crystal, mese, ent = nil, nil, nil
+				if ent.itemstring == "default:mese_crystal 2" and not mese then
 
-			for k, obj in pairs(objs) do
+					mese = obj
 
-				ent = obj:get_luaentity()
+				elseif ent.itemstring == "ethereal:crystal_spike 2" and not crystal then
 
-				if ent and ent.name == "__builtin:item" then
-
-					if ent.itemstring == "default:mese_crystal 2"
-					and not mese then
-
-						mese = obj
-
-					elseif ent.itemstring == "ethereal:crystal_spike 2"
-					and not crystal then
-
-						crystal = obj
-					end
+					crystal = obj
 				end
 			end
-
-			if mese and crystal then
-
-				mese:remove()
-				crystal:remove()
-
-				minetest.add_item(pos, "ethereal:crystal_ingot")
-
-				return false
-			end
 		end
-	})
-end
 
-minetest.register_craft({
-	output = "ethereal:crystal_ingot",
-	recipe = {
-		{"default:mese_crystal", "ethereal:crystal_spike"},
-		{"ethereal:crystal_spike", "default:mese_crystal"},
-		{"bucket:bucket_water", ""}
-	},
-	replacements = {{"bucket:bucket_water", "bucket:bucket_empty"}}
+		if mese and crystal then
+
+			mese:remove()
+			crystal:remove()
+
+			minetest.add_item(pos, "ethereal:crystal_ingot")
+
+			return false
+		end
+	end
 })
 
+-- Crystal Block and recipe
 
--- Crystal Block
 minetest.register_node("ethereal:crystal_block", {
 	description = S("Crystal Block"),
 	tiles = {"ethereal_crystal_block.png"},
@@ -121,8 +111,8 @@ minetest.register_craft({
 	recipe = {{"ethereal:crystal_block"}}
 })
 
-
 -- Crystal Sword (Powerful wee beastie)
+
 minetest.register_tool("ethereal:sword_crystal", {
 	description = S("Crystal Sword"),
 	inventory_image = "ethereal_crystal_sword.png",
@@ -132,9 +122,7 @@ minetest.register_tool("ethereal:sword_crystal", {
 		max_drop_level = 1,
 		groupcaps = {
 			snappy = {
-				times = {[1] = 1.70, [2] = 0.70, [3] = 0.25},
-				uses = 50,
-				maxlevel = 3
+				times = {[1] = 1.70, [2] = 0.70, [3] = 0.25}, uses = 50, maxlevel = 3
 			}
 		},
 		damage_groups = {fleshy = 10}
@@ -152,8 +140,8 @@ minetest.register_craft({
 	}
 })
 
-
 -- Crystal Axe
+
 minetest.register_tool("ethereal:axe_crystal", {
 	description = S("Crystal Axe"),
 	inventory_image = "ethereal_crystal_axe.png",
@@ -163,9 +151,7 @@ minetest.register_tool("ethereal:axe_crystal", {
 		max_drop_level = 1,
 		groupcaps = {
 			choppy = {
-				times = {[1] = 2.00, [2] = 0.80, [3] = 0.40},
-				uses = 40,
-				maxlevel = 3
+				times = {[1] = 2.00, [2] = 0.80, [3] = 0.40}, uses = 40, maxlevel = 3
 			}
 		},
 		damage_groups = {fleshy = 7}
@@ -192,8 +178,8 @@ minetest.register_craft({
 	}
 })
 
-
 -- Crystal Pick (This will last a while)
+
 minetest.register_tool("ethereal:pick_crystal", {
 	description = S("Crystal Pickaxe"),
 	inventory_image = "ethereal_crystal_pick.png",
@@ -203,9 +189,7 @@ minetest.register_tool("ethereal:pick_crystal", {
 		max_drop_level = 3,
 		groupcaps={
 			cracky = {
-				times = {[1] = 1.8, [2] = 0.8, [3] = 0.40},
-				uses = 40,
-				maxlevel = 3
+				times = {[1] = 1.8, [2] = 0.8, [3] = 0.40}, uses = 40, maxlevel = 3
 			}
 		},
 		damage_groups = {fleshy = 6}
@@ -223,8 +207,8 @@ minetest.register_craft({
 	}
 })
 
+-- backup old function and replace with new silk touch ability for crystal shovel
 
--- dig override for crystal shovel's silk touch ability
 local old_handle_node_drops = minetest.handle_node_drops
 
 function minetest.handle_node_drops(pos, drops, digger)
@@ -245,6 +229,8 @@ function minetest.handle_node_drops(pos, drops, digger)
 	return old_handle_node_drops(pos, {ItemStack(nn)}, digger)
 end
 
+-- Crystal Shovel
+
 minetest.register_tool("ethereal:shovel_crystal", {
 	description = S("Crystal Shovel"),
 	inventory_image = "ethereal_crystal_shovel.png",
@@ -254,9 +240,7 @@ minetest.register_tool("ethereal:shovel_crystal", {
 		max_drop_level = 1,
 		groupcaps = {
 			crumbly = {
-				times = {[1] = 1.10, [2] = 0.50, [3] = 0.30},
-				uses = 30,
-				maxlevel = 3
+				times = {[1] = 1.10, [2] = 0.50, [3] = 0.30}, uses = 30, maxlevel = 3
 			}
 		},
 		damage_groups = {fleshy = 4}
@@ -274,8 +258,8 @@ minetest.register_craft({
 	}
 })
 
-
 -- Crystal Gilly Staff (replenishes air supply when used)
+
 minetest.register_tool("ethereal:crystal_gilly_staff", {
 	description = S("Crystal Gilly Staff"),
 	inventory_image = "ethereal_crystal_gilly_staff.png",
@@ -283,9 +267,7 @@ minetest.register_tool("ethereal:crystal_gilly_staff", {
 
 	on_use = function(itemstack, user, pointed_thing)
 
-		if user:get_breath() < 10 then
-			user:set_breath(10)
-		end
+		if user and user:get_breath() < 10 then user:set_breath(10) end
 	end
 })
 
@@ -298,12 +280,11 @@ minetest.register_craft({
 	},
 })
 
+-- Add Toolranks mod support
 
--- Add [toolranks] mod support if found
 if minetest.get_modpath("toolranks") then
 
-	-- Helper function
-	local function add_tool(name, desc, afteruse)
+	local function add_tool(name, desc, afteruse) -- helper function
 
 		minetest.override_item(name, {
 			original_description = desc,

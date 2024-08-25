@@ -1,19 +1,13 @@
+std = "min+minetest"
+
 globals = {
 	"Promise",
 	"minetest" -- for testing
 }
 
 read_globals = {
-	-- Stdlib
-	string = {fields = {"split", "trim"}},
-	table = {fields = {"copy", "getn"}},
-
-	-- Minetest
-	"vector", "ItemStack",
-	"dump", "dump2",
-	"AreaStore",
-	"VoxelArea",
-
+	-- missing from minetest std
+	"unpack",
 	-- opt deps
-	"mtt"
+	"mtt", "fakelib"
 }

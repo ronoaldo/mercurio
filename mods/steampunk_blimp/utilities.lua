@@ -70,6 +70,8 @@ local function do_attach(self, player, slot)
         
         if airutils.is_mcl then
             mcl_player.player_attached[name] = true
+        elseif airutils.is_repixture then
+            rp_player.player_attached[name] = true
         else
             player_api.player_attached[name] = true
         end
@@ -104,6 +106,8 @@ function steampunk_blimp.rescueConnectionFailedPassengers(self)
                     local is_attached = nil
                     if airutils.is_mcl then
                         is_attached = mcl_player.player_attached[self._passengers[i]]
+                    elseif airutils.is_repixture then
+                        is_attached = rp_player.player_attached[self._passengers[i]]
                     else
                         is_attached = player_api.player_attached[self._passengers[i]]
                     end
@@ -175,6 +179,11 @@ function steampunk_blimp.dettach_pax(self, player, side)
     side = side or "r"
     if player then
         local name = player:get_player_name() --self._passenger
+        if self.driver_name == name then
+            self.driver_name = nil
+            self._at_control = false
+        end
+
         steampunk_blimp.remove_hud(player)
 
         -- passenger clicked the object => driver gets off the vehicle
@@ -192,6 +201,9 @@ function steampunk_blimp.dettach_pax(self, player, side)
         if airutils.is_mcl then
             mcl_player.player_attached[name] = nil
             mcl_player.player_set_animation(player, "stand", 30)
+        elseif airutils.is_repixture then
+            rp_player.player_attached[name] = nil
+            rp_player.player_set_animation(player, "stand", 30)
         else
             player_api.player_attached[name] = nil
             player_api.set_animation(player, "stand")
@@ -227,18 +239,29 @@ function steampunk_blimp.textures_copy()
     return tablecopy
 end
 
+--this function needs an urgent refactory to be independent, but not today :(
 local function paint(self, write_prefix)
     write_prefix = write_prefix or false
+
     local l_textures = steampunk_blimp.textures_copy()
     for _, texture in ipairs(l_textures) do
-        local indx = texture:find('wool_blue.png')
+        local indx = texture:find(steampunk_blimp.color1_texture)
         if indx then
-            l_textures[_] = "wool_".. self.color..".png"
+            if not airutils.is_repixture then
+                l_textures[_] = "wool_".. self.color..".png"
+            else
+                l_textures[_] = "rp_default_reed_block_side.png^[colorize:"..airutils.colors[self.color]
+            end
         end
-        indx = texture:find('wool_yellow.png')
+        indx = texture:find(steampunk_blimp.color2_texture)
         if indx then
-            l_textures[_] = "wool_".. self.color2..".png"
+            if not airutils.is_repixture then
+                l_textures[_] = "wool_".. self.color2..".png"
+            else
+                l_textures[_] = "rp_default_reed_block_side.png^[colorize:"..airutils.colors[self.color2]
+            end
         end
+
         indx = texture:find('steampunk_blimp_alpha_logo.png')
         if indx then
             l_textures[_] = self.logo
@@ -286,47 +309,53 @@ function steampunk_blimp.destroy(self, overload)
     local pos = self.object:get_pos()
     if self.fire then self.fire:remove() end
 
-    if self._passengers_base[1] then self._passengers_base[1]:remove() end
-    if self._passengers_base[2] then self._passengers_base[2]:remove() end
-    if self._passengers_base[3] then self._passengers_base[3]:remove() end
-    if self._passengers_base[4] then self._passengers_base[4]:remove() end
-    if self._passengers_base[5] then self._passengers_base[5]:remove() end
-    if self._passengers_base[6] then self._passengers_base[6]:remove() end
-    if self._passengers_base[7] then self._passengers_base[7]:remove() end
+    for i = steampunk_blimp.max_seats,1,-1 
+    do
+        if self._passengers_base[i] then self._passengers_base[i]:remove() end
+    end
 
     airutils.destroy_inventory(self)
+    self.inv = nil
+    self._inv_id = nil
+    
+    local remove_it = self._remove or false
+
+    local lua_ent = self.object:get_luaentity()
+    local staticdata = lua_ent:get_staticdata(self)
+    local player = minetest.get_player_by_name(self.owner)
+
     self.object:remove()
 
-    pos.y=pos.y+2
-    --[[for i=1,7 do
-        minetest.add_item({x=pos.x+math.random()-0.5,y=pos.y,z=pos.z+math.random()-0.5},'default:steel_ingot')
-    end
+    if remove_it == false then
+        pos.y=pos.y+2
+        --[[for i=1,7 do
+            minetest.add_item({x=pos.x+math.random()-0.5,y=pos.y,z=pos.z+math.random()-0.5},'default:steel_ingot')
+        end
 
-    for i=1,7 do
-        minetest.add_item({x=pos.x+math.random()-0.5,y=pos.y,z=pos.z+math.random()-0.5},'default:mese_crystal')
-    end]]--
+        for i=1,7 do
+            minetest.add_item({x=pos.x+math.random()-0.5,y=pos.y,z=pos.z+math.random()-0.5},'default:mese_crystal')
+        end]]--
 
-    --minetest.add_item({x=pos.x+math.random()-0.5,y=pos.y,z=pos.z+math.random()-0.5},'steampunk_blimp:boat')
-    --minetest.add_item({x=pos.x+math.random()-0.5,y=pos.y,z=pos.z+math.random()-0.5},'default:diamond')
+        --minetest.add_item({x=pos.x+math.random()-0.5,y=pos.y,z=pos.z+math.random()-0.5},'steampunk_blimp:boat')
+        --minetest.add_item({x=pos.x+math.random()-0.5,y=pos.y,z=pos.z+math.random()-0.5},'default:diamond')
 
-    if overload then
         local stack = ItemStack(self.item)
-        local item_def = stack:get_definition()
+        local stack_meta = stack:get_meta()
+        stack_meta:set_string("staticdata", staticdata)
 
-        if item_def.overload_drop then
-            for _,item in pairs(item_def.overload_drop) do
-                minetest.add_item({x=pos.x+math.random()-0.5,y=pos.y,z=pos.z+math.random()-0.5},item)
+        if player then
+            local inv = player:get_inventory()
+            if inv then
+                if inv:room_for_item("main", stack) then
+                    inv:add_item("main", stack)
+                else
+                    minetest.add_item({x=pos.x+math.random()-0.5,y=pos.y,z=pos.z+math.random()-0.5}, stack)
+                end
             end
-            return
+        else
+            minetest.add_item({x=pos.x+math.random()-0.5,y=pos.y,z=pos.z+math.random()-0.5}, stack)
         end
     end
-    local stack = ItemStack(self.item)
-    local item_def = stack:get_definition()
-    if self.hull_integrity then
-        local boat_wear = math.floor(65535*(1-(self.hull_integrity/item_def.hull_integrity)))
-        stack:set_wear(boat_wear)
-    end
-    minetest.add_item({x=pos.x+math.random()-0.5,y=pos.y,z=pos.z+math.random()-0.5}, stack)
 end
 
 --returns 0 for old, 1 for new
@@ -388,15 +417,16 @@ function steampunk_blimp.engineSoundPlay(self)
     if self.sound_handle_pistons then minetest.sound_stop(self.sound_handle_pistons) end
     if self.object then
         local furnace_sound = "default_furnace_active"
-        if airutils.is_mcl then furnace_sound = "fire_fire" end
-        self.sound_handle = minetest.sound_play({name = furnace_sound},
-            {object = self.object, gain = 0.2,
-                max_hear_distance = 5,
-                loop = true,})
+        if steampunk_blimp.furnace_sound then
+            self.sound_handle = minetest.sound_play({name = steampunk_blimp.furnace_sound.name},
+                {object = self.object, gain = steampunk_blimp.furnace_sound.gain,
+                    max_hear_distance = 5,
+                    loop = true,})
+        end
 
-        self.sound_handle_pistons = minetest.sound_play({name = "default_cool_lava"},--"default_item_smoke"},
-            {object = self.object, gain = 0.05,
-                pitch = 0.4+((math.abs(self._power_lever)/100)/2),
+        self.sound_handle_pistons = minetest.sound_play({name = steampunk_blimp.piston_sound.name},--"default_item_smoke"},
+            {object = self.object, gain = steampunk_blimp.piston_sound.gain,
+                pitch = steampunk_blimp.piston_sound.pitch+((math.abs(self._power_lever)/100)/2),
                 max_hear_distance = 32,
                 loop = true,})
     end
@@ -439,10 +469,12 @@ function steampunk_blimp.start_furnace(self)
             local furnace_sound = "default_furnace_active"
             if airutils.is_mcl then furnace_sound = "fire_fire" end
 
-            self.sound_handle = minetest.sound_play({name = furnace_sound},
-                {object = self.object, gain = 0.2,
-                    max_hear_distance = 5,
-                    loop = true,})
+            if steampunk_blimp.furnace_sound then
+                self.sound_handle = minetest.sound_play({name = steampunk_blimp.furnace_sound.name},
+                    {object = self.object, gain = steampunk_blimp.furnace_sound.gain,
+                        max_hear_distance = 5,
+                        loop = true,})
+            end
         end
     end
 end

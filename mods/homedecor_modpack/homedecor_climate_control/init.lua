@@ -7,7 +7,7 @@ homedecor.register("air_conditioner", {
 	mesh = "homedecor_ac.obj",
 	tiles = {
 		"homedecor_ac.png",
-		homedecor.textures.glass
+		homedecor.textures.glass.pane
 	},
 	groups = { snappy = 3, dig_stone = 3 },
 	use_texture_alpha = "clip",
@@ -36,11 +36,13 @@ homedecor.register("air_conditioner", {
 -- fans
 
 minetest.register_entity(":homedecor:mesh_desk_fan", {
-	collisionbox = homedecor.nodebox.null,
-	visual = "mesh",
-	mesh = "homedecor_desk_fan.b3d",
-	textures = {"homedecor_desk_fan_uv.png"},
-	visual_size = {x=10, y=10},
+	initial_properties = {
+		collisionbox = homedecor.nodebox.null,
+		visual = "mesh",
+		mesh = "homedecor_desk_fan.b3d",
+		textures = {"homedecor_desk_fan_uv.png"},
+		visual_size = {x=10, y=10},
+	}
 })
 
 local add_mesh_desk_fan_entity = function(pos)

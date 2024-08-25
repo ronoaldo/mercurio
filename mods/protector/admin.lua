@@ -111,6 +111,8 @@ minetest.register_abm({
 -- get protection radius
 local r = tonumber(minetest.settings:get("protector_radius")) or 5
 
+if r > 30 then r = 30 end
+
 -- show protection areas of nearby protectors owned by you (thanks agaran)
 minetest.register_chatcommand("protector_show_area", {
 	params = "",
@@ -159,6 +161,7 @@ minetest.register_node("protector:protect_hidden", {
 	floodable = false,
 	drop = "",
 	groups = {not_in_creative_inventory = 1, unbreakable = 1},
+	is_ground_content = false,
 	on_blast = function() end,
 	-- 1px block inside door hinge near node top
 	collision_box = {

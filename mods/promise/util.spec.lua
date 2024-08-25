@@ -6,6 +6,13 @@ mtt.register("Promise.resolved", function(callback)
     end)
 end)
 
+mtt.register("Promise.empty", function(callback)
+    Promise.empty():next(function(result)
+        assert(not result)
+        callback()
+    end)
+end)
+
 mtt.register("Promise.rejected", function(callback)
     Promise.rejected("nope")
     :catch(function(err)
@@ -69,3 +76,33 @@ end)
 mtt.register("Promise.mods_loaded", function()
     return Promise.mods_loaded()
 end)
+
+if minetest.get_modpath("fakelib") then
+    mtt.register("Promise.on_punch", function()
+        local pos = vector.new(10,20,30)
+        local p = Promise.on_punch(pos)
+
+        local node = { name="default:mese" }
+        local puncher = fakelib.create_player()
+        local pointed_thing = {}
+        for _, fn in ipairs(minetest.registered_on_punchnodes) do
+            fn(pos, node, puncher, pointed_thing)
+        end
+
+        return p:next(function(data)
+            assert(vector.equals(data.pos, pos))
+            assert(data.node == node)
+            assert(data.puncher == puncher)
+            assert(data.pointed_thing == pointed_thing)
+        end)
+    end)
+
+    mtt.register("Promise.on_punch (timeout)", function(callback)
+        local pos = vector.new(10,20,30)
+        local p = Promise.on_punch(pos, 1)
+
+        p:catch(function()
+            callback()
+        end)
+    end)
+end

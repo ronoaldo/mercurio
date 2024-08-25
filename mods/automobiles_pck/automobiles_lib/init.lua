@@ -24,13 +24,20 @@ automobiles_lib.fuel = {['biofuel:biofuel'] = 1,['biofuel:bottle_fuel'] = 1,
 automobiles_lib.gravity = 9.8
 automobiles_lib.ideal_step = 0.2
 automobiles_lib.is_creative = minetest.settings:get_bool("creative_mode", false)
+automobiles_lib.can_collect_car = minetest.settings:get_bool("collect_automobiles", true)
 
+automobiles_lib.is_drift_game = false
+automobiles_lib.extra_drift = false
+if minetest.registered_nodes["dg_mapgen:stone"] then
+    automobiles_lib.is_drift_game = true
+    automobiles_lib.extra_drift = true
+end
 
-local load_noob_mode = storage:get_int("noob_mode")
+local load_noob_mode = minetest.settings:get_bool("noob_mode", false) -- or storage:get_int("noob_mode")
 automobiles_lib.noob_mode = false
 automobiles_lib.extra_stepheight = 0
 -- 1 == true ---- 2 == false
-if load_noob_mode == 1 then
+if load_noob_mode == true then
     automobiles_lib.load_noob_mode = true
     automobiles_lib.extra_stepheight = 1
 end
@@ -80,6 +87,40 @@ function automobiles_lib.properties_copy(origin_table)
       tablecopy[k] = v
     end
     return tablecopy
+end
+
+local function smoke_particle(pos)
+	minetest.add_particle({
+		pos = pos,
+		velocity = {x = 0, y = 0, z = 0},
+		acceleration = {x = 0, y = 0, z = 0},
+		expirationtime = 0.25,
+		size = 2.8,
+		collisiondetection = false,
+		collision_removal = false,
+		vertical = false,
+		texture = "automobiles_smoke.png",
+	})
+end
+
+function automobiles_lib.add_smoke(pos, yaw, rear_wheel_xpos)
+    local direction = yaw
+    
+    --right
+    local move = rear_wheel_xpos/10
+    local smk_pos = vector.new(pos)
+    smk_pos.x = smk_pos.x + move * math.cos(direction)
+    smk_pos.z = smk_pos.z + move * math.sin(direction)
+    
+    smoke_particle(smk_pos)
+
+    --left
+    direction = direction - math.rad(180)
+    smk_pos = vector.new(pos)
+    smk_pos.x = smk_pos.x + move * math.cos(direction)
+    smk_pos.z = smk_pos.z + move * math.sin(direction)
+    
+    smoke_particle(smk_pos)
 end
 
 --returns 0 for old, 1 for new
@@ -465,19 +506,49 @@ function automobiles_lib.destroy(self, puncher)
     if self.reverse_lights then self.reverse_lights:remove() end
     if self.turn_l_light then self.turn_l_light:remove() end
     if self.turn_r_light then self.turn_r_light:remove() end
+    if self.rag then self.rag:remove() end --for buggy
+    if self.back_seat then self.back_seat:remove() end --for catrelle
+    if self.instruments then self.instruments:remove() end --for delorean
+    if self.normal_kit then self.normal_kit:remove() end
+    if self.rag_rect then self.rag_rect:remove() end --for roadster
+    
 
     automobiles_lib.seats_destroy(self)
-
     automobiles_lib.destroy_inventory(self)
-    self.object:remove()
 
     pos.y=pos.y+2
 
-    minetest.add_item({x=pos.x+math.random()-0.5,y=pos.y,z=pos.z+math.random()-0.5},'automobiles_lib:engine')
-    minetest.add_item({x=pos.x+math.random()-0.5,y=pos.y,z=pos.z+math.random()-0.5},'automobiles_lib:wheel')
-    minetest.add_item({x=pos.x+math.random()-0.5,y=pos.y,z=pos.z+math.random()-0.5},'automobiles_lib:wheel')
-    minetest.add_item({x=pos.x+math.random()-0.5,y=pos.y,z=pos.z+math.random()-0.5},'automobiles_lib:wheel')
-    minetest.add_item({x=pos.x+math.random()-0.5,y=pos.y,z=pos.z+math.random()-0.5},'automobiles_lib:wheel')
+    if automobiles_lib.can_collect_car == false then
+        minetest.add_item({x=pos.x+math.random()-0.5,y=pos.y,z=pos.z+math.random()-0.5},'automobiles_lib:engine')
+        minetest.add_item({x=pos.x+math.random()-0.5,y=pos.y,z=pos.z+math.random()-0.5},'automobiles_lib:wheel')
+        minetest.add_item({x=pos.x+math.random()-0.5,y=pos.y,z=pos.z+math.random()-0.5},'automobiles_lib:wheel')
+        minetest.add_item({x=pos.x+math.random()-0.5,y=pos.y,z=pos.z+math.random()-0.5},'automobiles_lib:wheel')
+        minetest.add_item({x=pos.x+math.random()-0.5,y=pos.y,z=pos.z+math.random()-0.5},'automobiles_lib:wheel')
+    else
+        local lua_ent = self.object:get_luaentity()
+        local staticdata = lua_ent:get_staticdata(self)
+        local obj_name = lua_ent.name
+        local player = puncher
+
+        local stack = ItemStack(obj_name)
+        local stack_meta = stack:get_meta()
+        stack_meta:set_string("staticdata", staticdata)
+
+        if player then
+            local inv = player:get_inventory()
+            if inv then
+                if inv:room_for_item("main", stack) then
+                    inv:add_item("main", stack)
+                else
+                    minetest.add_item({x=pos.x+math.random()-0.5,y=pos.y,z=pos.z+math.random()-0.5}, stack)
+                end
+            end
+        else
+            minetest.add_item({x=pos.x+math.random()-0.5,y=pos.y,z=pos.z+math.random()-0.5}, stack)
+        end
+    end
+
+    self.object:remove()
 end
 
 function automobiles_lib.engine_set_sound_and_animation(self, _longit_speed)
@@ -717,7 +788,7 @@ minetest.register_chatcommand("transfer_vehicle", {
 	end
 })
 
-minetest.register_chatcommand("noobfy_the_vehicles", {
+--[[minetest.register_chatcommand("noobfy_the_vehicles", {
     params = "<true/false>",
     description = S("Enable/disable the NOOB mode for the vehicles"),
     privs = {server=true},
@@ -737,8 +808,28 @@ minetest.register_chatcommand("noobfy_the_vehicles", {
         if automobiles_lib.noob_mode == true then save = 1 end
         storage:set_int("noob_mode", save)
     end,
-})
+})]]--
 
+-- Give to new player
+if automobiles_lib.is_drift_game == true then
+    minetest.register_on_joinplayer(function(player)
+	    local inv = player:get_inventory()
+        local car = "automobiles_beetle:beetle"
+        if not inv:contains_item("main", car) then inv:add_item("main", car) end
+        car = "automobiles_buggy:buggy"
+        if not inv:contains_item("main", car) then inv:add_item("main", car) end
+        car = "automobiles_catrelle:catrelle_4f"
+        if not inv:contains_item("main", car) then inv:add_item("main", car) end
+        car = "automobiles_coupe:coupe"
+        if not inv:contains_item("main", car) then inv:add_item("main", car) end
+        car = "automobiles_delorean:delorean"
+        if not inv:contains_item("main", car) then inv:add_item("main", car) end
+        car = "automobiles_delorean:time_machine"
+        if not inv:contains_item("main", car) then inv:add_item("main", car) end
+        car = "automobiles_trans_am:trans_am"
+        if not inv:contains_item("main", car) then inv:add_item("main", car) end
+    end)
+end
 
 local old_entities = {
     "automobiles_buggy:pivot_mesh",

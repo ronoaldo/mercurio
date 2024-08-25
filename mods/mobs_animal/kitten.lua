@@ -1,7 +1,10 @@
--- Translation support
-local S = minetest.get_translator("mobs_animal")
 
-local hairball = minetest.settings:get("mobs_hairball")
+-- translation and hairball setting
+
+local S = minetest.get_translator("mobs_animal")
+local hairball = minetest.settings:get_bool("mobs_animal.hairball") ~= false
+
+-- custom kitty types
 
 local kitten_types = {
 
@@ -37,9 +40,7 @@ mobs:register_mob("mobs_animal:kitten", {
 		{"mobs_kitten_sandy.png"}
 	},
 	makes_footstep_sound = false,
-	sounds = {
-		random = "mobs_kitten"
-	},
+	sounds = {random = "mobs_kitten"},
 	walk_velocity = 0.6,
 	walk_chance = 15,
 	run_velocity = 2,
@@ -53,12 +54,9 @@ mobs:register_mob("mobs_animal:kitten", {
 	fear_height = 3,
 	animation = {
 		speed_normal = 42,
-		stand_start = 97,
-		stand_end = 192,
-		walk_start = 0,
-		walk_end = 96,
-		stoodup_start = 0,
-		stoodup_end = 0,
+		stand_start = 97, stand_end = 192,
+		walk_start = 0, walk_end = 96,
+		stoodup_start = 0, stoodup_end = 0,
 	},
 	follow = {
 		"mobs_animal:rat", "group:food_fish_raw",
@@ -111,19 +109,13 @@ mobs:register_mob("mobs_animal:kitten", {
 
 	do_custom = function(self, dtime)
 
-		if hairball == "false" then
-			return
-		end
+		if not hairball then return end
 
 		self.hairball_timer = (self.hairball_timer or 0) + dtime
-		if self.hairball_timer < 10 then
-			return
-		end
+		if self.hairball_timer < 10 then return end
 		self.hairball_timer = 0
 
-		if self.child or math.random(250) > 1 then
-			return
-		end
+		if self.child or math.random(250) > 1 then return end
 
 		local pos = self.object:get_pos()
 
@@ -134,14 +126,15 @@ mobs:register_mob("mobs_animal:kitten", {
 	end
 })
 
-
-local spawn_on = "default:dirt_with_grass"
-
-if minetest.get_modpath("ethereal") then
-	spawn_on = "ethereal:grove_dirt"
-end
+-- where to spawn
 
 if not mobs.custom_spawn_animal then
+
+	local spawn_on = "default:dirt_with_grass"
+
+	if minetest.get_modpath("ethereal") then
+		spawn_on = "ethereal:grove_dirt"
+	end
 
 	mobs:spawn({
 		name = "mobs_animal:kitten",
@@ -156,12 +149,15 @@ if not mobs.custom_spawn_animal then
 	})
 end
 
+-- spawn egg
 
 mobs:register_egg("mobs_animal:kitten", S("Kitten"), "mobs_kitten_inv.png", 0)
 
+-- compatibility with old mobs mod
 
-mobs:alias_mob("mobs:kitten", "mobs_animal:kitten") -- compatibility
+mobs:alias_mob("mobs:kitten", "mobs_animal:kitten")
 
+-- hairball and items
 
 local hairball_items = {
 	"default:stick", "default:coal_lump", "default:dry_shrub", "flowers:rose",
@@ -177,6 +173,7 @@ local hairball_items = {
 minetest.register_craftitem(":mobs:hairball", {
 	description = S("Hairball"),
 	inventory_image = "mobs_hairball.png",
+
 	on_use = function(itemstack, user, pointed_thing)
 
 		local pos = user:get_pos()
@@ -184,8 +181,7 @@ minetest.register_craftitem(":mobs:hairball", {
 		local newpos = {x = pos.x + dir.x, y = pos.y + dir.y + 1.5, z = pos.z + dir.z}
 		local item = hairball_items[math.random(1, #hairball_items)]
 
-		if item ~= ""
-		and minetest.registered_items[item] then
+		if item ~= "" and minetest.registered_items[item] then
 			minetest.add_item(newpos, {name = item})
 		end
 

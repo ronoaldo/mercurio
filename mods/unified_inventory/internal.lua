@@ -368,6 +368,10 @@ function ui.apply_filter(player, filter, search_dir)
 		local groups = lfilter:sub(7):split(",")
 		ffilter = function(name)
 			local def = registered_items[name]
+			if not def then
+				return false
+			end
+
 			for _, group in ipairs(groups) do
 				if not def.groups[group]
 				or def.groups[group] <= 0 then
@@ -383,6 +387,10 @@ function ui.apply_filter(player, filter, search_dir)
 
 		ffilter = function(name)
 			local def = registered_items[name]
+			if not def then
+				return false
+			end
+
 			local lname = string.lower(name)
 			local ldesc = string.lower(def.description)
 			local llocaldesc = minetest.get_translated_string

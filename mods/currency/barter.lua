@@ -113,9 +113,11 @@ minetest.register_node("currency:barter", {
 	description = S("Barter Table"),
 	paramtype = "light",
 	paramtype2 = "facedir",
-	tiles = {"barter_top.png",
-					"barter_base.png",
-					"barter_side.png"},
+	tiles = {
+		"barter_top.png",
+		"barter_base.png",
+		"barter_side.png"
+	},
 	inventory_image = "barter_top.png",
 	node_box = {
 		type = "fixed",
@@ -128,6 +130,7 @@ minetest.register_node("currency:barter", {
 		},
 	},
 	groups = {choppy=2,oddly_breakable_by_hand=2},
+	is_ground_content = false,
 	sounds = currency.node_sound_wood_defaults(),
 	on_construct = function(pos)
 		local meta = minetest.get_meta(pos)

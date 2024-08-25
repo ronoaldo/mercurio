@@ -5,45 +5,25 @@
 	https://forum.minetest.net/viewtopic.php?f=9&t=19488
 ]]
 
-local S = farming.translate
-local a = farming.recipe_items
+local S = minetest.get_translator("farming")
 
--- onion
+-- item/seed
+
 minetest.register_craftitem("farming:onion", {
 	description = S("Onion"),
 	inventory_image = "crops_onion.png",
-	groups = {compostability = 48, seed = 2, food_onion = 1, flammable = 3},
+	groups = {compostability = 48, seed = 2, food_onion = 1},
+	on_use = minetest.item_eat(1),
+
 	on_place = function(itemstack, placer, pointed_thing)
 		return farming.place_seed(itemstack, placer, pointed_thing, "farming:onion_1")
-	end,
-	on_use = minetest.item_eat(1)
+	end
 })
 
--- onion soup
-minetest.register_craftitem("farming:onion_soup", {
-	description = S("Onion Soup"),
-	inventory_image = "farming_onion_soup.png",
-	groups = {flammable = 2, compostability = 65},
-	on_use = minetest.item_eat(6, a.bowl)
-})
-
-minetest.register_craft({
-	output = "farming:onion_soup",
-	recipe = {
-		{"group:food_onion", "group:food_onion", "group:food_onion"},
-		{"group:food_onion", "group:food_bowl", "group:food_onion"},
-		{"", a.pot, ""}
-	},
-	replacements = {{"farming:pot", "farming:pot"}}
-})
-
--- yellow dye
-minetest.register_craft({
-	output = a.dye_yellow,
-	recipe = {{"group:food_onion"}}
-})
+farming.add_eatable("farming:onion", 1)
 
 -- crop definition
+
 local def = {
 	drawtype = "plantlike",
 	tiles = {"crops_onion_plant_1.png"},
@@ -61,25 +41,32 @@ local def = {
 		handy = 1, snappy = 3, flammable = 3, plant = 1, attached_node = 1,
 		not_in_creative_inventory = 1, growing = 1
 	},
-	sounds = farming.sounds.node_sound_leaves_defaults()
+	_mcl_hardness = farming.mcl_hardness,
+	is_ground_content = false,
+	sounds = farming.node_sound_leaves_defaults()
 }
 
 -- stage 1
+
 minetest.register_node("farming:onion_1", table.copy(def))
 
 -- stage 2
+
 def.tiles = {"crops_onion_plant_2.png"}
 minetest.register_node("farming:onion_2", table.copy(def))
 
 -- stage 3
+
 def.tiles = {"crops_onion_plant_3.png"}
 minetest.register_node("farming:onion_3", table.copy(def))
 
 -- stage 4
+
 def.tiles = {"crops_onion_plant_4.png"}
 minetest.register_node("farming:onion_4", table.copy(def))
 
 -- stage 5
+
 def.tiles = {"crops_onion_plant_5.png"}
 def.groups.growing = nil
 def.selection_box = farming.select_final
@@ -95,6 +82,7 @@ def.drop = {
 minetest.register_node("farming:onion_5", table.copy(def))
 
 -- add to registered_plants
+
 farming.registered_plants["farming:onion"] = {
 	crop = "farming:onion",
 	seed = "farming:onion",
@@ -104,6 +92,7 @@ farming.registered_plants["farming:onion"] = {
 }
 
 -- mapgen
+
 minetest.register_decoration({
 	deco_type = "simple",
 	place_on = {"default:dirt_with_grass", "mcl_core:dirt_with_grass"},

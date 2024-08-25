@@ -234,8 +234,10 @@ xdecor.register("cobweb", {
 })
 
 local curtain_colors = {
-	red = S("Red Curtain"),
+	red = { S("Red Curtain"), "wool_red.png", "wool:red" },
 }
+
+local CURTAIN_OFFSET = 1/16
 
 -- For preserve_metadata for curtains.
 -- Erases metadata from the drops
@@ -248,20 +250,27 @@ local cleanup_curtain_meta = function(_,_,_,drops)
 	end
 end
 
-for c, desc in pairs(curtain_colors) do
+for c, info in pairs(curtain_colors) do
+	local desc = info[1]
+	local base_texture = info[2]
+	local craft_item = info[3]
 	xdecor.register("curtain_" .. c, {
 		description = desc,
 		walkable = false,
-		tiles = {"wool_white.png"},
-		color = c,
-		inventory_image = "wool_white.png^[colorize:" .. c ..
-			":170^xdecor_curtain_open_overlay.png^[makealpha:255,126,126",
-		wield_image = "wool_white.png^[colorize:" .. c .. ":170",
-		drawtype = "signlike",
-		paramtype2 = "colorwallmounted",
+		tiles = {base_texture, "("..base_texture..")^[transformFY", base_texture},
+		use_texture_alpha = ALPHA_CLIP,
+		inventory_image = base_texture.."^xdecor_curtain_open_overlay.png^[makealpha:255,126,126",
+		wield_image = base_texture.."^xdecor_curtain_open_overlay.png^[makealpha:255,126,126",
+		drawtype = "nodebox",
+		paramtype2 = "wallmounted",
+		node_box = {
+			type = "wallmounted",
+			wall_side = { -0.5, -0.5, -0.5, -0.5+CURTAIN_OFFSET, 0.5, 0.5 },
+			wall_top = { -0.5, 0.5-CURTAIN_OFFSET, -0.5, 0.5, 0.5, 0.5 },
+			wall_bottom = { -0.5, -0.5, -0.5, 0.5, -0.5+CURTAIN_OFFSET, 0.5 },
+		},
 		groups = {dig_immediate = 3, flammable = 3},
 		is_ground_content = false,
-		selection_box = {type = "wallmounted"},
 		on_rightclick = function(pos, node, _, itemstack)
 			minetest.set_node(pos, {name = "xdecor:curtain_open_" .. c, param2 = node.param2})
 			return itemstack
@@ -269,15 +278,28 @@ for c, desc in pairs(curtain_colors) do
 		preserve_metadata = cleanup_curtain_meta,
 	})
 
+	local open_tile = base_texture.."^xdecor_curtain_open_overlay.png^[makealpha:255,126,126"
 	xdecor.register("curtain_open_" .. c, {
-		tiles = {"wool_white.png^xdecor_curtain_open_overlay.png^[makealpha:255,126,126"},
-		color = c,
-		drawtype = "signlike",
-		paramtype2 = "colorwallmounted",
+		tiles = {
+			open_tile,
+			"("..open_tile..")^[transformFY",
+			base_texture,
+			base_texture,
+			base_texture.."^xdecor_curtain_open_overlay_top.png^[makealpha:255,126,126",
+			base_texture.."^xdecor_curtain_open_overlay_bottom.png^[makealpha:255,126,126",
+		},
+		use_texture_alpha = ALPHA_CLIP,
+		drawtype = "nodebox",
+		paramtype2 = "wallmounted",
+		node_box = {
+			type = "wallmounted",
+			wall_side = { -0.5, -0.5, -0.5, -0.5+CURTAIN_OFFSET, 0.5, 0.5 },
+			wall_top = { -0.5, 0.5-CURTAIN_OFFSET, -0.5, 0.5, 0.5, 0.5 },
+			wall_bottom = { -0.5, -0.5, -0.5, 0.5, -0.5+CURTAIN_OFFSET, 0.5 },
+		},
 		walkable = false,
 		groups = {dig_immediate = 3, flammable = 3, not_in_creative_inventory = 1},
 		is_ground_content = false,
-		selection_box = {type="wallmounted"},
 		drop = "xdecor:curtain_" .. c,
 		on_rightclick = function(pos, node, _, itemstack)
 			minetest.set_node(pos, {name="xdecor:curtain_" .. c, param2 = node.param2})
@@ -289,8 +311,8 @@ for c, desc in pairs(curtain_colors) do
 	minetest.register_craft({
 		output = "xdecor:curtain_" .. c .. " 4",
 		recipe = {
-			{"", "wool:" .. c, ""},
-			{"", "wool:" .. c, ""}
+			{"", craft_item, ""},
+			{"", craft_item, ""}
 		}
 	})
 end
@@ -806,11 +828,26 @@ xdecor.register("tatami", {
 
 xdecor.register("trampoline", {
 	description = S("Trampoline"),
-	tiles = {"xdecor_trampoline.png", "mailbox_blank16.png", "xdecor_trampoline_sides.png"},
+	tiles = {"xdecor_trampoline.png", "xdecor_trampoline_bottom.png", "xdecor_trampoline_sides.png"},
 	use_texture_alpha = ALPHA_CLIP,
 	groups = {cracky = 3, oddly_breakable_by_hand = 1, fall_damage_add_percent = -80, bouncy = 90},
 	is_ground_content = false,
-	node_box = xdecor.nodebox.slab_y(0.5),
+	node_box = {
+		type = "fixed",
+		fixed = {
+			{ -0.5, -1/16, -0.5, 0.5, 0, 0.5 }, -- bouncy top
+			{ -0.5, -0.5, -0.5, -3/16, 0, -3/16 }, -- leg 1
+			{ 3/16, -0.5, -0.5, 0.5, 0, -3/16 }, -- leg 2
+			{ -0.5, -0.5, 3/16, -3/16, 0, 0.5 }, -- leg 3
+			{ 3/16, -0.5, 3/16, 0.5, 0, 0.5 }, -- leg 4
+			{ -3/16, -5/16, -0.5, 3/16, -1/16, -7/16 }, -- connector 1
+			{ -0.5, -5/16, -3/16, -7/16, -1/16, 3/16 }, -- connector 2
+			{ -3/16, -5/16, 7/16, 3/16, -1/16, 0.5 }, -- connector 3
+			{ 7/16, -5/16, -3/16, 0.5, -1/16, 3/16 }, -- connector 4
+		},
+	},
+	selection_box = xdecor.nodebox.slab_y(0.5),
+	collision_box = xdecor.nodebox.slab_y(0.5),
 	sounds = default.node_sound_defaults({
 		footstep = {
 			name = "xdecor_bouncy",

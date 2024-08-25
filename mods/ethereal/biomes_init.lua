@@ -1,24 +1,29 @@
+
+-- storage tables
+
 local old_biomes = {}
 local old_decor = {}
 
+-- backup registered biomes
 
--- backup registered biome data
 for key, def in pairs(minetest.registered_biomes) do
 	old_biomes[key] = def
 end
+
+-- backup registered decorations
 
 for key, def in pairs(minetest.registered_decorations) do
 	old_decor[key] = def
 end
 
-
 -- clear current biome data
+
 minetest.clear_registered_biomes()
 minetest.clear_registered_decorations()
 -- minetest.clear_registered_ores()
 
-
 -- create list of default biomes to remove
+
 local def_biomes = {
 	["rainforest_swamp"] = 1,
 	["grassland_dunes"] = 1,
@@ -65,17 +70,15 @@ local def_biomes = {
 	["coniferous_forest"] = 1
 }
 
-
 -- only re-register biomes that aren't on the list
+
 for key, def in pairs(old_biomes) do
 
-	if not def_biomes[key] then
-		minetest.register_biome(def)
-	end
+	if not def_biomes[key] then minetest.register_biome(def) end
 end
 
-
 -- loop through decorations
+
 for key, def in pairs(old_decor) do
 
 	local can_add = true
@@ -86,15 +89,11 @@ for key, def in pairs(old_decor) do
 		-- loop through decoration biomes, only re-add one's not on above list
 		for num, bio in pairs(def.biomes) do
 
-			if not def_biomes[bio] then
-				table.insert(new_biomes, bio)
-			end
+			if not def_biomes[bio] then table.insert(new_biomes, bio) end
 		end
 
 		-- if no biomes are left on new list, do not re-add decoration
-		if #new_biomes == 0 then
-			can_add = false
-		end
+		if #new_biomes == 0 then can_add = false end
 
 	elseif type(def.biomes) == "string" then
 
@@ -104,9 +103,7 @@ for key, def in pairs(old_decor) do
 			new_biomes = {def.biomes} -- convert to table
 		end
 
-	elseif not def.biomes then
-		new_biomes = nil -- keep it nil for re-adding
-	end
+	elseif not def.biomes then new_biomes = nil end -- keep it nil for re-adding
 
 	if can_add == true then
 

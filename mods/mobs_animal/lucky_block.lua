@@ -1,3 +1,6 @@
+
+-- add lucky blocks
+
 lucky_block:add_blocks({
 	{"spw", "mobs:sheep", 5},
 	{"spw", "mobs:rat", 5},
@@ -19,6 +22,8 @@ lucky_block:add_blocks({
 	{"dro", {"mobs:meat_raw", "mobs:meat"}, 10},
 	{"dro", {"mobs:glass_milk"}, 5}
 })
+
+-- if nyancat found add special block
 
 if minetest.registered_nodes["default:nyancat"] then
 

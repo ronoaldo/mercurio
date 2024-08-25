@@ -1,4 +1,9 @@
 
+hangglider = {
+	translator = minetest.get_translator('hangglider'),
+}
+local S = hangglider.translator
+
 local has_player_monoids = minetest.get_modpath("player_monoids")
 local has_areas = minetest.get_modpath("areas")
 
@@ -7,29 +12,31 @@ local enable_flak = has_areas and minetest.settings:get_bool("hangglider.enable_
 local flak_warning_time = tonumber(minetest.settings:get("hangglider.flak_warning_time")) or 2
 local hangglider_uses = tonumber(minetest.settings:get("hangglider.uses")) or 250
 
-local flak_warning = "You have entered restricted airspace!\n"..
-	"You will be shot down in "..flak_warning_time.." seconds by anti-aircraft guns!"
+local flak_warning = S("You have entered restricted airspace!@n"
+	.. "You will be shot down in @1 seconds by anti-aircraft guns!",
+	flak_warning_time)
 
 local hanggliding_players = {}
 local hud_overlay_ids = {}
 
 if enable_flak then
 	minetest.register_chatcommand("area_flak", {
-		params = "<ID>",
-		description = "Toggle airspace restrictions for area <ID>",
+		params = S("<ID>"),
+		description = S("Toggle airspace restrictions for area <ID>."),
 		func = function(name, param)
 			local id = tonumber(param)
 			if not id then
-				return false, "Invalid usage, see /help area_flak."
+				return false, S("Invalid usage, see /help area_flak.")
 			end
 			if not areas:isAreaOwner(id, name) then
-				return false, "Area "..id.." does not exist or is not owned by you."
+				return false, S("Area @1 does not exist or is not owned by you.", id)
 			end
 			local open = not areas.areas[id].flak
 			-- Save false as nil to avoid inflating the DB.
 			areas.areas[id].flak = open or nil
 			areas:save()
-			return true, "Area "..id.." airspace "..(open and "closed" or "opened")
+			return true, S("Area @1 airspace is @2.", id,
+				open and S("closed") or S("opened"))
 		end
 	})
 end
@@ -64,12 +71,12 @@ local function set_physics_overrides(player, overrides)
 end
 
 local function remove_physics_overrides(player)
-	for _, name in pairs({"jump", "speed", "gravity"}) do
-		if has_player_monoids then
+	if has_player_monoids then
+		for _, name in pairs({"jump", "speed", "gravity"}) do
 			player_monoids[name]:del_change(player, "hangglider:glider")
-		else
-			player:set_physics_override({[name] = 1})
 		end
+	else
+		player:set_physics_override({jump = 1, speed = 1, gravity = 1})
 	end
 end
 
@@ -236,7 +243,7 @@ minetest.register_entity("hangglider:glider", {
 })
 
 minetest.register_tool("hangglider:hangglider", {
-	description = "Glider",
+	description = S("Glider"),
 	inventory_image = "hangglider_item.png",
 	sound = {breaks = "default_tool_breaks"},
 	on_use = hangglider_use,

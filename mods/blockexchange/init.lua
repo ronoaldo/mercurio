@@ -13,7 +13,8 @@ blockexchange = {
 	url = minetest.settings:get("blockexchange.url") or "https://blockexchange.minetest.ch",
 	min_delay = tonumber(minetest.settings:get("blockexchange.min_delay") or "0.1"),
 	pos1 = {}, -- name -> pos
-	pos2 = {} -- name -> pos
+	pos2 = {}, -- name -> pos
+	max_size = 1000
 }
 
 assert(mtzip.api_version == 1, "mtzip api compatibility")
@@ -30,6 +31,7 @@ if blockexchange.is_online then
 	loadfile(MP.."/api/schemapart.lua")(http, blockexchange.url)
 	loadfile(MP.."/api/schemamods.lua")(http, blockexchange.url)
 	loadfile(MP.."/api/token.lua")(http, blockexchange.url)
+	loadfile(MP.."/api/media.lua")(http, blockexchange.url)
 end
 
 -- internal stuff
@@ -65,6 +67,7 @@ dofile(MP.."/util/is_area_protected.lua")
 dofile(MP.."/util/get_base_pos.lua")
 dofile(MP.."/util/iterator.lua")
 dofile(MP.."/util/collect_node_count.lua")
+dofile(MP.."/util/check_size.lua")
 dofile(MP.."/util/count_schemaparts.lua")
 dofile(MP.."/util/unpack_schemapart.lua")
 dofile(MP.."/util/place_schemapart.lua")
@@ -73,6 +76,7 @@ dofile(MP.."/util/is_player_in_area.lua")
 
 -- commands
 if blockexchange.is_online then
+	-- online commands
 	dofile(MP.."/commands/api_check_wrapper.lua")
 	dofile(MP.."/commands/info.lua")
 	dofile(MP.."/commands/license.lua")
@@ -84,7 +88,10 @@ if blockexchange.is_online then
 	dofile(MP.."/commands/load_update_chat.lua")
 	dofile(MP.."/commands/load_chat.lua")
 	dofile(MP.."/commands/autosave.lua")
+	dofile(MP.."/commands/media.lua")
+	dofile(MP.."/commands/media_chat.lua")
 end
+-- commands that are available offline
 dofile(MP.."/commands/pos.lua")
 dofile(MP.."/commands/area.lua")
 dofile(MP.."/commands/cancel_chat.lua")
@@ -109,6 +116,12 @@ dofile(MP.."/worker/emerge_worker.lua")
 dofile(MP.."/worker/protectioncheck_worker.lua")
 dofile(MP.."/worker/cleanup_worker.lua")
 
+-- compat
+if minetest.get_modpath("advtrains") then
+	dofile(MP.."/compat/advtrains.lua")
+end
+
+-- testing
 if minetest.get_modpath("mtt") then
 	dofile(MP .. "/mtt/serialize_spec.lua")
 	dofile(MP .. "/mtt/token_spec.lua")

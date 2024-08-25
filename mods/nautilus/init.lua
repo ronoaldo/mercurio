@@ -29,7 +29,8 @@ local S = nautilus.S
 
 nautilus.gravity = tonumber(minetest.settings:get("movement_gravity")) or 9.8
 nautilus.fuel = {['biofuel:biofuel'] = {amount=1},['biofuel:bottle_fuel'] = {amount=1},
-        ['biofuel:phial_fuel'] = {amount=0.25}, ['biofuel:fuel_can'] = {amount=10}}
+        ['biofuel:phial_fuel'] = {amount=0.25}, ['biofuel:fuel_can'] = {amount=10},
+        ['airutils:biofuel'] = {amount=1},}
 nautilus.air = {['vacuum:air_bottle'] = {amount=100,drop="vessels:steel_bottle"},}
 
 nautilus.have_air = false
@@ -98,11 +99,37 @@ end
 -- lets control particle emission frequency
 nautilus.last_light_particle_dtime = 0
 
+local function textures_copy(textures)
+    local tablecopy = {}
+    for k, v in pairs(textures) do
+      tablecopy[k] = v
+    end
+    return tablecopy
+end
+
 --painting
+local nautilus_default_textures = {"nautilus_black.png",
+    "default_wood.png", --texture of the cabin - must be changed on paint function
+    "nautilus_painting.png",
+    "nautilus_glass.png",
+    "nautilus_metal.png",
+    "nautilus_metal.png",
+    "nautilus_orange.png",
+    "nautilus_painting.png",
+    "nautilus_red.png",
+    "nautilus_painting.png",
+    "nautilus_helice.png",
+    "nautilus_interior.png",
+    "nautilus_panel.png"
+    }
+
 function nautilus.paint(self, colstr)
     if colstr then
-        self.color = colstr
-        local l_textures = self.initial_properties.textures
+        self._color = colstr
+        local l_textures = textures_copy(nautilus_default_textures)
+        if not (self.item == "nautilus:boat_wooden") then
+            l_textures[2] = "nautilus_painting.png" --change the texture to paint it normally
+        end
         for _, texture in ipairs(l_textures) do
             local indx = texture:find('nautilus_painting.png')
             if indx then
@@ -139,6 +166,12 @@ function nautilus.destroy(self, overload)
     if self.pointer then self.pointer:remove() end
     if self.pointer_air then self.pointer_air:remove() end
 
+    local lua_ent = self.object:get_luaentity()
+    local staticdata = lua_ent:get_staticdata(self)
+
+    local color = self._color
+    local energy = self.energy
+
     self.object:remove()
 
     pos.y=pos.y+2
@@ -164,7 +197,13 @@ function nautilus.destroy(self, overload)
     end
     
     local stack = ItemStack(self.item)
+    local stack_meta = stack:get_meta()
+    stack_meta:set_string("staticdata", staticdata)
+
     local item_def = stack:get_definition()
+    --item_def._color = color  --save the last color
+    --item_def._energy = energy --save the energy
+    
     if self.hull_integrity then
         local boat_wear = math.floor(65535*(1-(self.hull_integrity/item_def.hull_integrity)))
         stack:set_wear(boat_wear)
@@ -260,7 +299,6 @@ end
 --
 -- entity
 --
-
 minetest.register_entity("nautilus:boat", {
     initial_properties = {
         physical = true,
@@ -268,10 +306,7 @@ minetest.register_entity("nautilus:boat", {
         selectionbox = {-0.6,0.6,-0.6, 0.6,1,0.6},
         visual = "mesh",
         mesh = "nautilus_nautilus.b3d",
-        textures = {"nautilus_black.png", "nautilus_painting.png", "nautilus_glass.png",
-                "nautilus_metal.png", "nautilus_metal.png", "nautilus_orange.png",
-                "nautilus_painting.png", "nautilus_red.png", "nautilus_painting.png",
-                "nautilus_helice.png", "nautilus_interior.png", "nautilus_panel.png"},
+        textures = textures_copy(nautilus_default_textures),
     },
     textures = {},
     driver_name = nil,
@@ -285,7 +320,7 @@ minetest.register_entity("nautilus:boat", {
     infotext = S("A nice submarine"),
     lastvelocity = vector.new(),
     hp = 50,
-    color = "#ffe400",
+    _color = "#ffe400",
     rudder_angle = 0,
     timeout = 0;
     buoyancy = 0.98,
@@ -306,7 +341,7 @@ minetest.register_entity("nautilus:boat", {
             stored_air = self.air,
             stored_owner = self.owner,
             stored_hp = self.hp,
-            stored_color = self.color,
+            stored_color = self._color,
             stored_anchor = self.anchored,
             stored_buoyancy = self.buoyancy,
             stored_driver_name = self.driver_name,
@@ -326,7 +361,7 @@ minetest.register_entity("nautilus:boat", {
             self.hp = data.stored_hp
             self.surface_level = data.stored_surface_level
             self.deep_limit = data.stored_deep_limit
-            self.color = data.stored_color
+            self._color = data.stored_color
             self.anchored = data.stored_anchor
             self.buoyancy = data.stored_buoyancy
             self.driver_name = data.stored_driver_name
@@ -340,7 +375,7 @@ minetest.register_entity("nautilus:boat", {
             self.object:set_properties(properties)
         end
 
-        nautilus.paint(self, self.color)
+        nautilus.paint(self, self._color)
         local pos = self.object:get_pos()
 
         --animation load - stoped
@@ -652,9 +687,10 @@ minetest.register_entity("nautilus:boat", {
         local item_name = ""
         if itmstck then item_name = itmstck:get_name() end
 
+        --refuel
+        if nautilus.load_fuel(self, puncher:get_player_name()) then return end
+
         if is_attached == true then
-            --refuel
-            nautilus.load_fuel(self, puncher:get_player_name())
             self.engine_running = true
             --reair
             if nautilus.have_air then
@@ -809,25 +845,6 @@ function nautilus.put_light(object, name)
             end, pos)
         end
     end
-
-    --[[
-    local r = 6
-    local count = 0
-    for _ = 1, 3 do
-        local fpos = {}
-        fpos.x = pos.x + math.random(2 * r + 1) - r - 1
-        fpos.y = pos.y + math.random(2 * r + 1) - r - 1
-        fpos.z = pos.z + math.random(2 * r + 1) - r - 1
-        local n = minetest.get_node_or_nil(fpos)
-        if n and n.name == 'default:water_source' then
-            minetest.set_node(fpos, {name='nautilus:water_light'})
-            local timer = minetest.get_node_timer(fpos)
-            timer:set(10, 0)
-            count = count + 1
-        end
-    end
-
-    return count]]--
 end
 
 
@@ -888,7 +905,11 @@ nautilus.on_place = function(itemstack, placer, pointed_thing)
             return
         end
         pointed_pos.y = pointed_pos.y + 0.2
-        local boat = minetest.add_entity(pointed_pos, "nautilus:boat")
+
+        local stack_meta = itemstack:get_meta()
+        local staticdata = stack_meta:get_string("staticdata")
+
+        local boat = minetest.add_entity(pointed_pos, "nautilus:boat", staticdata)
         if boat and placer then
             local ent = boat:get_luaentity()
             local owner = placer:get_player_name()
@@ -902,7 +923,13 @@ nautilus.on_place = function(itemstack, placer, pointed_thing)
               local wear = (65535-itemstack:get_wear())/65535
               ent.hull_integrity = item_def.hull_integrity*wear
             end
-            ent.item = itemstack:to_string()
+            ent.item = itemstack:get_name() --to_string()
+            ent.hp = 50  --full again
+            if item_def._color and staticdata == "" then --color
+                ent._color = item_def._color
+            end
+            nautilus.paint(ent, ent._color)
+
             boat:set_yaw(placer:get_look_horizontal())
             itemstack:take_item()
 

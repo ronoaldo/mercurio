@@ -1,4 +1,5 @@
 local S = minetest.get_translator("home_workshop_machines")
+local materials = xcompat.materials
 
 -- "bedflinger" style 3D Printer (Prusa i3 or equivalent)
 
@@ -16,8 +17,9 @@ minetest.register_node("home_workshop_machines:3dprinter_bedflinger", {
 	},
 	paramtype = "light",
 	walkable = true,
-	groups = {snappy=3, ud_param2_colorable = 1},
-	sound = default and default.node_sound_wood_defaults() or nil,
+	groups = {snappy=3, ud_param2_colorable = 1, dig_tree=2},
+	is_ground_content = false,
+	sound = xcompat.sounds.node_sound_wood_defaults(),
 	drawtype = "mesh",
 	mesh = "home_workshop_machines_3dprinter_bedflinger.obj",
 	paramtype2 = "colorwallmounted",
@@ -46,8 +48,9 @@ minetest.register_node("home_workshop_machines:3dprinter_corexy", {
 	},
 	paramtype = "light",
 	walkable = true,
-	groups = {snappy=3, ud_param2_colorable = 1},
-	sound = default and default.node_sound_wood_defaults() or nil,
+	groups = {snappy=3, ud_param2_colorable = 1, dig_tree=2},
+	is_ground_content = false,
+	sound = xcompat.sounds.node_sound_wood_defaults(),
 	drawtype = "mesh",
 	mesh = "home_workshop_machines_3dprinter_corexy.obj",
 	paramtype2 = "colorwallmounted",
@@ -65,20 +68,18 @@ if minetest.get_modpath("basic_materials") then
 	minetest.register_craft({
 		output = "home_workshop_machines:3dprinter_bedflinger",
 		recipe = {
-			{"basic_materials:plastic_sheet", "dye:white", "basic_materials:plastic_sheet"},
+			{"basic_materials:plastic_sheet", materials.dye_white, "basic_materials:plastic_sheet"},
 			{"basic_materials:motor", "basic_materials:heating_element", "basic_materials:motor"},
-			{"default:steel_ingot", "default:steel_ingot", "default:steel_ingot"},
+			{materials.steel_ingot, materials.steel_ingot, materials.steel_ingot},
 		},
 	})
-end
 
-if minetest.get_modpath("basic_materials") then
 	minetest.register_craft({
 		output = "home_workshop_machines:3dprinter_corexy",
 		recipe = {
-			{"default:steel_ingot", "basic_materials:motor", "basic_materials:plastic_sheet"},
-			{"default:glass", "basic_materials:heating_element", "default:glass"},
-			{"default:steel_ingot", "basic_materials:motor", "default:steel_ingot"},
+			{materials.steel_ingot, "basic_materials:motor", "basic_materials:plastic_sheet"},
+			{materials.glass, "basic_materials:heating_element", materials.glass},
+			{materials.steel_ingot, "basic_materials:motor", materials.steel_ingot},
 		},
 	})
 end

@@ -1,4 +1,4 @@
-FROM ghcr.io/ronoaldo/minetestserver:5.8.0
+FROM ghcr.io/ronoaldo/minetestserver:5.9.0
 
 # Setup system-wide settings
 USER root

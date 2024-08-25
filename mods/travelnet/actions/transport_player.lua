@@ -32,7 +32,6 @@ return function (node_info, fields, player)
 	) then
 		return false, S("You are not allowed to travel to this station.")
 	end
-	minetest.chat_send_player(player_name, S("Initiating transfer to station '@1'.", fields.target or "?"))
 
 	if travelnet.travelnet_sound_enabled then
 		if node_info.props.is_elevator then

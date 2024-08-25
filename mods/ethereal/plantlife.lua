@@ -1,7 +1,8 @@
 
-local S = ethereal.translate
+local S = minetest.get_translator("ethereal")
 
 -- Spore Grass
+
 minetest.register_node("ethereal:spore_grass", {
 	description = S("Spore Grass"),
 	drawtype = "plantlike",
@@ -16,12 +17,12 @@ minetest.register_node("ethereal:spore_grass", {
 	groups = {snappy = 3, flora = 1, attached_node = 1},
 	sounds = default.node_sound_leaves_defaults(),
 	selection_box = {
-		type = "fixed",
-		fixed = {-5 / 16, -0.5, -5 / 16, 5 / 16, 4 / 16, 5 / 16}
+		type = "fixed", fixed = {-5 / 16, -0.5, -5 / 16, 5 / 16, 4 / 16, 5 / 16}
 	}
 })
 
--- Firethorn (poisonous when eaten raw, must be crushed and washed in flowing water 1st)
+-- Firethorn (poisonous when eaten raw, must be crushed and washed water 1st)
+
 minetest.register_node("ethereal:firethorn", {
 	description = S("Firethorn Shrub"),
 	drawtype = "plantlike",
@@ -36,13 +37,12 @@ minetest.register_node("ethereal:firethorn", {
 	groups = {snappy = 3, flora = 1, attached_node = 1},
 	sounds = default.node_sound_leaves_defaults(),
 	selection_box = {
-		type = "fixed",
-		fixed = {-5 / 16, -0.5, -5 / 16, 5 / 16, 4 / 16, 5 / 16}
+		type = "fixed", fixed = {-5 / 16, -0.5, -5 / 16, 5 / 16, 4 / 16, 5 / 16}
 	}
 })
 
-
 -- Fire Flower
+
 minetest.register_node("ethereal:fire_flower", {
 	description = S("Fire Flower"),
 	drawtype = "plantlike",
@@ -58,16 +58,13 @@ minetest.register_node("ethereal:fire_flower", {
 	groups = {snappy = 1, oddly_breakable_by_hand = 3, igniter = 2},
 	sounds = default.node_sound_leaves_defaults(),
 	selection_box = {
-		type = "fixed",
-		fixed = {-5 / 16, -0.5, -5 / 16, 5 / 16, 1 / 2, 5 / 16}
+		type = "fixed", fixed = {-5 / 16, -0.5, -5 / 16, 5 / 16, 1 / 2, 5 / 16}
 	},
 
-	on_punch = function(pos, node, puncher)
+	on_punch = function(pos, node, puncher) -- hurts when punched
 
 		puncher:punch(puncher, 1.0, {
-			full_punch_interval = 1.0,
-			damage_groups = {fleshy = 2}
-		}, nil)
+				full_punch_interval = 1.0, damage_groups = {fleshy = 2}}, nil)
 	end
 })
 
@@ -77,8 +74,8 @@ minetest.register_craft({
 	burntime = 20
 })
 
-
 -- Fire Dust
+
 minetest.register_craftitem("ethereal:fire_dust", {
 	description = S("Fire Dust"),
 	inventory_image = "ethereal_fire_dust.png"
@@ -95,8 +92,8 @@ minetest.register_craft({
 	burntime = 10
 })
 
-
 -- vines
+
 minetest.register_node("ethereal:vine", {
 	description = S("Vine"),
 	drawtype = "signlike",
@@ -108,9 +105,7 @@ minetest.register_node("ethereal:vine", {
 	walkable = false,
 	climbable = true,
 	is_ground_content = false,
-	selection_box = {
-		type = "wallmounted"
-	},
+	selection_box = {type = "wallmounted"},
 	groups = {choppy = 3, oddly_breakable_by_hand = 1, flammable = 2},
 	legacy_wallmounted = true,
 	sounds = default.node_sound_leaves_defaults()
@@ -125,8 +120,8 @@ minetest.register_craft({
 	}
 })
 
-
 -- light strings (glowing vine)
+
 minetest.register_node("ethereal:lightstring", {
 	description = S("Light String Vine"),
 	drawtype = "signlike",
@@ -139,9 +134,7 @@ minetest.register_node("ethereal:lightstring", {
 	walkable = false,
 	climbable = true,
 	is_ground_content = false,
-	selection_box = {
-		type = "wallmounted"
-	},
+	selection_box = {type = "wallmounted"},
 	groups = {choppy = 3, oddly_breakable_by_hand = 1, flammable = 2},
 	legacy_wallmounted = true,
 	sounds = default.node_sound_leaves_defaults()
@@ -156,8 +149,8 @@ minetest.register_craft({
 	}
 })
 
+-- Boston Fern
 
--- Fern (boston)
 minetest.register_node("ethereal:fern", {
 	description = S("Fern"),
 	drawtype = "plantlike",
@@ -180,21 +173,23 @@ minetest.register_node("ethereal:fern", {
 	groups = {snappy = 3, flora = 1, attached_node = 1, flammable = 2},
 	sounds = default.node_sound_leaves_defaults(),
 	selection_box = {
-		type = "fixed",
-		fixed = {-5 / 16, -0.5, -5 / 16, 5 / 16, 0.67, 5 / 16}
+		type = "fixed", fixed = {-5 / 16, -0.5, -5 / 16, 5 / 16, 0.67, 5 / 16}
 	}
 })
 
--- Boston Ferns sometimes drop edible Tubers (heals 1/2 heart when eaten)
+-- Boston Ferns sometimes drop edible Tubers
+
 minetest.register_craftitem("ethereal:fern_tubers", {
 	description = S("Fern Tubers"),
 	inventory_image = "ethereal_fern_tubers.png",
-	groups = {food_tuber = 1, flammable = 2},
+	groups = {food_tuber = 1},
 	on_use = minetest.item_eat(1)
 })
 
+ethereal.add_eatable("ethereal:fern_tubers", 1)
 
 -- Red Shrub (not flammable)
+
 minetest.register_node("ethereal:dry_shrub", {
 	description = S("Fiery Dry Shrub"),
 	drawtype = "plantlike",
@@ -209,13 +204,12 @@ minetest.register_node("ethereal:dry_shrub", {
 	groups = {snappy = 3, flora = 1, attached_node = 1},
 	sounds = default.node_sound_leaves_defaults(),
 	selection_box = {
-		type = "fixed",
-		fixed = {-5 / 16, -0.5, -5 / 16, 5 / 16, 4 / 16, 5 / 16}
+		type = "fixed", fixed = {-5 / 16, -0.5, -5 / 16, 5 / 16, 4 / 16, 5 / 16}
 	}
 })
 
-
 -- Grey Shrub (not Flammable - too cold to burn)
+
 minetest.register_node("ethereal:snowygrass", {
 	description = S("Snowy Grass"),
 	drawtype = "plantlike",
@@ -231,13 +225,12 @@ minetest.register_node("ethereal:snowygrass", {
 	groups = {snappy = 3, flora = 1, attached_node = 1},
 	sounds = default.node_sound_leaves_defaults(),
 	selection_box = {
-		type = "fixed",
-		fixed = {-5 / 16, -0.5, -5 / 16, 5 / 16, 5 / 16, 5 / 16}
+		type = "fixed", fixed = {-5 / 16, -0.5, -5 / 16, 5 / 16, 5 / 16, 5 / 16}
 	}
 })
 
-
 -- Crystal Shrub (not Flammable - too cold to burn)
+
 minetest.register_node("ethereal:crystalgrass", {
 	description = S("Crystal Grass"),
 	drawtype = "plantlike",
@@ -253,13 +246,12 @@ minetest.register_node("ethereal:crystalgrass", {
 	groups = {snappy = 3, flora = 1, attached_node = 1},
 	sounds = default.node_sound_leaves_defaults(),
 	selection_box = {
-		type = "fixed",
-		fixed = {-5 / 16, -0.5, -5 / 16, 5 / 16, 5 / 16, 5 / 16}
+		type = "fixed", fixed = {-5 / 16, -0.5, -5 / 16, 5 / 16, 5 / 16, 5 / 16}
 	}
 })
 
+-- tall lilac
 
--- lilac
 minetest.register_node("ethereal:lilac", {
 	description = S("Lilac"),
 	drawtype = "plantlike",
@@ -275,8 +267,7 @@ minetest.register_node("ethereal:lilac", {
 	groups = {snappy = 3, flora = 1, attached_node = 1, flammable = 2},
 	sounds = default.node_sound_leaves_defaults(),
 	selection_box = {
-		type = "fixed",
-		fixed = {-5 / 16, -0.5, -5 / 16, 5 / 16, 0.67, 5 / 16}
+		type = "fixed", fixed = {-5 / 16, -0.5, -5 / 16, 5 / 16, 0.67, 5 / 16}
 	}
 })
 
@@ -285,9 +276,9 @@ minetest.register_craft({
 	recipe = {{"ethereal:lilac"}}
 })
 
+-- moss helper function
 
--- Define Moss Types (Has grass textures on all sides)
-local add_moss = function(typ, descr, texture, receipe_item)
+local function add_moss(typ, descr, texture, receipe_item)
 
 	minetest.register_node("ethereal:" .. typ .. "_moss", {
 		description = S(descr .. " Moss"),
@@ -303,15 +294,17 @@ local add_moss = function(typ, descr, texture, receipe_item)
 	})
 end
 
+-- add moss types (has grass texture on all sides)
+
 add_moss("crystal", "Crystal", "ethereal_grass_crystal_top.png", "ethereal:frost_leaves")
 add_moss("mushroom", "Mushroom", "ethereal_grass_mushroom_top.png", "ethereal:spore_grass")
 add_moss("fiery", "Fiery", "ethereal_grass_fiery_top.png", "ethereal:dry_shrub")
 add_moss("gray", "Gray", "ethereal_grass_gray_top.png", "ethereal:snowygrass")
 add_moss("green", "Green", "default_grass.png", "default:jungleleaves")
 
+-- shroom helper function
 
--- Illuminated Cave Shrooms (Red, Green and Blue)
-local add_shroom = function(name, desc, ad)
+local function add_shroom(name, desc, ad)
 
 	minetest.register_node("ethereal:illumishroom" .. ad, {
 		description = S(desc .. " Illumishroom"),
@@ -326,11 +319,12 @@ local add_shroom = function(name, desc, ad)
 		groups = {dig_immediate = 3, attached_node = 1, flammable = 3},
 		sounds = default.node_sound_leaves_defaults(),
 		selection_box = {
-			type = "fixed",
-			fixed = {-6 / 16, -0.5, -6 / 16, 6 / 16, 0.47, 6 / 16}
+			type = "fixed", fixed = {-6 / 16, -0.5, -6 / 16, 6 / 16, 0.47, 6 / 16}
 		}
 	})
 end
+
+-- add illuminated cave shrooms
 
 add_shroom("red", "Red", "")
 add_shroom("green", "Green", "2")

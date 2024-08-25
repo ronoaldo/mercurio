@@ -62,7 +62,7 @@ local function update_entity(pos)
 		object = minetest.add_entity(pos, "3d_armor_stand:armor_entity")
 	end
 	if object then
-		local texture = "3d_armor_trans.png"
+		local texture = "blank.png"
 		local textures = {}
 		local meta = minetest.get_meta(pos)
 		local inv = meta:get_inventory()
@@ -144,8 +144,9 @@ minetest.register_node("3d_armor_stand:top", {
 	buildable_to = false,
 	drop = "",
 	groups = {not_in_creative_inventory = 1},
+	is_ground_content = false,
 	on_blast = function() end,
-	tiles = {"3d_armor_trans.png"},
+	tiles = {"blank.png"},
 })
 
 minetest.register_node("3d_armor_stand:armor_stand", {
@@ -165,6 +166,7 @@ minetest.register_node("3d_armor_stand:armor_stand", {
 		},
 	},
 	groups = {choppy=2, oddly_breakable_by_hand=2},
+	is_ground_content = false,
 	sounds = default.node_sound_wood_defaults(),
 	on_construct = function(pos)
 		local meta = minetest.get_meta(pos)
@@ -234,6 +236,7 @@ minetest.register_node("3d_armor_stand:locked_armor_stand", {
 		},
 	},
 	groups = {choppy=2, oddly_breakable_by_hand=2},
+	is_ground_content = false,
 	sounds = default.node_sound_wood_defaults(),
 	on_construct = function(pos)
 		local meta = minetest.get_meta(pos)
@@ -316,6 +319,7 @@ minetest.register_node("3d_armor_stand:shared_armor_stand", {
 		},
 	},
 	groups = {choppy=2, oddly_breakable_by_hand=2},
+	is_ground_content = false,
 	sounds = default.node_sound_wood_defaults(),
 	on_construct = function(pos)
 		local meta = minetest.get_meta(pos)
@@ -384,7 +388,7 @@ minetest.register_entity("3d_armor_stand:armor_entity", {
 		mesh = "3d_armor_entity.obj",
 		visual_size = {x=1, y=1},
 		collisionbox = {0,0,0,0,0,0},
-		textures = {"3d_armor_trans.png"},
+		textures = {"blank.png"},
 	},
 	_pos = nil,
 	on_activate = function(self)

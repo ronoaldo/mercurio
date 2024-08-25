@@ -1,0 +1,18 @@
+# textdomain: carpets
+
+##[ init.lua ]##
+Black carpet=Czarny dywan
+Blue carpet=Niebieski dywan
+Brown carpet=Brązowy dywan
+Cyan carpet=Błękitny dywan
+Dark green carpet=Ciemnozielony dywan
+Dark grey carpet=Ciemnoszary dywan
+Green carpet=Zielony dywan
+Grey carpet=Szary dywan
+Magenta carpet=Purpurowy dywan
+Orange carpet=Pomarańczowy dywan
+Pink carpet=Różowy dywan
+Red carpet=Czerwony dywan
+Violet carpet=Fioletowy dywan
+White carpet=Biały dywan
+Yellow carpet=Żółty dywan

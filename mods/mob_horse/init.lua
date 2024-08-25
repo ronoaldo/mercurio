@@ -56,7 +56,7 @@ mobs:register_mob("mob_horse:horse", {
 	hp_max = 16,
 	armor = 200,
 	lava_damage = 5,
-	fall_damage = 5,
+	fall_damage = 1,
 	water_damage = 0,
 	makes_footstep_sound = true,
 	drops = {
@@ -222,7 +222,15 @@ mobs:register_mob("mob_horse:horse", {
 		if self.saddle and self.owner == player_name then
 			mobs.attach(self, clicker)
 		end
+	end,
+--[[
+	on_sound = function(self, def)
+		-- loudness ranges from (0.0 = cannot hear, to 1.0 = next to sound)
+		if def.loudness > 0.8 then -- if loud enough startle horse into jumping
+			self.object:set_velocity({x=0, y=5, z=0})
+		end
 	end
+]]
 })
 
 

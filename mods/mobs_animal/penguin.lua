@@ -1,4 +1,4 @@
--- Translation support
+
 local S = minetest.get_translator("mobs_animal")
 
 -- Penguin by D00Med
@@ -15,9 +15,7 @@ stepheight = 0.6,
 	visual = "mesh",
 	mesh = "mobs_penguin.b3d",
 	visual_size = {x = 0.25, y = 0.25},
-	textures = {
-		{"mobs_penguin.png"}
-	},
+	textures = {{"mobs_penguin.png"}},
 	sounds = {},
 	makes_footstep_sound = true,
 	walk_velocity = 1,
@@ -34,12 +32,9 @@ stepheight = 0.6,
 	fear_height = 2,
 	animation = {
 		speed_normal = 15,
-		stand_start = 1,
-		stand_end = 20,
-		walk_start = 25,
-		walk_end = 45,
-		fly_start = 75, -- swim animation
-		fly_end = 95
+		stand_start = 1, stand_end = 20,
+		walk_start = 25, walk_end = 45,
+		fly_start = 75, fly_end = 95 -- swim animation
 		-- 50-70 is slide/water idle
 	},
 	fly_in = {"default:water_source", "default:water_flowing"},
@@ -59,6 +54,7 @@ stepheight = 0.6,
 	end
 })
 
+-- where to spawn
 
 if not mobs.custom_spawn_animal then
 
@@ -74,5 +70,6 @@ if not mobs.custom_spawn_animal then
 	})
 end
 
+-- spawn egg
 
 mobs:register_egg("mobs_animal:penguin", S("Penguin"), "mobs_penguin_inv.png")

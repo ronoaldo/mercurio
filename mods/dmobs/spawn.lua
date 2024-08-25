@@ -83,6 +83,17 @@ if dmobs.regulars then
 	})
 
 	mobs:spawn({
+		name = "dmobs:badger",
+		nodes = {"default:dirt_with_grass", "default:dirt"},
+		min_light = 10,
+		interval = 300,
+		chance = 16000,
+		active_object_count = 2,
+		min_height = 0,
+		max_height = 2000
+	})
+
+	mobs:spawn({
 		name = "dmobs:pig",
 		nodes = {"default:dirt_with_grass", "ethereal:prairie_dirt", "nyanland:cloudstone"},
 		min_light = 10,

@@ -1,10 +1,10 @@
--- Translation support
+
 local S = minetest.get_translator("mobs_animal")
 
 -- Panda by AspireMint (CC BY-SA 3.0)
 
 mobs:register_mob("mobs_animal:panda", {
-stepheight = 0.6,
+	stepheight = 0.6,
 	type = "animal",
 	passive = false,
 	attack_type = "dogfight",
@@ -19,9 +19,7 @@ stepheight = 0.6,
 	collisionbox = {-0.4, -0.45, -0.4, 0.4, 0.45, 0.4},
 	visual = "mesh",
 	mesh = "mobs_panda.b3d",
-	textures = {
-		{"mobs_panda.png"}
-	},
+	textures = {{"mobs_panda.png"}},
 	makes_footstep_sound = true,
 	sounds = {
 		random = "mobs_panda",
@@ -43,21 +41,13 @@ stepheight = 0.6,
 	fear_height = 6,
 	animation = {
 		speed_normal = 15,
-		stand_start = 130,
-		stand_end = 270,
-		stand1_start = 0,
-		stand1_end = 0,
-		stand2_start = 1,
-		stand2_end = 1,
-		stand3_start = 2,
-		stand3_end = 2,
-		walk_start = 10,
-		walk_end = 70,
-		run_start = 10,
-		run_end = 70,
-		punch_start = 80,
-		punch_end = 120,
-		-- 0 = rest, 1 = hiding (covers eyes), 2 = surprised
+		stand_start = 130, stand_end = 270,
+		stand1_start = 0, stand1_end = 0, -- rest
+		stand2_start = 1, stand2_end = 1, -- covers eyes
+		stand3_start = 2, stand3_end = 2, -- surprised
+		walk_start = 10, walk_end = 70,
+		run_start = 10, run_end = 70,
+		punch_start = 80, punch_end = 120
 	},
 
 	on_rightclick = function(self, clicker)
@@ -68,6 +58,7 @@ stepheight = 0.6,
 	end
 })
 
+-- where to spawn (ethereal bamboo biome only)
 
 if minetest.get_modpath("ethereal") and not mobs.custom_spawn_animal then
 
@@ -84,5 +75,6 @@ if minetest.get_modpath("ethereal") and not mobs.custom_spawn_animal then
 	})
 end
 
+-- spawn egg
 
 mobs:register_egg("mobs_animal:panda", S("Panda"), "mobs_panda_inv.png")

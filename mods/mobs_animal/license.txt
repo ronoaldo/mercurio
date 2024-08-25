@@ -24,6 +24,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
+Honey block, cheese and Cheese block by TenPlus1 under CC0
 
 Chicken/Cow/Panda/Pig/Sheep sounds from freesounds.org under CC0
 
@@ -49,7 +50,6 @@ Models/Textures/Media by Krupnov Pavel (WTFPL)
 
 Models/Textures by Krupno Pavel (MIT)
   mobs_bee.b3d (converted to .b3d by sirrobzerrone)
-  mobs_bee.png
   mobs_pumba.b3d (converted to .b3d by sirrobzerrone)
   mobs_pumba.png
 
@@ -67,6 +67,7 @@ Models/Textures by JK Murray (CC0)
   mobs_chick.png
 
 Models/Textures by sirrobzerrone (CC0)
+  mobs_bee.png
   mobs_cow.b3d
   mobs_cow.png
   mobs_cow2.png

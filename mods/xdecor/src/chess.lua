@@ -1893,7 +1893,7 @@ local function update_formspec(meta)
 	meta:set_string("formspec", formspec)
 end
 
-local function update_game_result(meta)
+local function update_game_result(meta, lastMove)
 	local inv = meta:get_inventory()
 	local board_t = realchess.board_to_table(inv)
 
@@ -1912,9 +1912,6 @@ local function update_game_result(meta)
 	if next(whiteMoves) then
 		whiteCanMove = true
 	end
-
-	-- assume lastMove was updated *after* the player moved
-	local lastMove = meta:get_string("lastMove")
 
 	local black_king_idx, white_king_idx = realchess.locate_kings(board_t)
 	if not black_king_idx or not white_king_idx then
@@ -3111,16 +3108,19 @@ function realchess.move_piece(meta, pieceFrom, from_list, from_index, to_list, t
 		add_to_eaten_list(meta, pieceTo)
 	end
 
+	local lastMove = meta:get_string("lastMove")
+	if lastMove == "" then lastMove = "black" end
+
 	local promo = meta:get_string("promotionActive") ~= ""
 	if not promo then
-		update_game_result(meta)
+		update_game_result(meta, lastMove)
+		lastMove = meta:get_string("lastMove")
+		if lastMove == "" then lastMove = "black" end
 	end
 	update_formspec(meta)
 
 	local botColor = meta:get_string("botColor")
 	if botColor == "" then botColor = "black" end
-	local lastMove = meta:get_string("lastMove")
-	if lastMove == "" then lastMove = "black" end
 	local mode = meta:get_string("mode")
 	local gameResult = meta:get_string("gameResult")
 	-- Let the bot play when it its turn
@@ -3208,6 +3208,7 @@ function realchess.promote_pawn(meta, color, promoteTo)
 		meta:set_int("promotionPawnFromIdx", 0)
 		meta:set_int("promotionPawnToIdx", 0)
 		realchess.update_state(meta, from_idx, to_idx, color, promoteFrom:get_name(), pstr)
+		update_game_result(meta, color)
 		update_formspec(meta)
 
 		local botColor = meta:get_string("botColor")

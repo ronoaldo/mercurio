@@ -231,6 +231,7 @@ signs_lib.unicode_install({38,"26"})
 dofile(signs_lib.path.."/nonascii-de.lua")
 dofile(signs_lib.path.."/nonascii-fr.lua")
 dofile(signs_lib.path.."/nonascii-pl.lua")
+dofile(signs_lib.path.."/nonascii-ua.lua")
 
 local nmdc = {
 	[36] = "$",

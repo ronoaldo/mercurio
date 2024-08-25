@@ -1,9 +1,10 @@
--- Translation support
-local S = minetest.get_translator("mobs_npc")
 
+-- translation and mod check
+
+local S = minetest.get_translator("mobs_npc")
 local mcl = minetest.get_modpath("mcl_core") ~= nil
 
--- Npc by TenPlus1
+-- right-click drops
 
 mobs_npc.npc_drops = {
 	{mcl and "mcl_tools:pick_iron" or "default:pick_steel", 2},
@@ -26,13 +27,14 @@ mobs_npc.npc_drops = {
 	mcl and "mcl_core:frosted_ice" or "default:permafrost_with_moss"
 }
 
+-- Npc by TenPlus1
 
 mobs:register_mob("mobs_npc:npc", {
 	type = "npc",
 	passive = false,
 	damage = 3,
 	attack_type = "dogfight",
-	attacks_monsters = true,
+	attack_monsters = true,
 	attack_npcs = false,
 	owner_loyal = true,
 	pathfinding = true,
@@ -77,16 +79,11 @@ mobs:register_mob("mobs_npc:npc", {
 	order = "wander",
 	fear_height = 3,
 	animation = {
-		speed_normal = 30,
-		speed_run = 30,
-		stand_start = 0,
-		stand_end = 79,
-		walk_start = 168,
-		walk_end = 187,
-		run_start = 168,
-		run_end = 187,
-		punch_start = 189, --200
-		punch_end = 198 --219
+		speed_normal = 30, speed_run = 30,
+		stand_start = 0, stand_end = 79,
+		walk_start = 168, walk_end = 187,
+		run_start = 168, run_end = 187,
+		punch_start = 189, punch_end = 198 -- was 200 and 219
 	},
 
 	on_rightclick = function(self, clicker)
@@ -106,6 +103,7 @@ mobs:register_mob("mobs_npc:npc", {
 		-- right clicking with gold lump drops random item from list
 		if 	mobs_npc.drop_trade(self, clicker, mcl and "mcl_raw_ores:raw_gold"
 				or "default:gold_lump", self.npc_drops or mobs_npc.npc_drops) then
+
 			return
 		end
 
@@ -134,23 +132,23 @@ mobs:register_mob("mobs_npc:npc", {
 	end
 })
 
+-- spawn egg
 
--- register spawn egg
 mobs:register_egg("mobs_npc:npc", S("Npc"),
 		mcl and "default_stone_brick.png" or "default_brick.png", 1)
 
+-- compatibility with older mobs mod
 
--- this is only needed for servers that used the old mobs mod
 mobs:alias_mob("mobs:npc", "mobs_npc:npc")
 
-
 -- spawn NPC in world
+
 if not mobs.custom_spawn_npc then
 
 	mobs:spawn({
 		name = "mobs_npc:npc",
 		nodes = {mcl and "mcl_core:stonebrick" or "default:brick"},
-		neighbors = {mcl and "mcl_flowers:tallgrass" or "default:grass_3"},
+		neighbors = {mcl and "mcl_flowers:tallgrass" or "group:grass"},
 		min_light = 10,
 		chance = 10000,
 		active_object_count = 1,

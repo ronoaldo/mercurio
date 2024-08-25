@@ -24,14 +24,14 @@ travelnet.abm_enabled              = minetest.settings:get_bool("travelnet.abm_e
 
 -- change these if you want other receipes for travelnet or elevator
 travelnet.travelnet_recipe = {
-	{ "default:glass", "default:steel_ingot", "default:glass" },
-	{ "default:glass", "default:mese",        "default:glass" },
-	{ "default:glass", "default:steel_ingot", "default:glass" }
+	{ xcompat.materials.glass, xcompat.materials.steel_ingot, xcompat.materials.glass },
+	{ xcompat.materials.glass, xcompat.materials.mese,        xcompat.materials.glass },
+	{ xcompat.materials.glass, xcompat.materials.steel_ingot, xcompat.materials.glass }
 }
 travelnet.elevator_recipe = {
-	{ "default:steel_ingot", "default:glass", "default:steel_ingot" },
-	{ "default:steel_ingot", "",              "default:steel_ingot" },
-	{ "default:steel_ingot", "default:glass", "default:steel_ingot" }
+	{ xcompat.materials.steel_ingot, xcompat.materials.glass, xcompat.materials.steel_ingot },
+	{ xcompat.materials.steel_ingot, "",                      xcompat.materials.steel_ingot },
+	{ xcompat.materials.steel_ingot, xcompat.materials.glass, xcompat.materials.steel_ingot }
 }
 travelnet.tiles_elevator = {
 	"travelnet_elevator_front.png",
@@ -42,19 +42,6 @@ travelnet.tiles_elevator = {
 	"travelnet_top.png"
 }
 travelnet.elevator_inventory_image  = "travelnet_elevator_inv.png"
-
-if minetest.get_modpath("mcl_core") then
-	travelnet.travelnet_recipe = {
-		{ "mcl_core:glass", "mcl_core:iron_ingot",          "mcl_core:glass" },
-		{ "mcl_core:glass", "mesecons_torch:redstoneblock", "mcl_core:glass" },
-		{ "mcl_core:glass", "mcl_core:iron_ingot",          "mcl_core:glass" }
-	}
-	travelnet.elevator_recipe = {
-		{ "mcl_core:iron_ingot", "mcl_core:glass", "mcl_core:iron_ingot" },
-		{ "mcl_core:iron_ingot", "",               "mcl_core:iron_ingot" },
-		{ "mcl_core:iron_ingot", "mcl_core:glass", "mcl_core:iron_ingot" }
-	}
-end
 
 travelnet.node_box = {
 	type = "fixed",

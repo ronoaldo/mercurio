@@ -1,7 +1,11 @@
--- Translation support
-local S = minetest.get_translator("mobs_animal")
 
+-- translation and localize function
+
+local S = minetest.get_translator("mobs_animal")
 local random = math.random
+
+-- sheep colour table
+
 local all_colours = {
 	{"black",      S("Black"),      "#212121b0"}, -- referenced down in mobs:spawn
 	{"blue",       S("Blue"),       "#015dbb70"},
@@ -19,7 +23,6 @@ local all_colours = {
 	{"white",      S("White"),      "#ffffffc0"}, -- referenced down in mobs:spawn
 	{"yellow",     S("Yellow"),     "#fff80070"}
 }
-
 
 -- Sheep by PilzAdam/K Pavel, texture converted to minetest by AMMOnym from Summerfield pack
 
@@ -87,9 +90,7 @@ for _, col in ipairs(all_colours) do
 		},
 		gotten_texture = {"mobs_sheep_base.png^mobs_sheep_shaved.png"},
 		makes_footstep_sound = true,
-		sounds = {
-			random = "mobs_sheep"
-		},
+		sounds = {random = "mobs_sheep"},
 		walk_velocity = 1,
 		run_velocity = 2,
 		runaway = true,
@@ -101,17 +102,13 @@ for _, col in ipairs(all_colours) do
 		lava_damage = 5,
 		light_damage = 0,
 		animation = {
-			speed_normal = 15,
-			speed_run = 15,
-			stand_start = 0,
-			stand_end = 80,
-			walk_start = 81,
-			walk_end = 100,
-			die_start = 1, -- we dont have a specific death animation so we will
-			die_end = 2, --   re-use 2 standing frames at a speed of 1 fps and
-			die_speed = 1, -- have mob rotate when dying.
-			die_loop = false,
-			die_rotate = true
+			speed_normal = 15, speed_run = 15,
+			stand_start = 0, stand_end = 80,
+			walk_start = 81, walk_end = 100,
+			-- no death animation so we'll re-use 2 standing frames at a speed of 1 fps
+			-- and have mob rotate while dying.
+			die_start = 1, die_end = 2, die_speed = 1,
+			die_loop = false, die_rotate = true
 		},
 		follow = {
 			"farming:wheat", "default:grass_1", "farming:barley",
@@ -183,24 +180,17 @@ for _, col in ipairs(all_colours) do
 			mob:set_properties({
 				textures = {textures},
 				visual_size = {
-					x = parent1.base_size.x * .5,
-					y = parent1.base_size.y * .5
+					x = parent1.base_size.x * .5, y = parent1.base_size.y * .5
 				},
 				collisionbox = {
-					parent1.base_colbox[1] * .5,
-					parent1.base_colbox[2] * .5,
-					parent1.base_colbox[3] * .5,
-					parent1.base_colbox[4] * .5,
-					parent1.base_colbox[5] * .5,
-					parent1.base_colbox[6] * .5
+					parent1.base_colbox[1] * .5, parent1.base_colbox[2] * .5,
+					parent1.base_colbox[3] * .5, parent1.base_colbox[4] * .5,
+					parent1.base_colbox[5] * .5, parent1.base_colbox[6] * .5
 				},
 				selectionbox = {
-					parent1.base_selbox[1] * .5,
-					parent1.base_selbox[2] * .5,
-					parent1.base_selbox[3] * .5,
-					parent1.base_selbox[4] * .5,
-					parent1.base_selbox[5] * .5,
-					parent1.base_selbox[6] * .5
+					parent1.base_selbox[1] * .5, parent1.base_selbox[2] * .5,
+					parent1.base_selbox[3] * .5, parent1.base_selbox[4] * .5,
+					parent1.base_selbox[5] * .5, parent1.base_selbox[6] * .5
 				}
 			})
 
@@ -212,6 +202,17 @@ for _, col in ipairs(all_colours) do
 
 			-- stop mobs_redo api from spawning child
 			return false
+		end,
+
+		-- fix any issue with horns by re-checking
+		on_spawn = function(self)
+
+			if self.child then return end -- baby sheep dont have horns
+
+			local textures = horn_texture_sel(self.attribute_horns, self.gotten)
+
+			self.object:set_properties({textures = {textures}})
+			self.base_texture = {textures}
 		end,
 
 		on_grown = function(self)
@@ -268,10 +269,8 @@ for _, col in ipairs(all_colours) do
 			-- are we giving a haircut>
 			if itemname == "mobs:shears" then
 
-				if self.gotten ~= false
-				or self.child ~= false
-				or name ~= self.owner
-				or not minetest.get_modpath("wool") then
+				if self.gotten ~= false or self.child ~= false
+				or name ~= self.owner or not minetest.get_modpath("wool") then
 					return
 				end
 
@@ -286,10 +285,7 @@ for _, col in ipairs(all_colours) do
 				if obj then
 
 					obj:set_velocity({
-						x = random(-1, 1),
-						y = 5,
-						z = random(-1, 1)
-					})
+							x = random(-1, 1), y = 5, z = random(-1, 1)})
 				end
 
 				item:add_wear(650) -- 100 uses
@@ -307,18 +303,15 @@ for _, col in ipairs(all_colours) do
 			-- are we coloring?
 			if itemname:find("dye:") then
 
-				if self.gotten == false
-				and self.child == false
-				and self.tamed == true
-				and name == self.owner then
+				if self.gotten == false and self.child == false
+				and self.tamed == true and name == self.owner then
 
 					local colr = string.split(itemname, ":")[2]
 
 					for _,c in pairs(all_colours) do
 
 						-- only dye if colour option available and sheep not same colour
-						if c[1] == colr
-						and self.name ~= "mobs_animal:sheep_" .. colr then
+						if c[1] == colr and self.name ~= "mobs_animal:sheep_" .. colr then
 
 							local pos = self.object:get_pos()
 
@@ -328,9 +321,11 @@ for _, col in ipairs(all_colours) do
 
 							if ent then
 
+								local prop = self.object:get_properties()
+
 								-- add old sheep attributes
 								ent.attribute_horns = self.attribute_horns
-								ent.nametag = self.nametag
+								ent._nametag = prop.nametag
 								ent.owner = name
 								ent.tamed = true
 								ent.protected = self.protected
@@ -343,8 +338,7 @@ for _, col in ipairs(all_colours) do
 
 								ent.base_texture = {textures}
 								ent.object:set_properties({
-									textures = {textures},
-									nametag = self.nametag
+									textures = {textures}
 								})
 
 								-- remove old sheep
@@ -381,6 +375,7 @@ for _, col in ipairs(all_colours) do
 	mobs:alias_mob("mobs:sheep_" .. col[1], "mobs_animal:sheep_" .. col[1])
 end
 
+-- where to spawn
 
 if not mobs.custom_spawn_animal then
 
@@ -445,8 +440,8 @@ if not mobs.custom_spawn_animal then
 				local entity = mobs:add_mob(pos,
 						{name = "mobs_animal:sheep_" .. types, child = lamb})
 
--- nil check
-if not entity then return end
+				-- nil check
+				if not entity then return end
 
 				if not lamb then
 					-- Set horns attribute, lower height will be rarer.
@@ -498,24 +493,31 @@ if not entity then return end
 	})
 end
 
+-- compatibility with older mobs mod
 
-mobs:alias_mob("mobs:sheep", "mobs_animal:sheep_white") -- compatibility
+mobs:alias_mob("mobs:sheep", "mobs_animal:sheep_white")
 
 -- raw mutton
+
 minetest.register_craftitem(":mobs:mutton_raw", {
 	description = S("Raw Mutton"),
 	inventory_image = "mobs_mutton_raw.png",
 	on_use = minetest.item_eat(2),
-	groups = {food_meat_raw = 1, food_mutton_raw = 1, flammable = 2}
+	groups = {food_meat_raw = 1, food_mutton_raw = 1}
 })
 
--- cooked mutton
+mobs.add_eatable("mobs:mutton_raw", 2)
+
+-- cooked mutton and recipe
+
 minetest.register_craftitem(":mobs:mutton_cooked", {
 	description = S("Cooked Mutton"),
 	inventory_image = "mobs_mutton_cooked.png",
 	on_use = minetest.item_eat(6),
-	groups = {food_meat = 1, food_mutton = 1, flammable = 2}
+	groups = {food_meat = 1, food_mutton = 1}
 })
+
+mobs.add_eatable("mobs:mutton_cooked", 6)
 
 minetest.register_craft({
 	type = "cooking",

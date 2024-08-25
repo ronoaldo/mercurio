@@ -4,7 +4,7 @@
 
 ]]--
 
-local S = ethereal.translate
+-- fish and where they can be caught
 
 local fish_items = {
 	"ethereal:fish_bluefin",
@@ -46,9 +46,14 @@ local fish_items = {
 -- sandstone_desert_ocean, plains_ocean, savanna_ocean, fiery_ocean, swamp_ocean,
 -- glacier_ocean, tundra_ocean
 
+-- translation and mod checks
+
+local S = minetest.get_translator("ethereal")
 local mod_bonemeal = minetest.get_modpath("bonemeal")
 local mod_armor = minetest.get_modpath("3d_armor")
 local mod_mobs = minetest.get_modpath("mobs")
+
+-- junk items to be found
 
 local junk_items = {
 	"ethereal:bowl",
@@ -65,6 +70,8 @@ local junk_items = {
 	mod_armor and "3d_armor:boots_wood 6000" or "default:stick"
 }
 
+-- bonus items to be found
+
 local bonus_items = {
 	mod_mobs and "mobs:nametag" or "fireflies:bug_net",
 	mod_mobs and "mobs:net" or "default:sapling",
@@ -80,28 +87,25 @@ local bonus_items = {
 	"ethereal:fishing_rod 9000"
 }
 
+-- helpers
+
 local default_item = "default:dirt"
 local random = math.random -- yup we use this a lot
 
+-- global add item function
 
--- add item function
 ethereal.add_item = function(fish, junk, bonus)
 
-	if fish and fish ~= "" then
-		table.insert(fish_items, fish)
-	end
+	if fish and fish ~= "" then table.insert(fish_items, fish) end
 
-	if junk and junk ~= "" then
-		table.insert(junk_items, junk)
-	end
+	if junk and junk ~= "" then table.insert(junk_items, junk) end
 
-	if bonus and bonus ~= "" then
-		table.insert(bonus_items, bonus)
-	end
+	if bonus and bonus ~= "" then table.insert(bonus_items, bonus) end
 end
 
+-- bubble particle effect
 
-local effect = function(pos)
+local function effect(pos)
 
 	minetest.add_particle({
 		pos = {
@@ -119,8 +123,8 @@ local effect = function(pos)
 	})
 end
 
-
 -- fishing bob entity
+
 minetest.register_entity("ethereal:bob_entity", {
 
 	initial_properties = {
@@ -157,8 +161,8 @@ if not self.cast then
 
 			-- incase of lag find water level
 			local free_fall, blocker = minetest.line_of_sight(
-				{x = pos.x, y = pos.y + 2, z = pos.z},
-				{x = pos.x, y = pos.y    , z = pos.z})
+					{x = pos.x, y = pos.y + 2, z = pos.z},
+					{x = pos.x, y = pos.y    , z = pos.z})
 
 			-- do we have worms for bait, if so take one
 			local player = self.fisher and minetest.get_player_by_name(self.fisher)
@@ -185,8 +189,8 @@ if not self.cast then
 			-- splash
 			effect(pos) ; effect(pos) ; effect(pos) ; effect(pos)
 
-			minetest.sound_play("default_water_footstep", {
-				pos = pos, gain = 0.1}, true)
+			minetest.sound_play("default_water_footstep",
+					{pos = pos, gain = 0.1}, true)
 		end
 
 else -- already cast and waiting for fish
@@ -222,12 +226,9 @@ else -- already cast and waiting for fish
 		-- remove bob if player is too far away
 		local pla_pos = player:get_pos()
 
-		if (pla_pos.y - pos.y) > 15
-		or (pla_pos.y - pos.y) < -15
-		or (pla_pos.x - pos.x) > 15
-		or (pla_pos.x - pos.x) < -15
-		or (pla_pos.z - pos.z) > 15
-		or (pla_pos.z - pos.z) < -15 then
+		if (pla_pos.y - pos.y) > 15 or (pla_pos.y - pos.y) < -15
+		or (pla_pos.x - pos.x) > 15 or (pla_pos.x - pos.x) < -15
+		or (pla_pos.z - pos.z) > 15 or (pla_pos.z - pos.z) < -15 then
 
 			self.object:remove() ; --print("-- out of range")
 
@@ -298,8 +299,8 @@ end -- if not self.cast
 	end -- on_step
 })
 
+-- narrow item list depending on biome
 
--- narrow item list depending on biome if applicable
 local find_item = function(list, pos)
 
 	local item
@@ -327,15 +328,13 @@ local find_item = function(list, pos)
 
 --print("==biome: " .. biome, dump(items))
 
-	if #items > 0 then
-		return items[random(#items)]
-	end
+	if #items > 0 then return items[random(#items)] end
 
 	return ""
 end
 
-
 -- fishing rod function that throws pre bob, places bob and catches fish when it moves
+
 local use_rod = function(itemstack, player, pointed_thing)
 
 	local pos = player:get_pos()
@@ -348,9 +347,7 @@ local use_rod = function(itemstack, player, pointed_thing)
 
 		ent = objs[n]:get_luaentity()
 
-		if ent
-		and ent.fisher
-		and ent.name == "ethereal:bob_entity"
+		if ent and ent.fisher and ent.name == "ethereal:bob_entity"
 		and player:get_player_name() == ent.fisher then
 
 			found = false
@@ -364,6 +361,7 @@ local use_rod = function(itemstack, player, pointed_thing)
 				-- lower position to be in water
 				rodpos.y = rodpos.y - 1
 
+				-- chance between catching fish, bonuns item or junk
 				if r < 86 then
 
 					item = find_item(fish_items, rodpos)
@@ -415,9 +413,7 @@ local use_rod = function(itemstack, player, pointed_thing)
 
 		ent = objs[n]:get_luaentity()
 
-		if ent
-		and ent.fisher
-		and ent.name == "ethereal:bob_entity"
+		if ent and ent.fisher and ent.name == "ethereal:bob_entity"
 		and player:get_player_name() == ent.fisher then
 
 			found = false
@@ -433,7 +429,7 @@ local use_rod = function(itemstack, player, pointed_thing)
 		local pos = {x = playerpos.x, y = playerpos.y + 1.5, z = playerpos.z}
 
 		minetest.sound_play("ethereal_casting_rod",
-			{pos = pos, gain = 1.0, max_hear_distance = 10}, true)
+				{pos = pos, gain = 1.0, max_hear_distance = 10}, true)
 
 		-- place actual bob
 		local obj = minetest.add_entity(pos, "ethereal:bob_entity")
@@ -449,8 +445,8 @@ local use_rod = function(itemstack, player, pointed_thing)
 	return itemstack
 end
 
-
 -- scan area for bobs that belong to player and remove
+
 local remove_bob = function(player)
 
 	local objs = minetest.get_objects_inside_radius(player:get_pos(), 15)
@@ -471,20 +467,20 @@ local remove_bob = function(player)
 	end
 end
 
-
 -- remove bob if player signs off
+
 minetest.register_on_leaveplayer(function(player)
 	remove_bob(player)
 end)
 
-
 -- remove bob if player dies
+
 minetest.register_on_dieplayer(function(player)
 	remove_bob(player)
 end)
 
-
 -- fishing rod
+
 minetest.register_tool("ethereal:fishing_rod", {
 	description = S("Fishing Rod (USE to cast and again when the time is right)"),
 	groups = {tool = 1},
@@ -511,6 +507,7 @@ minetest.register_craft({
 	burntime = 15
 })
 
+-- table of fish and edibility
 
 local fish = {
 	{"Blue Fin", "bluefin", 2},
@@ -547,10 +544,12 @@ local fish = {
 	{"Stoplight Parrotfish", "parrot", 2}
 }
 
+-- register above fish
+
 for n = 1, #fish do
 
 	local usage
-	local groups
+	local groups = nil
 
 	if fish[n][3] > 0 then
 		usage = minetest.item_eat(fish[n][3])
@@ -563,45 +562,18 @@ for n = 1, #fish do
 		on_use = usage,
 		groups = groups
 	})
+
+	if groups then
+		ethereal.add_eatable("ethereal:fish_" .. fish[n][2], fish[n][3])
+	end
 end
 
-
 -- Make Neon Tetra glow slightly
+
 minetest.override_item("ethereal:fish_tetra", {light_source = 3})
 
-
--- cooked fish
-minetest.register_craftitem(":ethereal:fish_cooked", {
-	description = S("Cooked Fish"),
-	inventory_image = "ethereal_fish_cooked.png",
-	wield_image = "ethereal_fish_cooked.png",
-	groups = {food_fish = 1, flammable = 3},
-	on_use = minetest.item_eat(5)
-})
-
-minetest.register_craft({
-	type = "cooking",
-	output = "ethereal:fish_cooked",
-	recipe = "group:ethereal_fish",
-	cooktime = 8
-})
-
--- Sashimi
-minetest.register_craftitem("ethereal:sashimi", {
-	description = S("Sashimi"),
-	inventory_image = "ethereal_sashimi.png",
-	wield_image = "ethereal_sashimi.png",
-	on_use = minetest.item_eat(4)
-})
-
-minetest.register_craft({
-	output = "ethereal:sashimi 2",
-	recipe = {
-		{"group:food_seaweed", "group:food_fish_raw", "group:food_seaweed"},
-	}
-})
-
 -- Worm
+
 minetest.register_craftitem("ethereal:worm", {
 	description = S("Worm"),
 	inventory_image = "ethereal_worm.png",
@@ -616,6 +588,7 @@ minetest.register_craft({
 })
 
 -- compatibility
+
 minetest.register_alias("ethereal:fish_raw", "ethereal:fish_cichlid")
 minetest.register_alias("ethereal:fishing_rod_baited", "ethereal:fishing_rod")
 minetest.register_alias("ethereal:fish_chichlid", "ethereal:fish_cichlid")

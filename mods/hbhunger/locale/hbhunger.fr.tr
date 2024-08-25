@@ -1,2 +1,9 @@
 # textdomain:hbhunger
+Hunger with HUD Bar=
+Adds a simple hunger meachanic with satiation, food poisoning and different healing.=
 Satiation=Satiété
+[<player>] <satiation>=
+Set satiation of player or yourself=
+Not possible, damage is disabled.=
+Invalid satiation!=
+Player @1 does not exist.=

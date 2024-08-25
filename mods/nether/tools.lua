@@ -153,6 +153,38 @@ minetest.register_craft({
 })
 
 
+if minetest.get_modpath("toolranks") then
+
+	local function add_toolranks(name)
+		local nethertool_after_use = ItemStack(name):get_definition().after_use
+		toolranks.add_tool(name)
+		local toolranks_after_use  = ItemStack(name):get_definition().after_use
+
+		if nethertool_after_use == nil or nethertool_after_use == toolranks_after_use then
+			return
+		end
+
+		minetest.override_item(name, {
+			after_use = function(itemstack, user, node, digparams)
+				-- combine nethertool_after_use and toolranks_after_use by allowing
+				-- nethertool_after_use() to calculate the wear...
+				local initial_wear = itemstack:get_wear()
+				itemstack = nethertool_after_use(itemstack, user, node, digparams)
+				local wear = itemstack:get_wear() - initial_wear
+				itemstack:set_wear(initial_wear) -- restore/undo the wear
+
+				-- ...and have toolranks_after_use() apply the wear.
+				digparams.wear = wear
+				return toolranks_after_use(itemstack, user, node, digparams)
+			end
+		})
+	end
+
+	add_toolranks("nether:pick_nether")
+	add_toolranks("nether:shovel_nether")
+	add_toolranks("nether:axe_nether")
+	add_toolranks("nether:sword_nether")
+end
 
 
 --===========================--
@@ -352,10 +384,11 @@ minetest.register_tool("nether:lightstaff_eternal", {
 	sound = {breaks = "default_tool_breaks"},
 	stack_max = 1,
 	on_use = function(itemstack, user, pointed_thing)
-		if lightstaff_on_use(user, "#23F", 0) then -- was "#8088FF" or "#13F"
+		if lightstaff_on_use(user, "#23F", 0) -- was "#8088FF" or "#13F"
+		   and not minetest.is_creative_enabled(user) then
 			-- The staff of Eternal Light wears out, to limit how much
 			-- a player can alter the nether with it.
-			itemstack:add_wear(65535 / (nether.lightstaff_uses - 1))
+			itemstack:add_wear_by_uses(nether.lightstaff_uses)
 		end
 		return itemstack
 	end

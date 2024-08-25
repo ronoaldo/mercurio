@@ -9,6 +9,15 @@ This is a libre version (free software, free media) of the X-Decor mod for Minet
 It is the same as X-Decor, except with all the non-free files replaced and with
 bugfixes. There are no new features.
 
+## New blocks
+
+This mod adds many decoration blocks: Flower pot, weathervane, radio, speaker,
+wooden tile, new bricks, lamps, candles, new doors, packed ice, and more.
+
+This mod also adds 7 new block shapes for many Minetest Game blocks. They can
+be created by using the workbench. This includes panels, mini blocks and flat
+stairs.
+
 ## Special nodes
 
 Most blocks in this mod are purely decorative, but there are also many special
@@ -33,8 +42,6 @@ blocks with special features:
 * Lever: Pull the lever to activate doors next to it
 * Pressure Plate: Step on it to activate doors next to it
 * Chessboard: Play Chess against a player or the computer (see `CHESS_README.md`)
-
-The radio and speaker are purely decorative and have no special functionality.
 
 ### X-Decor-libre vs X-Decor
 

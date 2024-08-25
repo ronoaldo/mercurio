@@ -1,81 +1,20 @@
 
-local S = farming.translate
+local S = minetest.get_translator("farming")
 
--- garlic clove
+-- item/seed
+
 minetest.register_craftitem("farming:garlic_clove", {
 	description = S("Garlic clove"),
 	inventory_image = "crops_garlic_clove.png",
 	groups = {compostability = 35, seed = 2, food_garlic_clove = 1, flammable = 3},
+
 	on_place = function(itemstack, placer, pointed_thing)
 		return farming.place_seed(itemstack, placer, pointed_thing, "farming:garlic_1")
 	end
 })
 
--- garlic bulb
-minetest.register_craftitem("farming:garlic", {
-	description = S("Garlic"),
-	inventory_image = "crops_garlic.png",
-	on_use = minetest.item_eat(1),
-	groups = {food_garlic = 1, flammable = 3, compostability = 55}
-})
-
-minetest.register_craft({
-	output = "farming:garlic_clove 8",
-	recipe = {{"farming:garlic"}}
-})
-
-minetest.register_craft({
-	output = "farming:garlic",
-	recipe = {
-		{"farming:garlic_clove", "farming:garlic_clove", "farming:garlic_clove"},
-		{"farming:garlic_clove", "", "farming:garlic_clove"},
-		{"farming:garlic_clove", "farming:garlic_clove", "farming:garlic_clove"}
-	}
-})
-
--- garlic braid
-minetest.register_node("farming:garlic_braid", {
-	description = S("Garlic Braid"),
-	inventory_image = "crops_garlic_braid.png",
-	wield_image = "crops_garlic_braid.png",
-	drawtype = "nodebox",
-	use_texture_alpha = "clip",
-	paramtype = "light",
-	paramtype2 = "facedir",
-	tiles = {
-		"crops_garlic_braid_top.png",
-		"crops_garlic_braid.png",
-		"crops_garlic_braid_side.png^[transformFx",
-		"crops_garlic_braid_side.png",
-		"crops_garlic_braid.png",
-		"crops_garlic_braid.png"
-	},
-	groups = {vessel = 1, dig_immediate = 3, flammable = 3, compostability = 65},
-	sounds = farming.sounds.node_sound_leaves_defaults(),
-	node_box = {
-		type = "fixed",
-		fixed = {
-			{-0.1875, -0.5, 0.5, 0.1875, 0.5, 0.125}
-		}
-	}
-})
-
-minetest.register_craft({
-	output = "farming:garlic_braid",
-	recipe = {
-		{"farming:garlic", "farming:garlic", "farming:garlic"},
-		{"farming:garlic", "farming:garlic", "farming:garlic"},
-		{"farming:garlic", "farming:garlic", "farming:garlic"}
-	}
-})
-
-minetest.register_craft({
-	type = "shapeless",
-	output = "farming:garlic 9",
-	recipe = {"farming:garlic_braid"}
-})
-
 -- crop definition
+
 local def = {
 	drawtype = "plantlike",
 	tiles = {"crops_garlic_plant_1.png"},
@@ -92,25 +31,32 @@ local def = {
 		handy = 1, snappy = 3, flammable = 3, plant = 1, attached_node = 1,
 		not_in_creative_inventory = 1, growing = 1
 	},
-	sounds = farming.sounds.node_sound_leaves_defaults()
+	_mcl_hardness = farming.mcl_hardness,
+	is_ground_content = false,
+	sounds = farming.node_sound_leaves_defaults()
 }
 
 -- stage 1
+
 minetest.register_node("farming:garlic_1", table.copy(def))
 
 -- stage 2
+
 def.tiles = {"crops_garlic_plant_2.png"}
 minetest.register_node("farming:garlic_2", table.copy(def))
 
 -- stage 3
+
 def.tiles = {"crops_garlic_plant_3.png"}
 minetest.register_node("farming:garlic_3", table.copy(def))
 
 -- stage 4
+
 def.tiles = {"crops_garlic_plant_4.png"}
 minetest.register_node("farming:garlic_4", table.copy(def))
 
 -- stage 5
+
 def.tiles = {"crops_garlic_plant_5.png"}
 def.groups.growing = nil
 def.selection_box = farming.select_final
@@ -124,6 +70,7 @@ def.drop = {
 minetest.register_node("farming:garlic_5", table.copy(def))
 
 -- add to registered_plants
+
 farming.registered_plants["farming:garlic"] = {
 	crop = "farming:garlic",
 	seed = "farming:garlic_clove",
@@ -133,6 +80,7 @@ farming.registered_plants["farming:garlic"] = {
 }
 
 -- mapgen
+
 minetest.register_decoration({
 	deco_type = "simple",
 	place_on = {"default:dirt_with_grass", "mcl_core:dirt_with_grass"},

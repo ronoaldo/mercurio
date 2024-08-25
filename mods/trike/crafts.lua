@@ -12,28 +12,40 @@ minetest.register_craftitem("trike:fuselage",{
 })
 
 -- trike
-minetest.register_craftitem("trike:trike", {
+--[[minetest.register_craftitem("trike:trike", {
 	description = S("Ultralight Trike"),
 	inventory_image = "trike.png",
-    liquids_pointable = true,
+    liquids_pointable = true,]]--
+minetest.register_tool("trike:trike", {
+	description = S("Ultralight Trike"),
+	inventory_image = "trike.png",
+    liquids_pointable = false,
+    stack_max = 1,
 
 	on_place = function(itemstack, placer, pointed_thing)
 		if pointed_thing.type ~= "node" then
 			return
 		end
         
+        local stack_meta = itemstack:get_meta()
+        local staticdata = stack_meta:get_string("staticdata")
+
         local pointed_pos = pointed_thing.under
         --local node_below = minetest.get_node(pointed_pos).name
         --local nodedef = minetest.registered_nodes[node_below]
         
 		pointed_pos.y=pointed_pos.y+0.5
-		local trike = minetest.add_entity(pointed_pos, "trike:trike")
+		local trike = minetest.add_entity(pointed_pos, "trike:trike", staticdata)
 		if trike and placer then
             local ent = trike:get_luaentity()
             local owner = placer:get_player_name()
             ent.owner = owner
 			trike:set_yaw(placer:get_look_horizontal())
 			itemstack:take_item()
+
+            --[[local properties = ent.object:get_properties()
+            properties.infotext = owner .. " nice trike"
+            ent.object:set_properties(properties)]]--
 		end
 
 		return itemstack

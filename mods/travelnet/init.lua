@@ -79,6 +79,7 @@ minetest.register_node("travelnet:hidden_top", {
 	pointable = false,
 	diggable = false,
 	groups = {not_in_creative_inventory = 1},
+	is_ground_content = false,
 	drop = "",
 })
 

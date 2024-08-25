@@ -53,8 +53,6 @@ local yaw2dir = minetest.yaw_to_dir
 -- Settings --
 --------------
 
-local creative = minetest.settings:get_bool("creative_mode")
-
 local terrain_destruction = minetest.settings:get_bool("dragon_terrain_destruction", true)
 
 ---------------------
@@ -2087,7 +2085,7 @@ function draconis.dragon_step(self, dtime)
 		draconis.dragons[self.dragon_id] = nil
 		return
 	end
-	local global_data = draconis.dragons[self.dragon_id]
+	local global_data = draconis.dragons[self.dragon_id] or {}
 	draconis.dragons[self.dragon_id] = {
 		last_pos = self.object:get_pos(),
 		owner = self.owner or nil,

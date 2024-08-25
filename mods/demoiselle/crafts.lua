@@ -10,22 +10,31 @@ minetest.register_craftitem("demoiselle:body",{
 })
 
 -- demoiselle
-minetest.register_craftitem("demoiselle:demoiselle", {
+--[[minetest.register_craftitem("demoiselle:demoiselle", {
 	description = "Demoiselle",
 	inventory_image = "demoiselle.png",
-    liquids_pointable = true,
+    liquids_pointable = false,]]--
+
+minetest.register_tool("demoiselle:demoiselle", {
+	description = "Demoiselle",
+	inventory_image = "demoiselle.png",
+    liquids_pointable = false,
+    stack_max = 1,
 
 	on_place = function(itemstack, placer, pointed_thing)
 		if pointed_thing.type ~= "node" then
 			return
 		end
         
+        local stack_meta = itemstack:get_meta()
+        local staticdata = stack_meta:get_string("staticdata")
+
         local pointed_pos = pointed_thing.under
         --local node_below = minetest.get_node(pointed_pos).name
         --local nodedef = minetest.registered_nodes[node_below]
         
 		pointed_pos.y=pointed_pos.y+0.5
-		local demoiselle = minetest.add_entity(pointed_pos, "demoiselle:demoiselle")
+		local demoiselle = minetest.add_entity(pointed_pos, "demoiselle:demoiselle", staticdata)
 		if demoiselle and placer then
             local ent = demoiselle:get_luaentity()
             local owner = placer:get_player_name()

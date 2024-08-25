@@ -61,7 +61,7 @@ Change log:
 - 3.1 - Ability to hide protection blocks using /protector_hide and /protector_show , italian local added (thanks Hamlet)
 - 3.2 - Defaults to Minetest translation if found, otherwise intllib fallback if loaded, locale files updated for both.  Added 'protector_msg' setting for player text.
 - 3.3 - Added support for playerfactions new api (thanks louisroyer), added limiter to protection radius of 22.
-- 3.4 - Player flip and hurt functions moved to minetest.register_protection_violation function (thanks hlqkj), added 'protector_crafts' setting, changed wood doors n chests to immediate_dig for mineclone2 fix.
+- 3.4 - Player flip and hurt functions moved to minetest.register_protection_violation function (thanks hlqkj), added 'protector_crafts' setting, changed wood doors n chests to immediate_dig for mineclone2 fix. Upped protector radius limit to 30.
 
 Lucky Blocks: 10
 

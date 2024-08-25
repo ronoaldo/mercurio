@@ -470,8 +470,8 @@ local math_max = math.max
 local function fill_line(x, y, w, c, font_size, colorbgw)
 	c = c or "0"
 	local tex = { }
-	for xx = 0, math.max(0, w), colorbgw do
-		table.insert(tex, (":%d,%d=signs_lib_color_"..font_size.."px_%s.png"):format(x + xx, y, c))
+	for xx = x, w, colorbgw do
+		table.insert(tex, (":%d,%d=signs_lib_color_"..font_size.."px_%s.png"):format(xx, y, c))
 	end
 	return table.concat(tex)
 end
@@ -583,8 +583,8 @@ local function make_line_texture(line, lineno, pos, line_width, line_height, cwi
 					end
 				end
 				if w then
-					width = width + w + 1
-					if width >= (line_width - cwidth_tab[" "]) then
+					width = width + w
+					if width > line_width then
 						width = 0
 					else
 						maxw = math_max(width, maxw)
@@ -607,6 +607,7 @@ local function make_line_texture(line, lineno, pos, line_width, line_height, cwi
 							off = ch_offs,
 							tex = tex,
 							col = ("%X"):format(cur_color),
+							w = w,
 						})
 					end
 					ch_offs = ch_offs + w
@@ -615,8 +616,8 @@ local function make_line_texture(line, lineno, pos, line_width, line_height, cwi
 			else
 				local w = cwidth_tab[c]
 				if w then
-					width = width + w + 1
-					if width >= (line_width - cwidth_tab[" "]) then
+					width = width + w
+					if width > line_width then
 						width = 0
 					else
 						maxw = math_max(width, maxw)
@@ -626,6 +627,7 @@ local function make_line_texture(line, lineno, pos, line_width, line_height, cwi
 							off = ch_offs,
 							tex = char_tex(font_name, c),
 							col = ("%X"):format(cur_color),
+							w = w,
 						})
 					end
 					ch_offs = ch_offs + w
@@ -633,7 +635,7 @@ local function make_line_texture(line, lineno, pos, line_width, line_height, cwi
 			end
 			i = i + 1
 		end
-		width = width + cwidth_tab[" "] + 1
+		width = width + cwidth_tab[" "]
 		maxw = math_max(width, maxw)
 		table.insert(words, { chars=chars, w=ch_offs })
 	end
@@ -642,7 +644,8 @@ local function make_line_texture(line, lineno, pos, line_width, line_height, cwi
 
 	local texture = { }
 
-	local start_xpos = math.floor((line_width - maxw) / 2) + def.x_offset
+	local start_xpos = math.max(0, math.floor((line_width - maxw) / 2)) + def.x_offset
+	local end_xpos = math.min(start_xpos + maxw, line_width)
 
 	local xpos = start_xpos
 	local ypos = (line_height + def.line_spacing)* lineno + def.y_offset
@@ -651,31 +654,33 @@ local function make_line_texture(line, lineno, pos, line_width, line_height, cwi
 
 	for word_i, word in ipairs(words) do
 		local xoffs = (xpos - start_xpos)
-		if (xoffs > 0) and ((xoffs + word.w) > maxw) then
-			table.insert(texture, fill_line(xpos, ypos, maxw, "n", font_size, colorbgw))
+		if (xoffs > 0) and ((xoffs + word.w) > end_xpos) then
+			table.insert(texture, fill_line(xpos, ypos, end_xpos, "n", font_size, colorbgw))
 			xpos = start_xpos
 			ypos = ypos + line_height + def.line_spacing
 			lineno = lineno + 1
 			if lineno >= def.number_of_lines then break end
-			table.insert(texture, fill_line(xpos, ypos, maxw, cur_color, font_size, colorbgw))
+			table.insert(texture, fill_line(xpos, ypos, end_xpos, cur_color, font_size, colorbgw))
 		end
 		for ch_i, ch in ipairs(word.chars) do
+			if xpos + ch.off + ch.w > end_xpos then
+				table.insert(texture, fill_line(xpos + ch.off, ypos, end_xpos, "n", font_size, colorbgw))
+				break
+			end
 			if ch.col ~= cur_color then
 				cur_color = ch.col
-				table.insert(texture, fill_line(xpos + ch.off, ypos, maxw, cur_color, font_size, colorbgw))
+				table.insert(texture, fill_line(xpos + ch.off, ypos, end_xpos, cur_color, font_size, colorbgw))
 			end
 			table.insert(texture, (":%d,%d=%s"):format(xpos + ch.off, ypos, ch.tex))
 		end
-		table.insert(
-			texture,
-			(":%d,%d="):format(xpos + word.w, ypos) .. char_tex(font_name, " ")
-		)
-		xpos = xpos + word.w + cwidth_tab[" "]
-		if xpos >= (line_width + cwidth_tab[" "]) then break end
+		xpos = xpos + word.w
+		if xpos < end_xpos then
+			table.insert(texture, (":%d,%d="):format(xpos, ypos) .. char_tex(font_name, " "))
+			xpos = xpos + cwidth_tab[" "]
+		end
 	end
 
-	table.insert(texture, fill_line(xpos, ypos, maxw, "n", font_size, colorbgw))
-	table.insert(texture, fill_line(start_xpos, ypos + line_height, maxw, "n", font_size, colorbgw))
+	table.insert(texture, fill_line(xpos, ypos, end_xpos, "n", font_size, colorbgw))
 
 	return table.concat(texture), lineno
 end
@@ -938,7 +943,13 @@ function signs_lib.after_place_node(pos, placer, itemstack, pointed_thing, locke
 	local controls = placer:get_player_control()
 
 	local signname = itemstack:get_name()
+
+	-- in case player has sign nodes they shouldn't, remove extensions for normal sign
 	local no_wall_name = string.gsub(signname, "_wall", "")
+	no_wall_name = string.gsub(no_wall_name, "_yard", "")
+	no_wall_name = string.gsub(no_wall_name, "_hanging", "")
+	no_wall_name = string.gsub(no_wall_name, "_onpole_horiz", "")
+	no_wall_name = string.gsub(no_wall_name, "_onpole", "")
 
 	local def = minetest.registered_items[signname]
 
@@ -1002,6 +1013,7 @@ end
 
 function signs_lib.register_sign(name, raw_def)
 	local def = table.copy(raw_def)
+	def.is_ground_content = false
 
 	if raw_def.entity_info == "standard" then
 		def.entity_info = {

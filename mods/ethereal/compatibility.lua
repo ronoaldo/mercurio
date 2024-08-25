@@ -1,5 +1,6 @@
 
--- add compatibility for ethereal nodes already in default game or name changed
+-- add compatibility for ethereal nodes already added to default game or name changed
+
 minetest.register_alias("ethereal:acacia_trunk", "default:acacia_tree")
 minetest.register_alias("ethereal:acacia_wood", "default:acacia_wood")
 
@@ -44,8 +45,3 @@ minetest.register_alias("ethereal:tree_sapling", "default:sapling")
 minetest.register_alias("ethereal:jungle_tree_sapling", "default:junglesapling")
 minetest.register_alias("ethereal:acacia_sapling", "default:acacia_sapling")
 minetest.register_alias("ethereal:pine_tree_sapling", "default:pine_sapling")
-
--- check if pine bush stem exists, if not create alias
-if not minetest.registered_nodes["default:pine_bush_stem"] then
-	minetest.register_alias("default:pine_bush_stem", "default:wood")
-end

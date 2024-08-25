@@ -259,4 +259,8 @@ dofile(path .. "/admin.lua")
 -- Unified Inventory Monkey Patch
 dofile(path .. "/inventory.lua")
 
+-- Monkey patches
+dofile(path .. "/patches.lua")
+
 log_action("Server overrides loaded!")
+
