@@ -1,6 +1,5 @@
 # Use this file in order to run a local/dev copy of the server.
 # Rename it to docker-compose.override.yml
-version: "3.3"
 services:
   db:
     restart: "no"

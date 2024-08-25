@@ -1,4 +1,3 @@
-version: "3.3"
 services:
   game:
     image: ghcr.io/ronoaldo/mercurio:main

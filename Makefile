@@ -1,13 +1,13 @@
 # Mercurio server build/management tool
 
 INTERACTIVE=true
-TEST_ARGS=--env-file /tmp/.env.test -f docker-compose.yml -f docker-compose.auto.yml
+TEST_ARGS=--env-file /tmp/.env.test -f docker compose.yml -f docker compose.auto.yml
 TEST_ENV= -e MERCURIO_AUTO_SHUTDOWN=true -e NO_LOOP=true
 
 all: build
 
 build:
-	docker-compose build
+	docker compose build
 
 .minetest/world:
 	mkdir -p .minetest/world
@@ -35,20 +35,20 @@ rm-submodule:
 	git commit
 
 test: volumes submodules
-	docker-compose down
-	docker-compose build --no-cache game
+	docker compose down
+	docker compose build --no-cache game
 	sed -e 's/AUTO_SHUTDOWN=.*/AUTO_SHUTDOWN=true/g' .env.sample > /tmp/.env.test
-	docker-compose $(TEST_ARGS) run -d db && sleep 5
-	docker-compose $(TEST_ARGS) run --user 0 -T game bash -c 'chown -R minetest:minetest /var/lib/mercurio /var/logs/minetest'
-	docker-compose $(TEST_ARGS) run $(TEST_ENV) game
-	docker-compose down
+	docker compose $(TEST_ARGS) run -d db && sleep 5
+	docker compose $(TEST_ARGS) run --user 0 -T game bash -c 'chown -R minetest:minetest /var/lib/mercurio /var/logs/minetest'
+	docker compose $(TEST_ARGS) run $(TEST_ENV) game
+	docker compose down
 	@echo ; echo "Mods not loaded by the server: "
 	grep "load.*false" /tmp/minetest/world/world.mt || true
 
 run: volumes submodules
-	docker-compose down && docker-compose up --build --detach
+	docker compose down && docker compose up --build --detach
 	@echo "Server is running in background"
-	if [ x"$(INTERACTIVE)" = x"true" ] ; then docker-compose logs -f ; fi
+	if [ x"$(INTERACTIVE)" = x"true" ] ; then docker compose logs -f ; fi
 
 run-client:
 	minetest --address jupiter.ronoaldo.dev.br --port 30000 \
@@ -56,21 +56,21 @@ run-client:
 		--go
 
 stop:
-	docker-compose down || true
+	docker compose down || true
 
 backup:
 	./scripts/backup.sh
 
 shell:
-	docker-compose exec --user 0 game bash
+	docker compose exec --user 0 game bash
 
 update:
 	git pull
 	git submodule init
 	git submodule update --init --recursive
 	docker pull ghcr.io/ronoaldo/mercurio:main
-	docker-compose pull
-	docker-compose up -d
+	docker compose pull
+	docker compose up -d
 
 fix-perms:
 	sudo chown -R 30000:$$(id -g) .minetest/world .minetest/logs
