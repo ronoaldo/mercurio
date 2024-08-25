@@ -25,6 +25,10 @@ COPY scripts/mercurio.sh /usr/bin
 COPY scripts/backup.sh   /usr/bin
 COPY scripts/lib         /usr/lib/scripts
 
+# Force load screwdriver mod as it is used by many ones
+# After Minetest 5.9 several mods stopped loading properly
+RUN echo "first_mod=screwdriver" >> /usr/share/minetest/games/minetest_game/game.conf
+
 # Restore user to minetest and redefine launch script
 WORKDIR /var/lib/minetest
 USER minetest
