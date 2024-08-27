@@ -32,15 +32,6 @@ end
 function travelnet.actions.remove_station(node_info, _, player)
 	local player_name = player:get_player_name()
 
-	-- abort if protected by another mod
-	if	minetest.is_protected(node_info.pos, player_name)
-		and not minetest.check_player_privs(player_name, { protection_bypass = true })
-	then
-		minetest.record_protection_violation(node_info.pos, player_name)
-		return false,
-			S("This @1 belongs to @2. You can't remove it.", node_info.props.description, node_info.props.owner_name)
-	end
-
 	-- players with travelnet_remove priv can dig the station
 	if
 		not minetest.get_player_privs(player_name)[travelnet.remove_priv]
@@ -73,8 +64,8 @@ end
 
 function travelnet.actions.edit_station(node_info, _, player)
 	local player_name = player:get_player_name()
-	-- abort if protected by another mod
-	if minetest.is_protected(node_info.pos, player_name)
+	-- abort if user isn't owner
+	if node_info.props.owner_name ~= player_name
 	   and not minetest.check_player_privs(player_name, { protection_bypass=true })
 	then
 		minetest.record_protection_violation(node_info.pos, player_name)

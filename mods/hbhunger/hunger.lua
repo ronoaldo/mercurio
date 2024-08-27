@@ -6,19 +6,18 @@ function hbhunger.load_hunger(player)
 	hbhunger.get_hunger_raw(player)
 end
 
--- wrapper for minetest.item_eat (this way we make sure other mods can't break this one)
-local org_eat = minetest.do_item_eat
-minetest.do_item_eat = function(hp_change, replace_with_item, itemstack, user, pointed_thing)
-	local old_itemstack = itemstack
-	itemstack = hbhunger.eat(hp_change, replace_with_item, itemstack, user, pointed_thing)
-	for _, callback in pairs(minetest.registered_on_item_eats) do
-		local result = callback(hp_change, replace_with_item, itemstack, user, pointed_thing, old_itemstack)
-		if result then
-			return result
-		end
-	end
-	return itemstack
-end
+-- HACK: We register our on_item_eat handler after the other mods have loaded
+-- so their on_item_eat handlers run first. This is because Minetest refuses
+-- to run ANY further on_item_eat handler once one of the callback functions
+-- has returned an itemstack. (as of Minetest 5.8.0)
+-- FIXME: Remove the register_on_mods_loaded as soon Minetest handles
+-- on_item_eat events in a less weird manner.
+minetest.register_on_mods_loaded(function()
+	minetest.register_on_item_eat(function(hp_change, replace_with_item, itemstack, user, pointed_thing)
+		-- Our own item eat handler
+		return hbhunger.eat(hp_change, replace_with_item, ItemStack(itemstack), user, pointed_thing)
+	end)
+end)
 
 -- food functions
 local food = hbhunger.food

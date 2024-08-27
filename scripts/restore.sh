@@ -27,18 +27,22 @@ DB_FILE=$2
 
 # Only keep the container server running
 log "Shutting services down"
-docker-compose down
+docker compose down
 
 TIMESTAMP=$(date +%Y%m%d-%H%M%S)
-AUX=.minetest/world.$TIMESTAMP
-log "Moving current world dir to $AUX"
-sudo mv .minetest/world "$AUX"
-AUX=.minetest/db.$TIMESTAMP
-log "Moving current db dir to $AUX"
-sudo mv .minetest/db "$AUX"
+if [ -d .minetest/world ] ; then
+    AUX=.minetest/world.$TIMESTAMP
+    log "Moving current world dir to $AUX"
+    sudo mv .minetest/world "$AUX"
+fi
+if [ -d .minetest/db ] ; then
+    AUX=.minetest/db.$TIMESTAMP
+    log "Moving current db dir to $AUX"
+    sudo mv .minetest/db "$AUX"
+fi
 
 log "Starting database with empty structure"
-docker-compose up -d db
+docker compose up -d db
 sleep 10
 
 # Extract the world folder from backup
@@ -47,7 +51,7 @@ sudo tar xvf "$FILE" .minetest/world
 
 # Restore the database from backup
 log "Restoring database. This may take a long time"
-gunzip -c "$DB_FILE" | docker-compose exec -T db psql -U mercurio
+gunzip -c "$DB_FILE" | docker compose exec -T db psql -U mercurio
 
 # Fix permissions after restore
 log "Fixing permissions after restore"

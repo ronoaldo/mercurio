@@ -124,12 +124,14 @@ function minekart.destroy(self, puncher)
 
     if self.driver_name then
         -- detach the driver first (puncher must be driver)
-        puncher:set_detach()
-        puncher:set_eye_offset({x = 0, y = 0, z = 0}, {x = 0, y = 0, z = 0})
+        if puncher then
+            puncher:set_detach()
+            puncher:set_eye_offset({x = 0, y = 0, z = 0}, {x = 0, y = 0, z = 0})
+        end
         if minetest.global_exists("player_api") then
             player_api.player_attached[self.driver_name] = nil
             -- player should stand again
-            player_api.set_animation(puncher, "stand")
+            if puncher then player_api.set_animation(puncher, "stand") end
         end
         self.driver_name = nil
     end
@@ -142,11 +144,32 @@ function minekart.destroy(self, puncher)
     if self.steering then self.steering:remove() end
     if self.dir_bar then self.dir_bar:remove() end
 
+    local lua_ent = self.object:get_luaentity()
+    local staticdata = lua_ent:get_staticdata(self)
+    local obj_name = lua_ent.name
+
+    local stack = ItemStack(obj_name)
+    local stack_meta = stack:get_meta()
+    stack_meta:set_string("staticdata", staticdata)
+
+    if puncher then
+        local inv = puncher:get_inventory()
+        if inv then
+            if inv:room_for_item("main", stack) then
+                inv:add_item("main", stack)
+            else
+                minetest.add_item({x=pos.x+math.random()-0.5,y=pos.y,z=pos.z+math.random()-0.5}, stack)
+            end
+        end
+    else
+        minetest.add_item({x=pos.x+math.random()-0.5,y=pos.y,z=pos.z+math.random()-0.5}, stack)
+    end
+
     self.object:remove()
 
-    pos.y=pos.y+2
+    --[[pos.y=pos.y+2
 
-    minetest.add_item({x=pos.x+math.random()-0.5,y=pos.y,z=pos.z+math.random()-0.5},'kartcar:kart')
+    minetest.add_item({x=pos.x+math.random()-0.5,y=pos.y,z=pos.z+math.random()-0.5},'kartcar:kart')]]--
 end
 
 
@@ -634,7 +657,7 @@ minetest.register_entity("kartcar:kart", {
             end
 
             if self.hp <= 0 then
-                minekart.destroy(self)
+                minekart.destroy(self, puncher)
             end
 
         end
@@ -706,23 +729,34 @@ minetest.register_entity("kartcar:kart", {
 --
 
 -- Kart
-minetest.register_craftitem("kartcar:kart", {
+--[[minetest.register_craftitem("kartcar:kart", {
+	description = "Kart",
+	inventory_image = "kart_inv.png",
+    liquids_pointable = false,]]--
+
+-- boat
+minetest.register_tool("kartcar:kart", {
 	description = "Kart",
 	inventory_image = "kart_inv.png",
     liquids_pointable = false,
+    stack_max = 1,
 
 	on_place = function(itemstack, placer, pointed_thing)
 		if pointed_thing.type ~= "node" then
 			return
 		end
+
+        local stack_meta = itemstack:get_meta()
+        local staticdata = stack_meta:get_string("staticdata")
         
         local pointed_pos = pointed_thing.above
 		--pointed_pos.y=pointed_pos.y+0.2
-		local kart = minetest.add_entity(pointed_pos, "kartcar:kart")
+		local kart = minetest.add_entity(pointed_pos, "kartcar:kart", staticdata)
 		if kart and placer then
             local ent = kart:get_luaentity()
             local owner = placer:get_player_name()
             ent.owner = owner
+            ent.hp = 50
 			kart:set_yaw(placer:get_look_horizontal())
 			itemstack:take_item()
             ent.object:set_acceleration({x=0,y=-minekart.gravity,z=0})

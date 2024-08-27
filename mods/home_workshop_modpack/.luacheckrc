@@ -21,5 +21,5 @@ read_globals = {
     "vector", "ItemStack", "dump", "DIR_DELIM", "VoxelArea", "Settings", "PcgRandom", "VoxelManip", "PseudoRandom",
 
     --mod produced
-    "default", "screwdriver", "unifieddyes", "computers", "farming",
+    "default", "screwdriver", "unifieddyes", "computers", "farming", "xcompat",
 }

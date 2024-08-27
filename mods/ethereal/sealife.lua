@@ -1,8 +1,8 @@
 
-local S = ethereal.translate
-
+local S = minetest.get_translator("ethereal")
 
 -- Seaweed
+
 minetest.register_node("ethereal:seaweed", {
 	description = S("Seaweed"),
 	drawtype = "plantlike",
@@ -14,11 +14,10 @@ minetest.register_node("ethereal:seaweed", {
 	climbable = true,
 	drowning = 1,
 	selection_box = {
-		type = "fixed",
-		fixed = {-0.3, -0.5, -0.3, 0.3, 0.5, 0.3}
+		type = "fixed", fixed = {-0.3, -0.5, -0.3, 0.3, 0.5, 0.3}
 	},
 	post_effect_color = {a = 64, r = 100, g = 100, b = 200},
-	groups = {food_seaweed = 1, snappy = 3, flammable = 3},
+	groups = {food_seaweed = 1, snappy = 3},
 	on_use = minetest.item_eat(1),
 	sounds = default.node_sound_leaves_defaults(),
 
@@ -33,9 +32,7 @@ minetest.register_node("ethereal:seaweed", {
 
 		if def_up.liquidtype == nil or def_up.liquidtype ~= "none" then
 
-			if minetest.is_protected(pos, pname) then
-				return
-			end
+			if minetest.is_protected(pos, pname) then return end
 
 			if def_down.name ~= "default:sand" and def_down.name ~= "ethereal:sandy" then
 				return
@@ -58,6 +55,10 @@ minetest.register_node("ethereal:seaweed", {
 	end
 })
 
+ethereal.add_eatable("ethereal:seaweed", 1)
+
+-- seaweed rooted in sand
+
 minetest.register_node("ethereal:seaweed_rooted", {
 	description = S("Seaweed"),
 	drop = "ethereal:seaweed",
@@ -72,8 +73,7 @@ minetest.register_node("ethereal:seaweed_rooted", {
 	selection_box = {
 		type = "fixed",
 		fixed = {
-				{-0.5, -0.5, -0.5, 0.5, 0.5, 0.5},
-				{-2/16, 0.5, -2/16, 2/16, 3.5, 2/16},
+			{-0.5, -0.5, -0.5, 0.5, 0.5, 0.5}, {-2/16, 0.5, -2/16, 2/16, 3.5, 2/16},
 		},
 	},
 	node_dig_prediction = "default:sand",
@@ -112,6 +112,7 @@ minetest.register_node("ethereal:seaweed_rooted", {
 	end
 })
 
+-- update old style seaweed nodes to new
 
 minetest.register_lbm({
 	label = "[ethereal] Upgrade seaweed",
@@ -130,8 +131,7 @@ minetest.register_lbm({
 
 			local height = 0
 
-			while height < 14
-			and minetest.get_node(pos_up).name == "ethereal:seaweed" do
+			while height < 14 and minetest.get_node(pos_up).name == "ethereal:seaweed" do
 				minetest.remove_node(pos_up)
 				height = height + 1
 				pos_up.y = pos_up.y + 1
@@ -145,34 +145,16 @@ minetest.register_lbm({
 	end
 })
 
+-- seaweed to dark green dye
 
--- seaweed to d.green dye
 minetest.register_craft( {
 	output = "dye:dark_green 3",
 	recipe = {{"ethereal:seaweed"}}
-
-})
--- agar powder
-minetest.register_craftitem("ethereal:agar_powder", {
-	description = S("Agar Powder"),
-	inventory_image = "ethereal_agar_powder.png",
-	groups = {food_gelatin = 1, flammable = 2}
-})
-
-minetest.register_craft({
-	output = "ethereal:agar_powder 3",
-	recipe = {
-		{"group:food_seaweed", "group:food_seaweed", "group:food_seaweed"},
-		{"bucket:bucket_water", "bucket:bucket_water", "default:torch"},
-		{"bucket:bucket_water", "bucket:bucket_water", "default:torch"}
-	},
-	replacements = {
-		{"bucket:bucket_water", "bucket:bucket_empty 4"}
-	}
 })
 
 
--- Corals
+-- coral on_place helper function
+
 local coral_nodes = {}
 
 local function register_coral(name, description, texture)
@@ -188,11 +170,9 @@ local function register_coral(name, description, texture)
 
 		if def_up.liquidtype == nil or def_up.liquidtype ~= "none" then
 
-			if minetest.is_protected(pos, pname) then
-				return
-			end
+			if minetest.is_protected(pos, pname) then return end
 
-			if def_down.name ~= "default:sand" then
+			if def_down.name ~= "default:sand"and def_down.name ~= "ethereal:sandy" then
 				return
 			end
 
@@ -219,6 +199,7 @@ local function register_coral(name, description, texture)
 		return res
 	end
 
+	-- decorative coral node
 	minetest.register_node("ethereal:" .. name, {
 		description = description,
 		drawtype = "plantlike",
@@ -227,8 +208,7 @@ local function register_coral(name, description, texture)
 		wield_image = texture,
 		paramtype = "light",
 		selection_box = {
-			type = "fixed",
-			fixed = {-6 / 16, -0.5, -6 / 16, 6 / 16, 1 / 4, 6 / 16}
+			type = "fixed", fixed = {-6 / 16, -0.5, -6 / 16, 6 / 16, 1 / 4, 6 / 16}
 		},
 		light_source = 3,
 		groups = {snappy = 3},
@@ -236,6 +216,7 @@ local function register_coral(name, description, texture)
 		on_place = plantlike_on_place
 	})
 
+	-- coral node rooted in sand
 	minetest.register_node("ethereal:" .. name .. "_rooted", {
 		description = description,
 		drop = "ethereal:" .. name,
@@ -246,8 +227,7 @@ local function register_coral(name, description, texture)
 		wield_image = texture,
 		paramtype = "light",
 		selection_box = {
-			type = "fixed",
-			fixed = {-6 / 16, 0.5, -6 / 16, 6 / 16, 1.25, 6 / 16}
+			type = "fixed", fixed = {-6 / 16, 0.5, -6 / 16, 6 / 16, 1.25, 6 / 16}
 		},
 		light_source = 3,
 		groups = {snappy = 3, not_in_creative_inventory = 1},
@@ -258,6 +238,7 @@ local function register_coral(name, description, texture)
 	table.insert(coral_nodes, "ethereal:" .. name)
 end
 
+-- update old style coral to new
 
 minetest.register_lbm({
 	label = "[ethereal] Upgrade corals",
@@ -282,44 +263,32 @@ minetest.register_lbm({
 	end
 })
 
-
 -- Blua Coral
+
 register_coral("coral2", S("Blue Glow Coral"), "ethereal_coral_blue.png")
 
-minetest.register_craft( {
-	output = "dye:cyan 3",
-	recipe = {{"ethereal:coral2"}}
-})
-
+minetest.register_craft({output = "dye:cyan 3", recipe = {{"ethereal:coral2"}}})
 
 -- Orange Coral
+
 register_coral("coral3", S("Orange Glow Coral"), "ethereal_coral_orange.png")
 
-minetest.register_craft( {
-	output = "dye:orange 3",
-	recipe = {{"ethereal:coral3"}}
-})
-
+minetest.register_craft({output = "dye:orange 3", recipe = {{"ethereal:coral3"}}})
 
 -- Pink Coral
+
 register_coral("coral4", S("Pink Glow Coral"), "ethereal_coral_pink.png")
 
-minetest.register_craft( {
-	output = "dye:pink 3",
-	recipe = {{"ethereal:coral4"}}
-})
-
+minetest.register_craft({output = "dye:pink 3", recipe = {{"ethereal:coral4"}}})
 
 -- Green Coral
+
 register_coral("coral5", S("Green Glow Coral"), "ethereal_coral_green.png")
 
-minetest.register_craft( {
-	output = "dye:green 3",
-	recipe = {{"ethereal:coral5"}}
-})
-
+minetest.register_craft({output = "dye:green 3", recipe = {{"ethereal:coral5"}}})
 
 -- Undersea Sand (used for growing seaweed and corals)
+
 minetest.register_node("ethereal:sandy", {
 	description = S("Sandy"),
 	tiles = {"default_sand.png"},
@@ -331,8 +300,8 @@ minetest.register_node("ethereal:sandy", {
 	sounds = default.node_sound_sand_defaults()
 })
 
-
 -- randomly generate coral or seaweed and have seaweed grow up to 14 high
+
 if ethereal.sealife == 1 then
 
 	minetest.register_abm({
@@ -351,9 +320,7 @@ if ethereal.sealife == 1 then
 				local p2 = node.param2 or 16
 				local height = math.max(1, math.floor(p2 / 16))
 
-				if height > 13 then
-					return
-				end
+				if height > 13 then return end
 
 				height = height + 1
 
@@ -395,8 +362,7 @@ if ethereal.sealife == 1 then
 	})
 end
 
-
--- sponge nodes
+-- sponge nodes (place dry sponge to suck up all water surrounding it, cook to dry)
 
 minetest.register_node("ethereal:sponge_air", {
 	drawtype = "airlike",
@@ -428,14 +394,12 @@ minetest.register_node("ethereal:sponge", {
 		local name = placer:get_player_name()
 
 		-- is area protected
-		if minetest.is_protected(pos, name) then
-			return
-		end
+		if minetest.is_protected(pos, name) then return end
 
 		-- get water nodes within range
 		local num = minetest.find_nodes_in_area(
-			{x = pos.x - 3, y = pos.y - 3, z = pos.z - 3},
-			{x = pos.x + 3, y = pos.y + 3, z = pos.z + 3}, {"group:water"})
+				{x = pos.x - 3, y = pos.y - 3, z = pos.z - 3},
+				{x = pos.x + 3, y = pos.y + 3, z = pos.z + 3}, {"group:water"})
 
 		-- no water
 		if #num == 0 then return end
@@ -454,6 +418,7 @@ minetest.register_node("ethereal:sponge", {
 })
 
 -- cook wet sponge into dry sponge
+
 minetest.register_craft({
 	type = "cooking",
 	recipe = "ethereal:sponge_wet",
@@ -462,6 +427,7 @@ minetest.register_craft({
 })
 
 -- use leaf decay to remove sponge air nodes
+
 default.register_leafdecay({
 	trunks = {"ethereal:sponge_wet"},
 	leaves = {"ethereal:sponge_air"},
@@ -469,6 +435,7 @@ default.register_leafdecay({
 })
 
 -- dry sponges can be used as fuel
+
 minetest.register_craft({
 	type = "fuel",
 	recipe = "ethereal:sponge",

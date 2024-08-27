@@ -1,0 +1,4 @@
+# textdomain: show_wielded_item
+Show Wielded Item=
+Displays the name of the wielded item.=
+

@@ -21,6 +21,12 @@
 -- Version 3.0
 
 -- Changelog: 
+-- 02.09.2021 * Added a history of stored patterns (not saved over server restart)
+--            * Added a menu to select a history entry. It is accessable via AUX1 + left click.
+--            * Removed deprecated functions get/set_metadata(..) and renamed metadata to pattern
+-- 29.09.2021 * AUX1 key works now same as SNEAK key for storing new pattern (=easier when flying)
+--            * The description of the tool now shows which pattern is stored
+--            * The description of the stored pattern is more human readable
 -- 09.12.2017 * Got rid of outdated minetest.env
 --            * Fixed error in protection function.
 --            * Fixed minor bugs.
@@ -42,6 +48,8 @@ dofile(minetest.get_modpath("replacer").."/check_owner.lua");
 
 replacer = {};
 
+replacer.default_dirt = "default:dirt"
+
 replacer.blacklist = {};
 
 -- playing with tnt and creative building are usually contradictory
@@ -57,6 +65,13 @@ replacer.blacklist[ "protector:protect2"] = true;
 
 -- adds a tool for inspecting nodes and entities
 dofile(minetest.get_modpath("replacer").."/inspect.lua");
+
+-- adds a formspec with a history function (accessible with AUX1 + left click)
+dofile(minetest.get_modpath("replacer").."/fs_history.lua");
+
+-- adds support for the circular saw from moreblocks and similar nodes
+-- and allows to replace the *material* while keeping shape - or vice versa
+dofile(minetest.get_modpath("replacer").."/mode_of_replacement.lua");
 
 minetest.register_tool( "replacer:replacer",
 {
@@ -81,7 +96,6 @@ minetest.register_tool( "replacer:replacer",
     },
 --]]
     node_placement_prediction = nil,
-    metadata = "default:dirt", -- default replacement: common dirt
 
     on_place = function(itemstack, placer, pointed_thing)
 
@@ -93,8 +107,8 @@ minetest.register_tool( "replacer:replacer",
 
        local keys=placer:get_player_control();
     
-       -- just place the stored node if now new one is to be selected
-       if( not( keys["sneak"] )) then
+       -- just place the stored node if no new one is to be selected
+       if( not( keys["sneak"] ) and not( keys["aux1"])) then
 
           return replacer.replace( itemstack, placer, pointed_thing, 0  ); end
 
@@ -104,27 +118,21 @@ minetest.register_tool( "replacer:replacer",
           return nil;
        end
 
-       local pos  = minetest.get_pointed_thing_position( pointed_thing, under );
+       local pos  = minetest.get_pointed_thing_position( pointed_thing, false ); -- node under
        local node = minetest.get_node_or_nil( pos );
        
-       --minetest.chat_send_player( name, "  Target node: "..minetest.serialize( node ).." at pos "..minetest.serialize( pos ).."."); 
-       local metadata = "default:dirt 0 0";
+       local pattern = replacer.default_dirt.." 0 0";
        if( node ~= nil and node.name ) then
-          metadata = node.name..' '..node.param1..' '..node.param2;
+          pattern = node.name..' '..node.param1..' '..node.param2;
        end
-       itemstack:set_metadata( metadata );
 
-       minetest.chat_send_player( name, "Node replacement tool set to: '"..metadata.."'.");
-
-       return itemstack; -- nothing consumed but data changed
+       return replacer.set_to(name, pattern, placer, itemstack) -- nothing consumed but data changed
     end,
      
 
---    on_drop = func(itemstack, dropper, pos),
-
     on_use = function(itemstack, user, pointed_thing)
 
-       return replacer.replace( itemstack, user, pointed_thing, above );
+       return replacer.replace( itemstack, user, pointed_thing, false );
     end,
 })
 
@@ -135,7 +143,6 @@ replacer.replace = function( itemstack, user, pointed_thing, mode )
           return nil;
        end
        local name = user:get_player_name();
-       --minetest.chat_send_player( name, "You USED this on "..minetest.serialize( pointed_thing )..".");
  
        if( pointed_thing.type ~= "node" ) then
           minetest.chat_send_player( name, "  Error: No node.");
@@ -145,8 +152,6 @@ replacer.replace = function( itemstack, user, pointed_thing, mode )
        local pos  = minetest.get_pointed_thing_position( pointed_thing, mode );
        local node = minetest.get_node_or_nil( pos );
        
-       --minetest.chat_send_player( name, "  Target node: "..minetest.serialize( node ).." at pos "..minetest.serialize( pos ).."."); 
-
        if( node == nil ) then
 
           minetest.chat_send_player( name, "Error: Target node not yet loaded. Please wait a moment for the server to catch up.");
@@ -154,15 +159,22 @@ replacer.replace = function( itemstack, user, pointed_thing, mode )
        end
 
 
-       local item = itemstack:to_table();
+       local meta = itemstack:get_meta()
+       local pattern = meta:get_string("pattern")
 
        -- make sure it is defined
-       if( not( item[ "metadata"] ) or item["metadata"]=="" ) then
-          item["metadata"] = "default:dirt 0 0";
+       if(not(pattern) or pattern == "") then
+          pattern = replacer.default_dirt.." 0 0";
+       end
+
+       local keys=user:get_player_control();
+       if( keys["aux1"]) then
+           minetest.show_formspec(name, "replacer:menu", replacer.get_formspec(name, pattern, user))
+           return nil
        end
 
        -- regain information about nodename, param1 and param2
-       local daten = item[ "metadata"]:split( " " );
+       local daten = pattern:split( " " );
        -- the old format stored only the node name
        if( #daten < 3 ) then
           daten[2] = 0;
@@ -173,6 +185,12 @@ replacer.replace = function( itemstack, user, pointed_thing, mode )
        if( replacer_homedecor_node_is_owned(pos, user)) then
 
           return nil;
+       end
+
+       local daten = replacer.get_new_node_data(node, daten, name)
+       -- nothing to replace
+       if(not(daten)) then
+          return
        end
 
        if( node.name and node.name ~= "" and replacer.blacklist[ node.name ]) then
@@ -198,16 +216,15 @@ replacer.replace = function( itemstack, user, pointed_thing, mode )
           return nil;
        end
 
-
        -- in survival mode, the player has to provide the node he wants to place
-       if( not(minetest.setting_getbool("creative_mode") )
+       if( not(minetest.settings:get_bool("creative_mode") )
 	  and not( minetest.check_player_privs( name, {creative=true}))) then
  
           -- players usually don't carry dirt_with_grass around; it's safe to assume normal dirt here
           -- fortunately, dirt and dirt_with_grass does not make use of rotation
-          if( daten[1] == "default:dirt_with_grass" ) then
-             daten[1] = "default:dirt";
-             item["metadata"] = "default:dirt 0 0";
+          if( daten[1] == "default:dirt_with_grass" or daten[1] == "mcl_core:dirt_with_grass") then
+             daten[1] = replacer.default_dirt
+             pattern = replacer.default_dirt.." 0 0";
           end
 
           -- does the player carry at least one of the desired nodes with him?
@@ -219,16 +236,9 @@ replacer.replace = function( itemstack, user, pointed_thing, mode )
           end
 
 
-
           -- give the player the item by simulating digging if possible
           if(   node.name ~= "air" 
-            and node.name ~= "ignore"
-            and node.name ~= "default:lava_source" 
-            and node.name ~= "default:lava_flowing"
-	    and node.name ~= "default:river_water_source"
-	    and node.name ~= "default:river_water_flowing"
-            and node.name ~= "default:water_source"
-            and node.name ~= "default:water_flowing" ) then
+            and node.name ~= "ignore") then
 
              minetest.node_dig( pos, node, user );
 
@@ -236,33 +246,44 @@ replacer.replace = function( itemstack, user, pointed_thing, mode )
              if( not( digged_node ) 
                 or digged_node.name == node.name ) then
 
-                minetest.chat_send_player( name, "Replacing '"..( node.name or "air" ).."' with '"..( item[ "metadata"] or "?" ).."' failed. Unable to remove old node.");
-                return nil;
+                -- some nodes - like liquids - cannot be digged. but they are buildable_to and
+                -- thus can be replaced
+                local node_def = minetest.registered_nodes[node.name]
+                if(not(node_def) or not(node_def.buildable_to)) then
+                   minetest.chat_send_player( name, "Replacing '"..( node.name or "air" ).."' with '"..( pattern or "?" ).."' failed. Unable to remove old node.");
+                   return nil;
+                end
              end
             
           end
 
           -- consume the item
           user:get_inventory():remove_item("main", daten[1].." 1");
-
-          --user:get_inventory():add_item( "main", node.name.." 1");
        end
-
-       --minetest.chat_send_player( name, "Replacing node '"..( node.name or "air" ).."' with '"..( item[ "metadata"] or "?" ).."'.");
-
-       --minetest.place_node( pos, { name =  item[ "metadata" ] } );
        minetest.add_node( pos, { name =  daten[1], param1 = daten[2], param2 = daten[3] } );
        return nil; -- no item shall be removed from inventory
     end
 
 
-minetest.register_craft({
-        output = 'replacer:replacer',
-        recipe = {
-                { 'default:chest', '',              '' },
-                { '',              'default:stick', '' },
-                { '',              '',              'default:chest' },
-        }
-})
-
-
+-- do the exception for MineClone first...
+if(minetest.registered_nodes["mcl_chests:chest"]) then
+	replacer.default_dirt = "mcl_core:dirt"
+	minetest.register_craft({
+	        output = 'replacer:replacer',
+	        recipe = {
+	                { 'mcl_chests:chest', '',              '' },
+	                { '',              'mcl_core:stick', '' },
+	                { '',              '',              'mcl_chests:chest' },
+	        }
+	})
+-- then the normal receipe
+elseif(minetest.registered_nodes["default:chest"]) then
+	minetest.register_craft({
+	        output = 'replacer:replacer',
+	        recipe = {
+	                { 'default:chest', '',              '' },
+	                { '',              'default:stick', '' },
+	                { '',              '',              'default:chest' },
+	        }
+	})
+end

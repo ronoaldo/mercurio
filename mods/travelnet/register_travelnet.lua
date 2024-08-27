@@ -43,6 +43,7 @@ function travelnet.register_travelnet_box(cfg)
 
 		use_texture_alpha = "clip",
 		inventory_image = "travelnet_inv_base.png^(travelnet_inv_colorable.png^[multiply:" .. cfg.color .. ")",
+		is_ground_content = false,
 		groups = {
 			travelnet = 1
 		},

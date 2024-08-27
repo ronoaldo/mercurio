@@ -39,4 +39,5 @@ read_globals = {
     "creative",
     "doors",
     "i3",
+    "xcompat",
 }

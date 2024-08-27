@@ -3,11 +3,12 @@ local S = protector.intllib
 local radius = (tonumber(minetest.settings:get("protector_radius")) or 5)
 
 -- radius limiter (minetest cannot handle node volume of more than 4096000)
-if radius > 22 then radius = 22 end
+if radius > 30 then radius = 30 end
 
 local hud = {}
 local hud_timer = 0
 local hud_interval = (tonumber(minetest.settings:get("protector_hud_interval")) or 5)
+local hud_style = minetest.has_feature("hud_def_type_field")
 
 if hud_interval > 0 then
 minetest.register_globalstep(function(dtime)
@@ -42,8 +43,7 @@ minetest.register_globalstep(function(dtime)
 
 			hud[name] = {}
 
-			hud[name].id = player:hud_add({
-				hud_elem_type = "text",
+			local hud_tab = {
 				name = "Protector Area",
 				number = 0xFFFF22,
 				position = {x = 0, y = 0.95},
@@ -51,7 +51,15 @@ minetest.register_globalstep(function(dtime)
 				text = hud_text,
 				scale = {x = 200, y = 60},
 				alignment = {x = 1, y = -1},
-			})
+			}
+
+			if hud_style then
+				hud_tab["type"] = "text"
+			else
+				hud_tab["hud_elem_type"] = "text"
+			end
+
+			hud[name].id = player:hud_add(hud_tab)
 
 			return
 		else

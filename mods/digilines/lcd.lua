@@ -286,6 +286,7 @@ minetest.register_node("digilines:lcd", {
 	node_box = lcd_box,
 	selection_box = lcd_box,
 	groups = {choppy = 3, dig_immediate = 2},
+	is_ground_content = false,
 	_mcl_blast_resistance = 1,
 	_mcl_hardness = 0.8,
 	after_place_node = function(pos)
@@ -335,9 +336,11 @@ minetest.register_lbm({
 })
 
 minetest.register_entity(":digilines_lcd:text", {
-	collisionbox = { 0, 0, 0, 0, 0, 0 },
-	visual = "upright_sprite",
-	textures = {},
+	initial_properties = {
+		collisionbox = { 0, 0, 0, 0, 0, 0 },
+		visual = "upright_sprite",
+		textures = {},
+	},
 	on_activate = set_texture,
 })
 

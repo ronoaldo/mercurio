@@ -1,11 +1,12 @@
--- Translation support
-local S = minetest.get_translator("mobs_npc")
 
+-- translation and mod check
+
+local S = minetest.get_translator("mobs_npc")
 local mcl = minetest.get_modpath("mcl_core") ~= nil
 local def = minetest.get_modpath("default") ~= nil
 
-
 -- show random message from list
+
 mobs_npc.npc_talk =  function(self, player, message_list)
 
 	local name = player:get_player_name() or ""
@@ -19,8 +20,8 @@ mobs_npc.npc_talk =  function(self, player, message_list)
 	end
 end
 
-
 -- drop random item from list
+
 mobs_npc.drop_trade = function(self, player, item, item_list)
 
 	local w_inv = player:get_wielded_item()
@@ -57,8 +58,8 @@ mobs_npc.drop_trade = function(self, player, item, item_list)
 	return true
 end
 
-
 -- check for simple_dialogs mod and setup
+
 local context = {}
 
 mobs_npc.useDialogs = "N"
@@ -117,8 +118,8 @@ if minetest.get_modpath("simple_dialogs") then
 	end)
 end
 
-
 -- Kilarin's formspec functions
+
 function mobs_npc.get_controls_formspec(name, self)
 
 	self.id = set_npc_id(self) -- make sure id is set
@@ -157,8 +158,8 @@ function mobs_npc.get_controls_formspec(name, self)
 	return table.concat(formspec, "")
 end
 
-
 -- receive and do orders given through form
+
 minetest.register_on_player_receive_fields(function(player, formname, fields)
 
 	local pname = player:get_player_name()
@@ -209,8 +210,8 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 	end
 end)
 
-
 -- check if npc has id set otherwise create one
+
 function set_npc_id(npcself)
 
 	if not npcself.id then
@@ -221,8 +222,8 @@ function set_npc_id(npcself)
 	return npcself.id
 end
 
-
 --this function finds an npcself in the luaentities list given an npcId
+
 function get_npcself_from_id(npcId)
 
 	if npcId == nil then return nil end
@@ -234,8 +235,6 @@ function get_npcself_from_id(npcId)
 		end
 	end
 end
-
-
 
 --This code comes almost exclusively from the trader and inventory of mobf, by Sapier.
 --The copyright notice below is from mobf:

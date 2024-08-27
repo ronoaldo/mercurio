@@ -80,6 +80,7 @@ if minetest.global_exists("unified_inventory") then -- unified inventory install
 	unified_inventory.register_button("worldedit_gui", {
 		type = "image",
 		image = "inventory_plus_worldedit_gui.png",
+		tooltip = "Edit your World!",
 		condition = function(player)
 			return minetest.check_player_privs(player:get_player_name(), {worldedit=true})
 		end,
@@ -193,7 +194,8 @@ elseif minetest.global_exists("sfinv") then -- sfinv installed
 		get = function(self, player, context)
 			local can_worldedit = minetest.check_player_privs(player, {worldedit=true})
 			local fs = orig_get(self, player, context)
-			return fs .. (can_worldedit and "image_button[0,0;1,1;inventory_plus_worldedit_gui.png;worldedit_gui;]" or "")
+			return fs .. (can_worldedit and "image_button[0,0;1,1;inventory_plus_worldedit_gui.png;worldedit_gui;]" ..
+				"tooltip[worldedit_gui;Edit your World!]" or "")
 		end
 	})
 
@@ -262,7 +264,7 @@ worldedit.register_gui_handler("worldedit_gui", function(name, fields)
 			--ensure player has permission to perform action
 			local has_privs, missing_privs = minetest.check_player_privs(name, entry.privs)
 			if not has_privs then
-				worldedit.player_notify(name, "you are not allowed to use this function (missing privileges: " .. table.concat(missing_privs, ", ") .. ")")
+				worldedit.player_notify(name, "you are not allowed to use this function (missing privileges: " .. table.concat(missing_privs, ", ") .. ")", "error")
 				return false
 			end
 			if entry.on_select then

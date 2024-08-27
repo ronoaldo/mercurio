@@ -31,7 +31,7 @@ function register_door(name, def)
 		inventory_image = def.inventory_image,
 
 		on_place = function(itemstack, placer, pointed_thing)
-			if not pointed_thing.type == "node" then
+			if pointed_thing.type ~= "node" then
 				return itemstack
 			end
 
@@ -132,7 +132,7 @@ function register_door(name, def)
 		end
 
 		pos.y = pos.y + dir
-		if not minetest.get_node(pos).name == check_name then
+		if minetest.get_node(pos).name ~= check_name then
 			return false
 		end
 		if minetest.is_protected(pos, user:get_player_name()) then

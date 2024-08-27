@@ -4,37 +4,25 @@
 	http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/1288375-food-plus-mod-more-food-than-you-can-imagine-v2-9)
 ]]
 
-local S = farming.translate
+local S = minetest.get_translator("farming")
 
--- tomato
+-- item/seed
+
 minetest.register_craftitem("farming:tomato", {
 	description = S("Tomato"),
 	inventory_image = "farming_tomato.png",
-	groups = {compostability = 45, seed = 2, food_tomato = 1, flammable = 2},
+	groups = {compostability = 45, seed = 2, food_tomato = 1},
+	on_use = minetest.item_eat(4),
+
 	on_place = function(itemstack, placer, pointed_thing)
 		return farming.place_seed(itemstack, placer, pointed_thing, "farming:tomato_1")
-	end,
-	on_use = minetest.item_eat(4)
+	end
 })
 
--- tomato soup
-minetest.register_craftitem("farming:tomato_soup", {
-	description = S("Tomato Soup"),
-	inventory_image = "farming_tomato_soup.png",
-	groups = {flammable = 2, compostability = 65},
-	on_use = minetest.item_eat(8, "farming:bowl")
-})
+farming.add_eatable("farming:tomato", 4)
 
-minetest.register_craft({
-	output = "farming:tomato_soup",
-	recipe = {
-		{"group:food_tomato"},
-		{"group:food_tomato"},
-		{"group:food_bowl"}
-	}
-})
+-- crop definition
 
--- tomato definition
 local def = {
 	drawtype = "plantlike",
 	tiles = {"farming_tomato_1.png"},
@@ -49,33 +37,42 @@ local def = {
 		handy = 1, snappy = 3, flammable = 2, plant = 1, attached_node = 1,
 		not_in_creative_inventory = 1, growing = 1
 	},
-	sounds = farming.sounds.node_sound_leaves_defaults()
+	_mcl_hardness = farming.mcl_hardness,
+	is_ground_content = false,
+	sounds = farming.node_sound_leaves_defaults()
 }
 
 -- stage 1
+
 minetest.register_node("farming:tomato_1", table.copy(def))
 
 -- stage2
+
 def.tiles = {"farming_tomato_2.png"}
 minetest.register_node("farming:tomato_2", table.copy(def))
 
 -- stage 3
+
 def.tiles = {"farming_tomato_3.png"}
 minetest.register_node("farming:tomato_3", table.copy(def))
 
 -- stage 4
+
 def.tiles = {"farming_tomato_4.png"}
 minetest.register_node("farming:tomato_4", table.copy(def))
 
 -- stage 5
+
 def.tiles = {"farming_tomato_5.png"}
 minetest.register_node("farming:tomato_5", table.copy(def))
 
 -- stage 6
+
 def.tiles = {"farming_tomato_6.png"}
 minetest.register_node("farming:tomato_6", table.copy(def))
 
 -- stage 7
+
 def.tiles = {"farming_tomato_7.png"}
 def.drop = {
 	items = {
@@ -86,6 +83,7 @@ def.drop = {
 minetest.register_node("farming:tomato_7", table.copy(def))
 
 -- stage 8 (final)
+
 def.tiles = {"farming_tomato_8.png"}
 def.groups.growing = nil
 def.selection_box = farming.select_final
@@ -99,6 +97,7 @@ def.drop = {
 minetest.register_node("farming:tomato_8", table.copy(def))
 
 -- add to registered_plants
+
 farming.registered_plants["farming:tomato"] = {
 	crop = "farming:tomato",
 	seed = "farming:tomato",
@@ -108,6 +107,7 @@ farming.registered_plants["farming:tomato"] = {
 }
 
 -- mapgen
+
 minetest.register_decoration({
 	deco_type = "simple",
 	place_on = {"default:dirt_with_grass", "mcl_core:dirt_with_grass"},

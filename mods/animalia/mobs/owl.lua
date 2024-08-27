@@ -95,68 +95,11 @@ creatura.register_mob("animalia:owl", {
 	wander_action = creatura.action_move,
 
 	utility_stack = {
-		{
-			utility = "animalia:aerial_wander",
-			--step_delay = 0.25,
-			get_score = function(self)
-				if not self.is_landed
-				or self.in_liquid then
-					return 0.1, {self}
-				end
-				return 0
-			end
-		},
-		{
-			utility = "animalia:fly_to_roost",
-			get_score = function(self)
-				local pos = self.object:get_pos()
-				if not pos then return end
-				local player = creatura.get_nearby_player(self)
-				local plyr_pos = player and player:get_pos()
-				if plyr_pos then
-					local dist = vector.distance(pos, plyr_pos)
-					if dist < 3 then
-						return 0
-					end
-				end
-				local home = animalia.is_day and self.home_position
-				if home
-				and vec_dist(pos, home) < 8 then
-					return 0.2, {self}
-				end
-				return 0
-			end
-		},
-		{
-			utility = "animalia:fly_to_food",
-			get_score = function(self)
-				local cooldown = self.eat_cooldown or 0
-				if cooldown > 0 then
-					self.eat_cooldown = cooldown - 1
-					return 0
-				end
-				local food_item = animalia.get_dropped_food(self, "animalia:rat_raw")
-				if food_item then
-					return 0.3, {self, food_item}
-				end
-				return 0
-			end
-		},
-		{
-			utility = "animalia:raptor_hunt",
-			get_score = function(self)
-				if math.random(12) > 1
-				and (self:get_utility() or "") ~= "animalia:raptor_hunt" then
-					return 0
-				end
-				local target = self._target or creatura.get_nearby_object(self, {"animalia:rat", "animalia:song_bird"})
-				local tgt_pos = target and target:get_pos()
-				if tgt_pos then
-					return 0.4, {self, target}
-				end
-				return 0
-			end
-		},
+		animalia.mob_ai.fly_wander,
+		animalia.mob_ai.swim_seek_land,
+		animalia.mob_ai.bat_seek_home,
+		animalia.mob_ai.fly_seek_food,
+		animalia.mob_ai.eagle_attack
 	},
 
 	activate_func = function(self)

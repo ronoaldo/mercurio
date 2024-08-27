@@ -23,7 +23,7 @@ jobs:
           submodules: true
 
       - name: Build docker image
-        run: docker-compose build
+        run: docker compose build
       
       - name: Run tests and export mods
         run: make test

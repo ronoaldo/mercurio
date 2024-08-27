@@ -18,7 +18,8 @@ minetest.register_node("home_workshop_misc:tool_cabinet", {
 	paramtype2="facedir",
 	inventory_image = "home_workshop_misc_tool_cabinet_inv.png",
 	on_rotate = minetest.get_modpath("screwdriver") and screwdriver.rotate_simple or nil,
-	groups = { snappy=3 },
+	groups = { snappy=3, dig_tree=2 },
+	is_ground_content = false,
 	expand = { top="placeholder" },
 	inventory = {
 		size=24,
@@ -36,7 +37,8 @@ minetest.register_node("home_workshop_misc:beer_tap", {
 	inventory_image = "home_workshop_misc_beertap_inv.png",
 	paramtype = "light",
 	paramtype2 = "facedir",
-	groups = { snappy=3 },
+	groups = { snappy=3, dig_tree=2 },
+	is_ground_content = false,
 	walkable = false,
 	selection_box = {
 		type = "fixed",
@@ -76,8 +78,9 @@ minetest.register_node("home_workshop_misc:beer_mug", {
 	paramtype = "light",
 	paramtype2 = "facedir",
 	groups = { snappy=3, oddly_breakable_by_hand=3 },
+	is_ground_content = false,
 	walkable = false,
-	sounds = default and default.node_sound_glass_defaults() or nil,
+	sounds = xcompat.sounds.node_sound_glass_defaults(),
 	selection_box = beer_cbox,
 	on_use = function(itemstack, user, pointed_thing)
 		if not minetest.is_creative_enabled(user:get_player_name()) then
@@ -97,7 +100,7 @@ else
 end
 
 local MODPATH = minetest.get_modpath("home_workshop_misc")
-if minetest.get_modpath("default") and minetest.get_modpath("basic_materials") then
+if minetest.get_modpath("basic_materials") then
 	dofile(MODPATH.."/crafts.lua")
 end
 

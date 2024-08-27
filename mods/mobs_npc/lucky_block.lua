@@ -1,3 +1,6 @@
+
+-- add lucky blocks
+
 lucky_block:add_blocks({
 	{"spw", "mobs:npc", 1, true, true},
 	{"spw", "mobs:igor", 1, true, true, 5, "Igor"},

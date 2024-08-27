@@ -32,6 +32,10 @@ function ju52.register_parts_method(self)
     self.wheels = wheels
     airutils.add_paintable_part(self, self.wheels)
 
+    local cabin = minetest.add_entity(pos,'ju52:cabin_interactor')
+    cabin:set_attach(self.object,'',{x=0,y=0,z=40},{x=0,y=0,z=0})
+    self.cabin = cabin
+
     self.object:set_bone_position("aileron_base_r", {x=93.7994, y=3.35, z=-15.3002}, {x=180, y=-7.45, z=5.3})
     self.object:set_bone_position("aileron_base_l", {x=-93.7994, y=3.35, z=-15.3002}, {x=180, y=7.54, z=-5.3})
 
@@ -43,6 +47,7 @@ end
 
 function ju52.destroy_parts_method(self)
     if self.wheels then self.wheels:remove() end
+    if self.cabin then self.cabin:remove() end
 
     local pos = self.object:get_pos()
 end
@@ -104,9 +109,9 @@ end
 ju52.plane_properties = {
 	initial_properties = {
 	    physical = true,
-        collide_with_objects = false,
-	    collisionbox = {-5, -2.31, -5, 5, 1, 5},
-	    selectionbox = {-5, -2.31, -5, 5, 1, 5},
+        collide_with_objects = true,
+	    collisionbox = {-4, -2.31, -4, 4, 1, 4},
+	    selectionbox = {-2, -2.31, -2, 2, 1, 2},
 	    visual = "mesh",
         backface_culling = false,
 	    mesh = "ju52_body.b3d",

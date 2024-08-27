@@ -1,0 +1,18 @@
+# textdomain: carpets
+
+##[ init.lua ]##
+Black carpet=Alfombra negra
+Blue carpet=Alfombra azul
+Brown carpet=Alfombra marrón
+Cyan carpet=Alfombra cian
+Dark green carpet=Alfombra verde oscuro
+Dark grey carpet=Alfombra gris oscuro
+Green carpet=Alfombra verde
+Grey carpet=Alfombra gris
+Magenta carpet=Alfombra magenta
+Orange carpet=Alfombra naranja
+Pink carpet=Alfombra rosa
+Red carpet=Alfombra roja
+Violet carpet=Alfombra violeta
+White carpet=Alfombra blanca
+Yellow carpet=Alfombra amarilla

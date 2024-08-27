@@ -10,9 +10,9 @@ local nest_spawning = minetest.settings:get("nest_spawning") or true
 
 local cavern_spawning = minetest.settings:get("cavern_spawning") or false
 
-local nest_spawn_rate = tonumber(minetest.settings:get("nest_spawn_rate")) or 64
+local nest_spawn_rate = tonumber(minetest.settings:get("nest_spawn_rate")) or 128
 
-local cavern_spawn_rate = tonumber(minetest.settings:get("cavern_spawn_rate")) or 64
+local cavern_spawn_rate = tonumber(minetest.settings:get("cavern_spawn_rate")) or 128
 
 ---------------------
 -- Local Variables --
@@ -95,7 +95,7 @@ end
 
 -- Nests --
 
-local function generate_fire_dragon_nest(minp, maxp, vm, area, data)
+local function generate_fire_dragon_nest(minp, maxp, area, data)
 	local gender = "male"
 
 	if random(2) < 2 then
@@ -220,7 +220,7 @@ local function generate_fire_dragon_nest(minp, maxp, vm, area, data)
 	end)
 end
 
-local function generate_ice_dragon_nest(minp, maxp, vm, area, data)
+local function generate_ice_dragon_nest(minp, maxp, area, data)
 	local gender = "male"
 
 	if random(2) < 2 then
@@ -347,7 +347,7 @@ end
 
 -- Nests --
 
-local function generate_fire_dragon_cavern(minp, maxp, vm, area, data)
+local function generate_fire_dragon_cavern(minp, maxp, area, data)
 	local gender = "male"
 
 	if random(2) < 2 then
@@ -439,7 +439,7 @@ local function generate_fire_dragon_cavern(minp, maxp, vm, area, data)
 	end)
 end
 
-local function generate_ice_dragon_cavern(minp, maxp, vm, area, data)
+local function generate_ice_dragon_cavern(minp, maxp, area, data)
 	local gender = "male"
 
 	if random(2) < 2 then
@@ -604,14 +604,14 @@ minetest.register_on_generated(function(minp, maxp)
 			end
 
 			if is_cold_biome(pos) then
-				generate_ice_dragon_nest(minp, maxp, vm, area, data)
+				generate_ice_dragon_nest(minp, maxp, area, data)
 				vm:set_data(data)
 				vm:set_lighting({day = 0, night = 0})
 				vm:calc_lighting()
 				vm:update_liquids()
 				vm:write_to_map()
 			elseif is_warm_biome(pos) then
-				generate_fire_dragon_nest(minp, maxp, vm, area, data)
+				generate_fire_dragon_nest(minp, maxp, area, data)
 				vm:set_data(data)
 				vm:set_lighting({day = 0, night = 0})
 				vm:calc_lighting()
@@ -623,14 +623,14 @@ minetest.register_on_generated(function(minp, maxp)
 	and random(cavern_spawn_rate) < 2
 	and max_y < 0 then
 		if is_cold_biome(pos) then
-			generate_ice_dragon_cavern(minp, maxp, vm, area, data)
+			generate_ice_dragon_cavern(minp, maxp, area, data)
 			vm:set_data(data)
 			vm:set_lighting({day = 0, night = 0})
 			vm:calc_lighting()
 			vm:update_liquids()
 			vm:write_to_map()
 		elseif is_warm_biome(pos) then
-			generate_fire_dragon_cavern(minp, maxp, vm, area, data)
+			generate_fire_dragon_cavern(minp, maxp, area, data)
 			vm:set_data(data)
 			vm:set_lighting({day = 0, night = 0})
 			vm:calc_lighting()

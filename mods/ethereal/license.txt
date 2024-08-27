@@ -22,6 +22,9 @@ THE SOFTWARE.
 
 Textures by TenPlus1 (CC0) unless listed below...
 
+Based on pilzmod_giant_mushroom_brown_side.png (CC BY-SA 3.0) by Phseiff
+  ethereal_mushroom_block_brown.png
+
 Based on default_leaves.png (Attribution-ShareAlike 3.0 Unported (CC BY-SA 3.0)
   ethereal_frost_leaves.png [edited by TenPlus1]
   ethereal_yellow_leaves.png [edited by TenPlus1]

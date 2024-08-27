@@ -43,7 +43,8 @@ for _, clay in pairs(clay) do
 		description = clay[2] .. " " .. S("Baked Clay"),
 		tiles = {"baked_clay_" .. clay[1] ..".png"},
 		groups = {cracky = 3, bakedclay = 1},
-		sounds = default.node_sound_stone_defaults()
+		sounds = default.node_sound_stone_defaults(),
+		is_ground_content = false
 	})
 
 	-- register craft recipe
@@ -141,6 +142,7 @@ for _, clay in pairs(clay) do
 			paramtype2 = "facedir",
 			groups = {cracky = 3, terracotta = 1},
 			sounds = default.node_sound_stone_defaults(),
+			is_ground_content = false,
 			on_place = minetest.rotate_node
 		})
 

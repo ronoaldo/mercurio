@@ -34,10 +34,12 @@ local generate_mobs = {
 	["animalia:cat"] = "Cat",
 	["animalia:chicken"] = "Chicken",
 	["animalia:cow"] = "Cow",
+	["animalia:opossum"] = "Opossum",
 	["animalia:owl"] = "Owl",
 	["animalia:tropical_fish"] = "Tropical Fish",
 	["animalia:fox"] = "Fox",
 	["animalia:frog"] = "Frog",
+	["animalia:grizzly_bear"] = "Grizzly Bear",
 	["animalia:horse"] = "Horse",
 	["animalia:pig"] = "Pig",
 	["animalia:rat"] = "Rat",
@@ -54,10 +56,12 @@ local spawn_biomes = {
 	["animalia:cat"] = "urban",
 	["animalia:chicken"] = "tropical",
 	["animalia:cow"] = "grassland",
+	["animalia:opossum"] = "temperate",
 	["animalia:owl"] = "temperate",
 	["animalia:tropical_fish"] = "ocean",
 	["animalia:fox"] = "boreal",
 	["animalia:frog"] = "swamp",
+	["animalia:grizzly_bear"] = "boreal",
 	["animalia:horse"] = "grassland",
 	["animalia:pig"] = "temperate",
 	["animalia:rat"] = "urban",
@@ -109,6 +113,7 @@ local biome_cubes = {}
 local function generate_page(mob)
 	local name = mob:split(":")[2]
 	local def = minetest.registered_entities[mob]
+	if not def then return end
 	local page = {
 		{ -- Info
 			element_type = "label",
@@ -447,6 +452,8 @@ minetest.register_craftitem("animalia:libri_animalia", {
 	description = "Libri Animalia",
 	inventory_image = "animalia_libri_animalia.png",
 	stack_max = 1,
+	groups = {book = 1},
+
 	on_place = function(itemstack, player)
 		local meta = itemstack:get_meta()
 		if meta:get_string("pages") ~= "" then meta:set_string("pages", "") end

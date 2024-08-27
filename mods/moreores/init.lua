@@ -33,12 +33,15 @@ local stone_ingredient = is_mcl_core_present and "mcl_core:stone" or "default:st
 local copper_ingredient =
 is_mcl_core_present and "mcl_copper:copper_ingot" or 'default:copper_ingot'
 
+local default_stone_sounds
+local default_metal_sounds
+
 if is_mcl_sounds_present then
-local default_stone_sounds = mcl_sounds.node_sound_stone_defaults()
-local default_metal_sounds = mcl_sounds.node_sound_metal_defaults()
+	default_stone_sounds = mcl_sounds.node_sound_stone_defaults()
+	default_metal_sounds = mcl_sounds.node_sound_metal_defaults()
 else
-local default_stone_sounds = default.node_sound_stone_defaults()
-local default_metal_sounds = default.node_sound_metal_defaults()
+	default_stone_sounds = default.node_sound_stone_defaults()
+	default_metal_sounds = default.node_sound_metal_defaults()
 end
 
 
@@ -146,6 +149,7 @@ local function add_ore(modname, description, mineral_name, oredef, extra_node_de
 			description = S("@1 Block", S(description)),
 			tiles = {img_base .. "_block.png"},
 			groups = {snappy = 1, bendy = 2, cracky = 1, melty = 2, level = 2},
+			is_ground_content = false,
 			sounds = default_metal_sounds,
 		})
 		minetest.register_alias(mineral_name.."_block", block_item)

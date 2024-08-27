@@ -1,0 +1,18 @@
+# textdomain: carpets
+
+##[ init.lua ]##
+Black carpet=Fekete szőnyeg
+Blue carpet=Kék szőnyeg
+Brown carpet=Barna szőnyeg
+Cyan carpet=Égszínkék szőnyeg
+Dark green carpet=Sötétzöld szőnyeg
+Dark grey carpet=Sötétszürke szőnyeg
+Green carpet=Zöld szőnyeg
+Grey carpet=Szürke szőnyeg
+Magenta carpet=Magenta szőnyeg
+Orange carpet=Narancs szőnyeg
+Pink carpet=Rózsaszín szőnyeg
+Red carpet=Piros szőnyeg
+Violet carpet=Lila szőnyeg
+White carpet=Fehér szőnyeg
+Yellow carpet=Sárga szőnyeg

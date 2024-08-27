@@ -8,3 +8,4 @@ mobs_animal.penguin (Enable Penguin) bool true
 mobs_animal.rat (Enable Rat) bool true
 mobs_animal.sheep (Enable Sheep) bool true
 mobs_animal.warthog (Enable Warthog) bool true
+mobs_animal.hairball (Enable Kitten Hairball drops) bool true

@@ -1,5 +1,5 @@
 #    Size of protected area around protection node limiting player interaction
-protector_radius (Protector Radius [max 22]) int 5
+protector_radius (Protector Radius [max 30]) int 5
 
 #    Flips player around when accessing protected area to stop lag griefing
 protector_flip (Protector Flip) bool false

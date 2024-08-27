@@ -49,23 +49,7 @@ mobs:register_mob("dmobs:fox", {
 		run_end = 16,
 		punch_start = 36,
 		punch_end = 51
-	},
-
-	on_activate = function(self)
-
-		if math.random(5) == 1 then
-			self.type = "animal"
-		end
-	end,
-
-	on_rightclick = function(self, clicker)
-
-		if mobs:feed_tame(self, clicker, 8, true, true) then
-			return
-		end
-
-		mobs:capture_mob(self, clicker, 0, 5, 50, false, nil)
-	end
+	}
 })
 
 

@@ -59,13 +59,13 @@ mtt.register("error handling", function(callback)
 end)
 
 mtt.register("error handling 2", function(callback)
-    -- return rejected promise in resolved function
-    Promise.resolved(100):next(function(v)
-        assert(v == 100)
-        return Promise.rejected("nope")
-    end):next(function()
-        error("should not end up here")
-    end):catch(function(err)
+    Promise.rejected("nope"):catch(function(err)
+        -- "nope"
+        assert(err)
+    end)
+
+    Promise.rejected("nope"):next(function() end):catch(function(err)
+        -- "/home/user/.minetest/mods/promise/promise.lua:13: nope"
         assert(err)
         callback()
     end)
@@ -99,6 +99,26 @@ mtt.register("Promise.race", function(callback)
 
     Promise.race(p1, p2):next(function(v)
         assert(v == 5)
+        callback()
+    end)
+end)
+
+mtt.register("Promise control logic", function(callback)
+    Promise.new(function(resolve)
+        resolve(math.random())
+    end):next(function(r)
+        if r < 0.5 then
+            -- branch 1
+            return Promise.new(function(resolve)
+                resolve(math.random())
+            end)
+        else
+            -- branch 2
+            return Promise.new(function(resolve)
+                resolve(math.random())
+            end)
+        end
+    end):next(function()
         callback()
     end)
 end)

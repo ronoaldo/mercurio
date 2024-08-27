@@ -64,6 +64,8 @@ worldedit.cuboid_shift = function(name, axis, amount)
 		return false, "undefined cuboid"
 	end
 
+	assert(not rawequal(pos1, pos2)) -- vectors must not alias
+
 	if axis == 'x' then
 		worldedit.pos1[name].x = pos1.x + amount
 		worldedit.pos2[name].x = pos2.x + amount
@@ -134,7 +136,8 @@ end
 
 -- Return the marker that is closest to the player
 worldedit.marker_get_closest_to_player = function(name)
-	local playerpos = minetest.get_player_by_name(name):get_pos()
+	local player = assert(minetest.get_player_by_name(name))
+	local playerpos = player:get_pos()
 	local dist1 = vector.distance(playerpos, worldedit.pos1[name])
 	local dist2 = vector.distance(playerpos, worldedit.pos2[name])
 

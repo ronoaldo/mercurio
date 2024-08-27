@@ -25,7 +25,4 @@ required:
 
 * [Unifieddyes](https://github.com/mt-mods/unifieddyes)
 * [Basic Materials](https://github.com/mt-mods/basic_materials)
-
-optional:
-
-* [Sound Api](https://github.com/mt-mods/sound_api) - note: needed for sound support
+* [xcompat](https://github.com/mt-mods/xcompat)

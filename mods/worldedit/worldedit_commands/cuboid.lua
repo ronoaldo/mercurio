@@ -3,6 +3,7 @@ local S = minetest.get_translator("worldedit_commands")
 worldedit.register_command("outset", {
 	params = "[h/v] <amount>",
 	description = S("Outset the selected region."),
+	category = S("Region operations"),
 	privs = {worldedit=true},
 	require_pos = 2,
 	parse = function(param)
@@ -42,6 +43,7 @@ worldedit.register_command("outset", {
 worldedit.register_command("inset", {
 	params = "[h/v] <amount>",
 	description = S("Inset the selected region."),
+	category = S("Region operations"),
 	privs = {worldedit=true},
 	require_pos = 2,
 	parse = function(param)
@@ -79,6 +81,7 @@ worldedit.register_command("inset", {
 worldedit.register_command("shift", {
 	params = "x/y/z/?/up/down/left/right/front/back [+/-]<amount>",
 	description = S("Shifts the selection area without moving its contents"),
+	category = S("Region operations"),
 	privs = {worldedit=true},
 	require_pos = 2,
 	parse = function(param)
@@ -114,6 +117,7 @@ worldedit.register_command("shift", {
 worldedit.register_command("expand", {
 	params = "[+/-]x/y/z/?/up/down/left/right/front/back <amount> [reverse amount]",
 	description = S("Expands the selection in the selected absolute or relative axis"),
+	category = S("Region operations"),
 	privs = {worldedit=true},
 	require_pos = 2,
 	parse = function(param)
@@ -163,6 +167,7 @@ worldedit.register_command("expand", {
 worldedit.register_command("contract", {
 	params = "[+/-]x/y/z/?/up/down/left/right/front/back <amount> [reverse amount]",
 	description = S("Contracts the selection in the selected absolute or relative axis"),
+	category = S("Region operations"),
 	privs = {worldedit=true},
 	require_pos = 2,
 	parse = function(param)
@@ -232,7 +237,8 @@ worldedit.register_command("cubeapply", {
 		end
 		local cmddef = worldedit.registered_commands[cmd]
 		if cmddef == nil or cmddef.require_pos ~= 2 then
-			return false, S("invalid usage: //@1 cannot be used with cubeapply", cmd)
+			return false, S("invalid usage: @1 cannot be used with cubeapply",
+				minetest.colorize("#00ffff", "//"..cmd))
 		end
 		-- run parsing of target command
 		local parsed = {cmddef.parse(args)}
@@ -243,14 +249,14 @@ worldedit.register_command("cubeapply", {
 	end,
 	nodes_needed = function(name, sidex, sidey, sidez, cmd, parsed)
 		-- its not possible to defer to the target command at this point
+		-- FIXME: why not?
 		return sidex * sidey * sidez
 	end,
 	func = function(name, sidex, sidey, sidez, cmd, parsed)
 		local cmddef = assert(worldedit.registered_commands[cmd])
 		local success, missing_privs = minetest.check_player_privs(name, cmddef.privs)
 		if not success then
-			worldedit.player_notify(name, S("Missing privileges: @1", table.concat(missing_privs, ", ")))
-			return
+			return false, S("Missing privileges: @1", table.concat(missing_privs, ", "))
 		end
 
 		-- update region to be the cuboid the user wanted

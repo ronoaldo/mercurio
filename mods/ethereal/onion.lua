@@ -1,13 +1,13 @@
 
-local S = ethereal.translate
-
+local S = minetest.get_translator("ethereal")
 
 -- wild onion
+
 minetest.register_craftitem("ethereal:wild_onion_plant", {
 	description = S("Wild Onion"),
 	inventory_image = "ethereal_wild_onion.png",
 	wield_image = "ethereal_wild_onion.png",
-	groups = {food_onion = 1, flammable = 2},
+	groups = {food_onion = 1},
 	on_use = minetest.item_eat(2),
 
 	on_place = function(itemstack, placer, pointed_thing)
@@ -15,8 +15,10 @@ minetest.register_craftitem("ethereal:wild_onion_plant", {
 	end
 })
 
+ethereal.add_eatable("ethereal:wild_onion_plant", 2)
 
--- Define Onion growth stages
+-- Onion definition
+
 local def = {
 	drawtype = "plantlike",
 	tiles = {"ethereal_wild_onion_1.png"},
@@ -26,8 +28,7 @@ local def = {
 	buildable_to = true,
 	drop = "",
 	selection_box = {
-		type = "fixed",
-		fixed = {-0.5, -0.5, -0.5, 0.5, -5/16, 0.5}
+		type = "fixed", fixed = {-0.5, -0.5, -0.5, 0.5, -5/16, 0.5}
 	},
 	groups = {
 		snappy = 3, flammable = 2, plant = 1, attached_node = 1,
@@ -36,19 +37,22 @@ local def = {
 	sounds = default.node_sound_leaves_defaults()
 }
 
-
 --stage 1
+
 minetest.register_node("ethereal:onion_1", table.copy(def))
 
 --stage 2
+
 def.tiles = {"ethereal_wild_onion_2.png"}
 minetest.register_node("ethereal:onion_2", table.copy(def))
 
 --stage 3
+
 def.tiles = {"ethereal_wild_onion_3.png"}
 minetest.register_node("ethereal:onion_3", table.copy(def))
 
 --stage 4
+
 def.tiles = {"ethereal_wild_onion_4.png"}
 def.drop = {
 	items = {
@@ -59,11 +63,11 @@ def.drop = {
 minetest.register_node("ethereal:onion_4", table.copy(def))
 
 --stage 5
+
 def.tiles = {"ethereal_wild_onion_5.png"}
 def.groups.growing = nil
 def.selection_box = {
-	type = "fixed",
-	fixed = {-0.5, -0.5, -0.5, 0.5, -2.5/16, 0.5}
+	type = "fixed", fixed = {-0.5, -0.5, -0.5, 0.5, -2.5/16, 0.5}
 }
 def.drop = {
 	items = {
@@ -73,8 +77,8 @@ def.drop = {
 }
 minetest.register_node("ethereal:onion_5", table.copy(def))
 
+-- register for use with farming redo growth routines
 
--- growing routine if farming redo isn't present
 if farming and farming.mod and farming.mod == "redo" then
 
 	-- add to registered_plants
@@ -85,9 +89,7 @@ if farming and farming.mod and farming.mod == "redo" then
 		maxlight = farming.max_light,
 		steps = 5
 	}
-
 else
-
 	minetest.register_abm({
 		label = "Ethereal grow onion",
 		nodenames = {
@@ -111,11 +113,9 @@ else
 			pos.y = pos.y + 1
 
 			-- do we have enough light?
-			local light = minetest.get_node_light(pos)
+			local light = minetest.get_node_light(pos) or 0
 
-			if not light or light < 13 then
-				return
-			end
+			if light < 13 then return end
 
 			-- grow to next stage
 			local num = node.name:split("_")[2]

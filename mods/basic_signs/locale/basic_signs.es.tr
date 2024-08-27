@@ -1,14 +1,14 @@
 # textdomain: basic_signs
-Locked Sign=Letrero bloqueada
-Glass Sign=
-Obsidian Glass Sign=
-Plastic Sign=
+Locked Sign=Cartel privado
+Glass Sign=Cartel de vidrio
+Obsidian Glass Sign=Cartel de obsidiana
+Plastic Sign=Cartel de plástico
 green=verde
 yellow=amarillo
 red=rojo
-white_red=rojo y blanco
-white_black=negro y blanco
+white_red=blanco y rojo
+white_black=blanco y negro
 orange=naranja
 blue=azul
 brown=marrón
-Sign (@1, steel)=
+Sign (@1, steel)=Cartel (@1, acero)

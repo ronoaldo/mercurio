@@ -1,40 +1,9 @@
 
-local S = ethereal.translate
-
-
--- Blue Marble Nodes
-minetest.register_node("ethereal:blue_marble", {
-	description = S("Blue Marble"),
-	tiles = {"ethereal_blue_marble.png"},
-	groups = {cracky = 1, stone = 1},
-	sounds = default.node_sound_stone_defaults()
-})
-
-minetest.register_node("ethereal:blue_marble_tile", {
-	description = S("Blue Marble Tile"),
-	tiles = {"ethereal_blue_marble_tile.png"},
-	groups = {cracky = 1, stone = 1},
-	sounds = default.node_sound_stone_defaults()
-})
-
-minetest.register_craft({
-	output = "ethereal:blue_marble_tile 9",
-	recipe = {
-		{"ethereal:blue_marble", "ethereal:blue_marble", "ethereal:blue_marble"},
-		{"ethereal:blue_marble", "ethereal:blue_marble", "ethereal:blue_marble"},
-		{"ethereal:blue_marble", "ethereal:blue_marble", "ethereal:blue_marble"}
-	}
-})
-
-
--- helper strings
-local tmp, tmp2
-
 -- helper function
-local add_biome = function(a, l, m, n, o, p, b, c, d, e, f, g, nd, na, ns)
 
-	-- if not 1 then biome disabled, don't add
-	if p ~= 1 then return end
+local function add_biome(a, l, m, n, o, p, b, c, d, e, f, g, nd, na, ns)
+
+	if p ~= 1 then return end -- if not 1 then biome disabled
 
 	minetest.register_biome({
 		name = a,
@@ -59,8 +28,8 @@ local add_biome = function(a, l, m, n, o, p, b, c, d, e, f, g, nd, na, ns)
 	})
 end
 
-
 -- always registered biomes
+
 add_biome("mountain", 140, 31000, 50, 50, 1,
 	nil, "default:snow", 1, "default:snowblock", 2)
 
@@ -85,19 +54,18 @@ minetest.register_biome({
 --add_biome("underground", -31000, -192, 50, 50, 1,
 --	nil, nil, nil, nil, nil)
 
-
 -- biomes with disable setting
-tmp = "default:desert_stone"
 
 add_biome("desert", 3, 23, 35, 20, ethereal.desert,
-	nil, "default:desert_sand", 1, "default:desert_sand", 3, tmp,
+	nil, "default:desert_sand", 1, "default:desert_sand", 3, "default:desert_stone",
 	"default:desert_stone", nil, "stairs:stair_desert_stone")
 
 add_biome("desert_ocean", -192, 3, 35, 20, ethereal.desert,
-	nil, "default:sand", 1, "default:sand", 2, tmp,
+	nil, "default:sand", 1, "default:sand", 2, "default:desert_stone",
 	"default:desert_stone", nil, "stairs:stair_desert_stone")
 
 if ethereal.desert then
+
 	minetest.register_biome({
 		name = "desert_under",
 		node_cave_liquid = {"default:water_source", "default:lava_source"},
@@ -127,21 +95,15 @@ add_biome("mesa", 1, 71, 25, 28, ethereal.mesa,
 add_biome("mesa_ocean", -192, 2, 25, 28, ethereal.mesa,
 	nil, "default:sand", 1, "default:sand", 2)
 
-
-tmp = "default:dirt_with_coniferous_litter"
-
-if not minetest.registered_nodes[tmp] then
-	tmp = "ethereal:cold_dirt"
-end
-
 -- was 'snowy' biome
 add_biome("coniferous_forest", 5, 40, 10, 40, ethereal.snowy,
-	nil, tmp, 1, "default:dirt", 2)
+	nil, "default:dirt_with_coniferous_litter", 1, "default:dirt", 2)
 
 add_biome("coniferous_forest_ocean", -192, 1, 10, 40, (ethereal.snowy or ethereal.frost),
 	nil, "default:silver_sand", 1, "default:sand", 2)
 
 if ethereal.snowy then
+
 	minetest.register_biome({
 		name = "coniferous_forest_under",
 		node_cave_liquid = {"default:water_source", "default:lava_source"},
@@ -159,6 +121,7 @@ add_biome("taiga", 40, 140, 10, 40, ethereal.alpine,
 	nil, "default:dirt_with_snow", 1, "default:dirt", 2)
 
 if ethereal.alpine then
+
 	minetest.register_biome({
 		name = "taiga_under",
 		node_cave_liquid = {"default:water_source", "default:lava_source"},
@@ -186,6 +149,7 @@ add_biome("deciduous_forest_ocean", -31000, 3, 13, 40, ethereal.grassy,
 	nil, "default:sand", 2, "default:gravel", 1)
 
 if ethereal.grassy then
+
 	minetest.register_biome({
 		name = "deciduous_forest_under",
 		node_cave_liquid = {"default:water_source", "default:lava_source"},
@@ -202,20 +166,14 @@ end
 add_biome("caves", 4, 41, 15, 25, ethereal.caves,
 	nil, "default:desert_stone", 3, "air", 8)
 
-
-tmp = "default:silver_sand"
-
-if not minetest.registered_nodes[tmp] then
-	tmp = "default:sand"
-end
-
 add_biome("grayness", 2, 41, 15, 30, ethereal.grayness,
 	nil, "ethereal:gray_dirt", 1, "default:dirt", 3)
 
 add_biome("grayness_ocean", -18, 2, 15, 30, ethereal.grayness,
-	nil, tmp, 2, "default:sand", 2, "ethereal:blue_marble")
+	nil, "default:silver_sand", 2, "default:sand", 2, "ethereal:blue_marble")
 
 if ethereal.grayness then
+
 	minetest.register_biome({
 		name = "grayness_under",
 		node_cave_liquid = {"default:water_source", "default:lava_source"},
@@ -249,19 +207,14 @@ add_biome("jumble", 1, 71, 25, 50, ethereal.jumble,
 add_biome("jumble_ocean", -192, 1, 25, 50, ethereal.jumble,
 	nil, "default:sand", 1, "default:sand", 2)
 
-tmp = "default:dirt_with_rainforest_litter"
-
-if not minetest.registered_nodes[tmp] then
-	tmp = "ethereal:jungle_dirt"
-end
-
 add_biome("junglee", 1, 71, 30, 60, ethereal.junglee,
-	nil, tmp, 1, "default:dirt", 3)
+	nil, "default:dirt_with_rainforest_litter", 1, "default:dirt", 3)
 
 add_biome("junglee_ocean", -192, 2, 30, 60, ethereal.junglee,
 	nil, "default:sand", 1, "default:sand", 2)
 
 if ethereal.junglee then
+
 	minetest.register_biome({
 		name = "junglee_under",
 		node_cave_liquid = {"default:water_source", "default:lava_source"},
@@ -302,6 +255,7 @@ add_biome("sandstone_desert_ocean", -192, 2, 50, 20, ethereal.sandstone,
 	"default:sandstone", nil, "stairs:stair_sandstone")
 
 if ethereal.sandstone then
+
 	minetest.register_biome({
 		name = "sandstone_desert_under",
 		node_cave_liquid = {"default:water_source", "default:lava_source"},
@@ -325,21 +279,14 @@ add_biome("plains", 3, 25, 65, 25, ethereal.plains,
 add_biome("plains_ocean", -192, 2, 55, 25, ethereal.plains,
 	nil, "default:sand", 1, "default:sand", 2)
 
-tmp = "default:dry_dirt_with_dry_grass"
-tmp2 = "default:dry_dirt"
-
-if not minetest.registered_nodes[tmp] then
-	tmp = "default:dirt_with_dry_grass"
-	tmp2 = "default:dirt"
-end
-
 add_biome("savanna", 3, 50, 55, 25, ethereal.savanna,
-	nil, tmp, 1, tmp2, 3)
+	nil, "default:dry_dirt_with_dry_grass", 1, "default:dry_dirt", 3)
 
 add_biome("savanna_ocean", -192, 2, 55, 25, ethereal.savanna,
 	nil, "default:sand", 1, "default:sand", 2)
 
 if ethereal.savanna then
+
 	minetest.register_biome({
 		name = "savanna_under",
 		node_cave_liquid = {"default:water_source", "default:lava_source"},
@@ -363,6 +310,7 @@ add_biome("fiery_ocean", -192, 2, 75, 10, ethereal.fiery,
 	nil, "default:sand", 1, "default:sand", 2)
 
 if ethereal.fiery then
+
 	minetest.register_biome({
 		name = "fiery_under",
 		node_cave_liquid = {"default:lava_source"},
@@ -437,7 +385,7 @@ if ethereal.glacier == 1 then
 end
 
 
-if ethereal.tundra == 1 and minetest.registered_nodes["default:permafrost"] then
+if ethereal.tundra == 1 then
 
 	minetest.register_biome({
 		name = "tundra_highland",

@@ -142,7 +142,7 @@ trike.plane_properties = {
     _enable_fire_explosion = false,
     _longit_drag_factor = 0.13*0.13,
     _later_drag_factor = 2.0,
-    _wing_angle_of_attack = 2.5,
+    _wing_angle_of_attack = 1.5,
     _wing_span = 12, --meters
     _min_speed = 3,
     _max_speed = 7.5,
@@ -163,7 +163,7 @@ trike.plane_properties = {
     _rudder_limit = 30.0,
     _elevator_limit = 40.0,
     _elevator_response_attenuation = 10,
-    _pitch_intensity = 0.8,
+    _pitch_intensity = 0.6,
     _yaw_intensity = 40,
     _yaw_turn_rate = 12,
     _elevator_pos = {x=0, y=0, z=0},

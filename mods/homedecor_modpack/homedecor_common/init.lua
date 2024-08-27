@@ -54,15 +54,13 @@ homedecor.color_dark_grey = 0xff606060
 homedecor.color_med_grey  = 0xffa0a0a0
 
 -- load different handler subsystems
-dofile(modpath.."/textures.lua")
-dofile(modpath.."/materials.lua")
+dofile(modpath.."/xcompat.lua")
 dofile(modpath.."/nodeboxes.lua")
 dofile(modpath.."/expansion.lua")
 dofile(modpath.."/furnaces.lua")
 dofile(modpath.."/inventory.lua")
 dofile(modpath.."/registration.lua")
 dofile(modpath.."/water_particles.lua")
-dofile(modpath.."/sit.lua")
 dofile(modpath.."/crafts.lua")
 
 if minetest.settings:get_bool("log_mod") then

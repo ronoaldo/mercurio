@@ -59,17 +59,6 @@ return function (node_info, fields, player)
 			)
 	end
 
-	-- abort if protected by another mod
-	if minetest.is_protected(pos, player_name)
-		and not minetest.check_player_privs(player_name, { protection_bypass = true })
-	then
-		minetest.record_protection_violation(pos, player_name)
-		return false, S("This @1 belongs to @2. You can't edit it.",
-				description,
-				tostring(owner_name)
-			)
-	end
-
 	local timestamp = os.time()
 	if owner_name ~= fields.owner_name then
 		if not minetest.get_player_privs(player_name)[travelnet.attach_priv]

@@ -1,7 +1,6 @@
 
--- Translation support
+-- translation and mod check
 local S = minetest.get_translator("mobs_npc")
-
 local mcl = minetest.get_modpath("mcl_core") ~= nil
 
 -- define table containing names for use and shop items for sale
@@ -63,7 +62,7 @@ mobs:register_mob("mobs_npc:trader", {
 	passive = false,
 	damage = 3,
 	attack_type = "dogfight",
-	attacks_monsters = true,
+	attack_monsters = true,
 	attack_animals = false,
 	attack_npcs = false,
 	pathfinding = false,
@@ -98,16 +97,11 @@ mobs:register_mob("mobs_npc:trader", {
 	order = "stand",
 	fear_height = 3,
 	animation = {
-		speed_normal = 30,
-		speed_run = 30,
-		stand_start = 0,
-		stand_end = 79,
-		walk_start = 168,
-		walk_end = 187,
-		run_start = 168,
-		run_end = 187,
-		punch_start = 189, --200
-		punch_end = 198 --219
+		speed_normal = 30, speed_run = 30,
+		stand_start = 0, stand_end = 79,
+		walk_start = 168, walk_end = 187,
+		run_start = 168, run_end = 187,
+		punch_start = 189, punch_end = 198 -- was 200 and 219
 	},
 
 	-- stop attacking on right-click and open shop
@@ -127,6 +121,7 @@ mobs:register_mob("mobs_npc:trader", {
 		-- owner can right-click with stick to show control formspec
 		local item = clicker:get_wielded_item()
 		local name = clicker:get_player_name()
+
 		if item:get_name() == (mcl and "mcl_core:stick" or "default:stick")
 		and (self.owner == name or
 		minetest.check_player_privs(clicker, {protection_bypass = true}) )then
@@ -155,19 +150,18 @@ mobs:register_mob("mobs_npc:trader", {
 	end
 })
 
+-- spawn egg
 
--- add spawn egg
 mobs:register_egg("mobs_npc:trader", S("Trader"),
 		mcl and "mcl_core_sandstone_top.png" or "default_sandstone.png", 1)
 
-
--- this is only required for servers that previously used the old mobs mod
+-- compatibility with older mobs mod
 mobs:alias_mob("mobs:trader", "mobs_npc:trader")
 
+-- make global and add functions and list
 
 local trader_lists = {}
 
--- global function to add to list
 mobs_npc.add_trader_list = function(def)
 	table.insert(trader_lists, def)
 end
@@ -188,8 +182,8 @@ mobs_npc.add_trader_list({
 	}
 })
 
-
 -- helper function
+
 local function place_trader(pos, node)
 
 	local face = node.param2
@@ -248,11 +242,11 @@ local function place_trader(pos, node)
 
 	-- pop sound
 	minetest.sound_play("default_place_node_hard", {
-			pos = pos, gain = 1.0, max_hear_distance = 5, pitch = 2.0})
+			pos = pos, gain = 1.0, max_hear_distance = 5, pitch = 2.0}, true)
 end
 
-
 -- trader block (punch to spawn trader)
+
 minetest.register_node(":mobs:trader_block", {
 	description = S("Place this and punch to spawn Trader"),
 	groups = {cracky = 3},
@@ -272,8 +266,8 @@ minetest.register_node(":mobs:trader_block", {
 	on_blast = function() end
 })
 
-
 -- trader block recipe
+
 local db = mcl and "mcl_core:diamondblock" or "default:diamondblock"
 local tb = mcl and "mcl_core:ironblock" or "default:tinblock"
 

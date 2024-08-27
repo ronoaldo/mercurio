@@ -313,6 +313,7 @@ minetest.register_node("computers:tetris_arcade", {
 	paramtype = "light",
 	paramtype2 = "facedir",
 	groups = {snappy=3},
+	is_ground_content = false,
 	on_rotate = minetest.get_modpath("screwdriver") and screwdriver.rotate_simple or nil,
 	selection_box = {
 		type = "fixed",

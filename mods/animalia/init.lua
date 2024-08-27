@@ -64,6 +64,7 @@ end
 animalia.food_wheat = {}
 animalia.food_seeds = {}
 animalia.food_crops = {}
+animalia.food_bear = {}
 
 minetest.register_on_mods_loaded(function()
 	if minetest.get_modpath("farming")
@@ -79,20 +80,31 @@ minetest.register_on_mods_loaded(function()
 		or minetest.get_item_group(name, "food_wheat") > 0)
 		and not name:find("seed") then
 			table.insert(animalia.food_wheat, name)
-			return
 		end
 		if name:match(":seed_")
 		or name:match("_seed") then
 			table.insert(animalia.food_seeds, name)
-			return
+		end
+		if (minetest.get_item_group(name, "food_berry") > 0
+		and not name:find("seed"))
+		or minetest.get_item_group(name, "food_fish") > 0 then
+			table.insert(animalia.food_bear, name)
 		end
 	end
 end)
 
 -- Load Files
 
+local function load_file(filepath, filename)
+    if io.open(filepath .. "/" .. filename, "r") then
+        dofile(filepath .. "/" .. filename)
+    else
+        minetest.log("action", "[Creatura] The file " .. filename .. " could not be loaded.")
+    end
+end
+
 dofile(path.."/api/api.lua")
-dofile(path.."/api/behaviors.lua")
+dofile(path.."/api/mob_ai.lua")
 dofile(path.."/api/lasso.lua")
 dofile(path.."/craftitems.lua")
 
@@ -104,7 +116,9 @@ animalia.animals = {
 	"animalia:cow",
 	"animalia:fox",
 	"animalia:frog",
+	"animalia:grizzly_bear",
 	"animalia:horse",
+	"animalia:opossum",
 	"animalia:owl",
 	"animalia:pig",
 	"animalia:rat",
@@ -115,10 +129,26 @@ animalia.animals = {
 	"animalia:wolf",
 }
 
-for i = 1, #animalia.animals do
-	local name = animalia.animals[i]:split(":")[2]
-	dofile(path.."/mobs/" .. name .. ".lua")
-end
+dofile(path.."/api/api.lua")
+
+load_file(path .. "/mobs", "bat.lua")
+load_file(path .. "/mobs", "bear.lua")
+load_file(path .. "/mobs", "cat.lua")
+load_file(path .. "/mobs", "chicken.lua")
+load_file(path .. "/mobs", "cow.lua")
+load_file(path .. "/mobs", "fox.lua")
+load_file(path .. "/mobs", "frog.lua")
+load_file(path .. "/mobs", "horse.lua")
+load_file(path .. "/mobs", "opossum.lua")
+load_file(path .. "/mobs", "owl.lua")
+load_file(path .. "/mobs", "pig.lua")
+load_file(path .. "/mobs", "rat.lua")
+load_file(path .. "/mobs", "reindeer.lua")
+load_file(path .. "/mobs", "sheep.lua")
+load_file(path .. "/mobs", "song_bird.lua")
+load_file(path .. "/mobs", "turkey.lua")
+load_file(path .. "/mobs", "tropical_fish.lua")
+load_file(path .. "/mobs", "wolf.lua")
 
 if minetest.settings:get_bool("spawn_mobs", true) then
 	dofile(path.."/api/spawning.lua")

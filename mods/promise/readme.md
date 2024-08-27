@@ -11,6 +11,7 @@ promise library for minetest
 Features:
 * Async event handling
 * Utilities for formspec, emerge_area, handle_async, http and minetest.after
+* async/await helpers (js example [here](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/async_function))
 
 # Examples
 
@@ -110,6 +111,10 @@ Returns an already resolved promise with given value
 
 Returns an already rejected promise with given error
 
+## `Promise.empty()`
+
+Returns an already resolved promise with a `nil` value
+
 ## `Promise.all(...)`
 
 Wait for all promises to finish
@@ -140,15 +145,17 @@ Promise.race(p1, p2):next(function(v)
 end)
 ```
 
-## `Promise.after(delay, value, err)`
+**NOTE**: errors don't get propagated when calling `race` only successful results
+
+## `Promise.after(delay, value?, err?)`
 
 Returns a delayed promise that resolves to given value or error
 
-## `Promise.emerge_area(pos1, pos2)`
+## `Promise.emerge_area(pos1, pos2?)`
 
 Emerges the given area and resolves afterwards
 
-## `Promise.formspec(player, formspec, callback)`
+## `Promise.formspec(player, formspec, callback?)`
 
 Formspec shorthand / util
 
@@ -184,7 +191,7 @@ Executes the function `fn` in the async environment with given arguments
 
 **NOTE:** This falls back to a simple function-call if the `minetest.handle_async` function isn't available.
 
-## `Promise.http(http, url, opts)`
+## `Promise.http(http, url, opts?)`
 
 Http query
 
@@ -219,6 +226,21 @@ end):catch(function(res)
 end)
 ```
 
+## `Promise.json(http, url, opts?)`
+
+Helper function for `Promise.http` that parses a json response
+
+Example:
+```lua
+-- call chuck norris api: https://api.chucknorris.io/ and expect json-response
+Promise.json(http, "https://api.chucknorris.io/jokes/random"):next(function(joke)
+    assert(type(joke.value) == "string")
+end, function(err)
+    -- request not successful or response-status not 200
+    print("something went wrong while calling the api: " .. err)
+end)
+```
+
 ## `Promise.mods_loaded()`
 
 Resolved on mods loaded (`minetest.register_on_mods_loaded`)
@@ -229,6 +251,10 @@ Promise.mods_loaded():next(function()
     -- stuff that runs when all mods are loaded
 end)
 ```
+
+## `Promise.on_punch(pos, timeout?)`
+
+Resolves when the node at `pos` is hit or throws an error if the timeout (in seconds, default: 5) is reached.
 
 ## `Promise.dynamic_add_media(options)`
 
@@ -246,8 +272,61 @@ end)
 
 **NOTE**: experimental, only works if the `to_player` property is set
 
+# async/await with `Promise.async`
+
+Similar to [javascripts](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/async_function) implementation async/await can be used in lua too with the help of [coroutines](https://www.lua.org/pil/9.1.html)
+
+Example: fetch a joke with async/await
+```lua
+Promise.async(function(await)
+    local joke = await(Promise.json(http, "https://api.chucknorris.io/jokes/random"))
+    assert(type(joke.value) == "string")
+    -- do stuff here with the joke
+end)
+```
+
+Example: sleep for a few seconds
+```lua
+Promise.async(function(await)
+    await(Promise.after(5))
+    -- 5 seconds passed
+end)
+```
+
+`Promise.async` returns a Promise that can be used with `:next` or `await` in another async function, for example:
+
+```lua
+Promise.async(function(await)
+    local data = await(Promise.json(http, "https://my-api"))
+    return data.value * 200 -- "value" is a number
+end):next(function(n)
+    -- n is the result of the multiplication in the previous function
+end)
+```
+
+Error handling:
+```lua
+Promise.async(function(await)
+    -- second result from await is the error if rejected
+    local data, err = await(Promise.rejected("nope"))
+    assert(err == "nope")
+end)
+```
+
+Error handling with http/json:
+```lua
+Promise.async(function(await)
+    local result, err = await(Promise.json(http, "https://httpbin.org/status/500"))
+    assert(err == "unexpected status-code: 500")
+end)
+```
+
+
 # License
 
 * Code: MIT (adapted from https://github.com/Billiam/promise.lua)
 
+<details>
+
 ![Yo dawg](yo.jpg)
+</details>

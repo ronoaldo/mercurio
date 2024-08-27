@@ -1,20 +1,18 @@
 # textdomain: carpets
 
-
-### init.lua ###
-
-Black Carpet=Tapis noir
-Blue Carpet=Tapis bleu
-Brown Carpet=Tapis marron
-Cyan Carpet=Tapis cyan
-Dark Green Carpet=Tapis vert foncé
-Dark Grey Carpet=Tapis gris foncé
-Green Carpet=Tapis vert
-Grey Carpet=Tapis gris
-Magenta Carpet=Tapis magenta
-Orange Carpet=Tapis orange
-Pink Carpet=Tapis rose
-Red Carpet=Tapis rouge
-Violet Carpet=Tapis violet
-White Carpet=Tapis blanc
-Yellow Carpet=Tapis jaune
+##[ init.lua ]##
+Black carpet=Tapis noir
+Blue carpet=Tapis bleu
+Brown carpet=Tapis marron
+Cyan carpet=Tapis cyan
+Dark green carpet=Tapis vert foncé
+Dark grey carpet=Tapis gris foncé
+Green carpet=Tapis vert
+Grey carpet=Tapis gris
+Magenta carpet=Tapis magenta
+Orange carpet=Tapis orange
+Pink carpet=Tapis rose
+Red carpet=Tapis rouge
+Violet carpet=Tapis violet
+White carpet=Tapis blanc
+Yellow carpet=Tapis jaune

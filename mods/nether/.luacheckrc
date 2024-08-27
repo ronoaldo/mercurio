@@ -27,9 +27,11 @@ read_globals = {
 	"stairsplus",
 	"string.split",
 	table = { fields = { "copy", "getn" } },
+	"toolranks",
 	"vector",
 	"VoxelArea",
 	"VoxelManip",
+	"walls",
 	xpanes = { fields = { "register_pane" } },
 }
 

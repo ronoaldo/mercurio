@@ -1,12 +1,11 @@
-local statistics = {}
-local ROOT_2 = math.sqrt(2.0)
 
 -- Approximations for erf(x) and erfInv(x) from
 -- https://en.wikipedia.org/wiki/Error_function
 
+local statistics = {}
+local ROOT_2 = math.sqrt(2.0)
 local erf
 local erf_inv
-
 local A = 8 * (math.pi - 3.0) / (3.0 * math.pi * (4.0 - math.pi))
 local B = 4.0 / math.pi
 local C = 2.0 / (math.pi * A)
@@ -114,17 +113,16 @@ poisson = function(lambda, max)
 	end
 end
 
-
 -- Error function.
+
 statistics.erf = erf
 
 -- Inverse error function.
+
 statistics.erf_inv = erf_inv
 
 --- Standard normal distribution function (mean 0, standard deviation 1).
- --
- -- @return
- --    Any real number (actually between -3.0 and 3.0).
+ -- @return - Any real number (actually between -3.0 and 3.0).
 
 statistics.std_normal = function()
 
@@ -139,15 +137,10 @@ statistics.std_normal = function()
 	return std_normal(u)
 end
 
-
 --- Standard normal distribution function (mean 0, standard deviation 1).
- --
- -- @param mu
- --    The distribution mean.
- -- @param sigma
- --    The distribution standard deviation.
- -- @return
- --    Any real number (actually between -3*sigma and 3*sigma).
+ -- @param mu - The distribution mean.
+ -- @param sigma - The distribution standard deviation.
+ -- @return - Any real number (actually between -3*sigma and 3*sigma).
 
 statistics.normal = function(mu, sigma)
 
@@ -162,15 +155,10 @@ statistics.normal = function(mu, sigma)
 	return mu + sigma * std_normal(u)
 end
 
-
 --- Poisson distribution function.
- --
- -- @param lambda
- --    The distribution mean and variance.
- -- @param max
- --    The distribution maximum.
- -- @return
- --    An integer between 0 and max (both inclusive).
+ -- @param lambda - The distribution mean and variance.
+ -- @param max - The distribution maximum.
+ -- @return - An integer between 0 and max (both inclusive).
 
 statistics.poisson = function(lambda, max)
 
@@ -180,6 +168,5 @@ statistics.poisson = function(lambda, max)
 
 	return poisson(lambda, max)
 end
-
 
 return statistics

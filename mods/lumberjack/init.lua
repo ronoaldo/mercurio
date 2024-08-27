@@ -137,9 +137,9 @@ end
 
 local function get_points(player)
 	if player and player.is_player and player:is_player() then
-		-- Test if we got an automatised tool like nodebreaker from pipeworks
-		-- always allow lumberjack point with this workaroud
-		if not player.get_meta then
+		-- Passthrough for pipeworks nodebreakers ( assume enough lumberjack points )
+		if not player.get_meta or							-- pipeworks standard behavior
+			getmetatable(player) == "fakelib:player" then	-- mt-mods new behavior
 			return -1,-1
 		end
 		local meta = player:get_meta()

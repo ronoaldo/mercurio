@@ -1,10 +1,10 @@
--- Translation support
-local S = minetest.get_translator("mobs_npc")
 
+-- translation and mod check
+
+local S = minetest.get_translator("mobs_npc")
 local mcl = minetest.get_modpath("mcl_core") ~= nil
 
-
--- Igor by TenPlus1
+-- right-click drops
 
 mobs_npc.igor_drops = {
 	mcl and "mcl_potions:glass_bottle" or "vessels:glass_bottle",
@@ -27,6 +27,7 @@ mobs_npc.igor_drops = {
 	mcl and "mcl_core:obsidian" or {"default:obsidian", 2}
 }
 
+-- Igor by TenPlus1
 
 mobs:register_mob("mobs_npc:igor", {
 	type = "npc",
@@ -36,7 +37,8 @@ mobs:register_mob("mobs_npc:igor", {
 	owner_loyal = true,
 	pathfinding = true,
 	reach = 2,
-	attacks_monsters = true,
+	attack_monsters = true,
+--	attack_ignore = {"mobs_npc:npc"},
 	hp_min = 20,
 	hp_max = 30,
 	armor = 100,
@@ -77,16 +79,11 @@ mobs:register_mob("mobs_npc:igor", {
 	owner = "",
 	order = "wander",
 	animation = {
-		speed_normal = 30,
-		speed_run = 30,
-		stand_start = 0,
-		stand_end = 79,
-		walk_start = 168,
-		walk_end = 187,
-		run_start = 168,
-		run_end = 187,
-		punch_start = 189, --200
-		punch_end = 198 --219
+		speed_normal = 30, speed_run = 30,
+		stand_start = 0, stand_end = 79,
+		walk_start = 168, walk_end = 187,
+		run_start = 168, run_end = 187,
+		punch_start = 189, punch_end = 198 -- was 200 and 219
 	},
 
 	on_rightclick = function(self, clicker)
@@ -102,6 +99,7 @@ mobs:register_mob("mobs_npc:igor", {
 		-- right clicking with gold lump drops random item from list
 		if 	mobs_npc.drop_trade(self, clicker,  mcl and "mcl_raw_ores:raw_gold"
 				or "default:gold_lump", self.npc_drops or mobs_npc.igor_drops) then
+
 			return
 		end
 
@@ -129,17 +127,17 @@ mobs:register_mob("mobs_npc:igor", {
 	end
 })
 
+-- spawn egg
 
--- register spawn egg
 mobs:register_egg("mobs_npc:igor", S("Igor"),
 		mcl and "mcl_mobitems_beef_raw.png" or "mobs_meat_raw.png", 1)
 
+-- compatibility with older mobs mod
 
--- this is only required for servers that used the old mobs mod
 mobs:alias_mob("mobs:igor", "mobs_npc:igor")
 
-
 -- spawn Igor in world
+
 if not mobs.custom_spawn_npc then
 
 	mobs:spawn({

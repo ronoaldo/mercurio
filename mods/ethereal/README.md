@@ -19,7 +19,7 @@ TODO:
 
 #### Lucky Blocks
 
-It provides 63 new lucky blocks if the mod is detected.
+It provides 65 new lucky blocks if the mod is detected.
 
 ## Technical info
 -----------------
@@ -97,12 +97,21 @@ several examples are at the documentation of [api.txt](api.txt) file.
 A huge thanks to Chinchow who was the inspiration behind Ethereal and everyone
 who helped make this mod bigger and better throughout it's release :)
 
+### 1.32
+ - Add {eatable} groups to food items
+ - Use underground decoration placement for illumishrooms to improve performance
+ - Use worldalign textures for stairs
+ - Tidy and tweak code to run on Minetest 5.1 and above
+
 ### 1.31
  - Fix fishing biome checks
  - Increase bamboo leaf decay radius
  - Switch ethereal coral to new plantlike_rooted drawtype (thanks Niklp)
  - Switch seaweed to new plantlike_rooted drawtype (thanks Niklp)
  - Added 'ethereal.logs' setting that adds decorative fallen tree logs to biomes
+ - Added 'ethereal.sapling_protection_check' setting to use default sapling placement checks
+ - Added alternative giant brown mushroom to higher elevations in mushroom biome
+ - Added 'ethereal.wood_rotate' setting to enable/disable directional placement of wood in ethereal
 
 ### 1.30
  - New fish textures by SirroBzeroone and BlueTangs Rock

@@ -74,9 +74,11 @@ end
 
 function delorean.set_mode(self, is_attached, curr_pos, velocity, player, dtime)
     if self._car_type == 1 then
-        local ent_propertioes = self.normal_kit:get_properties()
-        if ent_propertioes.mesh ~= "automobiles_delorean_time_machine_accessories.b3d" then
-            delorean.set_kit(self)
+        local ent_properties = self.normal_kit:get_properties()
+        if ent_properties then
+            if ent_properties.mesh ~= "automobiles_delorean_time_machine_accessories.b3d" then
+                delorean.set_kit(self)
+            end
         end
 
         if is_attached == true then

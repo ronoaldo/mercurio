@@ -7,7 +7,7 @@ local S = protector.intllib
 local r = tonumber(minetest.settings:get("protector_radius")) or 5
 
 -- radius limiter (minetest cannot handle node volume of more than 4096000)
-if r > 22 then r = 22 end
+if r > 30 then r = 30 end
 
 minetest.register_craftitem("protector:tool", {
 	description = S("Protector Placer Tool (stand near protector, face direction and use)"),

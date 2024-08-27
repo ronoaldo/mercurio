@@ -50,6 +50,15 @@ minetest.register_on_mods_loaded(function()
         count = count+1
     end
 
+    for name, def in pairs(minetest.registered_entities) do
+        table.insert(buff, "entity=" .. name)
+        if name == "draconis:ice_dragon" or name == "draconis:fire_dragon" then
+            log_action(name .. ": max_health=" .. to_json(def.max_health))
+            log_action(name .. ": turn_rate=" .. to_json(def.turn_rate))
+        end
+        count = count+1
+    end
+
     local wp = minetest.get_worldpath()
     local filename = wp .. "/mercurio_registered_names.txt"
     table.sort(buff)

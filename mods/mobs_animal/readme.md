@@ -17,7 +17,7 @@ Wanders around eating grass/wheat and can be right-clicked with empty bucket to 
 
 ---
 ### Kitten
-Found on green grass these cute cats walk around and can be picked up and placed in inventory as pets or right-clicked with 4x live rats or raw fish (found in ethereal) and tamed.  They can sometimes leave you little gifts of a hairball.
+Found on green grass these cute cats walk around and can be picked up and placed in inventory as pets or right-clicked with 4x live rats or raw fish (found in ethereal) and tamed.  They can sometimes leave you little gifts of a hairball, remember to check just incase it contains an item.
 
 ---
 ### Rat

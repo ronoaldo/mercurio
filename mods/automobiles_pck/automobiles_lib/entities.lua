@@ -219,6 +219,11 @@ function automobiles_lib.on_activate(self, staticdata, dtime_s)
         self._car_gravity = data.stored_car_gravity or -automobiles_lib.gravity
 
         automobiles_lib.setText(self, self._vehicle_name)
+        if data.remove then
+            automobiles_lib.destroy_inventory(self)
+            self.object:remove()
+            return
+        end
     end
 
     if self._painting_load then
@@ -381,6 +386,10 @@ function automobiles_lib.on_step(self, dtime)
     local dynamic_later_drag = self._LATER_DRAG_FACTOR
     if longit_speed > 2 then dynamic_later_drag = 2.0 end
     if longit_speed > 8 then dynamic_later_drag = 0.5 end
+
+    if automobiles_lib.extra_drift and longit_speed > 4 then
+        dynamic_later_drag = dynamic_later_drag/(longit_speed*2)
+    end
 
     local later_drag = vector.multiply(nhdir,later_speed*
         later_speed*dynamic_later_drag*-1*automobiles_lib.sign(later_speed))
@@ -547,17 +556,22 @@ function automobiles_lib.on_step(self, dtime)
     if (noded and noded.drawtype ~= 'airlike') then
         if noded.drawtype ~= 'liquid' then
             local min_later_speed = self._min_later_speed or 3
-            if (later_speed > min_later_speed or later_speed < -min_later_speed) and
-                    self._last_time_drift_snd >= 2.0 then
-                self._last_time_drift_snd = 0
-                minetest.sound_play("automobiles_drifting", {
-                    pos = curr_pos,
-                    max_hear_distance = 20,
-                    gain = 3.0,
-                    fade = 0.0,
-                    pitch = 1.0,
-                    ephemeral = true,
-                })
+            local speed_for_smoke = min_later_speed / 2
+            if (later_speed > speed_for_smoke or later_speed < -speed_for_smoke) then
+                automobiles_lib.add_smoke(curr_pos, yaw, self._rear_wheel_xpos)
+                if automobiles_lib.extra_drift == false then  --disables the sound when playing drift game.. it's annoying
+                    if self._last_time_drift_snd >= 2.0 and (later_speed > min_later_speed or later_speed < -min_later_speed) then
+                        self._last_time_drift_snd = 0
+                        minetest.sound_play("automobiles_drifting", {
+                            pos = curr_pos,
+                            max_hear_distance = 20,
+                            gain = 3.0,
+                            fade = 0.0,
+                            pitch = 1.0,
+                            ephemeral = true,
+                        })
+                    end
+                end
             end
 
             local wheel_compensation = longit_speed * (self._wheel_compensation or 1)
@@ -634,8 +648,12 @@ function automobiles_lib.on_step(self, dtime)
         local zero_reference = vector.new()
         local acceleration = automobiles_lib.get_hipotenuse_value(accel, zero_reference)
         --minetest.chat_send_all(acceleration)
-        local consumed_power = acceleration/40000
-        self._energy = self._energy - consumed_power;
+        if automobiles_lib.is_drift_game == false then
+            local consumed_power = acceleration/40000
+            self._energy = self._energy - consumed_power;
+        else
+            self._energy = 5
+        end
     end
     if self._energy <= 0 then
         self._engine_running = false

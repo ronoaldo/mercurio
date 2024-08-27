@@ -34,21 +34,18 @@ emote.register_emote("sit", {
 	anim_name = "sit",
 	speed = 30,
 	description = S("sits"),
-	eye_offset = vector.new(0, -5, 0)
 })
 
 emote.register_emote("lay", {
 	anim_name = "lay",
 	speed = 30,
 	description = S("lies down"),
-	eye_offset = vector.new(0, -10, -5)
 })
 
 emote.register_emote("sleep", { -- alias for lay
 	anim_name = "lay",
 	speed = 30,
 	description = S("falls asleep"),
-	eye_offset = vector.new(0, -10, -5)
 })
 
 model.animations.wave = {x = 192, y = 196, override_local = true}
