@@ -72,10 +72,10 @@ log "Initializing $BACKUP_DIR"
 mkdir -p "$BACKUP_DIR"
 
 log "Ensuring the db server is up"
-docker-compose up --detach db
+docker compose up --detach --no-recreate db
 
 log "Creating database backup into $DB_BACKUP_FILE ..."
-docker-compose exec -T db pg_dump -c -Fp -Z0 -U mercurio | gzip --fast -c > "$DB_BACKUP_FILE"
+docker compose exec -T db pg_dump -c -Fp -Z0 -U mercurio | gzip --fast -c > "$DB_BACKUP_FILE"
 _size="$(du -sh "${DB_BACKUP_FILE}")"
 log "Validating the resulting backup contents are valid (size=${_size})"
 gunzip --test "${DB_BACKUP_FILE}"
