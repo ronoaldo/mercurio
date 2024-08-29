@@ -12,7 +12,7 @@ warn() { log "WARN" "$*" ; }
 
 export_map() {
     info "Exporting protected map area ... This may take a long time."
-    docker-compose up -d db ; sleep 5
+    docker compose up -d --no-recreate db ; sleep 5
     cp -v mapcleaner_protect.txt "${BASEDIR}/".minetest/world
     cd "${BASEDIR}/".minetest/world || exit 1
     rm -rf area-export
