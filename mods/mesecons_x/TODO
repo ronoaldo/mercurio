@@ -1,0 +1,142 @@
+Here is a list of things I plan to implement.
+
+
+[FSM generator](status: after first release)
+Description: A tool which generates circuit based on code. You use special lanugae 
+to describe FSM (finite state machine), and based on this code circuit is 
+generated. Example of the code:
+
+#pinA = a ~b c 
+#pinB = a c d 
+@state_left = lem li
+@state_pause = pause0 pause1
+
+[[start]]
+[lem] a b ~d
+[li] d pause sel #pinB
+
+[start] pause #pinA -> [start]
+[@state_pause] ~pause sel -> [some_state]
+
+etc.
+
+
+
+[Fromula generator](status: not started)
+Description: A tool that generates circuit based on formula. Formula is in special 
+language (similar to logic formula in math). It is also possible to generate
+formulas using numbers. Example:
+if pin0 = true and counter > 10 then
+    output = counter + 10
+    pin1 = true
+else
+    outpue = counter / 2 + 1
+    pin2 = true
+    pin3 = false
+end
+
+
+
+
+[Module generator](status: not started)
+Description: A tool that has a list of preprogrammed circuits. Allows you to choose and 
+use it. For some of them you can generate different versions based
+on the input size or other parameters. Example: you can generate adder by setting the size 
+of the input. Example: you can generate incrementer by +8, where the number
+8 you set as a parameter for generation algorithm. 
+
+A tool also contains the following modules/circuits: incrementer, decrementer, adder, 
+substracter, multiplier, divider, shift registers, comparators, wire transfomation, 
+number generation (from dec to hex/bin) etc
+
+
+As and advanced option, the tool should also be able to generate circuit based on 
+the current selection. Example. if you selected 5 wires and want to generate 
+an adder that should be connected to these wires, the generator should generate 
+circuit with inputs and outpus connected (so the circuit may be streched if necessary)
+Example. If you are building a cpu with pipes, and need from time to time add a registers 
+to store partial computation, you just select the wires, use generator, and 
+the registers are connected to the wires (you dont have to connect the wires manualy))
+etc.
+
+
+
+[Book of circuits](status: not started)
+Description: a tool that stores multiple circuits built by player (blue books). Allows 
+to search, and put in different directories. The tool should be able to store aprox 1000
+circuits and it should be easy to find and manage any of them ( adding, removing, renaming, 
+moving etc). Search would use name and descriptinos of the circuits. You can use some 
+tags (i.e. simple string formated like #tagname) in circuits description. You should also 
+be able to duplicate the circuit, and there should be some mechanism to put a group 
+of circuits in the inventory at once (a previously prepared groups of circuits 
+that are used often).
+
+
+
+
+
+[Gate move tool] (status: not started)
+Description: tool that moves one gate or piece of wire from one place to another. 
+The connections are rearranged, but the whole circuits stays the same (in terms of 
+functional equivalence). 
+You have to select the circuit (using blue tool) first. This is the area that is going 
+to be changed. During the process, the circuit may grow, so you must be sure that other things are not deleted.
+The purpouse of these tool is to optimise your circuit in terms of size.
+
+
+
+[Delete and change tool](status: not started)
+Description: If you use circuits templates (ex. adders) sometimes you set some wires 
+to fixed value (eg. using general adder of two numbers, to create incrementer ++2. 
+by seting one numner to 2). 
+This tool should allow you to remove the unnecessary gates and wires, that never change.
+You click on power plants (generating alway 1, or 0) or empty wires (generating always 0), 
+then the wire is deleted and all gates that just lost one of the connections are also 
+deleted (or changed to other gate accordingly). Proces is continued till there are no more changes to do. 
+
+Note that this tool will remove only one starting wire or plant. It could change the whole 
+circuit in the process (as a chain of removal reaction), but if you have another power plants, 
+you must click at all of them on by one.
+This tool is not ment to be a whole circuit optymalization tool.
+
+
+
+[Streching tool](status: not stared)
+Description: There is a need to shrink the circuit when possible. I'm not sure yet if 
+this feature should be as a separte tool, or just automatically done in other tools.
+
+
+
+[Reverse Generation](status: not started)
+Description: Tool that generates a code in special language based on the circuit. 
+You select some circuit, and use the tool. The tool generates logic formula or FSM. 
+This tool is kind of opposite to the FSM Generator and Formula Generator.
+
+
+
+[Input & Output blocs](status: not started)
+Description: just a simple node, to let know all the other tools that the wire 
+is input or output. You can add a name, so some tools can use it to name wires 
+in code or descriptions. Very userful for Reverse Generator tool.
+Blocks can also be used by generators, so that the player can see which wire is which. 
+
+[undo tool](status: not started)
+Description: a list per user of deleted regions, that can by recovered, or put in 
+a blue book. It's a simple list of
+
+data (before circuit) (after circuit) (position+teleport button) (to book button)
+
+Circuits are stores in files, in minetest data structures (let's cool it 'a trash book')
+is only a list of name s of last deletes.
+
+It will track the following:
+- cable generate (black tool)
+- remove regions and wires (red tools)
+- orange tools
+- grey tool
+- pasting blue books
+- pasting fsm books (orange book)
+
+
+
+
