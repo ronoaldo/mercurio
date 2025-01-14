@@ -36,10 +36,10 @@ log() {
 # from environment
 log "Starting server configuration"
 
-cp -v /etc/luanti/world.mt /var/lib/mercurio/world.mt
-cp -v /etc/luanti/news/*   /var/lib/mercurio/
+cp -v /etc/minetest/world.mt /var/lib/mercurio/world.mt
+cp -v /etc/minetest/news/*   /var/lib/mercurio/
 __configure /var/lib/mercurio/world.mt
-__configure /etc/luanti/luanti.conf
+__configure /etc/minetest/minetest.conf
 
 log "Server configured, launching."
 
@@ -61,11 +61,11 @@ while true ; do
         ulimit -c unlimited  # Makes sure core dumps can be written with any size
         echo "$$" > pid      # Testing write access to $PWD
         rm -vf core          # Remove any previous core dumps
-        /usr/bin/env -i HOME=/var/lib/luanti \
-            luantiserver \
+        /usr/bin/env -i HOME=/var/lib/minetest \
+            minetestserver \
             --logfile ${MINETEST_DEBUG_FILE} \
             --world /var/lib/mercurio \
-            --config /etc/luanti/luanti.conf
+            --config /etc/minetest/minetest.conf
         echo -n "$?" > status
         log "Server shutdown with status code '$(cat status)'."
     } |& tee -a ${MINETEST_STDERR_FILE}
