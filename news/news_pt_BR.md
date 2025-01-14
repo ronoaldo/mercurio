@@ -5,8 +5,8 @@
 O servidor é desenhado para ser amigável e agradável! Por favor:
 
 ```
-* Não destrua as propriedades dos outros.
-* Não se aproprie de itens dos outros jogadores.
+* **Não destrua** as propriedades dos outros.
+* **Não se aproprie** de itens dos outros jogadores.
 * Namoro não é permitido.
 * Nenhuma forma de discriminação será tolerada.
 * Seja amigável para famílias e seguro para as crianças.
@@ -20,9 +20,10 @@ O servidor é desenhado para ser amigável e agradável! Por favor:
 
 # **Importante**
 
-Prezados jogadores: o servidor **Mercurio** passará por uma limpeza.  Não
-queremos que as suas construções sejam perdidas: somente as áreas protegidas
-serão exportadas, então é **necessário proteger as suas construções**.
+Prezados jogadores: o servidor **Mercurio** passará por uma limpeza e
+**áreas do jogo que não estão protegidas serão removidas!**
+Não queremos que as suas construções sejam perdidas: somente as áreas protegidas
+serão mantidas, então é **necessário proteger as suas construções**.
 
 Você também pode utilizar o mod `block_exchange` para fazer o upload de suas
 construções e baixar somente elas para jogar localmente.
@@ -33,8 +34,7 @@ construções e baixar somente elas para jogar localmente.
 
 # Novidades
 
-O servidor foi atualizado para o Minetest 5.9.0 e a grande maioria dos mods
-também foi atualizada para a última versão disponível em 25 de Outubro de 2025.
+O servidor foi atualizado para o Minetest 5.10.0.
 
 Caso tenha encontrado algum problema, avise via Discord ou para algum dos moderadores.
 
