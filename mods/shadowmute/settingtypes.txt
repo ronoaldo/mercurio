@@ -1,1 +1,0 @@
-shadowmute.report.discord_url (discord webhook url) string

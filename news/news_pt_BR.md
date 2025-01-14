@@ -34,7 +34,31 @@ construções e baixar somente elas para jogar localmente.
 
 # Novidades
 
-O servidor foi atualizado para o Minetest 5.10.0.
+O servidor foi atualizado para o Minetest 5.10.0. Mods atualizados até 14/01/2025:
+
+```
+3d_armor                moremesecons
+airutils                moreores
+anvil                   mtimer
+areas                   mydoors
+automobiles_pck         nether_mobs
+blockexchange           other_worlds
+digilines               pa28
+ethereal                pipeworks
+farming                 promise
+homedecor_modpack       protector
+hopper                  signs_lib
+hudbars                 skinsdb
+itemframes              steampunk_blimp
+ju52                    technic
+mesecons                travelnet
+mob_horse               unifieddyes
+mobkit                  unified_inventory
+mobs                    volumetric_lighting
+mobs_animal             worldedit
+mobs_monster            xcompat
+mobs_npc                xdecor
+```
 
 Caso tenha encontrado algum problema, avise via Discord ou para algum dos moderadores.
 

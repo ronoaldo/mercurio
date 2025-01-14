@@ -34,7 +34,31 @@ them to play offline.
 
 # News
 
-The server was updated to Minetest 5.10.0.
+The server was updated to Minetest 5.10.0. Updated mods as of January 14th, 2025:
+
+```
+3d_armor                moremesecons
+airutils                moreores
+anvil                   mtimer
+areas                   mydoors
+automobiles_pck         nether_mobs
+blockexchange           other_worlds
+digilines               pa28
+ethereal                pipeworks
+farming                 promise
+homedecor_modpack       protector
+hopper                  signs_lib
+hudbars                 skinsdb
+itemframes              steampunk_blimp
+ju52                    technic
+mesecons                travelnet
+mob_horse               unifieddyes
+mobkit                  unified_inventory
+mobs                    volumetric_lighting
+mobs_animal             worldedit
+mobs_monster            xcompat
+mobs_npc                xdecor
+```
 
 If you found an issue or bug, inform via Discord or to one of the server
 moderators.
