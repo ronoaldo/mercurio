@@ -41,8 +41,8 @@ test: volumes submodules
 	docker compose $(TEST_ARGS) run -d db && sleep 5
 	docker compose $(TEST_ARGS) run --user 0 -T game bash -c 'chown -R luanti:luanti /var/lib/mercurio /var/logs/'
 	docker compose $(TEST_ARGS) run $(TEST_ENV) game
-	docker compose down
-	@echo ; echo "Mods not loaded by the server: "
+	docker compose down --remove-orphans
+	@echo ; echo -n "\nMods not loaded by the server: "
 	grep "load.*false" /tmp/minetest/world/world.mt || true
 
 run: volumes submodules
