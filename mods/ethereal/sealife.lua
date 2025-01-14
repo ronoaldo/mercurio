@@ -1,6 +1,9 @@
 
 local S = minetest.get_translator("ethereal")
 
+-- local math functions
+
+local math_floor, math_max, math_random = math.floor, math.max, math.random
 -- Seaweed
 
 minetest.register_node("ethereal:seaweed", {
@@ -94,7 +97,7 @@ minetest.register_node("ethereal:seaweed_rooted", {
 	on_dig = function(pos, node, digger)
 
 		local p2 = node.param2 or 16
-		local num = math.max(1, math.floor(p2 / 16))
+		local num = math_max(1, math_floor(p2 / 16))
 		local inv = digger and digger:get_inventory()
 
 		if not inv then return end
@@ -300,6 +303,15 @@ minetest.register_node("ethereal:sandy", {
 	sounds = default.node_sound_sand_defaults()
 })
 
+minetest.register_craft({
+	output = "ethereal:sandy",
+	recipe = {
+		{"ethereal:slime_mold", "ethereal:slime_mold", "ethereal:slime_mold"},
+		{"ethereal:slime_mold", "group:sand", "ethereal:slime_mold"},
+		{"ethereal:slime_mold", "ethereal:slime_mold", "ethereal:slime_mold"},
+	}
+})
+
 -- randomly generate coral or seaweed and have seaweed grow up to 14 high
 
 if ethereal.sealife == 1 then
@@ -318,7 +330,7 @@ if ethereal.sealife == 1 then
 			if node.name == "ethereal:seaweed_rooted" then
 
 				local p2 = node.param2 or 16
-				local height = math.max(1, math.floor(p2 / 16))
+				local height = math_max(1, math_floor(p2 / 16))
 
 				if height > 13 then return end
 
@@ -336,7 +348,7 @@ if ethereal.sealife == 1 then
 				return
 			end
 
-			local sel = math.random(6)
+			local sel = math_random(6)
 			local pos_up = {x = pos.x, y = pos.y + 1, z = pos.z}
 			local nod = minetest.get_node(pos_up).name
 
@@ -344,7 +356,7 @@ if ethereal.sealife == 1 then
 
 				if sel == 1 then
 
-					local height = math.random(1, 6)
+					local height = math_random(6)
 
 					minetest.set_node(pos, {name = "ethereal:seaweed_rooted",
 							param2 = (height * 16)})

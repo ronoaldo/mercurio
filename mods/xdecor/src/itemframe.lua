@@ -73,7 +73,9 @@ function itemframe.set_infotext(meta)
 	local owner = meta:get_string("owner")
 	if itemstring == "" then
 		if owner ~= "" then
-			meta:set_string("infotext", S("@1 (owned by @2)", S("Item Frame"), owner))
+			--~ Item frame infotext. @1 = item frame name, @2 = owner name (player)
+			meta:set_string("infotext", S("@1 (owned by @2)",
+				S("Item Frame"), owner))
 		else
 			meta:set_string("infotext", S("Item Frame"))
 		end
@@ -158,6 +160,7 @@ end
 
 xdecor.register("itemframe", {
 	description = S("Item Frame"),
+	--~ Item frame tooltip
 	_tt_help = S("For presenting a single item"),
 	groups = {choppy = 3, oddly_breakable_by_hand = 2, flammable = 3},
 	is_ground_content = false,

@@ -14,8 +14,7 @@ By Electra Gizen
 
 Skybox texture:
 License: CC BY-SA 3.0 (https://creativecommons.org/licenses/by/3.0/)
-Attribution: Ulukai (available from http://opengameart.org/content/ulukais-space-skyboxes) 
-
+Attribution: Ulukai (available from http://opengameart.org/content/ulukais-space-skyboxes)
 
 ---
 
@@ -23,7 +22,6 @@ Recoloured textures from various mods:
 Grass textures based on default mod in minetest_game (WTFPL). 
 Redgrass texture based on junglegrass texture in default mod in minetest_game (assumed to be CC BY-SA 3.0).
 Red versions of asteroid textures (CC BY-SA 3.0).
-
 
 ---
 

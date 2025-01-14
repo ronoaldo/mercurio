@@ -1,13 +1,17 @@
 
 -- protector placement tool (thanks to Shara for code and idea)
 
-local S = protector.intllib
+local S = minetest.get_translator("protector")
 
 -- get protection radius
+
 local r = tonumber(minetest.settings:get("protector_radius")) or 5
 
 -- radius limiter (minetest cannot handle node volume of more than 4096000)
+
 if r > 30 then r = 30 end
+
+-- protector placement tool
 
 minetest.register_craftitem("protector:tool", {
 	description = S("Protector Placer Tool (stand near protector, face direction and use)"),
@@ -21,8 +25,8 @@ minetest.register_craftitem("protector:tool", {
 		-- check for protector near player (2 block radius)
 		local pos = user:get_pos()
 		local pp = minetest.find_nodes_in_area(
-			vector.subtract(pos, 2), vector.add(pos, 2),
-			{"protector:protect", "protector:protect2", "protector:protect_hidden"})
+				vector.subtract(pos, 2), vector.add(pos, 2),
+				{"protector:protect", "protector:protect2", "protector:protect_hidden"})
 
 		if #pp == 0 then return end -- none found
 
@@ -62,24 +66,26 @@ minetest.register_craftitem("protector:tool", {
 		if not protector.can_dig(r * 2, pos, user:get_player_name(), true, 3) then
 
 			minetest.chat_send_player(name,
-				S("Overlaps into above players protected area"))
+					S("Overlaps into above players protected area"))
 
 			return
 		end
 
 		-- does a protector already exist ?
-		if #minetest.find_nodes_in_area(
-			vector.subtract(pos, 1), vector.add(pos, 1),
-			{"protector:protect", "protector:protect2",
-					"protector:protect_hidden"}) > 0 then
+		if #minetest.find_nodes_in_area(vector.subtract(pos, 1), vector.add(pos, 1),
+				{"protector:protect", "protector:protect2",
+						"protector:protect_hidden"}) > 0 then
 
 			minetest.chat_send_player(name, S("Protector already in place!"))
 
 			return
 		end
 
-		-- do not place protector out of map bounds
-		if minetest.find_node_near(pos, 1, {"ignore"}) then
+		-- do not place protector out of map bounds or replace bedrock
+		if #minetest.find_nodes_in_area(pos, pos, {"ignore", "mcl_core:bedrock"}) > 0 then
+
+			minetest.chat_send_player(name, S("Out of bounds!"))
+
 			return
 		end
 
@@ -114,17 +120,17 @@ minetest.register_craftitem("protector:tool", {
 		local inv = minetest.get_inventory({type = "node", pos = pos})
 
 		if inv then
-			minetest.chat_send_player(name,
-				S("Cannot place protector, container at") ..
+			minetest.chat_send_player(name, S("Cannot place protector, container at") ..
 					" " .. minetest.pos_to_string(pos))
 			return
 		end
 
 		-- protection check for other mods like Areas
 		if minetest.is_protected(pos, name) then
+
 			minetest.chat_send_player(name,
-				S("Cannot place protector, already protected at") ..
-				" " .. minetest.pos_to_string(pos))
+					S("Cannot place protector, already protected at")
+					.. " " .. minetest.pos_to_string(pos))
 			return
 		end
 
@@ -147,17 +153,16 @@ minetest.register_craftitem("protector:tool", {
 		minetest.chat_send_player(name,
 				S("Protector placed at") ..
 				" " ..  minetest.pos_to_string(pos))
-
-	end,
+	end
 })
 
 -- tool recipe
+
 local df = "default:steel_ingot"
 
-if not minetest.registered_items[df] then
+if minetest.get_modpath("mcl_core") then
 	df = "mcl_core:iron_ingot"
 end
-
 
 minetest.register_craft({
 	output = "protector:tool",

@@ -24,6 +24,17 @@ THE SOFTWARE.
 License of media (textures):
 ----------------------------
 
+Created by TenPlus1 (CC0):
+  alt_textures/ethereal_strawberry*.png
+  farming_spanish_potatoes.png
+
+Created by Hugues Ross (CC BY-SA 4.0):
+  ethereal_strawberry*.png
+
+Created by NameNotQuality (CC0):
+  farming_vanilla_flan.png
+  farming_spaghetti.png
+
 Created by Oz-tal (license: CC BY-SA 3.0):
   crops_garlic_*.png
   crops_onion.png
@@ -164,10 +175,13 @@ Created by VanessaE and edited by SpaghettiToastBook (CC0):
 Created by mDiyo (Natura), modified by TenPlus1 (License: CC BY-SA 3.0):
   farming_barley.png
 
-Created by OgelGames (CC BY-SA 4.0)
+Created by OgelGames (CC BY-SA 4.0):
   farming_berry_smoothie.png
   farming_cactus_juice.png
   farming_salad.png
+
+Created by Huhues Ross (CC BY-SA 4.0):
+  farming_sunflower_bread.png
 
 Created by Felfa (CC0)
   farming_blackberry*.png
@@ -176,12 +190,12 @@ Created by Felfa (CC0)
   farming_vanilla_*.png
   farming_artichoke*.png
   farming_parsley*.png
-  farming_paella.png
+  farming_paella*.png
   farming_potato_omelette.png
-  farming_spanish_potatoes.png
-  farming_vanilla_flan.png
-  farming_sunflower*.png
-  farming_mayo.png
+  farming_spanish_potatoes_32px.png
+  farming_vanilla_flan_32px.png
+  farming_sunflower*.png [except sunflower_bread.png]
+  farming_mayo*.png
 
 Created by gorlock (CC0)
   farming_salt_crystal.png
@@ -191,7 +205,8 @@ Created by sirrobzeroone (CC0)
   farming_pineapple_ring.png
 
 Created by smoke_th (CC0 - https://opengameart.org/content/popcorn-icon)
-  farming_popcorn.png
+  farming_popcorn_32px.png
+  farming_popcorn.png [resized and edited by TenPlus1]
 
 Created by DMBuce (MIT - https://github.com/DMBuce/hatchling-snacks)
   farming_mac_and_cheese.png

@@ -83,6 +83,9 @@ minetest.register_node("travelnet:hidden_top", {
 	drop = "",
 })
 
+if minetest.get_modpath("mesecons_mvps") then
+	mesecon.register_mvps_stopper("travelnet:hidden_top")
+end
 
 if travelnet.travelnet_effect_enabled then
 	minetest.register_entity("travelnet:effect", {

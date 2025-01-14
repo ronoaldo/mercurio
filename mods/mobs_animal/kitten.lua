@@ -28,7 +28,7 @@ mobs:register_mob("mobs_animal:kitten", {
 	passive = false,
 	hp_min = 5,
 	hp_max = 10,
-	armor = 200,
+	armor = 100,
 	collisionbox = {-0.3, -0.3, -0.3, 0.3, 0.1, 0.3},
 	visual = "mesh",
 	visual_size = {x = 0.5, y = 0.5},

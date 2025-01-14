@@ -1,7 +1,7 @@
 -- Localise needed functions
 local m = mtimer
 local S = m.translator
-local esc = minetest.formspec_escape
+local esc = core.formspec_escape
 local line = mtimer.get_table_line
 
 
@@ -17,11 +17,10 @@ local line = mtimer.get_table_line
 -- @see ./system/on_receive_fields.lua
 -- @see ./system/chat_command.lua
 -- @see ./system/formspecs/*
--- @see https://dev.minetest.net/formspec
 
 
 mtimer.dialog.set_visibility = function (player_name)
-    local player = minetest.get_player_by_name(player_name)
+    local player = core.get_player_by_name(player_name)
     local visible = player:get_meta():get_string(m.meta.visible.key)
     local status = visible == 'true' and S('visible') or S('invisible')
 
@@ -38,7 +37,7 @@ mtimer.dialog.set_visibility = function (player_name)
                  label = S('Make invisible'),
                  container = { left = 4.25 }
              }),
-             'label[0,1.25;'..S('The timer is currently @1.', status)..']'
+             'label[0,1.25;'..S('The timer is currently @1', status)..']'
         }
     })
 end
@@ -171,7 +170,7 @@ mtimer.dialog.reset_everything = function (player_name)
                 label = S('Soft-reset all values to their defaults')
             }),
             mtimer.get_icon_button('reset_hard', {
-                label = S('Request hard-reset (kicks you from the server!)'),
+                label = S('Request hard-reset (disconnects you from the server!)'),
                 width = 10,
                 container = { top = 1 }
             }),

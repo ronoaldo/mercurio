@@ -200,7 +200,7 @@ xdecor.register("chair", {
 	description = S("Chair"),
 	tiles = {"xdecor_wood.png"},
 	sounds = default.node_sound_wood_defaults(),
-	groups = {choppy = 3, oddly_breakable_by_hand = 2, flammable = 2},
+	groups = {choppy = 3, oddly_breakable_by_hand = 2, flammable = 2, sittable = 1},
 	is_ground_content = false,
 	on_rotate = screwdriver.rotate_simple,
 	node_box = xdecor.pixelbox(16, {
@@ -212,8 +212,8 @@ xdecor.register("chair", {
 		{3,  6,  3,  10,  2, 8}
 	}),
 	can_dig = xdecor.sit_dig,
+	after_destruct = xdecor.sit_destruct,
 	on_rightclick = function(pos, node, clicker, itemstack, pointed_thing)
-		pos.y = pos.y + 0  -- Sitting position
 		xdecor.sit(pos, node, clicker, pointed_thing)
 		return itemstack
 	end,
@@ -320,13 +320,13 @@ end
 xdecor.register("cushion", {
 	description = S("Cushion"),
 	tiles = {"xdecor_cushion.png"},
-	groups = {snappy = 3, flammable = 3, fall_damage_add_percent = -50},
+	groups = {snappy = 3, flammable = 3, fall_damage_add_percent = -50, sittable = 1},
 	is_ground_content = false,
 	on_place = minetest.rotate_node,
 	node_box = xdecor.nodebox.slab_y(0.5),
 	can_dig = xdecor.sit_dig,
+	after_destruct = xdecor.sit_destruct,
 	on_rightclick = function(pos, node, clicker, itemstack, pointed_thing)
-		pos.y = pos.y + 0  -- Sitting position
 		xdecor.sit(pos, node, clicker, pointed_thing)
 		return itemstack
 	end
@@ -680,11 +680,12 @@ local painting_box = {
 
 xdecor.register("painting_1", {
 	description = S("Painting"),
-	tiles = {"xdecor_painting_1.png"},
+	tiles = {"xdecor_painting_1.png","xdecor_painting_1.png^[transformR180","xdecor_painting_1.png"},
 	use_texture_alpha = ALPHA_OPAQUE,
 	inventory_image = "xdecor_painting_empty.png",
 	wield_image = "xdecor_painting_empty.png",
 	paramtype2 = "wallmounted",
+	wallmounted_rotate_vertical = true,
 	sunlight_propagates = true,
 	groups = {choppy = 3, oddly_breakable_by_hand = 2, flammable = 2, attached_node = 1},
 	is_ground_content = false,
@@ -733,9 +734,10 @@ xdecor.register("painting_1", {
 
 for i = 2, 4 do
 	xdecor.register("painting_" .. i, {
-		tiles = {"xdecor_painting_" .. i .. ".png"},
+		tiles = {"xdecor_painting_"..i..".png","xdecor_painting_"..i..".png^[transformR180","xdecor_painting_"..i..".png"},
 		use_texture_alpha = ALPHA_OPAQUE,
 		paramtype2 = "wallmounted",
+		wallmounted_rotate_vertical = true,
 		drop = "xdecor:painting_1",
 		sunlight_propagates = true,
 		groups = {
@@ -938,6 +940,7 @@ xdecor.register("woodframed_glass", {
 
 local devices = {
 	{ "radio", S("Radio"), default.node_sound_metal_defaults() },
+	--~ as in "loudspeaker"
 	{ "speaker", S("Speaker"), default.node_sound_metal_defaults() },
 }
 for _, v in pairs(devices) do

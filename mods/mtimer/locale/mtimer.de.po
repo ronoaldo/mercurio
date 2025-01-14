@@ -1,0 +1,617 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: 2024-12-01 13:53+0100\n"
+"PO-Revision-Date: 2024-12-01 13:11+0000\n"
+"Last-Translator: Dirk <Dirk@users.noreply.translate.codeberg.org>\n"
+"Language-Team: German <https://translate.codeberg.org/projects/"
+"linuxdirks-luanti-mods/mtimer/de/>\n"
+"Language: de\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.8.1\n"
+"X-Poedit-KeywordsList: ;S;NS:1,2;core.translate:1c,2;core.translate_n:1c,2,"
+"3\n"
+"X-Poedit-Basepath: ..\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPathExcluded-0: .\n"
+
+#: system/chat_command.lua:46
+msgid "Configure timer display"
+msgstr "Timeranzeige konfigurieren"
+
+#: system/chat_command.lua:75
+msgid "Open Main Menu"
+msgstr "Hauptmenü öffnen"
+
+#: system/chat_command.lua:76 system/formspecs/formspec_creation.lua:28
+#: system/formspecs/main_menu.lua:63
+msgid "Visibility"
+msgstr "Sichtbarkeit"
+
+#: system/chat_command.lua:77 system/formspecs/main_menu.lua:64
+#: system/formspecs/set_position.lua:58
+msgid "Position"
+msgstr "Position"
+
+#: system/chat_command.lua:78 system/formspecs/main_menu.lua:65
+#: system/formspecs/set_color.lua:59
+msgid "Color"
+msgstr "Farbe"
+
+#: system/chat_command.lua:79 system/formspecs/main_menu.lua:76
+#: system/formspecs/timezone_offset.lua:56
+msgid "Timezone Offset"
+msgstr "Zeitzonenversatz"
+
+#: system/chat_command.lua:80 system/formspecs/formspec_creation.lua:50
+#: system/formspecs/main_menu.lua:69
+msgid "Ingame Time Format"
+msgstr "Spielzeit-Format"
+
+#: system/chat_command.lua:81 system/formspecs/formspec_creation.lua:75
+#: system/formspecs/main_menu.lua:70
+msgid "Real-World Time Format"
+msgstr "Realzeit-Format"
+
+#: system/chat_command.lua:82 system/formspecs/formspec_creation.lua:84
+#: system/formspecs/main_menu.lua:73
+msgid "Host Time Format"
+msgstr "Hostzeit-Format"
+
+#: system/chat_command.lua:83 system/formspecs/formspec_creation.lua:93
+#: system/formspecs/main_menu.lua:71
+msgid "Session Start Time Format"
+msgstr "Sitzungsstartzeit-Format"
+
+#: system/chat_command.lua:84 system/formspecs/formspec_creation.lua:102
+#: system/formspecs/main_menu.lua:72
+msgid "Session Duration Format"
+msgstr "Sitzungsdauer-Format"
+
+#: system/chat_command.lua:85 system/formspecs/hud_element_scale.lua:89
+#: system/formspecs/main_menu.lua:66
+msgid "HUD Element Scale"
+msgstr "Anzeigeskalierung"
+
+#: system/chat_command.lua:86 system/formspecs/hud_element_offset.lua:96
+#: system/formspecs/main_menu.lua:67
+msgid "HUD Element Offset"
+msgstr "Anzeigeversatz"
+
+#: system/chat_command.lua:87 system/formspecs/formspec_creation.lua:126
+#: system/formspecs/main_menu.lua:75
+msgid "Timer Format"
+msgstr "Timerformat"
+
+#: system/chat_command.lua:88 system/formspecs/formspec_creation.lua:159
+#: system/formspecs/main_menu.lua:82
+msgid "Reset Everything"
+msgstr "Alles zurücksetzen"
+
+#: system/chat_command.lua:90
+msgid "Configure the custom timer"
+msgstr "Individuellen Timer konfigurieren"
+
+#: system/chat_command.lua:91
+msgid "Start the custom timer"
+msgstr "Individuellen Timer starten"
+
+#: system/chat_command.lua:92
+msgid "Stop stop custom timer"
+msgstr "Individuellen Timer anhalten"
+
+#: system/chat_command.lua:93
+msgid "Restart the custom timer"
+msgstr "Individuellen Timer neu starten"
+
+#: system/formspec_helpers.lua:225
+msgid "Main Menu"
+msgstr "Hauptmenü"
+
+#: system/formspec_helpers.lua:230 system/formspecs/main_menu.lua:83
+msgid "Exit"
+msgstr "Verlassen"
+
+#: system/formspec_helpers.lua:236
+msgid "Default"
+msgstr "Standard"
+
+#: system/formspecs/custom_timer.lua:22 system/formspecs/custom_timer.lua:51
+msgid "running"
+msgstr "Timer läuft"
+
+#: system/formspecs/custom_timer.lua:22 system/formspecs/custom_timer.lua:52
+msgid "stopped"
+msgstr "Angehalten"
+
+#: system/formspecs/custom_timer.lua:38
+#: system/formspecs/formspec_creation.lua:140 system/formspecs/main_menu.lua:77
+msgid "Custom Timer"
+msgstr "Individueller Timer"
+
+#: system/formspecs/custom_timer.lua:53
+msgid "finished"
+msgstr "abgeschlossen"
+
+#: system/formspecs/custom_timer.lua:57
+msgid "Information"
+msgstr "Information"
+
+#: system/formspecs/custom_timer.lua:57
+#: system/formspecs/formspec_creation.lua:56
+#: system/formspecs/formspec_creation.lua:108
+#: system/formspecs/formspec_creation.lua:133
+#: system/formspecs/real_time_universal.lua:30
+msgid "Variable"
+msgstr "Variable"
+
+#: system/formspecs/custom_timer.lua:57
+msgid "Used Value"
+msgstr "Benutzter Wert"
+
+#: system/formspecs/custom_timer.lua:59
+#: system/formspecs/formspec_creation.lua:110
+msgid "Days"
+msgstr "Tage"
+
+#: system/formspecs/custom_timer.lua:60
+#: system/formspecs/formspec_creation.lua:111
+msgid "Hours"
+msgstr "Stunden"
+
+#: system/formspecs/custom_timer.lua:61
+#: system/formspecs/formspec_creation.lua:60
+#: system/formspecs/formspec_creation.lua:112
+#: system/formspecs/real_time_universal.lua:34
+msgid "Minutes"
+msgstr "Minuten"
+
+#: system/formspecs/custom_timer.lua:62
+#: system/formspecs/formspec_creation.lua:113
+#: system/formspecs/real_time_universal.lua:35
+msgid "Seconds"
+msgstr "Sekunden"
+
+#: system/formspecs/custom_timer.lua:87
+msgid "Countdown"
+msgstr "Countdown"
+
+#: system/formspecs/custom_timer.lua:88
+msgid "Timer Mode"
+msgstr "Zielzeit"
+
+#: system/formspecs/custom_timer.lua:89
+msgid "Continuous Run"
+msgstr "Dauerlauf"
+
+#: system/formspecs/custom_timer.lua:93
+#: system/formspecs/formspec_creation.lua:40
+msgid "The timer is currently @1"
+msgstr "Der Timer ist derzeit @1"
+
+#: system/formspecs/custom_timer.lua:95
+msgid "Start"
+msgstr "Start"
+
+#: system/formspecs/custom_timer.lua:96
+msgid "Stop"
+msgstr "Stopp"
+
+#: system/formspecs/custom_timer.lua:97
+msgid "Restart"
+msgstr "Neustart"
+
+#: system/formspecs/formspec_creation.lua:25
+msgid "visible"
+msgstr "sichtbar"
+
+#: system/formspecs/formspec_creation.lua:25
+msgid "invisible"
+msgstr "unsichtbar"
+
+#: system/formspecs/formspec_creation.lua:33
+msgid "Make visible"
+msgstr "Sichtbar machen"
+
+#: system/formspecs/formspec_creation.lua:37
+msgid "Make invisible"
+msgstr "Unsichtbar machen"
+
+#: system/formspecs/formspec_creation.lua:56
+#: system/formspecs/formspec_creation.lua:108
+#: system/formspecs/formspec_creation.lua:133
+#: system/formspecs/real_time_universal.lua:30
+msgid "Current Value"
+msgstr "Aktueller Wert"
+
+#: system/formspecs/formspec_creation.lua:58
+#: system/formspecs/real_time_universal.lua:32
+msgid "Hours (24h)"
+msgstr "Stunden (24h)"
+
+#: system/formspecs/formspec_creation.lua:59
+#: system/formspecs/real_time_universal.lua:33
+msgid "Hours (12h)"
+msgstr "Stunden (12h)"
+
+#: system/formspecs/formspec_creation.lua:61
+#: system/formspecs/real_time_universal.lua:36
+msgid "Meridiem Indicator"
+msgstr "Tageshälftenhinweis"
+
+#: system/formspecs/formspec_creation.lua:62
+msgid "Ingame Timestamp"
+msgstr "Spielzeit-Zeitstempel"
+
+#: system/formspecs/formspec_creation.lua:64
+#: system/formspecs/formspec_creation.lua:115
+#: system/formspecs/real_time_universal.lua:49
+msgid "Current Result"
+msgstr "Aktuelles Ergebnis"
+
+#: system/formspecs/formspec_creation.lua:135
+msgid "Real-World Date"
+msgstr "Reale Zeit"
+
+#: system/formspecs/formspec_creation.lua:136
+msgid "In-Game Time"
+msgstr "Spielzeit"
+
+#: system/formspecs/formspec_creation.lua:137
+msgid "Session Start Time"
+msgstr "Sitzungsstart-Zeit"
+
+#: system/formspecs/formspec_creation.lua:138
+msgid "Session Duration"
+msgstr "Sitzungsdauer"
+
+#: system/formspecs/formspec_creation.lua:139
+msgid "Host Time"
+msgstr "Hostzeit"
+
+#: system/formspecs/formspec_creation.lua:143
+msgid "Apply"
+msgstr "Anwenden"
+
+#: system/formspecs/formspec_creation.lua:153
+msgid "For resetting the configuration you have two options."
+msgstr "Für das zurücksetzen der Konfiguration bestehen zwei Optionen."
+
+#: system/formspecs/formspec_creation.lua:154
+msgid ""
+"Usually using a soft reset is enough. The soft reset sets all values based "
+"on mTimer functionality to the default values while staying connected."
+msgstr ""
+"Üblicher weise reicht ein sanftes Zurücksetzen. Dies setzt direkt alle Werte "
+"mittels mTimer-Funktionen auf die entsprecheden Standardwerte."
+
+#: system/formspecs/formspec_creation.lua:155
+msgid ""
+"If the soft reset does not work you can hard reset the configuration. This "
+"stores a request and then kicks you from the server. On rejoining mTimer "
+"forcefully removes all stored configuration and sets the current default "
+"values."
+msgstr ""
+"Sollte dies nicht funktionieren kann ein hartes Zurücksetzen angefordert "
+"werden. Es wird ein entsprechender Eintrag gesetzt und eine Trennung vom "
+"Server ausgeführt. Beim Neuverbinden wird zwangsweise die "
+"Standardkonfiguration geladen."
+
+#: system/formspecs/formspec_creation.lua:170
+msgid "Soft-reset all values to their defaults"
+msgstr "Alle Werte auf die definierten Standards setzen"
+
+#: system/formspecs/formspec_creation.lua:173
+msgid "Request hard-reset (disconnects you from the server!)"
+msgstr "Löschen anfordern (führt eine Trennung vom Server aus!)"
+
+#: system/formspecs/formspec_creation.lua:178
+msgid "Cancel reset and return to main menu"
+msgstr "Zurücksetzen abbrechen und zurück zum Hauptmenü"
+
+#: system/formspecs/hud_element_offset.lua:93
+msgid ""
+"Control the HUD element offset using the input on the right side and use the "
+"screenshot and markings as orientation for what is changed. The result is "
+"shown in the HUD in real time, so check for the actual timner position using "
+"the timer HUD element itself."
+msgstr ""
+"Anzeigeversatz des HUD-Elements über die Eingaben an der rechten Seite "
+"konfigurieren und dafür die Markierungen zur Orientierung verwenden. Das "
+"Ergebnis wir direkt übernommen. Die getätigen Änderungen können anhand des "
+"HUD-Elements sofort überprüft werden."
+
+#: system/formspecs/hud_element_offset.lua:115
+msgid "Vertical"
+msgstr "Vertikal"
+
+#. TRANSLATORS: Symbol for addition
+#: system/formspecs/hud_element_offset.lua:119
+#: system/formspecs/hud_element_offset.lua:128
+msgid "+"
+msgstr "+"
+
+#. TRANSLATORS: Symbol for subtraction
+#: system/formspecs/hud_element_offset.lua:121
+#: system/formspecs/hud_element_offset.lua:127
+msgid "-"
+msgstr "-"
+
+#: system/formspecs/hud_element_offset.lua:124
+msgid "Horizontal"
+msgstr "Horizontal"
+
+#: system/formspecs/hud_element_scale.lua:84
+msgid ""
+"The HUD element can be scaled between 1x (original size) and 10x (largest "
+"size due to performance reasons). Use the slider above to adjust the scaling "
+"to your needs."
+msgstr ""
+"Die Anzeige kann über den oben vorhandenen Schieberegler zwischen 1x "
+"(Originalgröße) und 10x (die aus Leistungsgründen die größte Größe) skaliert "
+"werden."
+
+#: system/formspecs/hud_element_scale.lua:86
+msgid ""
+"Due to technical reasons the slider position does not reset when clicking "
+"the button to set to default values. The HUD element itself resets, and when "
+"re-entering this dialog the slider position is properly set."
+msgstr ""
+"Aus technischen Gründen wird die Position des Schiebereglers beim einstellen "
+"der Standardwerte nicht zurückgesetzt, die Anzeige selbst wird aber "
+"zurückgesetzt. Beim erneuten öffnen des Dialogs wird der Schieberegler "
+"automatisch angepasst."
+
+#: system/formspecs/real_time_universal.lua:38
+msgid "Day Name"
+msgstr "Tagesname"
+
+#: system/formspecs/real_time_universal.lua:39
+msgid "Month Name"
+msgstr "Monatsname"
+
+#: system/formspecs/real_time_universal.lua:41
+msgid "Year"
+msgstr "Jahr"
+
+#: system/formspecs/real_time_universal.lua:42
+msgid "Month"
+msgstr "Monat"
+
+#: system/formspecs/real_time_universal.lua:43
+msgid "Day"
+msgstr "Tag"
+
+#: system/formspecs/real_time_universal.lua:45
+msgid "ISO 8601 Date"
+msgstr "Datum nach ISO 8601"
+
+#: system/formspecs/real_time_universal.lua:46
+msgid "ISO 8601 Time"
+msgstr "Zeit nach ISO 8601"
+
+#: system/formspecs/real_time_universal.lua:47
+msgid "Timestamp"
+msgstr "Zeitstempel"
+
+#: system/formspecs/set_color.lua:67
+msgid "Current color: @1"
+msgstr "Aktuelle Farbe: @1"
+
+#: system/formspecs/set_color.lua:68
+msgid "Use `@1` format only!"
+msgstr "Ausschließlich `@1` verwenden!"
+
+#: system/formspecs/set_color.lua:71
+msgid "Set a predefined color"
+msgstr "EIne vordefinierte Farbe einstellen"
+
+#: system/formspecs/set_position.lua:13
+msgid "top"
+msgstr "oben"
+
+#: system/formspecs/set_position.lua:14
+msgid "middle"
+msgstr "mitte"
+
+#: system/formspecs/set_position.lua:15
+msgid "bottom"
+msgstr "unten"
+
+#: system/formspecs/set_position.lua:16
+msgid "left"
+msgstr "links"
+
+#: system/formspecs/set_position.lua:17
+msgid "center"
+msgstr "mitte"
+
+#: system/formspecs/set_position.lua:18
+msgid "right"
+msgstr "rechts"
+
+#: system/formspecs/set_position.lua:48
+msgid "Click the position you want to place the timer at."
+msgstr "Auf die Stelle klicken, an der der Timer angezeigt werden soll."
+
+#: system/formspecs/set_position.lua:54
+msgid "Current position: @1"
+msgstr "Aktuelle Position: @1"
+
+#: system/formspecs/timezone_offset.lua:28
+msgid "Set timezone offset to @1"
+msgstr "Zeitzonenversatz auf @1 stellen"
+
+#: system/formspecs/timezone_offset.lua:53
+msgid ""
+"Please note that daylight saving time (DST) is ignored entirely due to "
+"minimizing implementation complexity. You need to manually adjust the time "
+"zone in order to adapt to any DST changes. This messes up the visual "
+"representation a bit (but it’s not very accurate anyways …)."
+msgstr ""
+"Die Sommerzeit wird aus Gründen der Komplexität der Implementierung "
+"vollständig ignoriert. Um der Sommerzeit Rechnung zu tragen muss die "
+"Zeitzone angepasst werden. Dies bringt zwar die grafische Darstellung "
+"durcheinander, aber die ist eh nicht ganz genau."
+
+#: system/formspecs/timezone_offset.lua:63
+msgid "set a value between -12 and +12 hours"
+msgstr "einen Wert zwischen -12 und +12 Stunden setzen"
+
+#: system/formspecs/timezone_offset.lua:72
+msgid "Current server time: @1"
+msgstr "Aktuelle Serverseitige Zeit: @1"
+
+#: system/formspecs/timezone_offset.lua:73
+msgid "Calculated local time: @1"
+msgstr "Errechnete lokale Zeit: @1"
+
+#. TRANSLATORS: Meridiem indicator for midnight to noon
+#: system/get_times.lua:17
+msgid "am"
+msgstr "am"
+
+#. TRANSLATORS: Meridiem indicator for noon to midnight
+#: system/get_times.lua:19
+msgid "pm"
+msgstr "pm"
+
+#: system/get_times.lua:20
+msgid "(ERROR)"
+msgstr "(FEHLER)"
+
+#: system/get_times.lua:37
+msgid "Sunday"
+msgstr "Sonntag"
+
+#: system/get_times.lua:37
+msgid "Monday"
+msgstr "Montag"
+
+#: system/get_times.lua:37
+msgid "Tuesday"
+msgstr "Dienstag"
+
+#: system/get_times.lua:37
+msgid "Wednesday"
+msgstr "Mittwoch"
+
+#: system/get_times.lua:37
+msgid "Thursday"
+msgstr "Donnerstag"
+
+#: system/get_times.lua:38
+msgid "Friday"
+msgstr "Freitag"
+
+#: system/get_times.lua:38
+msgid "Saturday"
+msgstr "Samstag"
+
+#: system/get_times.lua:42
+msgid "January"
+msgstr "Januar"
+
+#: system/get_times.lua:42
+msgid "February"
+msgstr "Februar"
+
+#: system/get_times.lua:42
+msgid "March"
+msgstr "März"
+
+#: system/get_times.lua:42
+msgid "April"
+msgstr "April"
+
+#: system/get_times.lua:42
+msgid "May"
+msgstr "Mai"
+
+#: system/get_times.lua:43
+msgid "June"
+msgstr "Juni"
+
+#: system/get_times.lua:43
+msgid "July"
+msgstr "Juli"
+
+#: system/get_times.lua:43
+msgid "August"
+msgstr "August"
+
+#: system/get_times.lua:43
+msgid "September"
+msgstr "September"
+
+#: system/get_times.lua:43
+msgid "October"
+msgstr "Oktober"
+
+#: system/get_times.lua:44
+msgid "November"
+msgstr "November"
+
+#: system/get_times.lua:44
+msgid "December"
+msgstr "Dezember"
+
+#: system/load_configuration.lua:115
+msgid "The timer is stopped"
+msgstr "Der Timer ist angehalten"
+
+#: system/load_configuration.lua:116
+msgid "The timer has finished"
+msgstr "Der Timer ist durchgelaufen"
+
+#: system/load_configuration.lua:125
+msgid "Current Date: @1"
+msgstr "Aktuelles Datum: @1"
+
+#: system/load_configuration.lua:126
+msgid "Ingame Time: @1"
+msgstr "Spielzeit: @1"
+
+#: system/load_configuration.lua:127
+msgid "Session Start: @1"
+msgstr "Sitzungsstart: @1"
+
+#: system/load_configuration.lua:128
+msgid "Session Duration: @1"
+msgstr "Sitzungsdauer: @1"
+
+#: system/on_receive_fields.lua:327
+msgid ""
+"You requested a hard reset of the mTimer configuration. This request was "
+"stored. As described, you were disconnected from the server in order to have "
+"the hard reset performed. Please rejoin the server. On rejoin all previously "
+"stored configuration regarding mTimer will be deleted."
+msgstr ""
+"Ein hartes Zurücksetzen der mTimer-Konfiguration wurde angefordert. Die "
+"Anfrage wurde gespeichert. Wie beschrieben wurde eine Trennung vom Server "
+"durchgeführt. Um das harte Zurücksetzen der Konfiguration abzuschließen ist "
+"ein Neuverbinden zum Server erforderlich. Dabei wird die gesamte mTimer-"
+"bezogene Konfiguration entfernt."
+
+#: system/update_timer.lua:152
+msgid "The custom timer was started"
+msgstr "Der individuelle Timer wurde gestartet"
+
+#: system/update_timer.lua:154
+msgid "The custom timer is already running"
+msgstr "Der individuelle Timer läuft bereits"
+
+#: system/update_timer.lua:163
+msgid "The custom timer was stopped"
+msgstr "Der individuelle Timer wurde angehalten"
+
+#: system/update_timer.lua:165 system/update_timer.lua:175
+msgid "The custom timer is not running"
+msgstr "Der individuelle Timer läuft nicht"
+
+#: system/update_timer.lua:173
+msgid "The custom timer was restarted"
+msgstr "Der individuelle timer wurde neu gestartet"

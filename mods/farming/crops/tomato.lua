@@ -24,6 +24,7 @@ farming.add_eatable("farming:tomato", 4)
 -- crop definition
 
 local def = {
+	description = S("Tomato") .. S(" Crop"),
 	drawtype = "plantlike",
 	tiles = {"farming_tomato_1.png"},
 	paramtype = "light",
@@ -110,7 +111,9 @@ farming.registered_plants["farming:tomato"] = {
 
 minetest.register_decoration({
 	deco_type = "simple",
-	place_on = {"default:dirt_with_grass", "mcl_core:dirt_with_grass"},
+	place_on = {
+		"default:dirt_with_grass", "mcl_core:dirt_with_grass", "ethereal:prairie_dirt"
+	},
 	sidelen = 16,
 	noise_params = {
 		offset = 0,
@@ -120,7 +123,6 @@ minetest.register_decoration({
 		octaves = 3,
 		persist = 0.6
 	},
-	y_min = 5,
-	y_max = 25,
+	y_min = 5, y_max = 25,
 	decoration = "farming:tomato_7"
 })

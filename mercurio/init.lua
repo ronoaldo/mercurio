@@ -261,6 +261,7 @@ dofile(path .. "/inventory.lua")
 
 -- Monkey patches
 dofile(path .. "/patches.lua")
+dofile(path .. "/xdecor.lua")
 
 log_action("Server overrides loaded!")
 

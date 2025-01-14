@@ -105,21 +105,14 @@ Bowl of soup=Bol de soupe
 Efficiency=Efficacité
 Durability=Durabilité
 Sharpness=Tranchant
-Your weapon inflicts more damages=Votre arme inflige plus de dégâts
-Your tool last longer=Votre outil dure plus longtemps
+@1 (+@2%)=
+Your weapon inflicts more damage=Votre arme inflige plus de dégâts
+Your tool lasts longer=Votre outil dure plus longtemps
 Your tool digs faster=Votre outil creuse plus vite
 Enchantment Table=Table d’enchantements
 Enchant your tools with mese crystals=
-Enchanted @1 @2@n@3=@2 en @1 enchantée@n@3
-Enchanted @1 @2=@2 en @1 enchantée
-Steel=Fer
-Bronze=Bronze
-Mese=Mese
-Diamond=Diamant
-Axe=Hache
-Pickaxe=Pioche
-Shovel=Pelle
-Sword=Épée
+Enchanted @1@n@2=
+Enchanted @1=
 The bees are busy making honey.=
 The bees are looking for flowers.=
 The bees want to pollinate more flowers.=
@@ -220,13 +213,14 @@ Back=Retour
 Work Bench=Atelier
 For cutting blocks, repairing tools with a hammer, crafting and storing items=
 @1 @2=
-Hammer=Marteau
 Repairs tools at the work bench=
+Hammer=Marteau
 
 
 ##### not used anymore #####
 
-Dumb AI=IA stupide
+Enchanted @1 @2@n@3=@2 en @1 enchantée@n@3
+Enchanted @1 @2=@2 en @1 enchantée
 You can't reset the chessboard, a game has been started. If you aren't a current player, try again in @1=Vous ne pouvez pas mettre à zéro l’échiquier, une partie a été commencée. Si ce n’est pas votre tour de jouer, réessayez dans @1
 You can't dig the chessboard, a game has been started. Reset it first if you're a current player, or dig it again in @1=Vous ne pouvez pas récupérer l’échiquier, une partie à été commencée. Remettez le à zéro si vous c’est votre tour de jouer, ou réessayez dans @1
 Cauldron (idle)=Chaudron (inactif)

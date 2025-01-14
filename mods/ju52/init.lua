@@ -48,8 +48,6 @@ end
 function ju52.destroy_parts_method(self)
     if self.wheels then self.wheels:remove() end
     if self.cabin then self.cabin:remove() end
-
-    local pos = self.object:get_pos()
 end
 
 function ju52.step_additional_function(self)
@@ -69,7 +67,7 @@ function ju52.step_additional_function(self)
 
     local energy_indicator_angle = airutils.get_gauge_angle((self._max_fuel - self._energy)/3) - 90
     self.object:set_bone_position("fuel", {x=0, y=-40.6, z=15.35}, {x=0, y=(energy_indicator_angle+180), z=0})
-    
+
     self.object:set_bone_position("compass", {x=0, y=-40.55, z=18.2}, {x=0, y=(math.deg(self._yaw)), z=0})
     self.object:set_bone_position("compass_plan", {x=0, y=-40.4, z=18.2}, {x=0, y=airutils.get_adf_angle(self, pos), z=0})
 
@@ -273,13 +271,6 @@ dofile(minetest.get_modpath("ju52") .. DIR_DELIM .. "entities.lua")
 --
 -- items
 --
-
-settings = Settings(minetest.get_worldpath() .. "/ju52.conf")
-local function fetch_setting(name)
-    local sname = name
-    return settings and settings:get(sname) or minetest.settings:get(sname)
-end
-
 
 local old_entities = {"ju52:seat_base","ju52:engine"}
 for _,entity_name in ipairs(old_entities) do

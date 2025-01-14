@@ -188,23 +188,40 @@ minetest.register_craft({
 
 -- candle helper function
 
+local candle_colors = {
+	[""] = "F7F2CD",
+	["black"] = "40403F",
+	["blue"] = "5587B4",
+	["brown"] = "6D4728",
+	["cyan"] = "78F1B1",
+	["dark_green"] = "23AF23",
+	["dark_grey"] = "868178",
+	["green"] = "96CA32",
+	["grey"] = "C0BAAF",
+	["magenta"] = "C22E7D",
+	["orange"] = "E88817",
+	["pink"] = "FA8B91",
+	["red"] = "CF4727",
+	["violet"] = "975EC0",
+	["yellow"] = "FFF74D"
+}
+
 local function add_candle(col, dcol)
 
-	local rcol = ""
+	local under = "" ; if dcol ~= "" then under = "_" end
 
-	if col ~= "" then
-		rcol = col
-		col = "_" .. col
-	end
-
-	minetest.register_node("ethereal:candle" .. col, {
+	minetest.register_node("ethereal:candle" .. under .. col, {
 		description = S(dcol .. "Candle"),
 		drawtype = "plantlike",
-		inventory_image = "ethereal_candle" .. col .. "_static.png",
-		wield_image = "ethereal_candle" .. col .. "_static.png",
+
+		inventory_image = "ethereal_candle_base_inv.png^[multiply:#"
+			.. candle_colors[col] .. "70^ethereal_candle_flame_inv.png",
+		wield_image = "ethereal_candle_base_inv.png^[multiply:#"
+			.. candle_colors[col] .. "70^ethereal_candle_flame_inv.png",
 		tiles = {
 			{
-				name = "ethereal_candle" .. col .. ".png",
+				name = "ethereal_candle_base.png^[multiply:#"
+					.. candle_colors[col] .. "70^ethereal_candle_flame.png",
 				animation = {
 					type="vertical_frames", aspect_w = 32, aspect_h = 32, length = 1.0
 				}
@@ -221,19 +238,16 @@ local function add_candle(col, dcol)
 		}
 	})
 
-	if col ~= "" then
-
+	if dcol ~= "" then
 		minetest.register_craft({
-			output = "ethereal:candle" .. col,
-			recipe = {
-				{"group:candle", "dye:" .. rcol},
-			}
+			output = "ethereal:candle" .. under .. col,
+			recipe = { {"group:candle", "dye:" .. col} }
 		})
 	end
 end
 
 add_candle("", "")
-add_candle("black", "Black ") -- candle colour textures by wRothbard
+add_candle("black", "Black ")
 add_candle("blue", "Blue ")
 add_candle("brown", "Brown ")
 add_candle("cyan", "Cyan ")
@@ -268,17 +282,15 @@ minetest.register_craft({
 	}
 })
 
--- Wooden Bowl
-
-minetest.register_craftitem("ethereal:bowl", {
-	description = S("Bowl"),
-	inventory_image = "ethereal_bowl.png",
-	groups = {food_bowl = 1, flammable = 2}
-})
-
--- dont add bowl recipe if farming redo already has one
+-- wooden bowl, dont add bowl if farming redo already has one
 
 if not minetest.registered_items["farming:bowl"] then
+
+	minetest.register_craftitem("ethereal:bowl", {
+		description = S("Bowl"),
+		inventory_image = "ethereal_bowl.png",
+		groups = {food_bowl = 1, flammable = 2}
+	})
 
 	minetest.register_craft({
 		output = "ethereal:bowl 4",
@@ -287,6 +299,8 @@ if not minetest.registered_items["farming:bowl"] then
 			{"", "group:wood", ""}
 		}
 	})
+else
+	minetest.register_alias("ethereal:bowl", "farming:bowl")
 end
 
 -- stone Ladder

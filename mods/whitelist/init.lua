@@ -1,8 +1,14 @@
-local version = "1.2.3"
+local version = "1.2.5"
+local srcpath = minetest.get_modpath("whitelist") .. "/src"
 
-dofile(minetest.get_modpath("whitelist") .. "/api.lua")
-dofile(minetest.get_modpath("whitelist") .. "/chatcmdbuilder.lua")
-dofile(minetest.get_modpath("whitelist") .. "/commands.lua")
-dofile(minetest.get_modpath("whitelist") .. "/player_manager.lua")
+-- TODO: remove after https://github.com/minetest/modtools/issues/2
+local S = minetest.get_translator("whitelist")
+
+S("Whitelist")
+S("Manage who can and who can't enter in your server")
+
+dofile(srcpath .. "/api.lua")
+dofile(srcpath .. "/commands.lua")
+dofile(srcpath .. "/player_manager.lua")
 
 minetest.log("action", "[WHITELIST] Mod initialised, running version " .. version)

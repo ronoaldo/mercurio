@@ -34,8 +34,11 @@ function vespa.attach_driver_stand(self, player)
     --minetest.chat_send_all(dump(self.driver_properties))
    
     -- attach the driver
-    player:set_attach(self.driver_seat, "", {x = 0, y = 0, z = 0}, {x = 0, y = 0, z = 0})
-    player:set_eye_offset({x = 0, y = 0, z = 1.5}, {x = 0, y = 3, z = -30})
+    local x_pos = 0  --WHY?! because after the 5.9.1 version the motorcycle got an strange shaking. But when I move it from the center, it ceases. Then I use the camera center bug.
+    --player:set_attach(self.driver_seat, "", {x = x_pos, y = 0, z = 0}, {x = 0, y = 0, z = 0})
+    player:set_attach(self.object, "", self._seat_pos[1], {x = 0, y = 0, z = 0})
+    --player:set_eye_offset({x = 0, y = 0, z = 1.5}, {x = 0, y = 3, z = -30})
+    player:set_eye_offset({x = self._seat_pos[1].x, y = 0, z = self._seat_pos[1].z}, {x = 0, y = 3, z = -30})
     player_api.player_attached[name] = true
 
     -- makes it "invisible"
@@ -45,7 +48,7 @@ function vespa.attach_driver_stand(self, player)
     --create the dummy mesh
     local pos = player:get_pos()
     local driver_mesh=minetest.add_entity(pos,'automobiles_vespa:player_mesh')
-    driver_mesh:set_attach(player,'',{x=0.0,y=-0.0,z=0.0},{x=0,y=0,z=0})
+    driver_mesh:set_attach(player,'',{x=x_pos*-1,y=-0.0,z=0.0},{x=0,y=0,z=0})
     self.driver_mesh = driver_mesh
     self.driver_mesh:set_properties({is_visible=false})
 
@@ -95,12 +98,12 @@ function vespa.dettach_driver_stand(self, player)
             player:set_properties({mesh = self.driver_properties.mesh})
             self.driver_properties = nil
         end
+    end
 
-        --player:set_properties({visual_size = {x=1, y=1}})
-        if self.driver_mesh then
-            self.driver_mesh:set_properties({is_visible=false})
-            self.driver_mesh:remove()
-        end
+    --player:set_properties({visual_size = {x=1, y=1}})
+    if self.driver_mesh then
+        self.driver_mesh:set_properties({is_visible=false})
+        self.driver_mesh:remove()
     end
     self.driver = nil
 end
@@ -121,8 +124,11 @@ function vespa.attach_pax_stand(self, player)
         self._passenger = name
 
         -- attach the driver
-        player:set_attach(self.passenger_seat, "", {x = 0, y = 0, z = 0}, {x = 0, y = 0, z = 0})
-        player:set_eye_offset({x = 0, y = 3, z = 0}, {x = 0, y = 3, z = -30})
+        local x_pos = 0  --WHY?! because after the 5.9.1 version the motorcycle got an strange shaking. But when I move it from the center, it ceases. Then I use the camera center bug.
+        --player:set_attach(self.passenger_seat, "", {x = x_pos, y = 0, z = 0}, {x = 0, y = 0, z = 0})
+        player:set_attach(self.object, "", self._seat_pos[2], {x = 0, y = 0, z = 0})
+        --player:set_eye_offset({x = 0, y = 3, z = 0}, {x = 0, y = 3, z = -30})
+        player:set_eye_offset({x = self._seat_pos[2].x, y = 3, z = self._seat_pos[2].z}, {x = 0, y = 3, z = -30})
         player_api.player_attached[name] = true
 
         -- makes it "invisible"
@@ -130,8 +136,8 @@ function vespa.attach_pax_stand(self, player)
 
         --create the dummy mesh
         local pos = player:get_pos()
-        local pax_mesh=minetest.add_entity(pos,'automobiles_vespa:player_mesh')
-        pax_mesh:set_attach(player,'',{x=0.0,y=-0.0,z=0.0},{x=0,y=0,z=0})
+        local pax_mesh=minetest.add_entity(pos,'automobiles_vespa:player_mesh')        
+        pax_mesh:set_attach(player,'',{x=x_pos*-1,y=-0.0,z=0.0},{x=0,y=0,z=0})
         self.pax_mesh = pax_mesh
         self.pax_mesh:set_properties({is_visible=false})
 
@@ -172,12 +178,11 @@ function vespa.dettach_pax_stand(self, player)
             player:set_properties({mesh = self.pax_properties.mesh})
             self.pax_properties = nil
         end
-
-        --player:set_properties({visual_size = {x=1, y=1}})
-        if self.pax_mesh then
-            self.pax_mesh:set_properties({is_visible=false})
-            self.pax_mesh:remove()
-        end
+    end
+    --player:set_properties({visual_size = {x=1, y=1}})
+    if self.pax_mesh then
+        self.pax_mesh:set_properties({is_visible=false})
+        self.pax_mesh:remove()
     end
 end
 

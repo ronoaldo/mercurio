@@ -19,6 +19,7 @@ farming.add_eatable("farming:asparagus", 1)
 -- crop definition
 
 local def = {
+	description = S("Asparagus") .. S(" Crop"),
 	drawtype = "plantlike",
 	tiles = {"farming_asparagus_1.png"},
 	paramtype = "light",
@@ -94,15 +95,14 @@ minetest.register_decoration({
 	place_on = {"default:dirt_with_grass", "mcl_core:dirt_with_grass"},
 	sidelen = 16,
 	noise_params = {
-		offset = -0.1,
+		offset = 0,
 		scale = farming.asparagus,
 		spread = {x = 100, y = 100, z = 100},
 		seed = 234,
 		octaves = 3,
 		persist = 0.6
 	},
-	y_min = 8,
-	y_max = 32,
+	y_min = 8, y_max = 32,
 	decoration = "farming:asparagus_5",
 	param2 = 3
 })

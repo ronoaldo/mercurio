@@ -46,7 +46,7 @@ local function add_fence(name, node, desc, texture)
 		default.register_mesepost("ethereal:mese_post_" .. name, {
 			description = S(desc .. " Mese Post Light"),
 			texture = texture .. ".png",
-			material = "ethereal:" .. node,
+			material = "ethereal:" .. node
 		})
 	end
 end

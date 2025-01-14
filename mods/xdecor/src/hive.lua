@@ -121,6 +121,7 @@ end
 
 xdecor.register("hive", {
 	description = S("Artificial Hive"),
+	--~ Tooltip of artificial hive
 	_tt_help = S("Bees live here and produce honey"),
 	tiles = {"xdecor_hive_top.png", "xdecor_hive_top.png",
 		 "xdecor_hive_side.png", "xdecor_hive_side.png",

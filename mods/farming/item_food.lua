@@ -180,7 +180,7 @@ farming.add_eatable("farming:muffin_blueberry", 2)
 minetest.register_craftitem("farming:tomato_soup", {
 	description = S("Tomato Soup"),
 	inventory_image = "farming_tomato_soup.png",
-	groups = {compostability = 65},
+	groups = {compostability = 65, drink = 1},
 	on_use = minetest.item_eat(8, "farming:bowl")
 })
 
@@ -606,6 +606,14 @@ minetest.register_craftitem("farming:cheese_vegan", {
 
 farming.add_eatable("farming:cheese_vegan", 2)
 
+-- Vegan Butter
+
+minetest.register_craftitem("farming:butter_vegan", {
+	description = S("Vegan Butter"),
+	inventory_image = "farming_vegan_butter.png",
+	groups = {food_butter = 1}
+})
+
 -- Onigiri
 
 minetest.register_craftitem("farming:onigiri", {
@@ -654,7 +662,8 @@ farming.add_eatable("farming:gingerbread_man", 2)
 minetest.register_craftitem("farming:mint_tea", {
 	description = S("Mint Tea"),
 	inventory_image = "farming_mint_tea.png",
-	on_use = minetest.item_eat(2, a.drinking_glass)
+	on_use = minetest.item_eat(2, a.drinking_glass),
+	groups = {drink = 1}
 })
 
 farming.add_eatable("farming:mint_tea", 2)
@@ -663,7 +672,7 @@ farming.add_eatable("farming:mint_tea", 2)
 minetest.register_craftitem("farming:onion_soup", {
 	description = S("Onion Soup"),
 	inventory_image = "farming_onion_soup.png",
-	groups = {compostability = 65},
+	groups = {compostability = 65, drink = 1},
 	on_use = minetest.item_eat(6, a.bowl)
 })
 
@@ -674,7 +683,7 @@ farming.add_eatable("farming:onion_soup", 6)
 minetest.register_craftitem("farming:pea_soup", {
 	description = S("Pea Soup"),
 	inventory_image = "farming_pea_soup.png",
-	groups = {compostability = 65},
+	groups = {compostability = 65, drink = 1},
 	on_use = minetest.item_eat(4, a.bowl)
 })
 
@@ -942,6 +951,16 @@ minetest.register_node("farming:vanilla_extract", {
 	sounds = farming.node_sound_glass_defaults(),
 })
 
+-- Jerusalem Artichokes with miso butter
+
+minetest.register_craftitem("farming:jerusalem_artichokes", {
+	description = S("Jerusalem Artichokes"),
+	inventory_image = "farming_jerusalem_artichokes.png",
+	on_use = minetest.item_eat(11, a.bowl)
+})
+
+farming.add_eatable("ethereal:jerusalem_artichokes", 11)
+
 --= Foods we shouldn't add when using Mineclonia/VoxeLibre
 
 if not farming.mcl then
@@ -990,7 +1009,8 @@ if not farming.mcl then
 	minetest.register_craftitem("farming:beetroot_soup", {
 		description = S("Beetroot Soup"),
 		inventory_image = "farming_beetroot_soup.png",
-		on_use = minetest.item_eat(6, "farming:bowl")
+		on_use = minetest.item_eat(6, "farming:bowl"),
+		groups = {drink = 1}
 	})
 
 	farming.add_eatable("farming:beetroot_soup", 6)

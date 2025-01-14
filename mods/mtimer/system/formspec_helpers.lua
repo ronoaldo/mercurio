@@ -1,6 +1,6 @@
 local m = mtimer
 local S = m.translator
-local esc = minetest.formspec_escape
+local esc = core.formspec_escape
 
 
 -- Get a table line
@@ -262,12 +262,12 @@ mtimer.show_formspec = function (id, def)
         ['+labelPositionLeft'] = icon_size + (icon_size / 4),
         ['+labelPositionTop'] = (icon_size / 2),
         ['+linePosition'] = line_position,
-        ['+titleText'] = minetest.formspec_escape(title_prefix..title_text),
+        ['+titleText'] = core.formspec_escape(title_prefix..title_text),
         ['+titleIcon'] = 'mtimer_'..id:gsub('mtimer:', '')..'.png',
         -- Buttons-related settings
         ['+buttonsPosition'] = height - 0.75,
     })
 
     -- Show formspec to the plauyer
-    minetest.show_formspec(def.show_to, id, formspec)
+    core.show_formspec(def.show_to, id, formspec)
 end

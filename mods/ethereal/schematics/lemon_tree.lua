@@ -2,7 +2,8 @@
 local _ = {name = "air", param1 = 0}
 local L = {name = "ethereal:lemon_leaves", param1 = 255}
 local l = {name = "ethereal:lemon_leaves", param1 = 127}
-local T = {name = "default:tree", param1 = 255}
+local t = {name = "default:tree", param1 = 255}
+local T = {name = "default:tree", param1 = 255, force_place = true}
 local e = {name = "ethereal:lemon", param1 = 100}
 
 ethereal.lemontree = {
@@ -10,7 +11,7 @@ ethereal.lemontree = {
 	size = {x = 5, y = 8, z = 5},
 
 	yslice_prob = {
-		{ypos = 0, prob = 127},
+		{ypos = 1, prob = 127},
 		{ypos = 3, prob = 127}
 	},
 
@@ -38,8 +39,8 @@ ethereal.lemontree = {
 	_,_,T,_,_,
 	_,_,T,_,_,
 	l,e,T,l,l,
-	L,L,T,L,l,
-	l,L,T,L,L,
+	L,L,t,L,l,
+	l,L,t,L,L,
 	L,L,L,l,L,
 	l,L,L,L,l,
 

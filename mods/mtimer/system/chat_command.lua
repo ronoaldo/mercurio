@@ -11,7 +11,7 @@ local d = m.dialog
 -- @param command The chat command paramter
 -- @return table  The colorized string
 local command = function (command)
-     return minetest.colorize('cyan', '/mtimer '..command..'   ')
+     return core.colorize('cyan', '/mtimer '..command..'   ')
 end
 
 
@@ -42,13 +42,13 @@ end
 --  help        Prints the help output showing the parameters
 --
 -- Providing unknown parameters has no effect.
-minetest.register_chatcommand('mtimer', {
+core.register_chatcommand('mtimer', {
     description = S('Configure timer display'),
     params = '<vi/po/co/tz/in/re/ht/st/sd/hs/os/tf/ct/re/help>',
     func = function(name, parameters)
         local action = parameters:match('%a+')
 
-        if not minetest.get_player_by_name(name) then return end
+        if not core.get_player_by_name(name) then return end
         if not action then d.main_menu(name) end
 
         if action == 'vi' then d.set_visibility(name) end
@@ -92,7 +92,7 @@ minetest.register_chatcommand('mtimer', {
                 command('ctstop   ')..S('Stop stop custom timer'),
                 command('ctrestart')..S('Restart the custom timer')
             }
-            minetest.chat_send_player(name, table.concat(message, '\n'))
+            core.chat_send_player(name, table.concat(message, '\n'))
         end
     end
 })

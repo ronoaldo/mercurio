@@ -5,22 +5,23 @@
 ]]
 
 -- Translation support
+
 local S = minetest.get_translator("farming")
 
 -- global
 
 farming = {
 	mod = "redo",
-	version = "20240812",
+	version = "20240924",
 	path = minetest.get_modpath("farming"),
 	select = {type = "fixed", fixed = {-0.5, -0.5, -0.5, 0.5, -5/16, 0.5}},
 	select_final = {type = "fixed", fixed = {-0.5, -0.5, -0.5, 0.5, -2.5/16, 0.5}},
 	registered_plants = {},
-	min_light = 12,
-	max_light = 15,
+	min_light = 12, max_light = 15,
 	mapgen = minetest.get_mapgen_setting("mg_name"),
 	use_utensils = minetest.settings:get_bool("farming_use_utensils") ~= false,
 	mtg = minetest.get_modpath("default"),
+	eth = minetest.get_modpath("ethereal"),
 	mcl = minetest.get_modpath("mcl_core"),
 	mcl_hardness = 0.01,
 	translate = S
@@ -58,13 +59,10 @@ end
 -- stats, locals, settings, function helper
 
 local statistics = dofile(farming.path .. "/statistics.lua")
-local random = math.random
-local floor = math.floor
+local random, floor = math.random, math.floor
 local time_speed = tonumber(minetest.settings:get("time_speed")) or 72
 local SECS_PER_CYCLE = (time_speed > 0 and (24 * 60 * 60) / time_speed) or 0
-local function clamp(x, min, max)
-	return (x < min and min) or (x > max and max) or x
-end
+local function clamp(x, min, max) return (x < min and min) or (x > max and max) or x end
 
 -- return amount of day or night that has elapsed
 -- dt is time elapsed, count_day if true counts day, otherwise night
@@ -236,8 +234,9 @@ local function reg_plant_stages(plant_name, stage, force_last)
 	return stages
 end
 
+-- split name and stage and register crop
 
-local register_plant_node = function(node)
+local function register_plant_node(node)
 
 	local plant_name, stage = plant_name_stage(node)
 
@@ -249,6 +248,7 @@ local register_plant_node = function(node)
 	end
 end
 
+-- check for further growth and set or stop timer
 
 local function set_growing(pos, stages_left)
 
@@ -282,6 +282,15 @@ function farming.handle_growth(pos, node)
 
 	if stages_left then set_growing(pos, stages_left) end
 end
+
+-- register crops nodes and add timer functions
+
+minetest.after(0, function()
+
+	for _, node_def in pairs(minetest.registered_nodes) do
+		register_plant_node(node_def)
+	end
+end)
 
 -- Just in case a growing type or added node is missed (also catches existing
 -- nodes added to map before timers were incorporated).
@@ -481,6 +490,11 @@ function farming.place_seed(itemstack, placer, pointed_thing, plantname)
 
 		minetest.sound_play("default_place_node", {pos = pt.above, gain = 1.0})
 
+		minetest.log("action", string.format("%s planted %s at %s",
+			(placer and placer:is_player() and placer:get_player_name() or "A mod"),
+			itemstack:get_name(), minetest.pos_to_string(pt.above)
+		))
+
 		if placer and itemstack
 		and not farming.is_creative(placer:get_player_name()) then
 
@@ -599,7 +613,10 @@ farming.register_plant = function(name, def)
 			next_plant = mname .. ":" .. pname .. "_" .. (i + 1)
 		end
 
+		local desc = pname:gsub("^%l", string.upper)
+
 		minetest.register_node(node_name, {
+			description = S(desc) .. S(" Crop"),
 			drawtype = "plantlike",
 			waving = 1,
 			tiles = {mname .. "_" .. pname .. "_" .. i .. ".png"},
@@ -639,40 +656,41 @@ end
 farming.asparagus = 0.002
 farming.eggplant = 0.002
 farming.spinach = 0.002
-farming.carrot = 0.001
-farming.potato = 0.001
-farming.tomato = 0.001
-farming.cucumber = 0.001
-farming.corn = 0.001
-farming.coffee = 0.001
-farming.melon = 0.001
-farming.pumpkin = 0.001
+farming.carrot = 0.002
+farming.potato = 0.002
+farming.tomato = 0.002
+farming.cucumber = 0.002
+farming.corn = 0.002
+farming.coffee = 0.002
+farming.melon = 0.009
+farming.pumpkin = 0.009
 farming.cocoa = true
-farming.raspberry = 0.001
-farming.blueberry = 0.001
-farming.rhubarb = 0.001
-farming.beans = 0.001
-farming.grapes = 0.001
+farming.raspberry = 0.002
+farming.blueberry = 0.002
+farming.rhubarb = 0.002
+farming.beans = 0.002
+farming.grapes = 0.002
 farming.barley = true
 farming.chili = 0.003
 farming.hemp = 0.003
-farming.garlic = 0.001
-farming.onion = 0.001
+farming.garlic = 0.002
+farming.onion = 0.002
 farming.pepper = 0.002
-farming.pineapple = 0.001
-farming.peas = 0.001
-farming.beetroot = 0.001
+farming.pineapple = 0.003
+farming.peas = 0.002
+farming.beetroot = 0.002
 farming.mint = 0.005
-farming.cabbage = 0.001
+farming.cabbage = 0.002
 farming.blackberry = 0.002
-farming.soy = 0.001
-farming.vanilla = 0.001
-farming.lettuce = 0.001
-farming.artichoke = 0.001
+farming.soy = 0.002
+farming.vanilla = 0.002
+farming.lettuce = 0.002
+farming.artichoke = 0.002
 farming.parsley = 0.002
-farming.sunflower = 0.001
+farming.sunflower = 0.002
 farming.ginger = 0.002
 farming.strawberry = 0.002
+farming.cotton = 0.003
 farming.grains = true
 farming.rice = true
 

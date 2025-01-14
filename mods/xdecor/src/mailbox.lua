@@ -61,7 +61,7 @@ function mailbox:formspec(pos, owner, is_owner)
 				-- List of donors. A line looks like this:
 				--    <donor name> <item icon> × <item count>
 				giver = giver .. "#FFFF00," .. giver_name .. "," .. i ..
-					-- Times a certain item count; used for the mailbox donor list
+					--~ Used in the mailbox donor list. Will be displayed as item icon followed by this string. @1 = item count
 					",#FFFFFF," .. FS("× @1", stack_count) .. ","
 
 				img = img .. i .. "=" ..
@@ -180,6 +180,7 @@ end
 
 xdecor.register("mailbox", {
 	description = S("Mailbox"),
+	--~ Mailbox tooltip
 	_tt_help = S("Lets other players give you things"),
 	tiles = {"xdecor_mailbox_top.png", "xdecor_mailbox_bottom.png",
 		 "xdecor_mailbox_side.png", "xdecor_mailbox_side.png",

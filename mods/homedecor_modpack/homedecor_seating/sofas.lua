@@ -47,7 +47,9 @@ minetest.register_node(":lrfurn:sofa", {
 	on_dig = unifieddyes.on_dig,
 	on_rightclick = function(pos, node, clicker, itemstack, pointed_thing)
 		return lrfurn.sit(pos, node, clicker, itemstack, pointed_thing, 2)
-	end
+	end,
+	on_destruct = lrfurn.on_seat_destruct,
+	on_movenode = lrfurn.on_seat_movenode,
 })
 
 minetest.register_craft({

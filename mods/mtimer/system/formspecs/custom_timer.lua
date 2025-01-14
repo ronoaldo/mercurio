@@ -7,7 +7,7 @@
 -- Localise needed functions
 local m = mtimer
 local S = m.translator
-local esc = minetest.formspec_escape
+local esc = core.formspec_escape
 
 
 -- Custom Timer Formspec
@@ -17,8 +17,8 @@ local esc = minetest.formspec_escape
 -- @see mtimer.show_formspec
 -- @param player_name The name of the player to show the formspec to
 mtimer.dialog.custom_timer = function (player_name)
-    local player_meta = minetest.get_player_by_name(player_name):get_meta()
-    local ctv = minetest.deserialize(player_meta:get_string(m.meta.custom_timer_settings.key))
+    local player_meta = core.get_player_by_name(player_name):get_meta()
+    local ctv = core.deserialize(player_meta:get_string(m.meta.custom_timer_settings.key))
     local timer_status = (ctv.running == true) and S('running') or S('stopped')
 
     local days = ctv.values.days or 0
@@ -48,9 +48,9 @@ mtimer.dialog.custom_timer = function (player_name)
             'field_close_on_enter[v_minutes;false]',
             'field_close_on_enter[v_seconds;false]',
             'container[0,0]',
-            '  label[0,0.25;'..S('Running')..']   field[2.5,0;10.5,0.5;v_format_running;;'..esc(format_running)..']',
-            '  label[0,0.85;'..S('Stopped')..']   field[2.5,0.6;10.5,0.5;v_format_stopped;;'..esc(format_stopped)..']',
-            '  label[0,1.45;'..S('Finished')..']  field[2.5,1.2;10.5,0.5;v_format_finished;;'..esc(format_finished)..']',
+            '  label[0,0.25;'..S('running')..']   field[2.5,0;10.5,0.5;v_format_running;;'..esc(format_running)..']',
+            '  label[0,0.85;'..S('stopped')..']   field[2.5,0.6;10.5,0.5;v_format_stopped;;'..esc(format_stopped)..']',
+            '  label[0,1.45;'..S('finished')..']  field[2.5,1.2;10.5,0.5;v_format_finished;;'..esc(format_finished)..']',
             '  box[0,2;+contentWidth,0.04;#ffffff]',
             'container_end[]',
             'container[3.75,2.4]',

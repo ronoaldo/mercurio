@@ -10,7 +10,7 @@ mobs:register_mob("mobs_animal:bunny", {
 	stepheight = 0.6,
 	hp_min = 1,
 	hp_max = 4,
-	armor = 200,
+	armor = 100,
 	collisionbox = {-0.268, -0.5, -0.268, 0.268, 0.167, 0.268},
 	visual = "mesh",
 	mesh = "mobs_bunny.b3d",

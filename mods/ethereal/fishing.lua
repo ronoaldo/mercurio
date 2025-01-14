@@ -14,22 +14,22 @@ local fish_items = {
 	"ethereal:fish_salmon",
 	{"ethereal:fish_clownfish", "savanna"},
 	{"ethereal:fish_pike", "grassland_ocean"},
-	{"ethereal:fish_flathead", "jungle"},
+	{"ethereal:fish_flathead", "rainforest"},
 	{"ethereal:fish_pufferfish", "desert_ocean"},
-	{"ethereal:fish_cichlid", "junglee_ocean"},
-	{"ethereal:fish_coy", "sakura"},
-	{"ethereal:fish_tilapia", "sakura"},
-	{"ethereal:fish_trevally", "sakura"},
+	{"ethereal:fish_cichlid", "rainforest_ocean"},
+	{"ethereal:fish_coy", "bamboo"},
+	{"ethereal:fish_tilapia", "bamboo"},
+	{"ethereal:fish_trevally", "bamboo"},
 	{"ethereal:fish_angler", "ocean"},
 	{"ethereal:fish_jellyfish", "ocean"},
 	{"ethereal:fish_seahorse", "ocean"},
-	{"ethereal:fish_seahorse_green", "junglee_ocean"},
+	{"ethereal:fish_seahorse_green", "rainforest_ocean"},
 	{"ethereal:fish_seahorse_pink", "mushroom_ocean"},
 	{"ethereal:fish_seahorse_blue", "coniferous_forest_ocean"},
 	{"ethereal:fish_seahorse_yellow", "desert_ocean"},
 	{"ethereal:fish_parrot", "desert"},
-	{"ethereal:fish_piranha", "jungle"},
-	{"ethereal:fish_tuna", "jungle"},
+	{"ethereal:fish_piranha", "rainforest"},
+	{"ethereal:fish_tuna", "rainforest"},
 	{"ethereal:fish_trout", "ocean"},
 	{"ethereal:fish_cod", "ocean"},
 	{"ethereal:fish_flounder", "ocean"},
@@ -40,9 +40,9 @@ local fish_items = {
 	{"ethereal:fish_tetra", "grayness_ocean"},
 	{"ethereal:fish_mackerel", "glacier"}
 }
--- grassland_ocean, desert_ocean, sakura_ocean, mesa_ocean, coniferous_forest_ocean,
+-- grassland_ocean, desert_ocean, bamboo_ocean, mesa_ocean, coniferous_forest_ocean,
 -- taiga_ocean, frost_ocean, deciduous_forest_ocean, grayness_ocean, grassytwo_ocean,
--- prairie_ocean, jumble_ocean, junglee_ocean, grove_ocean, mushroom_ocean,
+-- prairie_ocean, jumble_ocean, rainforest_ocean, grove_ocean, mushroom_ocean,
 -- sandstone_desert_ocean, plains_ocean, savanna_ocean, fiery_ocean, swamp_ocean,
 -- glacier_ocean, tundra_ocean
 
@@ -511,7 +511,7 @@ minetest.register_craft({
 
 local fish = {
 	{"Blue Fin", "bluefin", 2},
-	{"Blue Ram Chichlid", "blueram", 2},
+	{"Blue Ram Cichlid", "blueram", 2},
 	{"Common Carp", "carp", 2},
 	{"Cod", "cod", 2},
 	{"Redtail Catfish", "catfish", 2},
@@ -519,7 +519,7 @@ local fish = {
 	{"Northern Pike", "pike", 2},
 	{"Dusky Flathead", "flathead", 2},
 	{"Plaice", "plaice", 2},
-	{"Tiger Pufferfish", "pufferfish", -2},
+	{"Tiger Pufferfish", "pufferfish", -16},
 	{"Coy", "coy", 2},
 	{"European Flounder", "flounder", 2},
 	{"Atlantic Salmon", "salmon", 2},
@@ -551,7 +551,7 @@ for n = 1, #fish do
 	local usage
 	local groups = nil
 
-	if fish[n][3] > 0 then
+	if fish[n][3] ~= 0 then
 		usage = minetest.item_eat(fish[n][3])
 		groups = {food_fish_raw = 1, ethereal_fish = 1}
 	end
@@ -571,6 +571,10 @@ end
 -- Make Neon Tetra glow slightly
 
 minetest.override_item("ethereal:fish_tetra", {light_source = 3})
+
+-- Pufferfish changes so it cannot be used in generic recipes
+
+minetest.override_item("ethereal:fish_pufferfish", {groups = {flammable = 2}})
 
 -- Worm
 

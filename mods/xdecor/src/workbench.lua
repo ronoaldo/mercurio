@@ -7,6 +7,9 @@ local min, ceil = math.min, math.ceil
 local S = minetest.get_translator("xdecor")
 local FS = function(...) return minetest.formspec_escape(S(...)) end
 
+local DEFAULT_HAMMER_REPAIR = 500
+local DEFAULT_HAMMER_REPAIR_COST = 700
+
 
 -- Nodeboxes definitions
 workbench.defs = {
@@ -35,7 +38,7 @@ end
 
 -- Tools allowed to be repaired
 function workbench:repairable(stack)
-	-- Explicitly registeded as repairable: Overrides everything else
+	-- Explicitly registered as repairable: Overrides everything else
 	if custom_repairable[stack] then
 		return true
 	end
@@ -109,16 +112,16 @@ function workbench:get_output(inv, input, name)
 	inv:set_list("forms", output)
 end
 
-function workbench:register_special_cut(nodename, cutlist)
-	registered_cuttable_nodes[nodename] = true
-	special_cuts[nodename] = cutlist
-end
-
-local main_fs = "label[0.9,1.23;"..FS("Cut").."]"
+local main_fs = ""..
+	--~ Verb shown in workbench form where you can cut a node
+	"label[0.9,1.23;"..FS("Cut").."]"
+	--~ Verb shown in workbench form where you can repair an item
 	.."label[0.9,2.23;"..FS("Repair").."]"
 	..[[ box[-0.05,1;2.05,0.9;#555555]
 	box[-0.05,2;2.05,0.9;#555555] ]]
+	--~ Button in workbench form
 	.."button[0,0;2,1;craft;"..FS("Crafting").."]"
+	--~ Button in workbench form
 	.."button[2,0;2,1;storage;"..FS("Storage").."]"
 	..[[ image[3,1;1,1;gui_arrow.png]
 	image[0,1;1,1;worktable_saw.png]
@@ -216,9 +219,11 @@ function workbench.timer(pos)
 		return
 	end
 
+	local hammerdef = hammer:get_definition()
+
 	-- Tool's wearing range: 0-65535; 0 = new condition
-	tool:add_wear(-500)
-	hammer:add_wear(700)
+	tool:add_wear(-hammerdef._xdecor_hammer_repair or DEFAULT_HAMMER_REPAIR)
+	hammer:add_wear(hammerdef._xdecor_hammer_repair_cost or DEFAULT_HAMMER_REPAIR_COST)
 
 	inv:set_stack("tool", 1, tool)
 	inv:set_stack("hammer", 1, hammer)
@@ -230,7 +235,7 @@ function workbench.allow_put(pos, listname, index, stack, player)
 	local stackname = stack:get_name()
 	if (listname == "tool" and workbench:repairable(stackname)) or
 	   (listname == "input" and workbench:cuttable(stackname)) or
-	   (listname == "hammer" and stackname == "xdecor:hammer") or
+	   (listname == "hammer" and minetest.get_item_group(stackname, "repair_hammer") == 1) or
 	    listname == "storage" then
 		return stack:get_count()
 	end
@@ -255,7 +260,7 @@ function workbench.allow_move(pos, from_list, from_index, to_list, to_index, cou
 	elseif (to_list == "hammer" and from_list == "tool") or (to_list == "tool" and from_list == "hammer") then
 		local inv = minetest.get_inventory({type="node", pos=pos})
 		local stack = inv:get_stack(from_list, from_index)
-		if stack:get_name() == "xdecor:hammer" then
+		if minetest.get_item_group(stack:get_name(), "repair_hammer") == 1 then
 			return count
 		end
 	end
@@ -310,7 +315,7 @@ xdecor.register("workbench", {
 	is_ground_content = false,
 	sounds = default.node_sound_wood_defaults(),
 	tiles = {
-		"xdecor_workbench_top.png","xdecor_workbench_top.png",
+		"xdecor_workbench_top.png","xdecor_workbench_bottom.png",
 		"xdecor_workbench_sides.png", "xdecor_workbench_sides.png",
 		"xdecor_workbench_front.png", "xdecor_workbench_front.png"
 	},
@@ -328,29 +333,11 @@ xdecor.register("workbench", {
 	allow_metadata_inventory_move = workbench.allow_move
 })
 
-
-minetest.register_on_mods_loaded(function()
-local cuttable_nodes = {}
-
--- Nodes allowed to be cut:
--- Only the regular, solid blocks without metas or explosivity
--- from the xdecor or default mods.
-for nodename, def in pairs(minetest.registered_nodes) do
-	local nodenamesplit = string.split(nodename, ":")
-	local modname = nodenamesplit[1]
-	if (modname == "xdecor" or modname == "default") and xdecor.stairs_valid_def(def) then
-		cuttable_nodes[#cuttable_nodes + 1] = nodename
-		registered_cuttable_nodes[nodename] = true
-	end
-end
-
-for _, d in ipairs(workbench.defs) do
-for i = 1, #cuttable_nodes do
-	local node = cuttable_nodes[i]
+local function register_cut_raw(node, workbench_def)
 	local mod_name, item_name = node:match("^(.-):(.*)")
 	local def = minetest.registered_nodes[node]
 
-	if item_name and d[3] then
+	if item_name and workbench_def[3] then
 		local groups = {}
 		local tiles
 		groups.not_in_creative_inventory = 1
@@ -419,7 +406,7 @@ for i = 1, #cuttable_nodes do
 			end
 		end
 
-		local cutname = d[1]
+		local cutname = workbench_def[1]
 		local tiles_special_cut
 		if custom_tiles and custom_tiles[cutname] then
 			tiles_special_cut = custom_tiles[cutname]
@@ -427,9 +414,14 @@ for i = 1, #cuttable_nodes do
 			tiles_special_cut = tiles
 		end
 
-		minetest.register_node(":" .. node .. "_" .. cutname, {
-			-- @1: Base node description (e.g. "Stone"); @2: modifier (e.g. "Nanoslab")
-			description = S("@1 @2", def.description, d[4]),
+		local cutnodename = node .. "_" .. cutname
+		if minetest.registered_nodes[cutnodename] then
+			minetest.log("error", "[xdecor] register_cut_raw: Refusing to register node "..cutnodename.." becaut it was already registered!")
+			return false
+		end
+		minetest.register_node(":" .. cutnodename, {
+			--~ Format of the description of a cut node. @1: Base node description (e.g. "Stone"); @2: modifier (e.g. "Nanoslab")
+			description = S("@1 @2", def.description, workbench_def[4]),
 			paramtype = "light",
 			paramtype2 = "facedir",
 			drawtype = "nodebox",
@@ -438,7 +430,7 @@ for i = 1, #cuttable_nodes do
 			use_texture_alpha = def.use_texture_alpha,
 			groups = groups,
 			is_ground_content = def.is_ground_content,
-			node_box = xdecor.pixelbox(16, d[3]),
+			node_box = xdecor.pixelbox(16, workbench_def[3]),
 			sunlight_propagates = true,
 			on_place = minetest.rotate_node
 		})
@@ -453,32 +445,35 @@ for i = 1, #cuttable_nodes do
 			("stairs:stair_outer_%s"):format(item_name)
 		)
 	end
+	return true
 end
-end
-end)
 
--- Craft items
-
-minetest.register_tool("xdecor:hammer", {
-	description = S("Hammer"),
-	_tt_help = S("Repairs tools at the work bench"),
-	inventory_image = "xdecor_hammer.png",
-	wield_image = "xdecor_hammer.png",
-	on_use = function() do
-		return end
+function workbench:register_cut(nodename, cutlist)
+	if registered_cuttable_nodes[nodename] then
+		minetest.log("error", "[xdecor] Workbench: Tried to register cut for node "..nodename..", but it was already registered!")
+		return false
 	end
-})
+	local ok = true
+	for _, d in ipairs(workbench.defs) do
+		local ok = register_cut_raw(nodename, d)
+		if not ok then
+			ok = false
+		end
+	end
+	registered_cuttable_nodes[nodename] = true
+	return ok
+end
 
--- Recipes
+function workbench:register_special_cut(nodename, cutlist)
+	if registered_cuttable_nodes[nodename] or special_cuts[nodename] then
+		minetest.log("error", "[xdecor] Workbench: Tried to register special cut for node "..nodename..", but it was already registered!")
+		return false
+	end
+	registered_cuttable_nodes[nodename] = true
+	special_cuts[nodename] = cutlist
+end
 
-minetest.register_craft({
-	output = "xdecor:hammer",
-	recipe = {
-		{"default:steel_ingot", "group:stick", "default:steel_ingot"},
-		{"", "group:stick", ""}
-	}
-})
-
+-- Workbench craft
 minetest.register_craft({
 	output = "xdecor:workbench",
 	recipe = {
@@ -487,6 +482,121 @@ minetest.register_craft({
 	}
 })
 
+-- Register default cuttable blocks
+do
+	local cuttable_nodes = {}
+
+	-- Nodes allowed to be cut:
+	-- Only the regular, solid blocks without metas or explosivity
+	-- from the xdecor or default mods.
+	for nodename, def in pairs(minetest.registered_nodes) do
+		local nodenamesplit = string.split(nodename, ":")
+		local modname = nodenamesplit[1]
+		if (modname == "xdecor" or modname == "default") and xdecor.stairs_valid_def(def) then
+			cuttable_nodes[#cuttable_nodes + 1] = nodename
+		end
+	end
+
+	for i = 1, #cuttable_nodes do
+		local node = cuttable_nodes[i]
+		workbench:register_cut(node)
+	end
+end
+
 -- Special cuts for cushion block and cabinet
 workbench:register_special_cut("xdecor:cushion_block", { slab = "xdecor:cushion" })
 workbench:register_special_cut("xdecor:cabinet", { slab = "xdecor:cabinet_half" })
+
+--[[ API FUNCTIONS ]]
+
+--[[ Register a custom hammer (for repairing).
+A hammer repair items at the work bench. The workbench repeatedly
+checks if a hammer and a repairable tool are in the slots. The hammer
+will repair the tool in regular intervals. This is called a "step".
+In each step, the hammer reduces the wear of the repairable
+tool but increases its own wear, each by a fixed amount.
+
+This function allows you to register a custom hammer with custom
+name, item image and wear stats.
+
+Arguments:
+* name: Internal itemname
+* def: Definition table:
+    * description: Item `description`
+    * image: Inventory image and wield image
+    * groups: Item groups (MUST contain at least `repair_hammer = 1`)
+    * repair: How much item wear the hammer repairs per step
+    * repair_cost: How much item wear the hammer takes itself per step
+
+Note: Mind the implication of repair_cost! If repair_cost is lower than
+repair, this means practically infinite durability if you have two
+hammers that repair each other. If repair_cost is higher than repair,
+then hammers will break eventually.
+]]
+function xdecor.register_hammer(name, def)
+	minetest.register_tool(name, {
+		description = def.description,
+		_tt_help = S("Repairs tools at the work bench"),
+		inventory_image = def.image,
+		wield_image = def.image,
+		on_use = function() do
+			return end
+		end,
+		groups = def.groups,
+		_xdecor_hammer_repair = def.repair or DEFAULT_HAMMER_REPAIR,
+		_xdecor_hammer_repair_cost = def.repair_cost or DEFAULT_HAMMER_REPAIR_COST,
+	})
+end
+
+--[[ EXPERIMENTAL FUNCTION:
+Registers various 'cut' node variants for the node with the given nodename,
+which will be available in the workbench.
+This must only be called once per node. Calling it again is an error.
+
+The following nodes will be registered:
+
+* <nodename>_nanoslab
+* <nodename>_micropanel
+* <nodename>_microslab
+* <nodename>_thinstair
+* <nodename>_cube
+* <nodename>_panel
+* <nodename>_doublepanel
+* <nodename>_halfstair
+
+You MUST make sure these names are not already taken before
+calling this function. Failing to do so is an error.
+
+Additionally, a slab, stair, inner stair and outer stair
+will be registered by using the `stairs` mod if the slab
+node does not exist yet. Refer to the `stairs` mod documentation
+for details.
+
+Returns true if all nodes were registered successfully,
+returns false (and writes to error log) if any error occurred.
+]]
+xdecor.register_cut = function(nodename)
+	return workbench:register_cut(nodename)
+end
+
+
+--[[ END OF API FUNCTIONS ]]
+
+
+-- Register xdecor's built-in hammer
+xdecor.register_hammer("xdecor:hammer", {
+	description = S("Hammer"),
+	image = "xdecor_hammer.png",
+	groups = { repair_hammer = 1 },
+	repair = DEFAULT_HAMMER_REPAIR,
+	repair_cost = DEFAULT_HAMMER_REPAIR_COST,
+})
+
+-- Hammer recipes
+minetest.register_craft({
+	output = "xdecor:hammer",
+	recipe = {
+		{"default:steel_ingot", "group:stick", "default:steel_ingot"},
+		{"", "group:stick", ""}
+	}
+})

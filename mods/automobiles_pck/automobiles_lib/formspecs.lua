@@ -1,10 +1,14 @@
 local S = automobiles_lib.S
 
-function automobiles_lib.getCarFromPlayer(player)
+function automobiles_lib.getCarFromPlayer(player, self)
     local seat = player:get_attach()
     if seat then
         local car = seat:get_attach()
-        return car
+        if car then
+            return car
+        else
+            return seat
+        end
     end
     return nil
 end
@@ -48,7 +52,7 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
                         local pax_obj = minetest.get_player_by_name(ent._passenger)
 
                         local dettach_pax_f = automobiles_lib.dettach_pax
-                        if ent._dettach_pax then attach_driver_f = ent._dettach_pax end
+                        if ent._dettach_pax then dettach_pax_f = ent._dettach_pax end
                         dettach_pax_f(ent, pax_obj)                        
                     end
                     ent._is_flying = 0

@@ -44,10 +44,7 @@ for _, col in ipairs(all_colours) do
 
 			for _2, col2 in ipairs(all_colours) do
 
-				if col2[1] == colr then
-					colr = col2[3]
-					break
-				end
+				if col2[1] == colr then colr = col2[3] ; break end
 			end
 		end
 
@@ -59,8 +56,7 @@ for _, col in ipairs(all_colours) do
 		local col_text = "^[multiply:" .. col_override
 
 		if gotten then
-			wool_shave_text = shav_text
-			col_text = ""
+			wool_shave_text = shav_text ; col_text = ""
 		end
 
 		-- results in unneccesary brackets for shaved but these are ignored by engine
@@ -80,8 +76,8 @@ for _, col in ipairs(all_colours) do
 		type = "animal",
 		passive = true,
 		hp_min = 8,
-		hp_max = 10,
-		armor = 200,
+		hp_max = 12,
+		armor = 100,
 		collisionbox = {-0.5, -1, -0.5, 0.5, 0.3, 0.5},
 		visual = "mesh",
 		mesh = "mobs_sheep.b3d",
@@ -90,7 +86,10 @@ for _, col in ipairs(all_colours) do
 		},
 		gotten_texture = {"mobs_sheep_base.png^mobs_sheep_shaved.png"},
 		makes_footstep_sound = true,
-		sounds = {random = "mobs_sheep"},
+		sounds = {
+			random = "mobs_sheep",
+			replace = "default_dig_crumbly"
+		},
 		walk_velocity = 1,
 		run_velocity = 2,
 		runaway = true,
@@ -276,6 +275,7 @@ for _, col in ipairs(all_colours) do
 
 				self.gotten = true -- shaved
 				self.drops = drops_gotten
+				self.food = 0 -- reset food
 
 				local obj = minetest.add_item(
 					self.object:get_pos(),
@@ -283,9 +283,7 @@ for _, col in ipairs(all_colours) do
 				)
 
 				if obj then
-
-					obj:set_velocity({
-							x = random(-1, 1), y = 5, z = random(-1, 1)})
+					obj:set_velocity({x = random(-1, 1), y = 5, z = random(-1, 1)})
 				end
 
 				item:add_wear(650) -- 100 uses

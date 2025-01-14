@@ -23,7 +23,6 @@ if minetest.get_modpath("vessels") then
 		},
 		paramtype = "light",
 		paramtype2 = "facedir",
-		use_texture_alpha = "blend",
 	})
 
 	local sbox = {
@@ -37,7 +36,6 @@ if minetest.get_modpath("vessels") then
 		tiles = {"homedecor_3d_vessels_shelf_glass.png"},
 		inventory_image = "homedecor_3d_vessels_glass_bottle_inv.png",
 		wield_image = "homedecor_3d_vessels_glass_bottle_inv.png",
-		use_texture_alpha = "blend",
 		selection_box = sbox
 	})
 
@@ -56,7 +54,6 @@ if minetest.get_modpath("vessels") then
 		tiles = {"homedecor_3d_vessels_shelf_glass.png"},
 		inventory_image = "homedecor_3d_vessels_drinking_glass_inv.png",
 		wield_image = "homedecor_3d_vessels_drinking_glass_inv.png",
-		use_texture_alpha = "blend",
 		selection_box = sbox
 	})
 end

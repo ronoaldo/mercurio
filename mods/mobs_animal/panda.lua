@@ -15,7 +15,7 @@ mobs:register_mob("mobs_animal:panda", {
 	damage = 3,
 	hp_min = 10,
 	hp_max = 24,
-	armor = 200,
+	armor = 100,
 	collisionbox = {-0.4, -0.45, -0.4, 0.4, 0.45, 0.4},
 	visual = "mesh",
 	mesh = "mobs_panda.b3d",

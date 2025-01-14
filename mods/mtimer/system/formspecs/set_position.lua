@@ -44,7 +44,7 @@ end
 
 
 mtimer.dialog.set_position = function (player_name)
-    local player = minetest.get_player_by_name(player_name)
+    local player = core.get_player_by_name(player_name)
     local howto = S('Click the position you want to place the timer at.')
     local image = 'mtimer_positions_orientation.png'
 

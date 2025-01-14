@@ -12,6 +12,7 @@ dofile(modpath .. "/handlers/registration.lua")
 dofile(modpath .. "/src/nodes.lua")
 dofile(modpath .. "/src/recipes.lua")
 
+-- Load modules that can be enabled and disabled by settings
 local subpart = {
 	"chess",
 	"cooking",
@@ -21,14 +22,23 @@ local subpart = {
 	"mailbox",
 	"mechanisms",
 	"rope",
+	-- Workbench MUST be loaded after all other subparts that register nodes
+	-- last for the default 'cut node' registrations to work
 	"workbench",
 }
 
 for _, name in ipairs(subpart) do
-	local enable = minetest.settings:get_bool("enable_xdecor_" .. name)
-	if enable or enable == nil then
+	local enable = minetest.settings:get_bool("enable_xdecor_" .. name, true)
+	if enable then
 		dofile(modpath .. "/src/" .. name .. ".lua")
 	end
 end
 
---print(string.format("[xdecor] loaded in %.2f ms", (os.clock()-t)*1000))
+-- Special case: enchanted tools. This code is split from enchanting to
+-- deal with loading order.
+-- Enchanted tools registered last because they depend on previous
+-- subparts
+local enable_enchanting = minetest.settings:get_bool("enable_xdecor_enchanting", true)
+if enable_enchanting then
+	dofile(modpath .. "/src/enchanted_tools.lua")
+end

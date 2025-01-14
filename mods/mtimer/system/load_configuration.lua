@@ -1,5 +1,5 @@
 local S = mtimer.translator
-local worldpath = minetest.get_worldpath()..DIR_DELIM
+local worldpath = core.get_worldpath()..DIR_DELIM
 local worldconfig = Settings(worldpath..DIR_DELIM..'_mtimer.conf')
 
 
@@ -22,7 +22,7 @@ local worldconfig = Settings(worldpath..DIR_DELIM..'_mtimer.conf')
 -- The default value is searched in the following order When the setting is
 -- not found in any of the locations an empty string is used
 --
---   1. Standard `minetest.conf` file that is used for the server
+--   1. Standard configuration file that is used for the server
 --   2. `_mtimer.conf` in the loaded world’s directory
 --   3. Provided default value when calling the function
 --
@@ -51,7 +51,7 @@ local set = function (key_name, default_value, return_only, replace)
     local value = default_value
 
     -- Get the setting from one of the possible locations
-    local global_setting = minetest.settings:get(config_option)
+    local global_setting = core.settings:get(config_option)
     local world_setting = worldconfig:get(config_option)
 
     -- Define value
@@ -65,7 +65,7 @@ end
 
 
 -- Set HUD element offset table using the custom values
-set('hud_element_offset', minetest.serialize({
+set('hud_element_offset', core.serialize({
     x = set('hud_element_offset_x', 0, true),
     y = set('hud_element_offset_y', 0, true)
 }))
@@ -102,7 +102,7 @@ set('session_start_time_format', '{isodate}T{isotime}')
 -- 'continuous': The timer shows the difference between the current timestamp
 --               and the stored `start_timestamp`. Here the `target_message`
 --               is ignored and will never be shown.
-set('custom_timer_settings', minetest.serialize({
+set('custom_timer_settings', core.serialize({
     values = {
         days = tonumber(set('custom_timer_value_days', 0, true)),
         hours = tonumber(set('custom_timer_value_hours', 0, true)),

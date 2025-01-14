@@ -1,6 +1,6 @@
 local m = mtimer
-local deserialize = minetest.deserialize
-local cs = minetest.chat_send_player
+local deserialize = core.deserialize
+local cs = core.chat_send_player
 local S = m.translator
 
 
@@ -97,7 +97,7 @@ end
 -- @param player_name Name of the player to update the timer for
 -- @return void
 mtimer.update_timer = function (player_name)
-    local player = minetest.get_player_by_name(player_name)
+    local player = core.get_player_by_name(player_name)
     local meta = player:get_meta()
     local m = m.meta
     local hud_id = meta:get_string('mtimer:hud_id')
@@ -138,11 +138,11 @@ end
 -- @param update_parameters The update parameters table as described
 mtimer.update_custom_timer = function (player_name, update_parameters)
     local up = update_parameters or {}
-    local player = minetest.get_player_by_name(player_name)
+    local player = core.get_player_by_name(player_name)
     local player_meta = player:get_meta()
     local current_timestamp = os.time(os.date('!*t'))
     local ctv_key = m.meta.custom_timer_settings.key
-    local ctv = minetest.deserialize(player_meta:get_string(ctv_key))
+    local ctv = core.deserialize(player_meta:get_string(ctv_key))
 
     -- Start timer if not running
     if up.action == 'start' then
@@ -177,6 +177,6 @@ mtimer.update_custom_timer = function (player_name, update_parameters)
     end
 
     -- Write timer update to player meta data
-    player_meta:set_string(ctv_key, minetest.serialize(ctv))
+    player_meta:set_string(ctv_key, core.serialize(ctv))
 end
 

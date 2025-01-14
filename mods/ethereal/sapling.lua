@@ -73,7 +73,7 @@ minetest.register_node("ethereal:bamboo_sprout", {
 	},
 	sounds = default.node_sound_defaults(),
 	selection_box = {
-		type = "fixed", fixed = {-4 / 16, -0.5, -4 / 16, 4 / 16, 0, 4 / 16}
+		type = "fixed", fixed = {-3 / 16, -0.5, -3 / 16, 3 / 16, -0.1, 3 / 16}
 	},
 	on_use = minetest.item_eat(2),
 	grown_height = 11,
@@ -137,14 +137,12 @@ register_sapling("ethereal:olive_tree", "Olive", "ethereal_olive_tree_sapling", 
 
 -- add tree schematic
 
-local function add_tree(pos, ofx, ofy, ofz, schem, replace)
-
-	if not schem then print("Schematic not found") ; return end
+local function add_tree(pos, schem, replace)
 
 	minetest.swap_node(pos, {name = "air"})
 
-	minetest.place_schematic({x = pos.x - ofx, y = pos.y - ofy, z = pos.z - ofz},
-			schem, 0, replace, false)
+	minetest.place_schematic(pos, schem, "random", replace, false,
+			"place_center_x, place_center_z")
 end
 
 -- get mod path and schematic folder
@@ -154,85 +152,85 @@ local path = minetest.get_modpath("ethereal") .. "/schematics/"
 -- global tree grow functions
 
 function ethereal.grow_basandra_bush(pos)
-	add_tree(pos, 1, 0, 1, ethereal.basandrabush)
+	add_tree(pos, ethereal.basandrabush)
 end
 
 function ethereal.grow_yellow_tree(pos)
-	add_tree(pos, 4, 0, 4, ethereal.yellowtree)
+	add_tree(pos, ethereal.yellowtree)
 end
 
 function ethereal.grow_big_tree(pos)
-	add_tree(pos, 4, 0, 4, ethereal.bigtree)
+	add_tree(pos, ethereal.bigtree)
 end
 
 function ethereal.grow_banana_tree(pos)
 
 	if math.random(2) == 1 and minetest.find_node_near(pos, 1, {"farming:soil_wet"}) then
 
-		add_tree(pos, 3, 0, 3, ethereal.bananatree,
+		add_tree(pos, ethereal.bananatree,
 				{{"ethereal:banana", "ethereal:banana_bunch"}})
 	else
-		add_tree(pos, 3, 0, 3, ethereal.bananatree)
+		add_tree(pos, ethereal.bananatree)
 	end
 end
 
 function ethereal.grow_frost_tree(pos)
-	add_tree(pos, 4, 0, 4, ethereal.frosttrees)
+	add_tree(pos, ethereal.frosttrees)
 end
 
 function ethereal.grow_mushroom_tree(pos)
-	add_tree(pos, 4, 0, 4, ethereal.mushroomone)
+	add_tree(pos, ethereal.mushroomone)
 end
 
 function ethereal.grow_mushroom_brown_tree(pos)
-	add_tree(pos, 1, 0, 1, ethereal.mushroomtwo)
+	add_tree(pos, ethereal.mushroomtwo)
 end
 
 function ethereal.grow_palm_tree(pos)
-	add_tree(pos, 4, 0, 4, ethereal.palmtree)
+	add_tree(pos, ethereal.palmtree)
 end
 
 function ethereal.grow_willow_tree(pos)
-	add_tree(pos, 5, 0, 5, ethereal.willow)
+	add_tree(pos, ethereal.willow)
 end
 
 function ethereal.grow_redwood_tree(pos)
-	add_tree(pos, 4, 0, 4, ethereal.redwood_small_tree)
+	add_tree(pos, ethereal.redwood_small_tree)
 end
 
 function ethereal.grow_giant_redwood_tree(pos)
-	add_tree(pos, 7, 0, 7, ethereal.redwood_tree)
+	add_tree(pos, ethereal.redwood_tree)
 end
 
 function ethereal.grow_orange_tree(pos)
-	add_tree(pos, 2, 0, 2, ethereal.orangetree)
+	add_tree(pos, ethereal.orangetree)
 end
 
 function ethereal.grow_bamboo_tree(pos)
-	add_tree(pos, 1, 0, 1, ethereal.bambootree)
+	add_tree(pos, ethereal.bambootree)
 end
 
 function ethereal.grow_birch_tree(pos)
-	add_tree(pos, 2, 0, 2, ethereal.birchtree)
+	add_tree(pos, ethereal.birchtree)
 end
 
 function ethereal.grow_sakura_tree(pos)
 
 	if math.random(10) == 1 then
 
-		add_tree(pos, 4, 0, 3, ethereal.sakura_tree,
+		add_tree(pos, ethereal.sakura_tree,
 				{{"ethereal:sakura_leaves", "ethereal:sakura_leaves2"}})
 	else
-		add_tree(pos, 4, 0, 3, ethereal.sakura_tree)
+		add_tree(pos, ethereal.sakura_tree)
 	end
 end
 
 function ethereal.grow_lemon_tree(pos)
-	add_tree(pos, 2, 0, 2, ethereal.lemontree)
+	add_tree(pos, ethereal.lemontree)
 end
 
 function ethereal.grow_olive_tree(pos)
-	add_tree(pos, 3, 0, 3, ethereal.olivetree)
+	add_tree(pos, ethereal.olivetree)
 end
 
 -- return True if sapling has enough height room to grow
@@ -253,7 +251,7 @@ function ethereal.grow_sapling(pos, node)
 	-- get node below sapling
 	local under =  minetest.get_node({x = pos.x, y = pos.y - 1, z = pos.z}).name
 	local def = minetest.registered_nodes[node.name] ; if not def then return end
-	local height = def.grown_height
+	local height = def.grown_height or 33
 
 	-- do we have enough height to grow sapling into tree?
 	if not height or not enough_height(pos, height) then return end

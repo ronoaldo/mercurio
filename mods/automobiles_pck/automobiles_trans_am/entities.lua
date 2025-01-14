@@ -32,9 +32,8 @@ initial_properties = {
 	collide_with_objects=true,
     collisionbox = {-0.5, 0, -0.5, 0.5, 1, 0.5},
 	pointable=false,
-	visual = "mesh",
-	mesh = "automobiles_pivot_mesh.b3d",
-    textures = {"automobiles_black.png",},
+	visual = "sprite",
+    textures = {"automobiles_alpha.png",},
 	},
 
     on_activate = function(self,std)
@@ -58,9 +57,8 @@ initial_properties = {
 	physical = true,
 	collide_with_objects=true,
 	pointable=false,
-	visual = "mesh",
-	mesh = "automobiles_pivot_mesh.b3d",
-    textures = {"automobiles_black.png",},
+	visual = "sprite",
+    textures = {"automobiles_alpha.png",},
 	},
 
     on_activate = function(self,std)
@@ -362,6 +360,7 @@ minetest.register_entity("automobiles_trans_am:trans_am", {
     _max_acc_factor = 12,
     _max_speed = 40,
     _min_later_speed = 4.5,
+    _consumption_divisor = 40000,
 
     _wheel_compensation = 0.8,
 

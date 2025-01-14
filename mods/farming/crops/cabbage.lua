@@ -19,6 +19,7 @@ farming.add_eatable("farming:cabbage", 1)
 -- crop definition
 
 local def = {
+	description = S("Cabbage") .. S(" Crop"),
 	drawtype = "plantlike",
 	tiles = {"farming_cabbage_1.png"},
 	paramtype = "light",
@@ -98,7 +99,6 @@ minetest.register_decoration({
 		octaves = 3,
 		persist = 0.6
 	},
-	y_min = 2,
-	y_max = 15,
+	y_min = 2, y_max = 15,
 	decoration = "farming:cabbage_6"
 })

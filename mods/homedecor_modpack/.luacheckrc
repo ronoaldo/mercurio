@@ -15,7 +15,8 @@ globals = {
     "homedecor_doors_and_gates",
 
     -- mod-deps
-    "armor"
+    "armor",
+    xcompat = {fields = {"player"}},
 }
 
 read_globals = {
@@ -40,4 +41,5 @@ read_globals = {
     "doors",
     "i3",
     "xcompat",
+    "player_monoids"
 }

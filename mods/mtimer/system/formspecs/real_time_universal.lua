@@ -1,6 +1,6 @@
 local m = mtimer
 local S = m.translator
-local esc = minetest.formspec_escape
+local esc = core.formspec_escape
 local line = mtimer.get_table_line
 
 

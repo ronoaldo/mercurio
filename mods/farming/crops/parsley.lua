@@ -19,6 +19,7 @@ farming.add_eatable("farming:parsley", 1)
 -- crop definition
 
 local def = {
+	description = S("Parsley") .. S(" Crop"),
 	drawtype = "plantlike",
 	tiles = {"farming_parsley_1.png"},
 	paramtype = "light",
@@ -74,7 +75,10 @@ farming.registered_plants["farming:parsley"] = {
 
 minetest.register_decoration({
 	deco_type = "simple",
-	place_on = {"default:dirt_with_grass", "mcl_core:dirt_with_grass"},
+	place_on = {
+		"default:dirt_with_grass", "mcl_core:dirt_with_grass", "ethereal:prairie_dirt",
+		"ethereal:grove_dirt"
+	},
 	sidelen = 16,
 	noise_params = {
 		offset = 0,
@@ -84,7 +88,6 @@ minetest.register_decoration({
 		octaves = 3,
 		persist = 0.6
 	},
-	y_min = 10,
-	y_max = 40,
+	y_min = 10, y_max = 40,
 	decoration = "farming:parsley_3"
 })

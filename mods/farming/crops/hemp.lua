@@ -42,6 +42,7 @@ minetest.register_craftitem("farming:hemp_leaf", {
 -- crop definition
 
 local def = {
+	description = S("Hemp") .. S(" Crop"),
 	drawtype = "plantlike",
 	tiles = {"farming_hemp_1.png"},
 	paramtype = "light",
@@ -139,7 +140,7 @@ minetest.register_decoration({
 	deco_type = "simple",
 	place_on = {
 		"default:dirt_with_grass", "default:dirt_with_rainforest_litter",
-		"mcl_core:dirt_with_grass"
+		"mcl_core:dirt_with_grass", "ethereal:prairie_dirt"
 	},
 	sidelen = 16,
 	noise_params = {
@@ -150,9 +151,7 @@ minetest.register_decoration({
 		octaves = 3,
 		persist = 0.6
 	},
-	y_min = 3,
-	y_max = 45,
+	y_min = 3, y_max = 45,
 	decoration = "farming:hemp_7",
-	spawn_by = "group:tree",
-	num_spawn_by = 1
+	spawn_by = "group:tree", num_spawn_by = 1
 })

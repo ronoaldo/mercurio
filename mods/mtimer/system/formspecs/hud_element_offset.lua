@@ -1,7 +1,7 @@
 -- Localise needed functions
 local m = mtimer
 local S = m.translator
-local esc = minetest.formspec_escape
+local esc = core.formspec_escape
 
 
 -- Draw a scale/ruler indicator
@@ -78,14 +78,14 @@ end
 
 
 mtimer.dialog.hud_element_offset = function (player_name)
-    local player = minetest.get_player_by_name(player_name)
+    local player = core.get_player_by_name(player_name)
     local timer_data = esc(mtimer.get_timer_data(player_name).format)
     local h_color = '#a40000'
     local v_color = '#4e9a06'
 
     -- Get current offset values or 0 for use in formspec
     local key = m.meta.hud_element_offset.key
-    local offset = minetest.deserialize(player:get_meta():get_string(key))
+    local offset = core.deserialize(player:get_meta():get_string(key))
     offset.x = offset.x and offset.x or 0
     offset.y = offset.y and offset.y or 0
 
@@ -115,7 +115,9 @@ mtimer.dialog.hud_element_offset = function (player_name)
             '  label[-0.5,-0.25;'..esc(S('Vertical'))..']',
             '  box[-0.5,0.1;0.3,0.3;'..v_color..'FF]',
             '  field[0,0;0.75,0.5;y_offset;;'..offset.y..']',
+            -- TRANSLATORS: Symbol for addition
             '  button[0.8,0;0.5,0.26;y_add_1;'..S('+')..']',
+            -- TRANSLATORS: Symbol for subtraction
             '  button[0.8,0.26;0.5,0.26;y_substract_1;'..S('-')..']',
             'container_end[]',
             'container[9.5,1.75]',

@@ -1,27 +1,30 @@
 
-local S = protector.intllib
+-- translation and default name vars
+
+local S = minetest.get_translator("protector")
 local removal_names = ""
 local replace_names = ""
+
+-- remove protection command
 
 minetest.register_chatcommand("protector_remove", {
 	params = S("<names list>"),
 	description = S("Remove Protectors around players (separate names with spaces)"),
 	privs = {server = true},
+
 	func = function(name, param)
 
 		if not param or param == "" then
 
 			minetest.chat_send_player(name,
-				S("Protector Names to remove: @1",
-					removal_names))
+					S("Protector Names to remove: @1", removal_names))
 
 			return
 		end
 
 		if param == "-" then
 
-			minetest.chat_send_player(name,
-				S("Name List Reset"))
+			minetest.chat_send_player(name, S("Name List Reset"))
 
 			removal_names = ""
 
@@ -32,11 +35,13 @@ minetest.register_chatcommand("protector_remove", {
 	end
 })
 
+-- replace protection command
 
 minetest.register_chatcommand("protector_replace", {
 	params = S("<owner name> <name to replace with>"),
 	description = S("Replace Protector Owner with name provided"),
 	privs = {server = true},
+
 	func = function(name, param)
 
 		-- reset list to empty
@@ -50,13 +55,11 @@ minetest.register_chatcommand("protector_replace", {
 		end
 
 		-- show name info
-		if param == ""
-		and replace_names ~= "" then
+		if param == "" and replace_names ~= "" then
 
 			local names = replace_names:split(" ")
 
-			minetest.chat_send_player(name,
-				S("Replacing Protector name @1 with @2",
+			minetest.chat_send_player(name, S("Replacing Protector name @1 with @2",
 					names[1] or "", names[2] or ""))
 
 			return
@@ -66,18 +69,17 @@ minetest.register_chatcommand("protector_replace", {
 	end
 })
 
+-- Abm to remove or replace protectors within active player area
 
 minetest.register_abm({
 	nodenames = {"protector:protect", "protector:protect2", "protector:protect_hidden"},
 	interval = 6,
 	chance = 1,
 	catch_up = false,
+
 	action = function(pos, node)
 
-		if removal_names == ""
-		and replace_names == "" then
-			return
-		end
+		if removal_names == "" and replace_names == "" then return end
 
 		local meta = minetest.get_meta(pos)
 
@@ -90,9 +92,7 @@ minetest.register_abm({
 			local names = removal_names:split(" ")
 
 			for _, n in pairs(names) do
-				if n == owner then
-					minetest.set_node(pos, {name = "air"})
-				end
+				if n == owner then minetest.set_node(pos, {name = "air"}) end
 			end
 		end
 
@@ -108,16 +108,19 @@ minetest.register_abm({
 	end
 })
 
--- get protection radius
+-- get protection radius (max 30)
+
 local r = tonumber(minetest.settings:get("protector_radius")) or 5
 
 if r > 30 then r = 30 end
 
 -- show protection areas of nearby protectors owned by you (thanks agaran)
+
 minetest.register_chatcommand("protector_show_area", {
 	params = "",
 	description = S("Show protected areas of your nearby protectors"),
 	privs = {},
+
 	func = function(name, param)
 
 		local player = minetest.get_player_by_name(name)
@@ -125,9 +128,9 @@ minetest.register_chatcommand("protector_show_area", {
 
 		-- find the protector nodes
 		local pos = minetest.find_nodes_in_area(
-			{x = pos.x - r, y = pos.y - r, z = pos.z - r},
-			{x = pos.x + r, y = pos.y + r, z = pos.z + r},
-			{"protector:protect", "protector:protect2", "protector:protect_hidden"})
+				{x = pos.x - r, y = pos.y - r, z = pos.z - r},
+				{x = pos.x + r, y = pos.y + r, z = pos.z + r},
+				{"protector:protect", "protector:protect2", "protector:protect_hidden"})
 
 		local meta, owner
 
@@ -145,8 +148,8 @@ minetest.register_chatcommand("protector_show_area", {
 	end
 })
 
-
 -- ability to hide protection blocks (borrowed from doors mod :)
+
 minetest.register_node("protector:protect_hidden", {
 	description = "Hidden Protector",
 	drawtype = "airlike",
@@ -165,11 +168,11 @@ minetest.register_node("protector:protect_hidden", {
 	on_blast = function() end,
 	-- 1px block inside door hinge near node top
 	collision_box = {
-		type = "fixed",
-		fixed = {-15/32, 13/32, -15/32, -13/32, 1/2, -13/32}
+		type = "fixed", fixed = {-15/32, 13/32, -15/32, -13/32, 1/2, -13/32}
 	}
 })
 
+-- make own protectors visible in area
 
 minetest.register_chatcommand("protector_show", {
 	params = "",
@@ -187,9 +190,9 @@ minetest.register_chatcommand("protector_show", {
 		local pos = player:get_pos()
 
 		local a = minetest.find_nodes_in_area(
-			{x = pos.x - r, y = pos.y - r, z = pos.z - r},
-			{x = pos.x + r, y = pos.y + r, z = pos.z + r},
-			{"protector:protect_hidden"})
+				{x = pos.x - r, y = pos.y - r, z = pos.z - r},
+				{x = pos.x + r, y = pos.y + r, z = pos.z + r},
+				{"protector:protect_hidden"})
 
 		local meta, owner
 
@@ -205,6 +208,8 @@ minetest.register_chatcommand("protector_show", {
 		end
 	end
 })
+
+-- make own protectors invisible in area
 
 minetest.register_chatcommand("protector_hide", {
 	params = "",
@@ -222,9 +227,9 @@ minetest.register_chatcommand("protector_hide", {
 		local pos = player:get_pos()
 
 		local a = minetest.find_nodes_in_area(
-			{x = pos.x - r, y = pos.y - r, z = pos.z - r},
-			{x = pos.x + r, y = pos.y + r, z = pos.z + r},
-			{"protector:protect", "protector:protect2"})
+				{x = pos.x - r, y = pos.y - r, z = pos.z - r},
+				{x = pos.x + r, y = pos.y + r, z = pos.z + r},
+				{"protector:protect", "protector:protect2"})
 
 		local meta, owner
 

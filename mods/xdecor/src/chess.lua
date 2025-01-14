@@ -327,11 +327,10 @@ local function en_passant_to_string(double_step)
 	return s_en_passant
 end
 
-local function can_castle(meta, board, from_list, from_idx, to_idx)
+local function can_castle(board, from_idx, to_idx, castlingRights)
 	local from_x, from_y = index_to_xy(from_idx)
 	local to_x, to_y = index_to_xy(to_idx)
-	local inv = meta:get_inventory()
-	local kingPiece = inv:get_stack(from_list, from_idx):get_name()
+	local kingPiece = board[from_idx]
 	local kingColor
 	if kingPiece:find("black") then
 		kingColor = "black"
@@ -340,21 +339,21 @@ local function can_castle(meta, board, from_list, from_idx, to_idx)
 	end
 	local possible_castles = {
 		-- white queenside
-		{ y = 7, to_x = 2, rook_idx = 57, rook_goal = 60, acheck_dir = -1, color = "white", meta = "castlingWhiteL", rook_id = 1 },
+		{ y = 7, to_x = 2, rook_idx = 57, rook_goal = 60, acheck_dir = -1, color = "white", rightName = "castlingWhiteL", rook_id = 1 },
 		-- white kingside
-		{ y = 7, to_x = 6, rook_idx = 64, rook_goal = 62, acheck_dir = 1, color = "white", meta = "castlingWhiteR", rook_id = 2 },
+		{ y = 7, to_x = 6, rook_idx = 64, rook_goal = 62, acheck_dir = 1, color = "white", rightName = "castlingWhiteR", rook_id = 2 },
 		-- black queenside
-		{ y = 0, to_x = 2, rook_idx = 1, rook_goal = 4, acheck_dir = -1, color = "black", meta = "castlingBlackL", rook_id = 1 },
+		{ y = 0, to_x = 2, rook_idx = 1, rook_goal = 4, acheck_dir = -1, color = "black", rightName = "castlingBlackL", rook_id = 1 },
 		-- black kingside
-		{ y = 0, to_x = 6, rook_idx = 8, rook_goal = 6, acheck_dir = 1, color = "black", meta = "castlingBlackR", rook_id = 2 },
+		{ y = 0, to_x = 6, rook_idx = 8, rook_goal = 6, acheck_dir = 1, color = "black", rightName = "castlingBlackR", rook_id = 2 },
 	}
 
 	for p=1, #possible_castles do
 		local pc = possible_castles[p]
 		if pc.color == kingColor and pc.to_x == to_x and to_y == pc.y and from_y == pc.y then
-			local castlingMeta = meta:get_int(pc.meta)
-			local rookPiece = inv:get_stack(from_list, pc.rook_idx):get_name()
-			if castlingMeta == 1 and rookPiece == "realchess:rook_"..kingColor.."_"..pc.rook_id then
+			local castlingRightVal = castlingRights[pc.rightName]
+			local rookPiece = board[pc.rook_idx]
+			if castlingRightVal == 1 and rookPiece == "realchess:rook_"..kingColor.."_"..pc.rook_id then
 				-- Check if all squares between king and rook are empty
 				local empty_start, empty_end
 				if pc.acheck_dir == -1 then
@@ -367,7 +366,7 @@ local function can_castle(meta, board, from_list, from_idx, to_idx)
 					empty_end = pc.rook_idx - 1
 				end
 				for i = empty_start, empty_end do
-					if inv:get_stack(from_list, i):get_name() ~= "" then
+					if board[i] ~= "" then
 						return false
 					end
 				end
@@ -389,15 +388,15 @@ end
 -- Checks if a square to check if there is a piece that can be captured en passant. Returns true if this
 -- is the case, false otherwise.
 -- Parameters:
--- * meta: chessboard node metadata
+-- * board: chessboard table
 -- * victim_color: color of the opponent to capture a piece from. "white" or "black". (so in White's turn, pass "black" here)
 -- * victim_index: board index of the square where you expect the victim to be
-local function can_capture_en_passant(meta, victim_color, victim_index)
-	local inv = meta:get_inventory()
-	local victimPiece = inv:get_stack("board", victim_index)
-	local double_step_index = meta:get_int("prevDoublePawnStepTo")
-	local victim_name = victimPiece:get_name()
-	if double_step_index ~= 0 and double_step_index == victim_index and victim_name:find(victim_color) and victim_name:sub(11,14) == "pawn" then
+-- * prevDoublePawnStepTo: if a pawn did a double-step in the previous halfmove, this is the board index of the destination.
+--   if no pawn made a double-step in the previous halfmove, this is nil or 0.
+local function can_capture_en_passant(board, victim_color, victim_index, prevDoublePawnStepTo)
+	local victimPiece = board[victim_index]
+	local double_step_index = prevDoublePawnStepTo or 0
+	if double_step_index ~= 0 and double_step_index == victim_index and victimPiece:find(victim_color) and victimPiece:sub(11,14) == "pawn" then
 		return true
 	end
 	return false
@@ -413,7 +412,7 @@ end
 --    Any key with a numeric value is a possible destination.
 --    The numeric value is a move rating for the bot and is 0 by default.
 -- Example: { [4] = 0, [9] = 0 } -- can move to squares 4 and 9
-local function get_theoretical_moves_from(meta, board, from_idx)
+local function get_theoretical_moves_from(board, from_idx, prevDoublePawnStepTo, castlingRights)
 	local piece, color = board[from_idx]:match(":(%w+)_(%w+)")
 	if not piece then
 		return {}
@@ -450,7 +449,7 @@ local function get_theoretical_moves_from(meta, board, from_idx)
 							can_capture = true
 						else
 							-- en passant
-							if can_capture_en_passant(meta, "black", xy_to_index(to_x, from_y)) then
+							if can_capture_en_passant(board, "black", xy_to_index(to_x, from_y), prevDoublePawnStepTo) then
 								can_capture = true
 								en_passant = true
 							end
@@ -505,7 +504,7 @@ local function get_theoretical_moves_from(meta, board, from_idx)
 							can_capture = true
 						else
 							-- en passant
-							if can_capture_en_passant(meta, "white", xy_to_index(to_x, from_y)) then
+							if can_capture_en_passant(board, "white", xy_to_index(to_x, from_y), prevDoublePawnStepTo) then
 								can_capture = true
 								en_passant = true
 							end
@@ -783,11 +782,10 @@ local function get_theoretical_moves_from(meta, board, from_idx)
 
 		-- KING
 		elseif piece == "king" then
-			local inv = meta:get_inventory()
 			-- King can't move to any attacked square
 			-- king_board simulates the board with the king moved already.
 			-- Required for the attacked() check to work
-			local king_board = realchess.board_to_table(inv)
+			local king_board = table.copy(board)
 			king_board[to_idx] = king_board[from_idx]
 			king_board[from_idx] = ""
 			if realchess.attacked(color, to_idx, king_board) then
@@ -805,7 +803,7 @@ local function get_theoretical_moves_from(meta, board, from_idx)
 				end
 
 				if dx > 1 or dy > 1 then
-					local cc = can_castle(meta, board, "board", from_idx, to_idx)
+					local cc = can_castle(board, from_idx, to_idx, castlingRights)
 					if not cc then
 						moves[to_idx] = nil
 					end
@@ -847,10 +845,10 @@ end
 --   origin_index is the board index for the square to start the piece from (as string)
 --   and this is the key for a list of destination indixes.
 --   r1, r2, r3 ... are numeric values (normally 0) to "rate" this square for the bot.
-function realchess.get_theoretical_moves_for(meta, board, player)
+function realchess.get_theoretical_moves_for(board, player, prevDoublePawnStepTo, castlingRights)
 	local moves = {}
 	for i = 1, 64 do
-		local possibleMoves = get_theoretical_moves_from(meta, board, i)
+		local possibleMoves = get_theoretical_moves_from(board, i, prevDoublePawnStepTo, castlingRights)
 		if next(possibleMoves) then
 			local stack_name = board[i]
 			if stack_name:find(player) then
@@ -1089,7 +1087,11 @@ end
 
 local function get_figurine_id(piece_itemname)
 	local piece_s = piece_itemname:match(":(%w+_%w+)")
-	return figurines_str:match("(%d+)=chess_figurine_" .. piece_s)
+	if not piece_s then
+		return MOVES_LIST_SYMBOL_EMPTY
+	else
+		return figurines_str:match("(%d+)=chess_figurine_" .. piece_s)
+	end
 end
 
 
@@ -1678,17 +1680,17 @@ local function update_formspec(meta)
 	local turnWhite = minetest.colorize("#000001", playerWhiteDisplay)
 
 	-- several status words for the player
-	-- player is in check
+	--~ Chess: player is in check
 	local check_s   = minetest.colorize("#FF8000", "["..S("check").."]")
-	-- player has been checkmated
+	--~ Chess: player has been checkmated
 	local mate_s    = minetest.colorize("#FF0000", "["..S("checkmate").."]")
-	-- player has resigned
+	--~ Chess: player has resigned
 	local resign_s    = minetest.colorize("#FF0000", "["..S("resigned").."]")
-	-- player has won
+	--~ Chess: player has won
 	local win_s     = minetest.colorize("#26AB2B", "["..S("winner").."]")
-	-- player has lost
+	--~ Chess: player has lost
 	local lose_s     = minetest.colorize("#FF0000", "["..S("loser").."]")
-	-- player has a draw
+	--~ Chess: player has a draw
 	local draw_s    = minetest.colorize("#FF00FF", "["..S("draw").."]")
 
 	local status_black = ""
@@ -1733,6 +1735,7 @@ local function update_formspec(meta)
 	if promotion == "black" then
 		eaten_img = ""
 		promotion_formstring =
+			--~ Chess: Shown when black player can promote a pawn. Space for text is limited.
 			"label[10.1,6.35;"..FS("PROMOTION\nFOR BLACK!").."]" ..
 			"animated_image[10.05,7.2;2,2;p_img_white;pawn_black_promo_anim.png;5;100]"
 		if botColor ~= "black" and botColor ~= "both" then
@@ -1748,6 +1751,7 @@ local function update_formspec(meta)
 	elseif promotion == "white" then
 		eaten_img = ""
 		promotion_formstring =
+			--~ Chess: Shown when white player can promote a pawn. Space for text is limited.
 			"label[10.1,6.35;"..FS("PROMOTION\nFOR WHITE!").."]" ..
 			"animated_image[10.05,7.2;2,2;p_img_white;pawn_white_promo_anim.png;5;100]"
 		if botColor ~= "white" and botColor ~= "both" then
@@ -1765,8 +1769,10 @@ local function update_formspec(meta)
 	local draw_claim_formstring = ""
 	if drawClaim ~= "" and gameResult == "" then
 		if lastMove == "black" or lastMove == "" then
+			--~ Chess: Shown when white player wants to claim a draw. Space for text is limited.
 			draw_claim_formstring = "label[10.1,6.35;"..FS("DRAW CLAIM\nBY WHITE!").."]"
 		else
+			--~ Chess: Shown when black player wants to claim a draw. Space for text is limited.
 			draw_claim_formstring = "label[10.1,6.35;"..FS("DRAW CLAIM\nBY BLACK!").."]"
 		end
 		if drawClaim == "50_move_rule" then
@@ -1790,6 +1796,7 @@ local function update_formspec(meta)
 
 	if playerActionsAvailable and (playerWhite ~= "" and playerBlack ~= "") then
 		game_buttons = game_buttons .. "image_button[14.56,9.7;0.8,0.8;chess_resign.png;resign;]" ..
+			--~ Resign in Chess
 			"tooltip[resign;"..FS("Resign").."]"
 	end
 
@@ -1810,12 +1817,14 @@ local function update_formspec(meta)
 			-- Will trigger "draw claim" mode in which player must do the final move that triggers the draw
 			game_buttons = game_buttons .. "image_button[13.36,9.7;0.8,0.8;chess_draw_50move_next.png;draw_50_moves;]"..
 				"tooltip[draw_50_moves;"..
+				--~ Chess
 				FS("Invoke the 50-move rule for your next move").."]"
 		elseif halfmoveClock >= DRAWCLAIM_LONGGAME_PLAYER then
 			-- When the 50 moves without capture / pawn move have occured occur.
 			-- Will insta-draw.
 			game_buttons = game_buttons .. "image_button[13.36,9.7;0.8,0.8;chess_draw_50move.png;draw_50_moves;]"..
 				"tooltip[draw_50_moves;"..
+				--~ Chess
 				FS("Invoke the 50-move rule and draw the game").."]"
 		end
 
@@ -1828,12 +1837,14 @@ local function update_formspec(meta)
 			-- Will insta-draw.
 			game_buttons = game_buttons .. "image_button[12.36,9.7;0.8,0.8;chess_draw_repeat3.png;draw_repeat_3;]"..
 				"tooltip[draw_repeat_3;"..
+				--~ Chess
 				FS("Invoke the threefold repetition rule and draw the game").."]"
 		elseif maxRepeatedPositions >= 2 then
 			-- If the same position may be about to occur 3 times.
 			-- Will trigger "draw claim" mode in which player must do the final move that triggers the draw.
 			game_buttons = game_buttons .. "image_button[12.36,9.7;0.8,0.8;chess_draw_repeat3_next.png;draw_repeat_3;]"..
 				"tooltip[draw_repeat_3;"..
+				--~ Chess
 				FS("Invoke the threefold repetition rule for your next move").."]"
 		end
 	end
@@ -1899,13 +1910,20 @@ local function update_game_result(meta, lastMove)
 
 	local playerWhite = meta:get_string("playerWhite")
 	local playerBlack = meta:get_string("playerBlack")
+	local prevDoublePawnStepTo = meta:get_int("prevDoublePawnStepTo")
+	local castlingRights = {
+		castlingWhiteR = meta:get_int("castlingWhiteR"),
+		castlingWhiteL = meta:get_int("castlingWhiteL"),
+		castlingBlackR = meta:get_int("castlingBlackR"),
+		castlingBlackL = meta:get_int("castlingBlackL"),
+	}
 
 	update_formspec(meta)
 	local blackCanMove = false
 	local whiteCanMove = false
 
-	local blackMoves = realchess.get_theoretical_moves_for(meta, board_t, "black")
-	local whiteMoves = realchess.get_theoretical_moves_for(meta, board_t, "white")
+	local blackMoves = realchess.get_theoretical_moves_for(board_t, "black", prevDoublePawnStepTo, castlingRights)
+	local whiteMoves = realchess.get_theoretical_moves_for(board_t, "white", prevDoublePawnStepTo, castlingRights)
 	if next(blackMoves) then
 		blackCanMove = true
 	end
@@ -1965,6 +1983,7 @@ local function update_game_result(meta, lastMove)
 			meta:set_string("gameResult", "draw")
 			meta:set_string("gameResultReason", "stalemate")
 			add_special_to_moves_list(meta, "draw")
+			--~ Chess message
 			send_message_2(playerWhite, playerBlack, S("The game ended up in a stalemate! It's a draw!"), botColor)
 			minetest.log("action", "[xdecor] Chess: A game between "..playerWhite.." and "..playerBlack.." ended in a draw by stalemate")
 			return
@@ -1985,6 +2004,7 @@ local function update_game_result(meta, lastMove)
 			meta:set_string("gameResult", "draw")
 			meta:set_string("gameResultReason", "stalemate")
 			add_special_to_moves_list(meta, "draw")
+			--~ Chess message
 			send_message_2(playerWhite, playerBlack, S("The game ended up in a stalemate! It's a draw!"), botColor)
 			minetest.log("action", "[xdecor] Chess: A game between "..playerWhite.." and "..playerBlack.." ended in a draw by stalemate")
 			return
@@ -1996,6 +2016,7 @@ local function update_game_result(meta, lastMove)
 		meta:set_string("gameResult", "draw")
 		meta:set_string("gameResultReason", "dead_position")
 		add_special_to_moves_list(meta, "draw")
+		--~ Chess message
 		send_message_2(playerWhite, playerBlack, S("The game ended up in a dead position! It's a draw!"), botColor)
 		minetest.log("action", "[xdecor] Chess: A game between "..playerWhite.." and "..playerBlack.." ended in a draw by dead position")
 	end
@@ -2111,6 +2132,7 @@ local function update_game_result(meta, lastMove)
 		meta:set_string("gameResult", "draw")
 		meta:set_string("gameResultReason", "same_position_5")
 		add_special_to_moves_list(meta, "draw")
+		--~ Chess message when the fivefold repetition has happened
 		local msg = S("The exact same position has occured 5 times. It's a draw!")
 		send_message_2(playerWhite, playerBlack, msg, botColor)
 		minetest.log("action", "[xdecor] Chess: A game between "..playerWhite.." and "..playerBlack.." ended in a draw because the same position has appeared 5 times")
@@ -2230,6 +2252,7 @@ function realchess.move(meta, from_list, from_index, to_list, to_index, playerNa
 	local lastMove    = meta:get_string("lastMove")
 	local playerWhite = meta:get_string("playerWhite")
 	local playerBlack = meta:get_string("playerBlack")
+	local prevDoublePawnStepTo = meta:get_int("prevDoublePawnStepTo")
 	local kingMoved   = false
 	local thisMove    -- Will replace lastMove when move is legal
 
@@ -2346,7 +2369,8 @@ function realchess.move(meta, from_list, from_index, to_list, to_index, playerNa
 					can_capture = true
 				else
 					-- en passant
-					if can_capture_en_passant(meta, "black", xy_to_index(to_x, from_y)) then
+					local board = realchess.board_to_table(inv)
+					if can_capture_en_passant(board, "black", xy_to_index(to_x, from_y), prevDoublePawnStepTo) then
 						can_capture = true
 						en_passant_target = xy_to_index(to_x, from_y)
 					end
@@ -2414,7 +2438,8 @@ function realchess.move(meta, from_list, from_index, to_list, to_index, playerNa
 					can_capture = true
 				else
 					-- en passant
-					if can_capture_en_passant(meta, "white", xy_to_index(to_x, from_y)) then
+					local board = realchess.board_to_table(inv)
+					if can_capture_en_passant(board, "white", xy_to_index(to_x, from_y), prevDoublePawnStepTo) then
 						can_capture = true
 						en_passant_target = xy_to_index(to_x, from_y)
 					end
@@ -2666,9 +2691,15 @@ function realchess.move(meta, from_list, from_index, to_list, to_index, playerNa
 		local check = true
 		local inv = meta:get_inventory()
 		local board = realchess.board_to_table(inv)
+		local castlingRights = {
+			castlingWhiteR = meta:get_int("castlingWhiteR"),
+			castlingWhiteL = meta:get_int("castlingWhiteL"),
+			castlingBlackR = meta:get_int("castlingBlackR"),
+			castlingBlackL = meta:get_int("castlingBlackL"),
+		}
 
 		-- Castling
-		local cc, rook_start, rook_goal, rook_name = can_castle(meta, board, from_list, from_index, to_index)
+		local cc, rook_start, rook_goal, rook_name = can_castle(board, from_index, to_index, castlingRights)
 		if cc then
 			inv:set_stack(from_list, rook_goal, rook_name)
 			inv:set_stack(from_list, rook_start, "")
@@ -2796,11 +2827,11 @@ local function timeout_format(timeout_limit)
 	local seconds        = time_remaining % 60
 
 	if minutes == 0 then
-		-- number of seconds
+		--~ number of seconds
 		return S("@1 s", seconds)
 	end
 
-	-- number of minutes and seconds
+	--~ number of minutes and seconds
 	return S("@1 min @2 s", minutes, seconds)
 end
 
@@ -2882,6 +2913,7 @@ function realchess.fields(pos, _, fields, sender)
 		local lastMove = meta:get_string("lastMove")
 		if (playerName == playerWhite and playerWhite == "") or (playerName == playerBlack and playerBlack == "") then
 			-- Can't resign before the player name has been recorded
+			--~ Chess message when player tried to resign too early
 			send_message(playerName, S("Resigning is not possible yet."))
 			return
 		end
@@ -3032,9 +3064,11 @@ function realchess.fields(pos, _, fields, sender)
 			local pcolor = promo:sub(-5)
 			local activePromo = meta:get_string("promotionActive")
 			if activePromo == "" then
+				--~ Chess message
 				send_message(playerName, S("This isn't the time for promotion."))
 				return
 			elseif activePromo ~= pcolor then
+				--~ Chess message
 				send_message(playerName, S("It's not your turn! This promotion is meant for the other player."))
 				return
 			end
@@ -3042,6 +3076,7 @@ function realchess.fields(pos, _, fields, sender)
 				realchess.promote_pawn(meta, pcolor, promo:sub(1, -7))
 				return
 			else
+				--~ Chess message
 				send_message(playerName, S("It's not your turn! This promotion is meant for the other player."))
 				return
 			end
@@ -3271,13 +3306,13 @@ if ENABLE_CHESS_GAMES then
 		realchess.move(meta, from_list, from_index, to_list, to_index, playerName)
 		-- We always return 0 to disable all *builtin* inventory moves, since
 		-- we do it ourselves. This should be fine because there shouldn't be a
-		-- conflict between this mod and Minetest then.
+		-- conflict between this mod and Luanti then.
 		return 0
 	end
 	chessboarddef.allow_metadata_inventory_take = function() return 0 end
 	chessboarddef.allow_metadata_inventory_put = function() return 0 end
 	-- Note: There is no on_move function because we put the entire move handling
-	-- into the allow function above. The reason for this is of Minetest's
+	-- into the allow function above. The reason for this is of Luanti's
 	-- awkward behavior when swapping items.
 
 	minetest.register_lbm({

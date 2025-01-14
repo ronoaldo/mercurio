@@ -1,3 +1,6 @@
+
+-- register craft recipes when enabled
+
 if otherworlds.settings.crafting.enable then
 
 	minetest.register_craft({

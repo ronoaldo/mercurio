@@ -9,9 +9,6 @@ local State = {
   REJECTED  = 'rejected',
 }
 
-local passthrough = function(x) return x end
-local errorthrough = function(x) error(x) end
-
 local function callable_table(callback)
   local mt = getmetatable(callback)
   return type(mt) == 'table' and type(mt.__call) == 'function'
@@ -141,11 +138,16 @@ run = function(promise)
       i = i + 1
       local obj = q[i]
       local success, result = pcall(function()
-        local success = obj.fulfill or passthrough
-        local failure = obj.reject or errorthrough
-        local callback = promise.state == State.FULFILLED and success or failure
+        local success_fn = obj.fulfill or function(x) return x end
+        local failure_fn = obj.reject or function(x) error(x) end
+        local callback = promise.state == State.FULFILLED and success_fn or failure_fn
         return callback(promise.value)
       end)
+
+      if not success and obj.reject == nil then
+        -- replace reason
+        result = promise.value
+      end
 
       if not success then
         reject(obj.promise, result)

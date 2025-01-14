@@ -22,11 +22,11 @@ minetest.register_craftitem("pa28:pa28", {
 		if pointed_thing.type ~= "node" then
 			return
 		end
-        
+
         local pointed_pos = pointed_thing.under
         --local node_below = minetest.get_node(pointed_pos).name
         --local nodedef = minetest.registered_nodes[node_below]
-        
+
 		pointed_pos.y=pointed_pos.y+2
 		local pa28_ent = minetest.add_entity(pointed_pos, "pa28:pa28")
 		if pa28_ent and placer then

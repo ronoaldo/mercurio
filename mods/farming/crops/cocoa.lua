@@ -69,6 +69,7 @@ minetest.register_craftitem("farming:cocoa_beans_raw", {
 -- crop definition
 
 local def = {
+	description = S("Cocoa Beans") .. S(" Crop"),
 	drawtype = "plantlike",
 	tiles = {"farming_cocoa_1.png"},
 	paramtype = "light",
@@ -142,10 +143,44 @@ farming.registered_plants["farming:cocoa_beans"] = {
 	steps = 4
 }
 
--- register async mapgen script
+-- add random cocoa pods to jungle tree's
 
-if minetest.register_mapgen_script then
-	minetest.register_mapgen_script(farming.path .. "/crops/cocoa_mapgen.lua")
-else
-	dofile(farming.path .. "/crops/cocoa_mapgen.lua")
-end
+local random = math.random -- localise for speed
+
+minetest.register_on_generated(function(minp, maxp)
+
+	if maxp.y < 0 then return end
+
+	local pos, dir
+	local cocoa = minetest.find_nodes_in_area(minp, maxp,
+			{"default:jungletree", "mcl_core:jungletree"})
+
+	for n = 1, #cocoa do
+
+		pos = cocoa[n]
+
+		if minetest.find_node_near(pos, 1,
+			{"default:jungleleaves", "moretrees:jungletree_leaves_green",
+			"mcl_core:jungleleaves"}) then
+
+			dir = random(80)
+
+			    if dir == 1 then pos.x = pos.x + 1
+			elseif dir == 2 then pos.x = pos.x - 1
+			elseif dir == 3 then pos.z = pos.z + 1
+			elseif dir == 4 then pos.z = pos.z - 1
+			end
+
+			if dir < 5
+			and minetest.get_node(pos).name == "air"
+			and minetest.get_node_light(pos) > 12 then
+
+--print ("Cocoa Pod added at " .. minetest.pos_to_string(pos))
+
+				minetest.set_node(pos, {
+					name = "farming:cocoa_" .. tostring(random(4))
+				})
+			end
+		end
+	end
+end)

@@ -19,6 +19,7 @@ farming.add_eatable("farming:pumpkin_slice", 2)
 -- crop definition
 
 local def = {
+	description = S("Pumpkin") .. S(" Crop"),
 	drawtype = "plantlike",
 	tiles = {"farming_pumpkin_1.png"},
 	paramtype = "light",
@@ -107,17 +108,12 @@ farming.registered_plants["farming:pumpkin"] = {
 
 -- mapgen
 
-local mg = farming.mapgen == "v6"
-
-def = {
-	y_max = mg and 20 or 6,
-	near = mg and "group:water" or nil,
-	num = mg and 1 or -1,
-}
-
 minetest.register_decoration({
 	deco_type = "simple",
-	place_on = {"default:dirt_with_grass", "mcl_core:dirt_with_grass"},
+	place_on = {
+		"default:dirt_with_grass", "default:dirt_with_rainforest_litter",
+		"mcl_core:dirt_with_grass"
+	},
 	sidelen = 16,
 	noise_params = {
 		offset = 0,
@@ -127,9 +123,7 @@ minetest.register_decoration({
 		octaves = 3,
 		persist = 0.6
 	},
-	y_min = 1,
-	y_max = def.y_max,
+	y_min = 1, y_max = 3,
 	decoration = "farming:pumpkin_8",
-	spawn_by = def.near,
-	num_spawn_by = def.num
+	spawn_by = {"group:water", "group:sand"}, num_spawn_by = 1
 })

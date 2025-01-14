@@ -1,6 +1,6 @@
 local m = mtimer
 local S = m.translator
-local esc = minetest.formspec_escape
+local esc = core.formspec_escape
 
 
 -- Tango palette
@@ -18,14 +18,14 @@ local palette_entries = {
 
 local hexformat = table.concat({
     '#',
-    minetest.colorize('#ce5c00', 'rr'),
-    minetest.colorize('#4e9a06', 'gg'),
-    minetest.colorize('#729fcf', 'bb')
+    core.colorize('#ce5c00', 'rr'),
+    core.colorize('#4e9a06', 'gg'),
+    core.colorize('#729fcf', 'bb')
 })
 
 
 mtimer.dialog.set_color = function (player_name)
-    local player = minetest.get_player_by_name(player_name)
+    local player = core.get_player_by_name(player_name)
     local color = player:get_meta():get_string(m.meta.color.key)
     local palette = {}
     local col = 0

@@ -8,7 +8,7 @@
 
 Use it on your public server to give your players additional value (players can individually hide the timer if they want) while being on your server or use it in your singleplayer world to stay informed or – when creating creative content for others to watch – give your viewers a hint on when the footage was recorded.
 
-The mod is game-agnostic and does not have any dependencies. The mod only interfaces with Minetest’s *HUD API*, the *player meta data API* and the *Formspec API*.
+The mod is game-agnostic and does not have any dependencies. The mod only interfaces with Luanti’s *HUD API*, the *player meta data API* and the *Formspec API*.
 
 ## Configuration
 
@@ -72,7 +72,7 @@ The default configuration is loaded on server start and applied when a new playe
 
 The mod tries to load the configuration from least to most mod specific locations:
 
-1. Default `minetest.conf` that is used to load the server
+1. Default configuration that is used to load the server
 2. From `_mtimer.conf` in the served world’s directory
 3. Built-in default setting defined by the mod’s author
 
@@ -113,17 +113,17 @@ The `mtimer_timer_format` value allows a special replacement variable. All occur
 
 ### Formspecs look weird
 
-On very small screens the configuration dialogs might look very crammed with text being cut off or overlaying other text. This is due to how formspecs work and is not fixable without massive Minetest engine changes.
+On very small screens the configuration dialogs might look very crammed with text being cut off or overlaying other text. This is due to how formspecs work and is not fixable without massive Luanti engine changes.
 
-Same in the other direction: On very large screens the dialogs seem unnecessary huge with much empty space. Same here: This is not fixable without re-implementing formspec generation from scratch in Minetest.
+Same in the other direction: On very large screens the dialogs seem unnecessary huge with much empty space. Same here: This is not fixable without re-implementing formspec generation from scratch in Luanti.
 
-mTimer was tested with resolutions from 1024×768 up to 2560×1440 with 20px font and GUI scaling of 1.5. Since different font sizes and GUI scaling are somewhat broken in Minetest when it comes to formspecs the later was usable but did not look that good.
+mTimer was tested with resolutions from 1024×768 up to 2560×1440 with 20px font and GUI scaling of 1.5. Since different font sizes and GUI scaling are somewhat broken in Luanti when it comes to formspecs the later was usable but did not look that good.
 
 ### Dialog language does not match dame language
 
 Simple: The mod was not translated to the language you’re using. Feel free to translate it and file a pull request. I’d be happy to merge it.
 
-Currently German (`language = de` in `minetest.conf`) and Italian (`language = it`) are supported as translation language and English being the default and Italian being slightly out of date.
+Currently German (`language = de`) and Italian (`language = it`) are supported as translation language and English being the default and Italian being slightly out of date.
 
 ### HUD element scale slider does not reset
 
@@ -134,3 +134,9 @@ Currently there is nothing that can be done in order to instantly reset the form
 ### When unchecking the custom timer type nothing is enabled
 
 This is a visual glitch. The timer operates in the last selected mode. The checkmark re-appears when closing and re-opening the custom timer dialog.
+
+## Translations
+
+Missing your language? Feel free to add it!
+
+[![Translation status](https://translate.codeberg.org/widget/linuxdirks-luanti-mods/mtimer/287x66-grey.png)](https://translate.codeberg.org/projects/linuxdirks-luanti-mods/mtimer)

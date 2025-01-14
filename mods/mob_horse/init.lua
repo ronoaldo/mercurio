@@ -1,11 +1,11 @@
 
--- Load support for intllib.
+-- translation and get mod path
+
+local S = minetest.get_translator("mob_horse")
 local MP = minetest.get_modpath(minetest.get_current_modname()) .. "/"
 
--- Translation support
-local S = minetest.get_translator("mob_horse")
-
 -- horse shoes (speed, jump, brake/reverse speed, overlay texture)
+
 local shoes = {
 	["mobs:horseshoe_steel"] = {7, 4, 2, "mobs_horseshoe_steelo.png"},
 	["mobs:horseshoe_bronze"] = {7, 4, 4, "mobs_horseshoe_bronzeo.png"},
@@ -14,8 +14,8 @@ local shoes = {
 	["mobs:horseshoe_crystal"] = {11, 6, 9, "mobs_horseshoe_crystalo.png"}
 }
 
-
 -- rideable horse
+
 mobs:register_mob("mob_horse:horse", {
 	type = "animal",
 	visual = "mesh",
@@ -23,19 +23,13 @@ mobs:register_mob("mob_horse:horse", {
 	mesh = "mobs_horse.x",
 	collisionbox = {-0.4, -0.01, -0.4, 0.4, 1.25, 0.4},
 	animation = {
-		speed_normal = 15,
-		speed_run = 30,
-		stand_start = 25,
-		stand_end = 50, -- 75
-		stand2_start = 25,
-		stand2_end = 25,
-		stand3_start = 55,
-		stand3_end = 75,
-		stand3_loop = false,
-		walk_start = 75,
-		walk_end = 100,
-		run_start = 75,
-		run_end = 100
+		speed_normal = 15, speed_run = 30,
+		stand_start = 25, stand_end = 50, -- 75
+		stand2_start = 25, stand2_end = 25,
+		stand3_start = 55, stand3_end = 75, stand3_loop = false,
+		walk_start = 75, walk_end = 100,
+		run_start = 75, run_end = 100,
+		punch_start = 55, punch_end = 75, punch_speed = 35,
 	},
 	textures = {
 		{"mobs_horse.png"}, -- textures by Mjollna
@@ -43,24 +37,27 @@ mobs:register_mob("mob_horse:horse", {
 		{"mobs_horseara.png"}
 	},
 	fear_height = 3,
-	runaway = true,
+	--runaway = true,
 	fly = false,
 	walk_chance = 60,
-	view_range = 5,
+	view_range = 7,
 	follow = {
 		"farming:wheat", "default:apple", "farming:oat",
 		"farming:barley", "farming:corn"
 	},
-	passive = true,
-	hp_min = 12,
-	hp_max = 16,
-	armor = 200,
+	passive = false, attack_type = "dogfight", reach = 2.5, damage = 3,
+	attack_monsters = true,
+	hp_min = 15,
+	hp_max = 23,
+	armor = 100,
 	lava_damage = 5,
+	fire_damage = 4,
 	fall_damage = 1,
 	water_damage = 0,
 	makes_footstep_sound = true,
 	drops = {
-		{name = "mobs:leather", chance = 1, min = 0, max = 2}
+		{name = "mobs:leather", chance = 1, min = 0, max = 2},
+		{name = "mobs:meat_raw", chance = 1, min = 1, max = 2}
 	},
 
 	do_custom = function(self, dtime)
@@ -117,19 +114,13 @@ mobs:register_mob("mob_horse:horse", {
 	on_rightclick = function(self, clicker)
 
 		-- make sure player is clicking
-		if not clicker or not clicker:is_player() then
-			return
-		end
+		if not clicker or not clicker:is_player() then return end
 
 		-- feed, tame or heal horse
-		if mobs:feed_tame(self, clicker, 10, true, true) then
-			return
-		end
+		if mobs:feed_tame(self, clicker, 10, true, true) then return end
 
 		-- applying protection rune
-		if mobs:protect(self, clicker) then
-			return
-		end
+		if mobs:protect(self, clicker) then return end
 
 		local player_name = clicker:get_player_name()
 
@@ -149,8 +140,7 @@ mobs:register_mob("mob_horse:horse", {
 			end
 
 			-- attach saddle to horse
-			if not self.driver
-			and not self.child
+			if not self.driver and not self.child
 			and clicker:get_wielded_item():get_name() == "mobs:saddle"
 			and not self.saddle then
 
@@ -225,14 +215,12 @@ mobs:register_mob("mob_horse:horse", {
 	end,
 --[[
 	on_sound = function(self, def)
-		-- loudness ranges from (0.0 = cannot hear, to 1.0 = next to sound)
 		if def.loudness > 0.8 then -- if loud enough startle horse into jumping
-			self.object:set_velocity({x=0, y=5, z=0})
+			self.object:set_velocity({x = 0, y = 5, z = 0})
 		end
 	end
 ]]
 })
-
 
 -- check for custom spawn.lua
 local input = io.open(MP .. "spawn.lua", "r")
@@ -255,11 +243,12 @@ else
 	})
 end
 
+-- spawn egg
 
 mobs:register_egg("mob_horse:horse", S("Horse"), "wool_brown.png", 1)
 
-
 -- steel horseshoes
+
 minetest.register_craftitem(":mobs:horseshoe_steel", {
 	description = S("Steel HorseShoes (use on horse to apply)"),
 	inventory_image = "mobs_horseshoe_steel.png",
@@ -275,6 +264,7 @@ minetest.register_craft({
 })
 
 -- bronze horseshoes
+
 minetest.register_craftitem(":mobs:horseshoe_bronze", {
 	description = S("Bronze HorseShoes (use on horse to apply)"),
 	inventory_image = "mobs_horseshoe_bronze.png"
@@ -290,6 +280,7 @@ minetest.register_craft({
 })
 
 -- mese horseshoes
+
 minetest.register_craftitem(":mobs:horseshoe_mese", {
 	description = S("Mese HorseShoes (use on horse to apply)"),
 	inventory_image = "mobs_horseshoe_mese.png"
@@ -305,6 +296,7 @@ minetest.register_craft({
 })
 
 -- diamond horseshoes
+
 minetest.register_craftitem(":mobs:horseshoe_diamond", {
 	description = S("Diamond HorseShoes (use on horse to apply)"),
 	inventory_image = "mobs_horseshoe_diamond.png"
@@ -320,6 +312,7 @@ minetest.register_craft({
 })
 
 -- crystal horseshoes
+
 if minetest.get_modpath("ethereal") then
 
 	minetest.register_craftitem(":mobs:horseshoe_crystal", {
@@ -337,8 +330,8 @@ if minetest.get_modpath("ethereal") then
 	})
 end
 
-
 -- lucky blocks
+
 if minetest.get_modpath("lucky_block") then
 
 	lucky_block:add_blocks({
@@ -350,5 +343,4 @@ if minetest.get_modpath("lucky_block") then
 	})
 end
 
-
-print("[MOD] Mob Horse loaded")
+print("[MOD] Mobs Redo Horse loaded")

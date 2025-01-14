@@ -14,14 +14,14 @@ local function add_stratum(y_min, y_max, node)
 	})
 end
 
--- add baked clay layers (mesa biome is between 1 and 71)
+-- add baked clay layers (mesa biome is between 20 and 71)
 
-add_stratum(5, 10, "bakedclay:red")
-add_stratum(15, 20, "bakedclay:grey")
-add_stratum(25, 30, "bakedclay:red")
-add_stratum(35, 40, "bakedclay:grey")
-add_stratum(45, 50, "bakedclay:red")
-add_stratum(55, 60, "bakedclay:grey")
+for n = 0, 5 do
+
+	add_stratum(20 + (n * 9), 21 + (n * 9), "bakedclay:brown")
+	add_stratum(22 + (n * 9), 23 + (n * 9), "bakedclay:grey")
+	add_stratum(25 + (n * 9), 26 + (n * 9), "bakedclay:red")
+end
 
 -- scatter ore helper
 
@@ -68,7 +68,7 @@ add_ore("default:stone_with_copper", "default:desert_stone", 9*9*9, 5, 3, -31000
 
 -- Coral Sand
 
-add_ore("ethereal:sandy", "default:sand", 10*10*10, 24, 4, -100, -10)
+add_ore("ethereal:sandy", "default:sand", 10*10*10, 24, 4, -45, -10)
 
 -- Etherium
 
@@ -95,4 +95,25 @@ minetest.register_ore({
 	clust_size = 2,
 	y_min = 1025,
 	y_max = 31000
+})
+
+-- Clay in silver and desert sand beaches
+
+minetest.register_ore({
+	ore_type = "blob",
+	ore = "default:clay",
+	wherein = {"default:silver_sand", "default:desert_sand"},
+	clust_scarcity = 16 * 16 * 16,
+	clust_size = 5,
+	y_max = 0,
+	y_min = -15,
+	noise_threshold = 0.0,
+	noise_params = {
+		offset = 0.5,
+		scale = 0.2,
+		spread = {x = 5, y = 5, z = 5},
+		seed = -316,
+		octaves = 1,
+		persist = 0.0
+	}
 })

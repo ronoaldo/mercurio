@@ -136,7 +136,6 @@ minetest.register_craft({
 
 -- cornstarch
 
-
 minetest.register_craft({
 	output = "farming:cornstarch",
 	recipe = {
@@ -685,6 +684,21 @@ minetest.register_craft({
 	}
 })
 
+-- vegan butter
+
+minetest.register_craft({
+	output = "farming:butter_vegan",
+	recipe = {
+		{"farming:soy_milk", "farming:sunflower_oil", "farming:soy_milk"},
+		{"group:food_salt", a.dye_yellow, "farming:mixing_bowl"}
+	},
+	replacements = {
+		{"farming:soy_milk", a.drinking_glass .. " 2"},
+		{"farming:sunflower_oil", a.glass_bottle},
+		{"farming:mixing_bowl", "farming:mixing_bowl"}
+	}
+})
+
 -- onigiri
 
 minetest.register_craft({
@@ -983,6 +997,18 @@ minetest.register_craft( {
 	}
 })
 
+-- jerusalem artichokes
+
+minetest.register_craft({
+	output = "farming:jerusalem_artichokes",
+	recipe = {
+		{"group:food_artichoke", "group:food_garlic_clove", "group:food_artichoke"},
+		{"group:food_soy", "group:food_salt", "group:food_soy"},
+		{"group:food_butter", "group:food_skillet", "group:food_bowl"}
+	},
+	replacements = {{"group:food_skillet", "farming:skillet"}}
+})
+
 -- wooden scarecrow base
 
 minetest.register_craft({
@@ -1092,8 +1118,8 @@ minetest.register_craft({
 minetest.register_craft({
 	output = "farming:mortar_pestle",
 	recipe = {
-		{a.stone, "group:stick", a.stone},
-		{"", a.stone, ""}
+		{"group:stone", "group:stick", "group:stone"},
+		{"", "group:stone", ""}
 	}
 })
 
@@ -1113,8 +1139,8 @@ minetest.register_craft({
 minetest.register_craft({
 	output = "farming:juicer",
 	recipe = {
-		{"", a.stone, ""},
-		{a.stone, "", a.stone}
+		{"", "group:stone", ""},
+		{"group:stone", "", "group:stone"}
 	}
 })
 

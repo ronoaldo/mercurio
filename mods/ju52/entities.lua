@@ -22,17 +22,17 @@ initial_properties = {
             "airutils_metal.png", --roda trem
         },
 	},
-	
+
     on_activate = function(self,std)
 	    self.sdata = minetest.deserialize(std) or {}
 	    if self.sdata.remove then self.object:remove() end
     end,
-	    
+
     get_staticdata=function(self)
       self.sdata.remove=true
       return minetest.serialize(self.sdata)
     end,
-	
+
 })
 
 minetest.register_entity('ju52:cabin_interactor',{
@@ -46,12 +46,12 @@ minetest.register_entity('ju52:cabin_interactor',{
 	},
     dist_moved = 0,
     max_hp = 65535,
-	
+
     on_activate = function(self,std)
 	    self.sdata = minetest.deserialize(std) or {}
 	    if self.sdata.remove then self.object:remove() end
     end,
-	    
+
     get_staticdata=function(self)
       self.sdata.remove=true
       return minetest.serialize(self.sdata)
@@ -73,7 +73,7 @@ minetest.register_entity('ju52:cabin_interactor',{
         if parent_self.co_pilot and parent_self._have_copilot then
             copilot_name = parent_self.co_pilot
         end
-        
+
         if name == parent_self.driver_name then
             local itmstck=clicker:get_wielded_item()
             local item_name = ""

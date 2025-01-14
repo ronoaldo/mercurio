@@ -107,21 +107,14 @@ Bowl of soup=Ciotola di zuppa
 Efficiency=Efficacia
 Durability=Durabilità
 Sharpness=Affilatezza
-Your weapon inflicts more damages=La tua arma infligge più danno
-Your tool last longer=Il tuo utensile dura di più
+@1 (+@2%)=
+Your weapon inflicts more damage=La tua arma infligge più danno
+Your tool lasts longer=Il tuo utensile dura di più
 Your tool digs faster=Il tuo utensile scava più rapidamente
 Enchantment Table=Tavolo per migliorie
 Enchant your tools with mese crystals=
-Enchanted @1 @2@n@3=@2 su @1 incantesimo@n@3
-Enchanted @1 @2=@2 su @1 incantesimo
-Steel=Acciaio
-Bronze=Bronzo
-Mese=Mese
-Diamond=Diamante
-Axe=Ascia
-Pickaxe=Piccone
-Shovel=Pala
-Sword=Spada
+Enchanted @1@n@2=
+Enchanted @1=
 The bees are busy making honey.=
 The bees are looking for flowers.=
 The bees want to pollinate more flowers.=
@@ -222,13 +215,14 @@ Back=Indietro
 Work Bench=Banco da lavoro
 For cutting blocks, repairing tools with a hammer, crafting and storing items=
 @1 @2=
-Hammer=Martello
 Repairs tools at the work bench=
+Hammer=Martello
 
 
 ##### not used anymore #####
 
-Dumb AI=AI stupida
+Enchanted @1 @2@n@3=@2 su @1 incantesimo@n@3
+Enchanted @1 @2=@2 su @1 incantesimo
 Cauldron (idle)=Calderone (inattivo)
 Cauldron (active) - Drop foods inside to make a soup=Calderone (attivo) - Mettere gli ingredienti all'interno per fare una zuppa.
 Cauldron (active) - Use a bowl to eat the soup=Calderone (actif) - Utilizzare una ciotola per mangiare la zuppa

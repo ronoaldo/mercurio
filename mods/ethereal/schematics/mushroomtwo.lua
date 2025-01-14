@@ -1,6 +1,7 @@
 
 local _ = {name = "air", param1 = 000}
-local T = {name = "ethereal:mushroom_trunk", param1 = 255}
+local t = {name = "ethereal:mushroom_trunk", param1 = 255}
+local T = {name = "ethereal:mushroom_trunk", param1 = 255, force_place = true}
 local M = {name = "ethereal:mushroom_brown", param1 = 255}
 local P = {name = "ethereal:mushroom_pore", param1 = 255}
 local l = {name = "ethereal:lightstring", param1 = 255, param2 = 10}
@@ -34,11 +35,11 @@ ethereal.mushroomtwo = {
 	_,T,_,
 	_,T,_,
 	_,T,_,
-	_,T,_,
-	_,T,_,
-	_,T,_,
-	M,T,M,
-	M,T,M,
+	_,t,_,
+	_,t,_,
+	_,t,_,
+	M,t,M,
+	M,t,M,
 	M,P,M,
 	M,P,M,
 	M,M,M,

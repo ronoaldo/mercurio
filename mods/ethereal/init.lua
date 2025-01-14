@@ -8,7 +8,7 @@
 
 -- global
 
-ethereal = {version = "20240816"}
+ethereal = {version = "20241014"}
 
 -- setting helper
 
@@ -42,39 +42,38 @@ setting("bool", "flight", true)
 setting("number", "glacier", 1)
 setting("number", "bamboo", 1)
 setting("number", "mesa", 1)
-setting("number", "alpine", 1)
-setting("number", "healing", 1)
-setting("number", "snowy", 1)
+setting("number", "alpine", 1)--taiga
+setting("number", "snowy", 1)--coniferous_forest
 setting("number", "frost", 1)
-setting("number", "grassy", 1)
+setting("number", "grassy", 1)--deciduous_forest
 setting("number", "caves", 1)
 setting("number", "grayness", 1)
 setting("number", "grassytwo", 1)
 setting("number", "prairie", 1)
 setting("number", "jumble", 1)
-setting("number", "junglee", 1)
+setting("number", "junglee", 1)--rainforest
 setting("number", "desert", 1)
 setting("number", "grove", 1)
 setting("number", "mushroom", 1)
-setting("number", "sandstone", 1)
-setting("number", "quicksand", 1)
+setting("number", "sandstone", 1)--sandstone_desert
 setting("number", "plains", 1)
 setting("number", "savanna", 1)
 setting("number", "fiery", 1)
-setting("number", "sandclay", 1)
 setting("number", "swamp", 1)
-setting("number", "sealife", 1)
-setting("number", "reefs", 1)
-setting("number", "sakura", 1)
+setting("number", "quicksand", 1)--swamp quicksand
 setting("number", "tundra", 1)
 setting("number", "mediterranean", 1)
+setting("number", "cold_desert", 1)
+setting("number", "snowy_grassland", 1)
+setting("number", "sealife", 1)
+setting("number", "reefs", 1)
 setting("number", "logs", 1)
 setting("bool", "wood_rotate", true)
 
 
 local path = minetest.get_modpath("ethereal")
 
--- Load settings.conf file if found
+-- Load settings.conf file if found [DEPRECATED]
 
 local input = io.open(path.."/settings.conf", "r")
 
@@ -167,10 +166,10 @@ else -- or return to where it came from
 	minetest.register_alias("ethereal:bonemeal", "default:dirt")
 end
 
--- Xanadu specific decoration
+-- ambience lite
 
-if minetest.get_modpath("xanadu") then
-	dofile(path .. "/plantpack.lua")
+if minetest.get_modpath("ambience") then
+	dofile(path .. "/ambience.lua")
 end
 
 print ("[MOD] Ethereal loaded")

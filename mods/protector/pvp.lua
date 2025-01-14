@@ -1,18 +1,20 @@
 
-local S = protector.intllib
-
 -- get static spawn position
+
 local statspawn = minetest.string_to_pos(minetest.settings:get("static_spawnpoint"))
 		or {x = 0, y = 2, z = 0}
 
 -- is spawn protected
+
 local protector_spawn = tonumber(minetest.settings:get("protector_spawn")
-	or minetest.settings:get("protector_pvp_spawn")) or 0
+		or minetest.settings:get("protector_pvp_spawn")) or 0
 
 -- is night-only pvp enabled
+
 local protector_night_pvp = minetest.settings:get_bool("protector_night_pvp")
 
 -- disables PVP in your own protected areas
+
 if minetest.settings:get_bool("enable_pvp")
 and minetest.settings:get_bool("protector_pvp") then
 
@@ -21,14 +23,12 @@ and minetest.settings:get_bool("protector_pvp") then
 		minetest.register_on_punchplayer(function(player, hitter,
 				time_from_last_punch, tool_capabilities, dir, damage)
 
-			if not player
-			or not hitter then
+			if not player or not hitter then
 				print("[MOD] Protector - on_punchplayer called with nil objects")
-			end
-
-			if not hitter:is_player() then
 				return false
 			end
+
+			if not hitter:is_player() then return false end
 
 			-- no pvp at spawn area
 			local pos = player:get_pos()

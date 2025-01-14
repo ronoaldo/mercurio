@@ -1,6 +1,6 @@
 local m = mtimer
 local S = m.translator
-local ds = minetest.deserialize
+local ds = core.deserialize
 
 
 -- Manually calculate am/pm
@@ -13,8 +13,10 @@ local ds = minetest.deserialize
 -- @return string The meridiem indicator for that hour
 local get_mi = function (hour)
     local s_hour = tonumber(hour)
-    if s_hour >= 0 and s_hour <= 11 then return S('am') end -- midnight->noon
-    if s_hour >= 12 and s_hour <= 23 then return S('pm') end -- noon->midnight
+    --TRANSLATORS: Meridiem indicator for midnight to noon
+    if s_hour >= 0 and s_hour <= 11 then return S('am') end
+    --TRANSLATORS: Meridiem indicator for noon to midnight
+    if s_hour >= 12 and s_hour <= 23 then return S('pm') end
     return S('(ERROR)')
 end
 
@@ -87,7 +89,7 @@ end
 -- @param time_type   A Time type as described
 -- @return table      The table containing the data as described
 local get_real_time_universal = function (player_name, time_type)
-    local player = minetest.get_player_by_name(player_name)
+    local player = core.get_player_by_name(player_name)
     local player_meta = player:get_meta()
     local m_meta = m.meta
     local timezone_offset = player_meta:get_string(m_meta.timezone_offset.key)
@@ -174,7 +176,7 @@ end
 --   formatted = the formatted (all variables replaced) string
 -- }
 --
--- Calculation: The function `minetest.get_timeofday()` returns a fraction
+-- Calculation: The function `core.get_timeofday()` returns a fraction
 --              between 0 and 1 for the time of the day. Multiplication with
 --              24000 converts this number to a millihours value (mh). By
 --              multiplication with 3.6 the mh value is converted into a
@@ -191,9 +193,9 @@ end
 -- @param player_name The name of the player to get the time for
 -- @return table The table as described
 local get_ingame_time = function (player_name)
-    local player = minetest.get_player_by_name(player_name)
+    local player = core.get_player_by_name(player_name)
     local format = player:get_meta():get_string(m.meta.ingame_time_format.key)
-    local time_of_day = math.floor((minetest.get_timeofday() * 24000) * 3.6)
+    local time_of_day = math.floor((core.get_timeofday() * 24000) * 3.6)
     local ingame_timestamp = tonumber(string.format('%.0f', time_of_day))
 
     local values = {
@@ -237,7 +239,7 @@ end
 -- @param player_name The name of the player to get the duration for
 -- @return table The table as described
 local get_session_duration = function (player_name)
-    local player = minetest.get_player_by_name(player_name)
+    local player = core.get_player_by_name(player_name)
     local player_meta = player:get_meta()
     local format = player_meta:get_string(m.meta.session_duration_format.key)
     local start_timestamp = player_meta:get_string('mtimer:session_start')
@@ -295,7 +297,7 @@ end
 -- time parts in all formats – wich makes no sense because the difference
 -- calculation is messed up outside the specific boundaries.
 local get_custom_timer = function (player_name)
-    local player = minetest.get_player_by_name(player_name)
+    local player = core.get_player_by_name(player_name)
     local player_meta = player:get_meta()
     local ctv = ds(player_meta:get_string(m.meta.custom_timer_settings.key))
     local current_timestamp = os.time(os.date('!*t'))

@@ -137,7 +137,7 @@ minetest.register_node("ethereal:flight_potion", {
 	selection_box = {
 		type = "fixed", fixed = {-0.2, -0.37, -0.2, 0.2, 0.31, 0.2}
 	},
-	groups = {dig_immediate = 3},
+	groups = {dig_immediate = 3, vessel = 1},
 	sounds = default.node_sound_glass_defaults(),
 
 	on_use = function(itemstack, user, pointed_thing)

@@ -818,6 +818,9 @@ function signs_lib.update_sign(pos, fields)
 	local ownstr = ""
 	if owner ~= "" then ownstr = S("Locked sign, owned by @1\n", owner) end
 
+	-- Fix pasting from Windows: CR instead of LF
+	text = string.gsub(text, "\r\n?", "\n")
+
 	meta:set_string("text", text)
 	meta:set_string("infotext", ownstr..make_infotext(text).." ")
 

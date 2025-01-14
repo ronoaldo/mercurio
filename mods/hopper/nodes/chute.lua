@@ -48,10 +48,7 @@ minetest.register_node("hopper:chute", {
 	end,
 
 	on_place = function(itemstack, placer, pointed_thing, node_name)
-		local pos  = pointed_thing.under
 		local pos2 = pointed_thing.above
-		local x = pos.x - pos2.x
-		local z = pos.z - pos2.z
 
 		local returned_stack, success = minetest.item_place_node(itemstack, placer, pointed_thing)
 		if success then
@@ -91,21 +88,19 @@ minetest.register_node("hopper:chute", {
 		local node = minetest.get_node(pos)
 		local dir = minetest.facedir_to_dir(node.param2)
 		local destination_pos = vector.add(pos, dir)
-		local output_direction
+		local output_direction = "bottom"
 		if dir.y == 0 then
-			output_direction = "horizontal"
+			output_direction = "side"
 		end
 
 		local destination_node = minetest.get_node(destination_pos)
 		local registered_inventories = hopper.get_registered(destination_node.name)
 		if registered_inventories ~= nil then
-			if output_direction == "horizontal" then
-				hopper.send_item_to(pos, destination_pos, destination_node, registered_inventories["side"])
-			else
-				hopper.send_item_to(pos, destination_pos, destination_node, registered_inventories["bottom"])
+			if not hopper.send_item_to(pos, destination_pos, destination_node, registered_inventories[output_direction]) then
+				hopper.try_eject_item(pos, destination_pos)
 			end
 		else
-			hopper.send_item_to(pos, destination_pos, destination_node)
+			hopper.try_eject_item(pos, destination_pos)
 		end
 
 		if not inv:is_empty("main") then

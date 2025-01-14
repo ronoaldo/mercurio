@@ -72,7 +72,7 @@ mobs:register_mob("mobs_npc:igor", {
 	lava_damage = 3,
 	light_damage = 0,
 	follow = {
-		mcl and "mcl_mobitems:beef" or "mobs:meat_raw",
+		mcl and "mcl_mobitems:beef" or "group:food_meat_raw",--"mobs:meat_raw",
 		mcl and "mcl_core:diamond" or "default:diamond"
 	},
 	view_range = 15,

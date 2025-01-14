@@ -89,7 +89,7 @@ mobs:register_mob("mobs_npc:trader", {
 	light_damage = 0,
 	follow = {
 		mcl and "mcl_farming:bread" or "farming:bread",
-		mcl and "mcl_mobitems:cooked_beef"or "mobs:meat",
+		mcl and "mcl_mobitems:cooked_beef"or "group:food_meat", --"mobs:meat",
 		mcl and "mcl_core:diamond" or "default:diamond"
 	},
 	view_range = 7,

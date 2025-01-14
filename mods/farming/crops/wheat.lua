@@ -41,6 +41,7 @@ minetest.register_craftitem("farming:wheat", {
 -- crop definition
 
 local def = {
+	description = S("Wheat") .. S(" Crop"),
 	drawtype = "plantlike",
 	tiles = {"farming_wheat_1.png"},
 	paramtype = "light",

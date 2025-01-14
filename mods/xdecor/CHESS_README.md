@@ -29,9 +29,9 @@ You need a chessboard to play. Craft yourself a chessboard like this:
     BWB
     sss
 
-B = Black Dye
-W = White Dye
-s = Wooden Slab (from apple tree)
+* B = Black Dye
+* W = White Dye
+* s = Wooden Slab (from apple tree)
 
 Place the chessboard and examine it. You will see a close-up of the chessboard.
 
@@ -298,7 +298,7 @@ Just click the corresponding button. These buttons only work for the
 current player. Promotion is mandatory and no other moves are possible
 until it is completed.
 
-Once a piece was selected, the pawn will be replaced replaced, which
+Once a piece was selected, the pawn will be replaced, which
 immediately activates its powers. This ends the move.
 
 ### The end of the game
@@ -501,11 +501,11 @@ If the game came to an end, the game result is written in a final separate line 
 
 #### Example
 
-    1.  d2—d4    e7—e6
+    1.  d2–d4    e7–e6
     2. ♔e1–d2   ♛d8–h4
     3.  d4–d5    e6×d5
     ...
-    8. d8×d8♖   ♞b8-c6
+    8. d8×d8♖   ♞b8–c6
     9. e2–e4	 d4×e3 e.p.
 
 Explanation of the moves:
@@ -513,7 +513,7 @@ Explanation of the moves:
 * 1.: First fullmove: White moves pawn from d2 to d4, Black moves pawn from e7 to e6
 * 2.: Second fullmove: White moves king from e1 to d2, Black moves queen from d8 to h4
 * 3.: Third fullmove: White moves pawn from d4 to d5, Black moves pawn from d6 to d5 and captures
-* 8.: Eight fullmove: White moves pawn from d7 to d8, captures a piece and promotes it to rook, Black moves knight from b8 to c6
+* 8.: Eighth fullmove: White moves pawn from d7 to d8, captures a piece and promotes it to rook, Black moves knight from b8 to c6
 * 9.: Ninth fullmove: White moves pawn from e2 to e4, black moves pawn from d4 to e3 and captures en passant
 
 #### Other symbols

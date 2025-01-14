@@ -1,4 +1,5 @@
 local m = mtimer
+local S = mtimer.translator
 local d = mtimer.dialog
 
 
@@ -6,7 +7,7 @@ local d = mtimer.dialog
 -- specific action for the given form. See Individual descriptions. The code
 -- for this is very simple because most of the logic is handled in the
 -- timer functions and not in the formspec code.
-minetest.register_on_player_receive_fields(function(player, formname, fields)
+core.register_on_player_receive_fields(function(player, formname, fields)
     if not player:is_player() then return end
     local meta = player:get_meta()
     local name = player:get_player_name()
@@ -160,7 +161,7 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
     if formname == 'mtimer:hud_element_scale' then
         local attr = m.meta.hud_element_scale
         local value = tonumber(attr.default)
-        local nv_data = minetest.explode_scrollbar_event(fields.new_value)
+        local nv_data = core.explode_scrollbar_event(fields.new_value)
 
         -- Set new value if value was changed
         if nv_data.type == 'CHG' then
@@ -185,7 +186,7 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
         --             the scollbar because the formspec gets re-sent.
         --
         --             I even tried to manually closing the formspec and
-        --             re-opening it via `minetest.after` to prevent race
+        --             re-opening it via `core.after` to prevent race
         --             conditions. This worked with a delay of 0.1 seconds
         --             every now and then and with smaller delays the whole
         --             screen looked like it “flashed” because, well, the
@@ -214,7 +215,7 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
     -- Set offset (used as border/padding) of the timer HUD element
     if formname == 'mtimer:hud_element_offset' then
         local attr = m.meta.hud_element_offset
-        local default = minetest.deserialize(attr.default)
+        local default = core.deserialize(attr.default)
         local x_offset = tonumber(fields.x_offset) or default.x
         local y_offset = tonumber(fields.y_offset) or default.y
 
@@ -223,7 +224,7 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
         if fields.x_substract_1 then x_offset = x_offset - 1 end
         if fields.y_substract_1 then y_offset = y_offset - 1 end
 
-        meta:set_string(attr.key, minetest.serialize({
+        meta:set_string(attr.key, core.serialize({
             x = x_offset,
             y = y_offset
         }))
@@ -246,7 +247,7 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
     -- Custom timer setting and configuration
     if formname == 'mtimer:custom_timer' then
         local attr = m.meta.custom_timer_settings
-        local ctv = minetest.deserialize(meta:get_string(attr.key))
+        local ctv = core.deserialize(meta:get_string(attr.key))
         local entered = fields.key_enter_field or ''
 
         -- Set mode
@@ -304,7 +305,7 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 
         -- Set values if not quitting
         if not fields.quit then
-            meta:set_string(attr.key, minetest.serialize(ctv))
+            meta:set_string(attr.key, core.serialize(ctv))
         end
 
         -- Control timer if one of the control buttons was pressed. This is run
@@ -323,7 +324,7 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 
     -- Reset everything
     if formname == 'mtimer:reset_everything' then
-        local kick_message = m.translator('You requested a hard reset of the mTimer configuration. This request was stored. As described, you were kicked from the server in order to have the hard reset performed. Please rejoin the server. On rejoin all previously stored configuration regarding mTimer will be deleted.')
+        local disconnection_message = S('You requested a hard reset of the mTimer configuration. This request was stored. As described, you were disconnected from the server in order to have the hard reset performed. Please rejoin the server. On rejoin all previously stored configuration regarding mTimer will be deleted.')
 
         -- Perform a soft reset
         if fields.reset_soft then
@@ -332,10 +333,10 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
             end
         end
 
-        -- Request hard reset and kick the player with informational message
+        -- Request hard reset and disconnect the player with a message
         if fields.reset_hard then
             meta:set_int(m.meta.hard_reset_everything.key, os.time())
-            minetest.kick_player(name, kick_message)
+            core.disconnect_player(name, disconnection_message, true)
         end
 
         -- Show main menu formspec when cancelled or close on fields.quit

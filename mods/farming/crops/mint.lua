@@ -42,6 +42,7 @@ minetest.register_craftitem("farming:mint_leaf", {
 -- crop definition
 
 local def = {
+	description = S("Mint") .. S(" Crop"),
 	drawtype = "plantlike",
 	tiles = {"farming_mint_1.png"},
 	paramtype = "light",
@@ -104,7 +105,7 @@ minetest.register_decoration({
 	deco_type = "simple",
 	place_on = {
 		"default:dirt_with_grass", "default:dirt_with_coniferous_litter",
-		"mcl_core:dirt_with_grass"
+		"mcl_core:dirt_with_grass", "ethereal:bamboo_dirt"
 	},
 	sidelen = 16,
 	noise_params = {
@@ -115,9 +116,7 @@ minetest.register_decoration({
 		octaves = 3,
 		persist = 0.6
 	},
-	y_min = 0,
-	y_max = 75,
+	y_min = 1, y_max = 75,
 	decoration = "farming:mint_4",
-	spawn_by = {"group:water", "group:sand"},
-	num_spawn_by = 1
+	spawn_by = {"group:water", "group:sand"}, num_spawn_by = 1
 })

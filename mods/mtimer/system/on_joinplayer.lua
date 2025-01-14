@@ -7,7 +7,7 @@ local m = mtimer
 -- 2. Set default values if not set
 -- 3. Set session start timestamp
 -- 4. Set “empty” HUD element and write ID to meta data for later use
-minetest.register_on_joinplayer(function(player)
+core.register_on_joinplayer(function(player)
     local meta = player:get_meta()
     local name = player:get_player_name()
     local re = meta:get_int('mtimer:hard_reset_everything')
@@ -21,7 +21,7 @@ minetest.register_on_joinplayer(function(player)
                 meta:set_string(fname, '')
             end
         end
-        minetest.chat_send_player(name, '[mTimer] '..message)
+        core.chat_send_player(name, '[mTimer] '..message)
     end
 
     -- Set all unset metadata to their defined default values
@@ -35,7 +35,7 @@ minetest.register_on_joinplayer(function(player)
 
     -- Initially set empty HUD element to store the ID for updates
     meta:set_string('mtimer:hud_id', player:hud_add({
-        hud_elem_type = 'text',
+        type = 'text',
         text = '',
         number = '0x000000',
         position = {x=0,y=0},

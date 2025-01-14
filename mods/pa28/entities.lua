@@ -20,17 +20,17 @@ initial_properties = {
         "airutils_metal.png", --rodas dianteira
         },
 	},
-	
+
     on_activate = function(self,std)
 	    self.sdata = minetest.deserialize(std) or {}
 	    if self.sdata.remove then self.object:remove() end
     end,
-	    
+
     get_staticdata=function(self)
       self.sdata.remove=true
       return minetest.serialize(self.sdata)
     end,
-	
+
 })
 
 minetest.register_entity('pa28:p_lights',{
@@ -52,12 +52,12 @@ minetest.register_entity('pa28:p_lights',{
 	    self.sdata = minetest.deserialize(std) or {}
 	    if self.sdata.remove then self.object:remove() end
     end,
-	    
+
     get_staticdata=function(self)
       self.sdata.remove=true
       return minetest.serialize(self.sdata)
     end,
-	
+
 })
 
 minetest.register_entity('pa28:light',{
@@ -77,12 +77,12 @@ minetest.register_entity('pa28:light',{
 	    self.sdata = minetest.deserialize(std) or {}
 	    if self.sdata.remove then self.object:remove() end
     end,
-	    
+
     get_staticdata=function(self)
       self.sdata.remove=true
       return minetest.serialize(self.sdata)
     end,
-	
+
 })
 
 minetest.register_entity('pa28:pa28',

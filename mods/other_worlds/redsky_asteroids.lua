@@ -1,9 +1,11 @@
+
 -- Approximate realm limits
+
 local YMIN = otherworlds.settings.redsky_asteroids.YMIN or 6000
 local YMAX = otherworlds.settings.redsky_asteroids.YMAX or 7000
 
-
 -- Register on_generated function for this layer
+
 minetest.register_on_generated(
 		otherworlds.asteroids.create_on_generated(YMIN, YMAX, {
 
@@ -23,39 +25,30 @@ minetest.register_on_generated(
 	c_snowblock = minetest.get_content_id("default:snowblock")
 }))
 
-
 -- Deco code for grass and crystal
 
--- how often surface decoration appears on top of asteroid cobble
-local TOPDECO = 500
+local TOPDECO = 500 -- how often deco appears on top of asteroid cobble
 
 local grass = {
-	"mars:grass_1", "mars:grass_2", "mars:grass_3", "mars:grass_4", "mars:grass_5"
-}
+	"mars:grass_1", "mars:grass_2", "mars:grass_3", "mars:grass_4", "mars:grass_5"}
 
-local flower = {
-	"mars:moss", "mars:redweed", "mars:redgrass"
-}
+local flower = {"mars:moss", "mars:redweed", "mars:redgrass"}
 
 local crystal = {
 	"crystals:ghost_crystal_1", "crystals:ghost_crystal_2",
 	"crystals:red_crystal_1", "crystals:red_crystal_2",
-	"crystals:rose_quartz_1", "crystals:rose_quartz_2"
-}
+	"crystals:rose_quartz_1", "crystals:rose_quartz_2"}
 
 local random = math.random
 
-
 -- Add surface decoration
+
 minetest.register_on_generated(function(minp, maxp)
 
-	if minp.y < YMIN or maxp.y > YMAX then
-		return
-	end
+	if minp.y < YMIN or maxp.y > YMAX then return end
 
 	local bpos, ran
-	local coal = minetest.find_nodes_in_area_under_air(minp, maxp,
-			{"asteroid:redgravel"})
+	local coal = minetest.find_nodes_in_area_under_air(minp, maxp, {"asteroid:redgravel"})
 
 	for n = 1, #coal do
 

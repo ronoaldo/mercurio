@@ -1,5 +1,13 @@
 
+-- translator and mod check
+
 local S = minetest.get_translator("ethereal")
+local mod_fredo = minetest.get_modpath("farming")
+		and farming and farming.mod and farming.mod == "redo"
+
+-- replacement bowl
+
+local bowl = mod_fredo and "farming:bowl" or "ethereal:bowl"
 
 -- Banana
 
@@ -21,10 +29,7 @@ minetest.register_node("ethereal:banana", {
 	drop = "ethereal:banana",
 	on_use = minetest.item_eat(2),
 	sounds = default.node_sound_leaves_defaults(),
-
-	after_place_node = function(pos, placer)
-		minetest.set_node(pos, {name = "ethereal:banana", param2 = 1})
-	end
+	place_param2 = 1
 })
 
 ethereal.add_eatable("ethereal:banana", 2)
@@ -49,10 +54,7 @@ minetest.register_node("ethereal:banana_bunch", {
 	drop = "ethereal:banana_bunch",
 	on_use = minetest.item_eat(6),
 	sounds = default.node_sound_leaves_defaults(),
-
-	after_place_node = function(pos, placer)
-		minetest.set_node(pos, {name = "ethereal:banana_bunch", param2 = 1})
-	end
+	place_param2 = 1
 })
 
 ethereal.add_eatable("ethereal:banana_bunch", 6)
@@ -107,10 +109,7 @@ minetest.register_node("ethereal:orange", {
 	drop = "ethereal:orange",
 	on_use = minetest.item_eat(4),
 	sounds = default.node_sound_leaves_defaults(),
-
-	after_place_node = function(pos, placer)
-		minetest.set_node(pos, {name = "ethereal:orange", param2 = 1})
-	end
+	place_param2 = 1
 })
 
 ethereal.add_eatable("ethereal:orange", 4)
@@ -168,10 +167,7 @@ minetest.register_node("ethereal:coconut", {
 	},
 	drop = cdrp,
 	sounds = default.node_sound_wood_defaults(),
-
-	after_place_node = function(pos, placer)
-		minetest.set_node(pos, {name = "ethereal:coconut", param2 = 1})
-	end
+	place_param2 = 1
 })
 
 -- Coconut Slice
@@ -226,6 +222,7 @@ minetest.register_node("ethereal:golden_apple", {
 	},
 	drop = "ethereal:golden_apple",
 	sounds = default.node_sound_leaves_defaults(),
+	place_param2 = 1,
 
 	on_use = function(itemstack, user, pointed_thing)
 
@@ -235,10 +232,6 @@ minetest.register_node("ethereal:golden_apple", {
 
 			return minetest.do_item_eat(2, nil, itemstack, user, pointed_thing)
 		end
-	end,
-
-	after_place_node = function(pos, placer, itemstack)
-		minetest.set_node(pos, {name = "ethereal:golden_apple", param2 = 1})
 	end
 })
 
@@ -248,7 +241,7 @@ minetest.register_craftitem("ethereal:hearty_stew", {
 	description = S("Hearty Stew"),
 	inventory_image = "ethereal_hearty_stew.png",
 	wield_image = "ethereal_hearty_stew.png",
-	on_use = minetest.item_eat(10, "ethereal:bowl")
+	on_use = minetest.item_eat(10, bowl)
 })
 
 ethereal.add_eatable("ethereal:hearty_stew", 10)
@@ -342,10 +335,7 @@ minetest.register_node("ethereal:lemon", {
 	drop = "ethereal:lemon",
 	on_use = minetest.item_eat(3),
 	sounds = default.node_sound_leaves_defaults(),
-
-	after_place_node = function(pos, placer)
-		minetest.set_node(pos, {name = "ethereal:lemon", param2 = 1})
-	end
+	place_param2 = 1
 })
 
 ethereal.add_eatable("ethereal:lemon", 3)
@@ -377,13 +367,14 @@ minetest.register_craft({
 minetest.register_node("ethereal:lemonade", {
 	description = S("Lemonade"),
 	drawtype = "plantlike",
+	visual_scale = 0.5,
 	tiles = {"ethereal_lemonade.png"},
 	inventory_image = "ethereal_lemonade.png",
 	wield_image = "ethereal_lemonade.png",
 	paramtype = "light",
 	walkable = false,
 	selection_box = {
-		type = "fixed", fixed = {-0.25, -0.5, -0.25, 0.25, 0.25, 0.25}
+		type = "fixed", fixed = {-0.15, -0.5, -0.15, 0.15, 0, 0.15}
 	},
 	groups = {vessel = 1, dig_immediate = 3, attached_node = 1, drink = 1},
 	on_use = minetest.item_eat(5, "vessels:drinking_glass"),
@@ -421,10 +412,7 @@ minetest.register_node("ethereal:olive", {
 	groups = {fleshy = 3, dig_immediate = 3, leafdecay = 3, leafdecay_drop = 1},
 	on_use = minetest.item_eat(1),
 	sounds = default.node_sound_leaves_defaults(),
-
-	after_place_node = function(pos, placer)
-		minetest.set_node(pos, {name = "ethereal:olive", param2 = 1})
-	end
+	place_param2 = 1
 })
 
 ethereal.add_eatable("ethereal:olive", 1)
@@ -558,7 +546,7 @@ minetest.register_craft({
 minetest.register_craftitem("ethereal:teriyaki_beef", {
 	description = S("Teriyaki Beef"),
 	inventory_image = "ethereal_teriyaki_beef.png",
-	on_use = minetest.item_eat(12, "ethereal:bowl")
+	on_use = minetest.item_eat(12, bowl)
 })
 
 ethereal.add_eatable("ethereal:teriyaki_beef", 12)
@@ -582,7 +570,7 @@ minetest.register_craftitem("ethereal:mushroom_soup", {
 	description = S("Mushroom Soup"),
 	inventory_image = "ethereal_mushroom_soup.png",
 	groups = {drink = 1},
-	on_use = minetest.item_eat(5, "ethereal:bowl")
+	on_use = minetest.item_eat(5, bowl)
 })
 
 ethereal.add_eatable("ethereal:mushroom_soup", 5)
@@ -643,7 +631,7 @@ minetest.register_craftitem("ethereal:jellyfish_salad", {
 	on_use = minetest.item_eat(6)
 })
 
-ethereal.add_eatable("ethereal:jellyfish_salad", 4)
+ethereal.add_eatable("ethereal:jellyfish_salad", 6)
 
 minetest.register_craft({
 	output = "ethereal:jellyfish_salad",
@@ -697,7 +685,7 @@ minetest.register_craftitem("ethereal:fish_n_chips", {
 	on_use = minetest.item_eat(6)
 })
 
-ethereal.add_eatable("ethereal:fish_n_chips", 4)
+ethereal.add_eatable("ethereal:fish_n_chips", 6)
 
 minetest.register_craft({
 	output = "ethereal:fish_n_chips",

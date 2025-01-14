@@ -1,0 +1,19 @@
+# textdomain: nether_mobs
+
+Dragon Scales Helmet=
+Dragon Scales Chestplate=
+Dragon Scales Leggings=
+Dragon Scales Boots=
+Dragon Scales Shield=
+Nether Tamed Dragon=
+Nether Dragon=
+@1 (tamed)=
+Nether Man=
+Nether Dragon Scale Block=
+Nether Dragon Scale Stair=
+Nether Dragon Scale Slab=
+Inner Nether Dragon Scale Stair=
+Outer Nether Dragon Scale Stair=
+Nether Dragon Fire=
+Permanent Nether Dragon Fire=
+Nether Dragon Scale=

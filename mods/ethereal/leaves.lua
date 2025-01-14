@@ -1,7 +1,7 @@
 
 local S = minetest.get_translator("ethereal")
 
--- set leaftype (0 for block, 1 for plantlike)
+-- set leaftype (0 for plantlike, 1 for block)
 
 local leaftype = "plantlike"
 local leafscale = 1.4
@@ -504,31 +504,17 @@ minetest.register_craft({
 	burntime = 1
 })
 
--- bush block #3
+-- pine needles bush (replaces bush 3)
 
-minetest.register_node("ethereal:bush3", {
-	drawtype = "allfaces_optional",
-	description = S("Bush #3"),
-	tiles = {"default_pine_needles.png"},
-	paramtype = "light",
-	walkable = true,
-	groups = {snappy = 3, flammable = 2},
-	sounds = default.node_sound_leaves_defaults()
-})
+minetest.register_alias("ethereal:bush3", "default:pine_bush_needles")
 
 minetest.register_craft({
-	output = "ethereal:bush3",
+	output = "default:pine_bush_needles",
 	recipe = {
 		{"group:leaves", "group:leaves", "group:leaves"},
 		{"group:leaves", "default:pine_needles", "group:leaves"},
 		{"group:leaves", "group:leaves", "group:leaves"}
 	}
-})
-
-minetest.register_craft({
-	type = "fuel",
-	recipe = "ethereal:bush3",
-	burntime = 1
 })
 
 -- basandra bush stem, leaves
@@ -544,7 +530,7 @@ minetest.register_node("ethereal:basandra_bush_stem", {
 	wield_image = "ethereal_basandra_bush_stem.png",
 	paramtype = "light",
 	sunlight_propagates = true,
-	groups = {choppy = 2, oddly_breakable_by_hand = 1, flammable = 2},
+	groups = {choppy = 2, oddly_breakable_by_hand = 1},
 	sounds = default.node_sound_wood_defaults(),
 	selection_box = {
 		type = "fixed", fixed = {-7 / 16, -0.5, -7 / 16, 7 / 16, 0.5, 7 / 16},
@@ -556,7 +542,7 @@ minetest.register_node("ethereal:basandra_bush_leaves", {
 	drawtype = "allfaces_optional",
 	tiles = {"ethereal_basandra_bush_leaves.png"},
 	paramtype = "light",
-	groups = {snappy = 3, flammable = 2, leaves = 1},
+	groups = {snappy = 3, leaves = 1},
 	drop = {
 		max_items = 1,
 		items = {
@@ -602,3 +588,76 @@ decay({"ethereal:olive_trunk"}, {"ethereal:olive_leaves", "ethereal:olive"}, 3)
 
 decay({"ethereal:mushroom_trunk"}, {"ethereal:mushroom", "ethereal:mushroom_brown",
 		"ethereal:mushroom_pore", "ethereal:lightstring"}, 4)
+
+-- falling leaf particles
+
+if minetest.settings:get_bool("ethereal.leaf_particles") ~= false then
+
+	local leaf_list = {
+		{"ethereal:frost_leaves", "331b37", 9},
+		{"ethereal:bananaleaves", "28581e"},
+		{"ethereal:lemon_leaves", "507c1e"},
+		{"ethereal:olive_leaves", "416531"},
+		{"ethereal:orange_leaves", "1a3b1b"},
+		{"ethereal:redwood_leaves", "15342a"},
+		{"ethereal:sakura_leaves", "c281a9"},
+		{"ethereal:sakura_leaves2", "d4cbac"},
+		{"ethereal:willow_twig", "0b9445"},
+		{"ethereal:yellowleaves", "8b5f00", 9},
+		{"ethereal:birch_leaves", "274527"},
+		{"ethereal:palmleaves", "2b6000"},
+		{"ethereal:bamboo_leaves", "445811"},
+		{"default:acacia_leaves", "296600"},
+		{"default:aspen_leaves", "395d16"},
+		{"default:jungleleaves", "141e10"},
+		{"default:pine_needles", "00280e"},
+		{"default:leaves", "223a20"}
+	}
+
+	minetest.register_abm({
+		label = "Ethereal falling leaves",
+		nodenames = {"group:leaves"},
+		neighbors = {"air"},
+		interval = 7,
+		chance = 50,
+		catch_up = false,
+
+		action = function(pos, node)
+
+			local text, glow
+
+			for n = 1, #leaf_list do
+
+				if node.name == leaf_list[n][1] then
+
+					text = "ethereal_falling_leaf.png^[multiply:#"
+							.. leaf_list[n][2] .. "70"
+
+					glow = leaf_list[n][3] ; break
+				end
+			end
+
+			if text then
+
+				minetest.add_particlespawner({
+					amount = 1,
+					time = 2,
+					minpos = {x = pos.x - 1, y = pos.y - 1, z = pos.z - 1},
+					maxpos = {x = pos.x + 1, y = pos.y, z = pos.z + 1},
+					minvel = {x = -0.8, y = -1, z = -0.8},
+					maxvel = {x = 0.8, y = -3, z = 0.8},
+					minacc = {x = -0.1, y = -1, z = -0.1},
+					maxacc = {x = 0.2, y = -3, z = 0.2},
+					minexptime = 5,
+					maxexptime = 10,
+					minsize = 3,
+					maxsize = 4,
+					collisiondetection = true, collision_removal = true,
+					texture = text,
+					vertical = true,
+					glow = glow
+				})
+			end
+		end
+	})
+end

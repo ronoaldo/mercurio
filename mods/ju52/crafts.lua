@@ -20,11 +20,11 @@ minetest.register_craftitem("ju52:ju52", {
 		if pointed_thing.type ~= "node" then
 			return
 		end
-        
+
         local pointed_pos = pointed_thing.under
         --local node_below = minetest.get_node(pointed_pos).name
         --local nodedef = minetest.registered_nodes[node_below]
-        
+
 		pointed_pos.y=pointed_pos.y+3.0
 		local new_ju52 = minetest.add_entity(pointed_pos, "ju52:ju52")
 		if new_ju52 and placer then
@@ -45,7 +45,7 @@ minetest.register_craftitem("ju52:ju52", {
 -- crafting
 --
 if not minetest.settings:get_bool('ju52.disable_craftitems') and minetest.get_modpath("default") then
-	--[[minetest.register_craft({
+	minetest.register_craft({
 		output = "ju52:wings",
 		recipe = {
 			{"wool:white", "farming:string", "wool:white"},
@@ -67,5 +67,5 @@ if not minetest.settings:get_bool('ju52.disable_craftitems') and minetest.get_mo
 			{"ju52:wings",},
 			{"ju52:body",},
 		}
-	})]]--
+	})
 end

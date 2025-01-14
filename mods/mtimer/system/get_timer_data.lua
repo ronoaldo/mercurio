@@ -15,7 +15,7 @@ local S = m.translator
 -- @param player_name The name of the player to get the timer data for
 -- @return table The timer data of the player
 mtimer.get_timer_data = function (player_name)
-    local player_meta = minetest.get_player_by_name(player_name):get_meta()
+    local player_meta = core.get_player_by_name(player_name):get_meta()
     local time_data = mtimer.get_times(player_name)
     local ingame_time = time_data.ingame_time.formatted
     local session_start_time = time_data.session_start_time.formatted

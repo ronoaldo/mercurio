@@ -19,6 +19,7 @@ farming.add_eatable("farming:lettuce", 2)
 -- crop definition
 
 local def = {
+	description = S("Lettuce") .. S(" Crop"),
 	drawtype = "plantlike",
 	tiles = {"farming_lettuce_1.png"},
 	paramtype = "light",
@@ -82,7 +83,9 @@ farming.registered_plants["farming:lettuce"] = {
 
 minetest.register_decoration({
 	deco_type = "simple",
-	place_on = {"default:dirt_with_grass", "mcl_core:dirt_with_grass"},
+	place_on = {
+		"default:dirt_with_grass", "mcl_core:dirt_with_grass", "ethereal:prairie_dirt"
+	},
 	sidelen = 16,
 	noise_params = {
 		offset = 0,
@@ -92,7 +95,6 @@ minetest.register_decoration({
 		octaves = 3,
 		persist = 0.6
 	},
-	y_min = 5,
-	y_max = 35,
+	y_min = 5, y_max = 35,
 	decoration = "farming:lettuce_5"
 })

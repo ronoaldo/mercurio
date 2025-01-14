@@ -51,4 +51,4 @@ if minetest.get_modpath("lucky_block") then
 	dofile(path .. "lucky_block.lua")
 end
 
-print ("[MOD] Mobs Animal loaded")
+print ("[MOD] Mobs Redo Animals loaded")

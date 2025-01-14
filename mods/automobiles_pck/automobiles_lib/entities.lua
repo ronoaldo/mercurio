@@ -5,19 +5,19 @@ initial_properties = {
 	pointable=false,
 	visual = "mesh",
 	mesh = "automobiles_pivot_mesh.b3d",
-    textures = {"automobiles_black.png",},
+    textures = {"automobiles_alpha.png",},
 	},
-	
+
     on_activate = function(self,std)
 	    self.sdata = minetest.deserialize(std) or {}
 	    if self.sdata.remove then self.object:remove() end
     end,
-	    
+
     get_staticdata=function(self)
       self.sdata.remove=true
       return minetest.serialize(self.sdata)
     end,
-	
+
 })
 
 minetest.register_entity('automobiles_lib:pointer',{
@@ -86,8 +86,8 @@ function automobiles_lib.on_rightclick (self, clicker)
                     attach_pax_f(self, clicker, true)
                 end
             else
-                --there is a passeger
-                --if you are the psenger, so deattach
+                --there is a passenger
+                --if you are the passenger, so deattach
                 local dettach_pax_f = automobiles_lib.dettach_pax
                 if self._dettach_pax then dettach_pax_f = self._dettach_pax end
                 dettach_pax_f(self, clicker)
@@ -237,33 +237,37 @@ function automobiles_lib.on_activate(self, staticdata, dtime_s)
     front_suspension:set_attach(self.object,'',self._front_suspension_pos,{x=0,y=0,z=0})
     self.front_suspension = front_suspension
 
-    local lf_wheel=minetest.add_entity(pos,self._front_wheel_ent)
-    lf_wheel:set_attach(self.front_suspension,'',{x=-self._front_wheel_xpos,y=0,z=0},{x=0,y=0,z=0})
-	-- set the animation once and later only change the speed
-    lf_wheel:set_animation(self._front_wheel_frames, 0, 0, true)
-    self.lf_wheel = lf_wheel
+    if self._front_wheel_ent then
+        local lf_wheel=minetest.add_entity(pos,self._front_wheel_ent)
+        lf_wheel:set_attach(self.front_suspension,'',{x=-self._front_wheel_xpos,y=0,z=0},{x=0,y=0,z=0})
+	    -- set the animation once and later only change the speed
+        lf_wheel:set_animation(self._front_wheel_frames, 0, 0, true)
+        self.lf_wheel = lf_wheel
 
-    local rf_wheel=minetest.add_entity(pos,self._front_wheel_ent)
-    rf_wheel:set_attach(self.front_suspension,'',{x=self._front_wheel_xpos,y=0,z=0},{x=0,y=180,z=0})
-	-- set the animation once and later only change the speed
-    rf_wheel:set_animation(self._front_wheel_frames, 0, 0, true)
-    self.rf_wheel = rf_wheel
+        local rf_wheel=minetest.add_entity(pos,self._front_wheel_ent)
+        rf_wheel:set_attach(self.front_suspension,'',{x=self._front_wheel_xpos,y=0,z=0},{x=0,y=180,z=0})
+	    -- set the animation once and later only change the speed
+        rf_wheel:set_animation(self._front_wheel_frames, 0, 0, true)
+        self.rf_wheel = rf_wheel
+    end
 
     local rear_suspension=minetest.add_entity(self.object:get_pos(),self._rear_suspension_ent)
     rear_suspension:set_attach(self.object,'',self._rear_suspension_pos,{x=0,y=0,z=0})
     self.rear_suspension = rear_suspension
 
-    local lr_wheel=minetest.add_entity(pos,self._rear_wheel_ent)
-    lr_wheel:set_attach(self.rear_suspension,'',{x=-self._rear_wheel_xpos,y=0,z=0},{x=0,y=0,z=0})
-	-- set the animation once and later only change the speed
-    lr_wheel:set_animation(self._rear_wheel_frames, 0, 0, true)
-    self.lr_wheel = lr_wheel
+    if self._rear_wheel_ent then
+        local lr_wheel=minetest.add_entity(pos,self._rear_wheel_ent)
+        lr_wheel:set_attach(self.rear_suspension,'',{x=-self._rear_wheel_xpos,y=0,z=0},{x=0,y=0,z=0})
+	    -- set the animation once and later only change the speed
+        lr_wheel:set_animation(self._rear_wheel_frames, 0, 0, true)
+        self.lr_wheel = lr_wheel
 
-    local rr_wheel=minetest.add_entity(pos,self._rear_wheel_ent)
-    rr_wheel:set_attach(self.rear_suspension,'',{x=self._rear_wheel_xpos,y=0,z=0},{x=0,y=180,z=0})
-	-- set the animation once and later only change the speed
-    rr_wheel:set_animation(self._rear_wheel_frames, 0, 0, true)
-    self.rr_wheel = rr_wheel
+        local rr_wheel=minetest.add_entity(pos,self._rear_wheel_ent)
+        rr_wheel:set_attach(self.rear_suspension,'',{x=self._rear_wheel_xpos,y=0,z=0},{x=0,y=180,z=0})
+	    -- set the animation once and later only change the speed
+        rr_wheel:set_animation(self._rear_wheel_frames, 0, 0, true)
+        self.rr_wheel = rr_wheel
+    end
 
 
     if self._steering_ent then
@@ -293,19 +297,13 @@ function automobiles_lib.on_activate(self, staticdata, dtime_s)
 
     automobiles_lib.seats_create(self)
 
-    --[[local driver_seat=minetest.add_entity(pos,'automobiles_lib:pivot_mesh')
-    driver_seat:set_attach(self.object,'',self._seat_pos[1],{x=0,y=0,z=0})
-    self.driver_seat = driver_seat
-
-    local passenger_seat=minetest.add_entity(pos,'automobiles_lib:pivot_mesh')
-    passenger_seat:set_attach(self.object,'',self._seat_pos[2],{x=0,y=0,z=0})
-    self.passenger_seat = passenger_seat]]--
-
     local pointer_entity = 'automobiles_lib:pointer'
     if self._gauge_pointer_ent then pointer_entity = self._gauge_pointer_ent end
-    local fuel_gauge=minetest.add_entity(pos, pointer_entity)
-    fuel_gauge:set_attach(self.object,'',self._fuel_gauge_pos,{x=0,y=0,z=0})
-    self.fuel_gauge = fuel_gauge
+    if self._fuel_gauge_pos then
+        local fuel_gauge=minetest.add_entity(pos, pointer_entity)
+        fuel_gauge:set_attach(self.object,'',self._fuel_gauge_pos,{x=0,y=0,z=0})
+        self.fuel_gauge = fuel_gauge
+    end
 
     if self._front_lights then
         local lights = minetest.add_entity(pos,self._front_lights)
@@ -368,6 +366,9 @@ function automobiles_lib.on_step(self, dtime)
     if self._last_time_drift_snd > 2.0 then self._last_time_drift_snd = 2.0 end
     --[[end sound control]]--
 
+    --in case it's not declared
+    self._max_acc_factor = self._max_acc_factor or 1
+
     local rotation = self.object:get_rotation()
     local yaw = rotation.y
 	local newyaw=yaw
@@ -391,8 +392,14 @@ function automobiles_lib.on_step(self, dtime)
         dynamic_later_drag = dynamic_later_drag/(longit_speed*2)
     end
 
-    local later_drag = vector.multiply(nhdir,later_speed*
+    local later_drag = 0
+    if self._is_motorcycle == true then
+        later_drag = vector.multiply(nhdir,later_speed*
+            later_speed*self._LATER_DRAG_FACTOR*-1*automobiles_lib.sign(later_speed))
+    else
+        later_drag = vector.multiply(nhdir,later_speed*
         later_speed*dynamic_later_drag*-1*automobiles_lib.sign(later_speed))
+    end
 
     local accel = vector.add(longit_drag,later_drag)
     local stop = nil
@@ -421,7 +428,7 @@ function automobiles_lib.on_step(self, dtime)
             local player_attach = player:get_attach()
             if player_attach then
                 if self.driver_seat then
-                    if player_attach == self.driver_seat then is_attached = true end
+                    if player_attach == self.driver_seat or player_attach == self.object then is_attached = true end
                 end
             end
         end
@@ -432,7 +439,7 @@ function automobiles_lib.on_step(self, dtime)
         self._setmode(self, is_attached, curr_pos, velocity, player, dtime)
     end
 
-    local is_breaking = false
+    local is_braking = false
     if is_attached then
 		local ctrl = player:get_player_control()
         if ctrl.jump then
@@ -449,7 +456,7 @@ function automobiles_lib.on_step(self, dtime)
             end
         end
         if ctrl.down then
-            is_breaking = true
+            is_braking = true
             if self.r_lights then self.r_lights:set_properties({textures={"automobiles_rear_lights_full.png"}, glow=15}) end
         end
         if self.reverse_lights then
@@ -468,14 +475,14 @@ function automobiles_lib.on_step(self, dtime)
             if self._show_lights == true then
                 --self.lights:set_properties({is_visible=true})
                 self.lights:set_properties({textures={"automobiles_front_lights.png"}, glow=15})
-                if is_breaking == false then
+                if is_braking == false then
                     if self.r_lights then self.r_lights:set_properties({textures={"automobiles_rear_lights.png"}, glow=10}) end
                 end
                 automobiles_lib.put_light(self)
             else
                 --self.lights:set_properties({is_visible=false})
                 self.lights:set_properties({textures={"automobiles_grey.png"}, glow=0})
-                if is_breaking == false then
+                if is_braking == false then
                     if self.r_lights then self.r_lights:set_properties({textures={"automobiles_rear_lights_off.png"}, glow=0}) end
                 end
                 automobiles_lib.remove_light(self)
@@ -484,7 +491,6 @@ function automobiles_lib.on_step(self, dtime)
     end
 
     -- impacts and control
-    self.object:move_to(curr_pos)
 	if is_attached then --and self.driver_name == self.owner then
         local impact = automobiles_lib.get_hipotenuse_value(velocity, self.lastvelocity)
         if impact > 1 then
@@ -518,14 +524,17 @@ function automobiles_lib.on_step(self, dtime)
         local transmission_state = automobiles_lib.get_transmission_state(longit_speed, self._max_speed)
 
         local target_acc_factor = acc_factor
-        if transmission_state == 1 then
-            target_acc_factor = (self._max_acc_factor/3)
+
+        if self._have_transmission ~= false then
+            if transmission_state == 1 then
+                target_acc_factor = (self._max_acc_factor/3)
+            end
+            if transmission_state == 2 then
+                target_acc_factor = (self._max_acc_factor/2)
+            end
+            self._transmission_state = transmission_state
         end
-        if transmission_state == 2 then
-            target_acc_factor = (self._max_acc_factor/2)
-        end
-        self._transmission_state = transmission_state
-        --minetest.chat_send_all(transmission_state)
+        --core.chat_send_all(transmission_state)
 
         --control
         local control = automobiles_lib.control
@@ -555,25 +564,6 @@ function automobiles_lib.on_step(self, dtime)
     local noded = automobiles_lib.nodeatpos(automobiles_lib.pos_shift(curr_pos,{y=self.initial_properties.collisionbox[2]-0.5}))
     if (noded and noded.drawtype ~= 'airlike') then
         if noded.drawtype ~= 'liquid' then
-            local min_later_speed = self._min_later_speed or 3
-            local speed_for_smoke = min_later_speed / 2
-            if (later_speed > speed_for_smoke or later_speed < -speed_for_smoke) then
-                automobiles_lib.add_smoke(curr_pos, yaw, self._rear_wheel_xpos)
-                if automobiles_lib.extra_drift == false then  --disables the sound when playing drift game.. it's annoying
-                    if self._last_time_drift_snd >= 2.0 and (later_speed > min_later_speed or later_speed < -min_later_speed) then
-                        self._last_time_drift_snd = 0
-                        minetest.sound_play("automobiles_drifting", {
-                            pos = curr_pos,
-                            max_hear_distance = 20,
-                            gain = 3.0,
-                            fade = 0.0,
-                            pitch = 1.0,
-                            ephemeral = true,
-                        })
-                    end
-                end
-            end
-
             local wheel_compensation = longit_speed * (self._wheel_compensation or 1)
             if self.lf_wheel then self.lf_wheel:set_animation_frame_speed( wheel_compensation * (12 - angle_factor)) end
             if self.rf_wheel then self.rf_wheel:set_animation_frame_speed(-wheel_compensation * (12 + angle_factor)) end
@@ -649,7 +639,11 @@ function automobiles_lib.on_step(self, dtime)
         local acceleration = automobiles_lib.get_hipotenuse_value(accel, zero_reference)
         --minetest.chat_send_all(acceleration)
         if automobiles_lib.is_drift_game == false then
-            local consumed_power = acceleration/40000
+            local consumption = 40000
+            if self._consumption_divisor then
+                consumption = self._consumption_divisor
+            end
+            local consumed_power = acceleration/consumption
             self._energy = self._energy - consumed_power;
         else
             self._energy = 5
@@ -658,8 +652,11 @@ function automobiles_lib.on_step(self, dtime)
     if self._energy <= 0 then
         self._engine_running = false
         self._is_flying = 0
-        if self.sound_handle then minetest.sound_stop(self.sound_handle) end
-        --minetest.chat_send_player(self.driver_name, "Out of fuel")
+        if self.sound_handle then
+            minetest.sound_stop(self.sound_handle)
+            self.sound_handle = nil
+            minetest.chat_send_player(self.driver_name, "Out of fuel")
+        end
     else
         self._last_engine_sound_update = self._last_engine_sound_update + dtime
         if self._last_engine_sound_update > 0.300 then
@@ -684,21 +681,22 @@ function automobiles_lib.on_step(self, dtime)
         accel.y = y_accel --sets the anti gravity
     end
 
-    if stop ~= true then
-        --self.object:set_velocity(velocity)
-        self.object:add_velocity(vector.multiply(accel,dtime))
-        --self.object:set_acceleration(accel)
+    if stop == true then
+        self._last_accel = vector.new() --self.object:get_acceleration()
+        self.object:set_acceleration({x=0,y=0,z=0})
+        self.object:set_velocity({x=0,y=0,z=0})
     else
-        if stop == true then
-            self.object:set_acceleration({x=0,y=0,z=0})
-            self.object:set_velocity({x=0,y=0,z=0})
-        end
+        self._last_accel = accel
+        self.object:move_to(curr_pos)
+        --airutils.set_acceleration(self.object, new_accel)
+        local limit = (self._max_speed/self.dtime)
+        if accel.y > limit then accel.y = limit end --it isn't a rocket :/
     end
 
     self._last_ground_check = self._last_ground_check + dtime
     if self._last_ground_check > 0.18 then
         self._last_ground_check = 0
-        automobiles_lib.ground_get_distances(self, 0.372, 2.7)
+        automobiles_lib.ground_get_distances(self, 0.372, (self._front_suspension_pos.z)/10)
     end
 	local newpitch = self._pitch --velocity.y * math.rad(6)
 
@@ -715,11 +713,65 @@ function automobiles_lib.on_step(self, dtime)
         if h_vel_compensation < 0 then h_vel_compensation = 0 end
         if h_vel_compensation > max_pitch then h_vel_compensation = max_pitch end
         newpitch = newpitch + (velocity.y * math.rad(max_pitch - h_vel_compensation))
+    else
+        local turn_effect_speed = longit_speed
+        if self._is_motorcycle then
+            if turn_effect_speed > 20 then turn_effect_speed = 20 end
+            newroll = (-self._steering_angle/100)*(turn_effect_speed/10)
+
+            if is_attached == false and stop == true then
+                newroll = self._stopped_roll
+            end
+        else
+            if turn_effect_speed > 10 then turn_effect_speed = 10 end
+            if math.abs(longit_speed) > 0 then
+                --local tilt_effect = (-self._steering_angle/100)*(turn_effect_speed/30)
+                local max_tilt = 10
+                local tilt_effect = (-later_speed/12)*(turn_effect_speed/30)
+                local tire_burn = false
+                if tilt_effect > max_tilt then
+                    tilt_effect = max_tilt
+                end
+                if tilt_effect < -max_tilt then
+                    tilt_effect = -max_tilt
+                end 
+                newroll = tilt_effect * -1
+                self.front_suspension:set_rotation({x=0,y=0,z=tilt_effect})
+                self.rear_suspension:set_rotation({x=0,y=0,z=tilt_effect})
+
+
+                if (noded and noded.drawtype ~= 'airlike') then
+                    if noded.drawtype ~= 'liquid' then
+                        local min_later_speed = self._min_later_speed or 3
+                        local speed_for_smoke = min_later_speed / 2
+                        if (later_speed > speed_for_smoke or later_speed < -speed_for_smoke) and not self._is_motorcycle then
+                            automobiles_lib.add_smoke(curr_pos, yaw, self._rear_wheel_xpos)
+                            if automobiles_lib.extra_drift == false then  --disables the sound when playing drift game.. it's annoying
+                                if self._last_time_drift_snd >= 2.0 and (later_speed > min_later_speed or later_speed < -min_later_speed) then
+                                    self._last_time_drift_snd = 0
+                                    minetest.sound_play("automobiles_drifting", {
+                                        pos = curr_pos,
+                                        max_hear_distance = 20,
+                                        gain = 3.0,
+                                        fade = 0.0,
+                                        pitch = 1.0,
+                                        ephemeral = true,
+                                    })
+                                end
+                            end
+                        end
+                    end
+                end
+
+
+            else
+                self.front_suspension:set_rotation({x=0,y=0,z=0})
+                self.rear_suspension:set_rotation({x=0,y=0,z=0})
+            end
+        end
     end
 
 	self.object:set_rotation({x=newpitch,y=newyaw,z=newroll})
 
-    --saves last velocity for collision detection (abrupt stop)
-    self.lastvelocity = self.object:get_velocity()
     self._longit_speed = longit_speed
 end

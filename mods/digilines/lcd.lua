@@ -1,4 +1,5 @@
 local S = digilines.S
+local FS = digilines.FS
 
 --* parts are currently not possible because you cannot set the pitch of an entity from lua
 
@@ -186,7 +187,7 @@ local lcds = {
 }
 
 local reset_meta = function(pos)
-	minetest.get_meta(pos):set_string("formspec", "field[channel;Channel;${channel}]")
+	minetest.get_meta(pos):set_string("formspec", "field[channel;"..FS("Channel")..";${channel}]")
 end
 
 local clearscreen = function(pos)
@@ -258,6 +259,8 @@ local on_digiline_receive = function(pos, _, channel, msg)
 	local meta = minetest.get_meta(pos)
 	local setchan = meta:get_string("channel")
 	if setchan ~= channel then return end
+
+	if type(msg) ~= "string" and type(msg) ~= "number" then return end
 
 	meta:set_string("text", msg)
 	meta:set_string("infotext", msg)

@@ -65,8 +65,7 @@ mtt.register("error handling 2", function(callback)
     end)
 
     Promise.rejected("nope"):next(function() end):catch(function(err)
-        -- "/home/user/.minetest/mods/promise/promise.lua:13: nope"
-        assert(err)
+        assert(err == "nope")
         callback()
     end)
 end)

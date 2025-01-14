@@ -1,9 +1,12 @@
-# version 1.1.1
+# textdomain: whitelist
 # author(s): Dragonop
 # reviewer(s):
-# textdomain: whitelist
 
-# api.lua
+##[ init.lua ]##
+Whitelist=Lista blanca
+Manage who can and who can't enter in your server=Maneja quien y quien no puede entrar a tu servidor
+
+##[ src/api.lua ]##
 [!] The whitelist is already enabled!=[!] ¡La lista blanca ya está activada!
 Whitelist successfully enabled=Lista blanca activada correctamente
 [!] The whitelist is already disabled!=[!] ¡La lista blanca ya está desactivada!
@@ -12,7 +15,11 @@ Whitelist successfully disabled=Lista blanca desactivada correctamente
 [!] There is no player whitelisted with that name...=[!] No hay ningún jugador en la lista blanca con ese nombre...
 [!] You can't remove yourself!=[!] ¡No puedes eliminarte a ti mismo!
 [!] Whitelist can't be empty when enabled!=[!] ¡La lista blanca no puede estar vacía cuando está habilitada!
-Whitelisted players: =Jugadores en la lista blanca: 
+Whitelisted players: @1=Jugadores en la lista blanca: @1
 
-#player_manager.lua
+##[ src/commands.lua ]##
+Whitelist commands. <player> is only needed for `add` and `remove`=Comandos de la lista blanca. <jugador> es lo único necesario para `add` y `remove`
+player=jugador
+
+##[ src/player_manager.lua ]##
 You're not whitelisted!=¡No estás en la lista blanca!

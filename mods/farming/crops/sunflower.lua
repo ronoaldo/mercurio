@@ -51,6 +51,7 @@ minetest.register_craft({
 -- crop definition
 
 local def = {
+	description = S("Sunflower") .. S(" Crop"),
 	drawtype = "plantlike",
 	tiles = {"farming_sunflower_1.png"},
 	paramtype = "light",
@@ -131,7 +132,9 @@ farming.registered_plants["farming:sunflower"] = {
 
 minetest.register_decoration({
 	deco_type = "simple",
-	place_on = {"default:dirt_with_grass", "mcl_core:dirt_with_grass"},
+	place_on = {
+		"default:dirt_with_grass", "mcl_core:dirt_with_grass", "ethereal:prairie_dirt"
+	},
 	sidelen = 16,
 	noise_params = {
 		offset = 0,
@@ -141,7 +144,6 @@ minetest.register_decoration({
 		octaves = 3,
 		persist = 0.6
 	},
-	y_min = 10,
-	y_max = 40,
+	y_min = 10, y_max = 40,
 	decoration = "farming:sunflower_8"
 })

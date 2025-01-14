@@ -152,6 +152,10 @@ minetest.register_node("travelnet:elevator", {
 	end
 })
 
+if minetest.get_modpath("mesecons_mvps") then
+	mesecon.register_mvps_stopper("travelnet:elevator")
+end
+
 minetest.register_craft({
 	output = "travelnet:elevator",
 	recipe = travelnet.elevator_recipe,

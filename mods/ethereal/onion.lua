@@ -20,6 +20,7 @@ ethereal.add_eatable("ethereal:wild_onion_plant", 2)
 -- Onion definition
 
 local def = {
+	description = S("Wild Onion") .. S(" Crop"),
 	drawtype = "plantlike",
 	tiles = {"ethereal_wild_onion_1.png"},
 	paramtype = "light",
@@ -113,9 +114,7 @@ else
 			pos.y = pos.y + 1
 
 			-- do we have enough light?
-			local light = minetest.get_node_light(pos) or 0
-
-			if light < 13 then return end
+			local light = minetest.get_node_light(pos) or 0 ; if light < 13 then return end
 
 			-- grow to next stage
 			local num = node.name:split("_")[2]

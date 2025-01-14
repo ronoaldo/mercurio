@@ -1,4 +1,4 @@
-local modpath = minetest.get_modpath('mtimer')..DIR_DELIM
+local modpath = core.get_modpath('mtimer')..DIR_DELIM
 local syspath = modpath..'system'..DIR_DELIM
 local fspath = syspath..'formspecs'..DIR_DELIM
 
@@ -10,7 +10,7 @@ local fspath = syspath..'formspecs'..DIR_DELIM
 -- @see ./system/formspecs/*
 -- @see ./system/load_configuration.lua
 mtimer = {
-    translator = minetest.get_translator('mtimer'),
+    translator = core.get_translator('mtimer'),
     dialog = {},
     meta = {}
 }
@@ -23,7 +23,7 @@ dofile(syspath..'load_configuration.lua')
 -- Load formspec-related files
 dofile(syspath..'formspec_helpers.lua')
 dofile(syspath..'on_receive_fields.lua')
-for _,f in pairs(minetest.get_dir_list(fspath, false)) do dofile(fspath..f) end
+for _,f in pairs(core.get_dir_list(fspath, false)) do dofile(fspath..f) end
 
 
 -- Load timer actions

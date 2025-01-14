@@ -10,9 +10,9 @@ mobs:register_mob("mobs_animal:cow", {
 	attack_npcs = false,
 	reach = 2,
 	damage = 4,
-	hp_min = 5,
+	hp_min = 10,
 	hp_max = 20,
-	armor = 200,
+	armor = 100,
 	collisionbox = {-0.4, -0.01, -0.4, 0.4, 1.2, 0.4},
 	visual = "mesh",
 	mesh = "mobs_cow.b3d",
@@ -21,7 +21,10 @@ mobs:register_mob("mobs_animal:cow", {
 		{"mobs_cow2.png"}
 	},
 	makes_footstep_sound = true,
-	sounds = {random = "mobs_cow"},
+	sounds = {
+		random = "mobs_cow",
+		replace = "default_dig_crumbly"
+	},
 	walk_velocity = 1,
 	run_velocity = 2,
 	jump = true,

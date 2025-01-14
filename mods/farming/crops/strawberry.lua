@@ -19,6 +19,7 @@ farming.add_eatable("ethereal:strawberry", 1)
 -- crop definition
 
 local def = {
+	description = S("Strawberry") .. S(" Crop"),
 	drawtype = "plantlike",
 	tiles = {"ethereal_strawberry_1.png"},
 	paramtype = "light",
@@ -113,7 +114,9 @@ farming.registered_plants["ethereal:strawberry"] = {
 
 minetest.register_decoration({
 	deco_type = "simple",
-	place_on = {"default:dirt_with_grass", "mcl_core:dirt_with_grass"},
+	place_on = {
+		"default:dirt_with_grass", "mcl_core:dirt_with_grass", "ethereal:prairie_dirt"
+	},
 	sidelen = 16,
 	noise_params = {
 		offset = 0,
@@ -123,7 +126,6 @@ minetest.register_decoration({
 		octaves = 3,
 		persist = 0.6
 	},
-	y_min = 20,
-	y_max = 55,
+	y_min = 15, y_max = 55,
 	decoration = "ethereal:strawberry_7"
 })

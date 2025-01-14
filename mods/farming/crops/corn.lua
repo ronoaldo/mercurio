@@ -24,6 +24,7 @@ farming.add_eatable("farming:corn", 3)
 -- crop definition
 
 local def = {
+	description = S("Corn") .. S(" Crop"),
 	drawtype = "plantlike",
 	tiles = {"farming_corn_1.png"},
 	paramtype = "light",
@@ -112,7 +113,9 @@ farming.registered_plants["farming:corn"] = {
 
 minetest.register_decoration({
 	deco_type = "simple",
-	place_on = {"default:dirt_with_grass", "mcl_core:dirt_with_grass"},
+	place_on = {
+		"default:dirt_with_grass", "mcl_core:dirt_with_grass", "ethereal:prairie_dirt"
+	},
 	sidelen = 16,
 	noise_params = {
 		offset = 0,
@@ -122,7 +125,6 @@ minetest.register_decoration({
 		octaves = 3,
 		persist = 0.6
 	},
-	y_min = 12,
-	y_max = 25,
+	y_min = 12, y_max = 27,
 	decoration = "farming:corn_7"
 })

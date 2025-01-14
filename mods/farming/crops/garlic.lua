@@ -16,6 +16,7 @@ minetest.register_craftitem("farming:garlic_clove", {
 -- crop definition
 
 local def = {
+	description = S("Garlic") .. S(" Crop"),
 	drawtype = "plantlike",
 	tiles = {"crops_garlic_plant_1.png"},
 	paramtype = "light",
@@ -83,7 +84,10 @@ farming.registered_plants["farming:garlic"] = {
 
 minetest.register_decoration({
 	deco_type = "simple",
-	place_on = {"default:dirt_with_grass", "mcl_core:dirt_with_grass"},
+	place_on = {
+		"default:dirt_with_grass", "mcl_core:dirt_with_grass", "ethereal:prairie_dirt",
+		"default:dirt_with_rainforest_litter"
+	},
 	sidelen = 16,
 	noise_params = {
 		offset = 0,
@@ -93,9 +97,7 @@ minetest.register_decoration({
 		octaves = 3,
 		persist = 0.6
 	},
-	y_min = 3,
-	y_max = 35,
+	y_min = 3, y_max = 45,
 	decoration = "farming:garlic_5",
-	spawn_by = "group:tree",
-	num_spawn_by = 1
+	spawn_by = "group:tree", num_spawn_by = 1
 })

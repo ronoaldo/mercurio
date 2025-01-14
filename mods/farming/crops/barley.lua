@@ -42,6 +42,7 @@ minetest.register_craftitem("farming:barley", {
 -- crop definition
 
 local def = {
+	description = S("Barley") .. S(" Crop"),
 	drawtype = "plantlike",
 	tiles = {"farming_barley_1.png"},
 	paramtype = "light",

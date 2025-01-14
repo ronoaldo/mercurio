@@ -1,7 +1,7 @@
 -- Localise needed functions
 local m = mtimer
 local S = m.translator
-local esc = minetest.formspec_escape
+local esc = core.formspec_escape
 
 
 -- Draw a scale ruler
@@ -69,7 +69,7 @@ end
 
 
 mtimer.dialog.hud_element_scale = function (player_name)
-    local player = minetest.get_player_by_name(player_name)
+    local player = core.get_player_by_name(player_name)
     local scale = player:get_meta():get_string(m.meta.hud_element_scale.key)
 
     local sb_options = table.concat({

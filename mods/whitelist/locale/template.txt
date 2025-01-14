@@ -1,9 +1,12 @@
-# version 1.2.0
+# textdomain: whitelist
 # author(s):
 # reviewer(s):
-# textdomain: whitelist
 
-# api.lua
+##[ init.lua ]##
+Whitelist=
+Manage who can and who can't enter in your server=
+
+##[ src/api.lua ]##
 [!] The whitelist is already enabled!=
 Whitelist successfully enabled=
 [!] The whitelist is already disabled!=
@@ -12,11 +15,11 @@ Whitelist successfully disabled=
 [!] There is no player whitelisted with that name...=
 [!] You can't remove yourself!=
 [!] Whitelist can't be empty when enabled!=
-Whitelisted players: =
+Whitelisted players: @1=
 
-# commands.lua
-Whitelist commands. <player> is only needed for 'add' and 'remove'=
+##[ src/commands.lua ]##
+Whitelist commands. <player> is only needed for `add` and `remove`=
 player=
 
-#player_manager.lua
+##[ src/player_manager.lua ]##
 You're not whitelisted!=

@@ -23,6 +23,7 @@ farming.add_eatable("farming:carrot", 4)
 -- crop definition
 
 local def = {
+	description = S("Carrot") .. S(" Crop"),
 	drawtype = "plantlike",
 	tiles = {"farming_carrot_1.png"},
 	paramtype = "light",
@@ -106,17 +107,11 @@ farming.registered_plants["farming:carrot"] = {
 
 -- mapgen
 
-local mg = farming.mapgen == "v6"
-
-def = {
-	y_max = mg and 30 or 20,
-	near = mg and "group:water" or nil,
-	num = mg and 1 or -1,
-}
-
 minetest.register_decoration({
 	deco_type = "simple",
-	place_on = {"default:dirt_with_grass", "mcl_core:dirt_with_grass"},
+	place_on = {
+		"default:dirt_with_grass", "mcl_core:dirt_with_grass", "ethereal:prairie_dirt"
+	},
 	sidelen = 16,
 	noise_params = {
 		offset = 0,
@@ -126,9 +121,6 @@ minetest.register_decoration({
 		octaves = 3,
 		persist = 0.6
 	},
-	y_min = 1,
-	y_max = def.y_max,
-	decoration = "farming:carrot_8",
-	spawn_by = def.near,
-	num_spawn_by = def.num
+	y_min = 1, y_max = 30,
+	decoration = "farming:carrot_7"
 })

@@ -19,6 +19,7 @@ farming.add_eatable("farming:spinach", 1)
 -- crop definition
 
 local def = {
+	description = S("Spinach") .. S(" Crop"),
 	drawtype = "plantlike",
 	tiles = {"farming_spinach_1.png"},
 	paramtype = "light",
@@ -88,16 +89,14 @@ minetest.register_decoration({
 	place_on = {"default:dirt_with_grass", "mcl_core:dirt_with_grass"},
 	sidelen = 16,
 	noise_params = {
-		offset = -0.1,
+		offset = 0,
 		scale = farming.spinach,
 		spread = {x = 100, y = 100, z = 100},
 		seed = 910,
 		octaves = 3,
 		persist = 0.6
 	},
-	biomes = {"deciduous_forest"},
-	y_max = 31000,
-	y_min = 1,
+	y_min = 1, y_max = 100,
 	decoration = "farming:spinach_4",
 	param2 = 3
 })

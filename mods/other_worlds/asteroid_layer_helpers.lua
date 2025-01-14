@@ -1,8 +1,10 @@
 
 -- submodule
+
 otherworlds.asteroids = {}
 
 -- Approximate realm limits
+
 local XMIN = -33000
 local XMAX = 33000
 local ZMIN = -33000
@@ -29,68 +31,56 @@ local abs = math.abs
 
 -- Note: for fewer large objects: increase the 'spread' numbers in 'np_large' noise parameters. For fewer small objects do the same in 'np_small'. Then tune size with 'ASCOT'
 
--- 3D Perlin noise 1 for large structures
-local np_large = {
+local np_large = { -- 3D Perlin noise 1 for large structures
 	offset = 0,
 	scale = 1,
 	spread = {x = 256, y = 128, z = 256},
 	seed = -83928935,
 	octaves = 5,
-	persist = 0.6
-}
+	persist = 0.6}
 
--- 3D Perlin noise 3 for fissures
-local np_fissure = {
+local np_fissure = { -- 3D Perlin noise 3 for fissures
 	offset = 0,
 	scale = 1,
 	spread = {x = 64, y = 64, z = 64},
 	seed = -188881,
 	octaves = 4,
-	persist = 0.5
-}
+	persist = 0.5}
 
--- 3D Perlin noise 4 for small structures
-local np_small = {
+local np_small = { -- 3D Perlin noise 4 for small structures
 	offset = 0,
 	scale = 1,
 	spread = {x = 128, y = 64, z = 128},
 	seed = 1000760700090,
 	octaves = 4,
-	persist = 0.6
-}
+	persist = 0.6}
 
--- 3D Perlin noise 5 for ore selection
-local np_ores = {
+local np_ores = { -- 3D Perlin noise 5 for ore selection
 	offset = 0,
 	scale = 1,
 	spread = {x = 128, y = 128, z = 128},
 	seed = -70242,
 	octaves = 1,
-	persist = 0.5
-}
+	persist = 0.5}
 
--- 3D Perlin noise 6 for comet atmosphere
-local np_latmos = {
+local np_latmos = { -- 3D Perlin noise 6 for comet atmosphere
 	offset = 0,
 	scale = 1,
 	spread = {x = 256, y = 128, z = 256},
 	seed = -83928935,
 	octaves = 3,
-	persist = 0.6
-}
+	persist = 0.6}
 
--- 3D Perlin noise 7 for small comet atmosphere
-local np_satmos = {
+local np_satmos = { -- 3D Perlin noise 7 for small comet atmosphere
 	offset = 0,
 	scale = 1,
 	spread = {x = 128, y = 64, z = 128},
 	seed = 1000760700090,
 	octaves = 2,
-	persist = 0.6
-}
-
+	persist = 0.6}
 
 -- On dignode function. Atmosphere flows into a dug hole.
+
 minetest.register_on_dignode(function(pos, oldnode, digger)
 
 	if minetest.find_node_near(pos, 1, {"asteroid:atmos"})
@@ -99,12 +89,9 @@ minetest.register_on_dignode(function(pos, oldnode, digger)
 	end
 end)
 
-
 -- Generate on_generated function based on parameters
-function otherworlds.asteroids.create_on_generated(ymin, ymax, content_ids)
 
-	local YMIN = ymin
-	local YMAX = ymax
+function otherworlds.asteroids.create_on_generated(YMIN, YMAX, content_ids)
 
 	local c_air = content_ids.c_air
 	local c_stone = content_ids.c_stone
@@ -130,12 +117,8 @@ function otherworlds.asteroids.create_on_generated(ymin, ymax, content_ids)
 			return
 		end
 
-		local x1 = maxp.x
-		local y1 = maxp.y
-		local z1 = maxp.z
-		local x0 = minp.x
-		local y0 = minp.y
-		local z0 = minp.z
+		local x0, y0, z0 = minp.x, minp.y, minp.z
+		local x1, y1, z1 = maxp.x, maxp.y, maxp.z
 
 -- local t1 = os.clock()
 --print ("[asteroid] chunk ("..x0.." "..y0.." "..z0..")")
@@ -292,14 +275,10 @@ function otherworlds.asteroids.create_on_generated(ymin, ymax, content_ids)
 
 						nodeid = data[vi]
 
-						if nodeid == c_gravel
-						or nodeid == c_cobble
-						or nodeid == c_stone
-						or nodeid == c_diamondore
-						or nodeid == c_goldore
-						or nodeid == c_meseore
-						or nodeid == c_copperore
-						or nodeid == c_ironore then
+						if nodeid == c_gravel or nodeid == c_cobble
+						or nodeid == c_stone or nodeid == c_diamondore
+						or nodeid == c_goldore or nodeid == c_meseore
+						or nodeid == c_copperore or nodeid == c_ironore then
 							data[vi] = c_dust
 						end
 
@@ -307,8 +286,7 @@ function otherworlds.asteroids.create_on_generated(ymin, ymax, content_ids)
 
 						nodeid = data[vi]
 
-						if nodeid == c_cobble
-						or nodeid == c_stone then
+						if nodeid == c_cobble or nodeid == c_stone then
 							data[vi] = c_obsidian -- obsidian buried under dust
 						end
 					end

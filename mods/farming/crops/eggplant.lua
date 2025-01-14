@@ -19,6 +19,7 @@ farming.add_eatable("farming:eggplant", 3)
 -- crop definition
 
 local def = {
+	description = S("Eggplant") .. S(" Crop"),
 	drawtype = "plantlike",
 	tiles = {"farming_eggplant_1.png"},
 	paramtype = "light",
@@ -88,16 +89,14 @@ minetest.register_decoration({
 	place_on = {"default:dirt_with_grass", "mcl_core:dirt_with_grass"},
 	sidelen = 16,
 	noise_params = {
-		offset = -0.1,
+		offset = 0,
 		scale = farming.eggplant,
 		spread = {x = 100, y = 100, z = 100},
 		seed = 356,
 		octaves = 3,
 		persist = 0.6
 	},
-	biomes = {"deciduous_forest"},
-	y_max = 31000,
-	y_min = 1,
-	decoration = "farming:eggplant_4",
+	y_min = 1, y_max = 40,
+	decoration = "farming:eggplant_3",
 	param2 = 3
 })

@@ -568,9 +568,11 @@ function automobiles_lib.engineSoundPlay(self)
         local base_pitch = 1
         if self._base_pitch then base_pitch = self._base_pitch end
 
-        local snd_pitch = base_pitch + ((self._longit_speed/10)/2)
+        local divisor = 6 --3 states, so 6 to make it more smooth
+        local multiplier = self._transmission_state or 1
+        local snd_pitch = base_pitch + ((base_pitch/divisor)*multiplier) + ((self._longit_speed/10)/2)
         if self._transmission_state == 1 then
-            snd_pitch = 1 + (self._longit_speed/10)
+            snd_pitch = base_pitch + (self._longit_speed/10)
         end
 
         self.sound_handle = minetest.sound_play({name = self._engine_sound},
@@ -682,6 +684,7 @@ end
 -- very basic transmission emulation for the car
 function automobiles_lib.get_transmission_state(curr_speed, max_speed)
     local retVal = 1
+    max_speed = max_speed or 100
     if curr_speed >= (max_speed/4) then retVal = 2 end
     if curr_speed >= (max_speed/2) then retVal = 3 end
     return retVal
@@ -845,6 +848,8 @@ local old_entities = {
     "automobiles_trans_am:pivot_mesh",
     "automobiles_trans_am:pointer",
     "automobiles_buggy:steering",
+    "automobiles_vespa:pivot_mesh",
+    "automobiles_motorcycle:pivot_mesh",
 }
 for _,entity_name in ipairs(old_entities) do
     minetest.register_entity(":"..entity_name, {

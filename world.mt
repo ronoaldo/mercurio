@@ -276,7 +276,6 @@ load_mod_void_chest = true
 load_mod_volumetric_lighting = true
 load_mod_water_life = true
 load_mod_we_undo = true
-load_mod_whitelist = true
 load_mod_wieldview = true
 load_mod_worldedit = true
 load_mod_worldedit_brush = true 

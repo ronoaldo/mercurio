@@ -127,4 +127,8 @@ function travelnet.register_travelnet_box(cfg)
 			recipe = { "group:travelnet", cfg.dye },
 		})
 	end
+
+	if minetest.get_modpath("mesecons_mvps") then
+		mesecon.register_mvps_stopper(cfg.nodename)
+	end
 end

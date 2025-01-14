@@ -20,6 +20,7 @@ minetest.register_alias("farming:soy_beans", "farming:soy_pod")
 -- crop definition
 
 local def = {
+	description = S("Soy") .. S(" Crop"),
 	drawtype = "plantlike",
 	tiles = {"farming_soy_1.png"},
 	paramtype = "light",
@@ -109,17 +110,13 @@ farming.registered_plants["farming:soy_pod"] = {
 
 -- mapgen
 
-local mg = farming.mapgen == "v6"
-
-def = {
-	spawn_on = mg and {"default:dirt_with_grass"} or {"default:dirt_with_dry_grass",
-			"default:dirt_with_rainforest_litter", "default:dry_dirt_with_dry_grass",
-			"mcl_core:dirt_with_grass"}
-}
-
 minetest.register_decoration({
 	deco_type = "simple",
-	place_on = def.spawn_on,
+	place_on = {
+		"default:dirt_with_grass", "default:dirt_with_dry_grass",
+		"default:dirt_with_rainforest_litter", "default:dry_dirt_with_dry_grass",
+		"mcl_core:dirt_with_grass", "ethereal:prairie_dirt"
+	},
 	sidelen = 16,
 	noise_params = {
 		offset = 0,
@@ -129,7 +126,6 @@ minetest.register_decoration({
 		octaves = 3,
 		persist = 0.6
 	},
-	y_min = 20,
-	y_max = 50,
-	decoration = "farming:soy_6"
+	y_min = 20, y_max = 50,
+	decoration = "farming:soy_5"
 })

@@ -22,6 +22,57 @@ THE SOFTWARE.
 
 Textures by TenPlus1 (CC0) unless listed below...
 
+Textures by Hugues Ross (CC BY-SA 4.0):
+  ethereal_strawberry*.png
+  ethereal_wild_onion*.png
+
+Textures by NameNotQuality (CC0):
+  ethereal_olive_leaves.png
+  ethereal_lemon_leaves.png
+  ethereal_frost_wood.png
+  ethereal_frost_tree.png
+  ethereal_frost_tree_top.png
+  ethereal_yellow_tree.png
+  ethereal_yellow_tree_top.png
+  ethereal_yellow_wood.png
+
+Textures by Jeterel from OpenGameArt.org (CC0):
+  ethereal_banana_bread.png
+
+Textures by SickleMoon and edited by TenPlus1 (CC0):
+   ethereal_illumishroom_red.png
+   ethereal_illumishroom_green.png
+   ethereal_illumishroom_cyan.png
+
+Textures by TenPlus1 and resized/edited by NameNotQuality (CC0):
+  ethereal_banana_leaf.png
+  ethereal_basandra_bush_wood.png
+  ethereal_blue_marble.png
+  ethereal_blue_marble_tile.png
+  ethereal_redwood_wood.png
+  ethereal_redwood_trunk.png
+  ethereal_redwood_trunk_top.png
+  ethereal_sakura_trunk.png
+  ethereal_sakura_trunk_top.png
+  ethereal_sakura_wood.png
+  ethereal_willow_trunk.png
+  ethereal_willow_trunk_top.png
+  ethereal_willow_wood.png
+
+Textures by Felfa and resized/edited by NameNotQuality (CC0):
+  ethereal_olive_trunk.png
+  ethereal_olive_trunk_top.png
+  ethereal_orange_leaves.png
+
+Textures based on default minetest wood by alerikaisattera (CC BY-SA 3.0):
+  ethereal_birch_wood_alt.png
+  ethereal_redwood_wood_alt.png
+  ethereal_banana_wood_alt.png
+  ethereal_olive_wood_alt.png
+  ethereal_palm_wood_alt.png
+  ethereal_sakura_wood_alt.png
+  ethereal_willow_wood_alt.png
+
 Based on pilzmod_giant_mushroom_brown_side.png (CC BY-SA 3.0) by Phseiff
   ethereal_mushroom_block_brown.png
 
@@ -75,19 +126,19 @@ Textures by Epoxum (CC0)
   ethereal_sushi_*.png
 
 Based on candle textures and coloured by wRothbard (CC0):
-  ethereal_candle_black*.png
-  ethereal_candle_blue*.png
-  ethereal_candle_cyan*.png
-  ethereal_candle_dark_green*.png
-  ethereal_candle_dark_grey*.png
-  ethereal_candle_green*.png
-  ethereal_candle_grey*.png
-  ethereal_candle_magenta*.png
-  ethereal_candle_orange*.png
-  ethereal_candle_pink*.png
-  ethereal_candle_red*.png
-  ethereal_candle_violet*.png
-  ethereal_candle_yellow*.png
+  ethereal_candle_black.png
+  ethereal_candle_blue.png
+  ethereal_candle_cyan.png
+  ethereal_candle_dark_green.png
+  ethereal_candle_dark_grey.png
+  ethereal_candle_green.png
+  ethereal_candle_grey.png
+  ethereal_candle_magenta.png
+  ethereal_candle_orange.png
+  ethereal_candle_pink.png
+  ethereal_candle_red.png
+  ethereal_candle_violet.png
+  ethereal_candle_yellow.png
 
 Based on default tool textures by BlockMen in Minetest (CC BY-SA 3.0):
   ethereal_crystal_pick.png
@@ -99,16 +150,12 @@ Based on texture by ElementW (CC BY-SA 3.0):
   bucket_cactus.png
 
 Based on tree textures by ElementW (CC BY-SA 3.0):
-  ethereal_yellow_tree.png
-  ethereal_yellow_tree_top.pngethereal_fish_plaice.png
-  ethereal_frost_tree.png
-  ethereal_frost_tree_top.png
   ethereal_scorched_tree.png
   ethereal_scorched_tree_top.png
 
 Based on wood texture by BlockMen (CC BY-SA 3.0):
-  ethereal_yellow_wood.png [edited by alerikaisattera]
-  ethereal_frost_wood.png [edited by alerikaisattera]
+  ethereal_yellow_wood_alt.png [edited by alerikaisattera]
+  ethereal_frost_wood_alt.png [edited by alerikaisattera]
 
 Based on bottle texture by Thomas-S (CC BY-SA 3.0):
   ethereal_flight_potion.png
@@ -123,13 +170,25 @@ Textures based on default_grass.png and default_grass_side.png by TumeniNodes (C
   ethereal_green_moss.png
 
 Texture by ZonerDarkRevention (CC0)
-  ethereal_crystal_spike.png [edited by TenPlus1]
-  ethereal_bowl.png [edited by TenPlus1]
-  ethereal_teriyaki_beef.png [edited by TenPlus1]
-  ethereal_hearty_stew.png
+  ethereal_bowl.png_32px
+  ethereal_crystal_spike_32px.png [edited by TenPlus1]
+  ethereal_teriyaki_beef_32px.png [edited by TenPlus1]
+  ethereal_hearty_stew_32px.png
 
 Textures by VanessaE (CC-BY-SA 4.0)
-  moretrees_*.png
+  moretrees_acacia_leaves.png
+  moretrees_birch_wood.png
+  moretrees_palm_trunk.png
+  moretrees_birch_leaves.png
+  moretrees_coconut.png
+  moretrees_palm_trunk_top.png
+  moretrees_birch_sapling.png
+  moretrees_coconut_slice.png
+  moretrees_palm_wood.png
+  moretrees_birch_trunk.png
+  moretrees_palm_leaves.png
+  moretrees_birch_trunk_top.png
+  moretrees_palm_sapling.png
   ethereal_banana_wood.png (edited)
   ethereal_olive_wood.png (edited)
 
@@ -140,8 +199,12 @@ Based on default snow texture by Gambit (CC BY-SA 3.0):
   ethereal_brick_snow.png [edited by philipmi]
 
 Textures by Felfa (CC0)
-  olive*.png
-  lemon*.png
+  ethereal_olive_trunk_32px.png
+  ethereal_olive_trunk_top_32px.png
+  ethereal_olive_leaves_32px.png
+  ethereal_olive_fruit.png
+  ethereal_lemon.png
+  ethereal_lemon_leaves.png
 
 Textures by Isaiah658 (CC0)
    ethereal_lemonade.png
@@ -152,3 +215,9 @@ Created by XSSheep (CC BY-SA 4.0 - https://minecraft.curseforge.com/projects/pix
 
 Sound by I_q (Attribution 3.0) https://freesound.org/people/l_q/sounds/440956/
   ethereal_casting_rod.ogg
+
+Sounds by eZZin (CC0) https://freesound.org/people/eZZin/sounds/667122/
+  ethereal_mushroom.ogg
+
+Sound by Kostrava (CC0) https://freesound.org/people/Kostrava/sounds/333988/
+  ethereal_crystal.ogg

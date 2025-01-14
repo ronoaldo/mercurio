@@ -49,9 +49,9 @@ else
 
 	minetest.register_node(":ethereal:bananaleaves", {
 		description = S("Banana Leaves"),
-		tiles = {"farming_banana_leaf.png"},
-		inventory_image = "farming_banana_leaf.png",
-		wield_image = "farming_banana_leaf.png",
+		tiles = {"ethereal_banana_leaf.png"},
+		inventory_image = "ethereal_banana_leaf.png",
+		wield_image = "ethereal_banana_leaf.png",
 		paramtype = "light",
 		waving = 1,
 		groups = {snappy = 3, leafdecay = 3, leaves = 1, flammable = 2},

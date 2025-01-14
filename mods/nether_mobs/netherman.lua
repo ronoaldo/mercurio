@@ -77,27 +77,27 @@ mobs:register_mob("nether_mobs:netherman", {
 	end,
 })
 
+if not nethermobs.custom_spawn then
+	mobs:spawn({
+		max_light = 12, --15 = bright daylight
+		name = "nether_mobs:netherman",
+		nodes = {"nether:sand","nether:rack","nether:rack_deep"},
+		max_height = nethermobs.MAX_HEIGHT_NETHERMAN,
+		min_height = nethermobs.MIN_HEIGHT_NETHERMAN,
+		interval = 8,
+		chance = 50,
+		day_toggle = nil,
+		active_object_count = 5,
+		on_spawn = function(self, pos)
+			pos.y = pos.y + 0.5
+			mobs:effect(pos, 30, "nether_particle.png", 0.1, 2, 3, 5)
+			pos.y = pos.y + 0.25
+			mobs:effect(pos, 30, "nether_particle.png", 0.1, 2, 3, 5)
+		end,
+	})
+end
 
-mobs:spawn({
-	max_light = 12, --15 = bright daylight
-	name = "nether_mobs:netherman",
-	nodes = {"nether:sand","nether:rack","nether:rack_deep"},
-	max_height = nethermobs.MAX_HEIGHT_NETHERMAN,
-	min_height = nethermobs.MIN_HEIGHT_NETHERMAN,
-	interval = 8,
-	chance = 50,
-	day_toggle = nil,
-	active_object_count = 5,
-	on_spawn = function(self, pos)
-		pos.y = pos.y + 0.5
-		mobs:effect(pos, 30, "nether_particle.png", 0.1, 2, 3, 5)
-		pos.y = pos.y + 0.25
-		mobs:effect(pos, 30, "nether_particle.png", 0.1, 2, 3, 5)
-	end,
-})
-
-
-mobs:register_egg("nether_mobs:netherman", S("nether man"), "nether_sand.png", 1)
+mobs:register_egg("nether_mobs:netherman", S("Nether Man"), "nether_sand.png", 1)
 
 
 mobs:alias_mob("mobs:netherman", "nether_mobs:netherman") -- compatibility

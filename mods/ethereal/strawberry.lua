@@ -20,6 +20,7 @@ ethereal.add_eatable("ethereal:strawberry", 1)
 -- Strawberry definition
 
 local def = {
+	description = S("Strawberry") .. S(" Crop"),
 	drawtype = "plantlike",
 	tiles = {"ethereal_strawberry_1.png"},
 	paramtype = "light",
@@ -79,7 +80,7 @@ def.tiles = {"ethereal_strawberry_7.png"}
 def.drop = {
 	items = {
 		{items = {"ethereal:strawberry 1"}, rarity = 1},
-		{items = {"ethereal:strawberry 2"}, rarity = 3}
+		{items = {"ethereal:strawberry 1"}, rarity = 3}
 	}
 }
 minetest.register_node("ethereal:strawberry_7", table.copy(def))
@@ -125,9 +126,7 @@ minetest.register_abm({
 		pos.y = pos.y + 1
 
 		-- do we have enough light?
-		local light = minetest.get_node_light(pos) or 0
-
-		if light < 13 then return end
+		local light = minetest.get_node_light(pos) or 0 ; if light < 13 then return end
 
 		-- grow to next stage
 		local num = node.name:split("_")[2]

@@ -256,13 +256,6 @@ dofile(minetest.get_modpath("pa28") .. DIR_DELIM .. "entities.lua")
 -- items
 --
 
-settings = Settings(minetest.get_worldpath() .. "/pa28.conf")
-local function fetch_setting(name)
-    local sname = name
-    return settings and settings:get(sname) or minetest.settings:get(sname)
-end
-
-
 local old_entities = {"pa28:seat_base","pa28:engine"}
 for _,entity_name in ipairs(old_entities) do
     minetest.register_entity(":"..entity_name, {

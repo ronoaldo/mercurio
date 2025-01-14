@@ -1,5 +1,0 @@
-based on default minetest wood textures
-
-edited by alerikaisattera
-
-license: CC-BY-SA 3.0

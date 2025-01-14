@@ -1,8 +1,14 @@
 local cauldron, sounds = {}, {}
 local S = minetest.get_translator("xdecor")
 
+-- Set to true to print soup ingredients and fire nodes to console
+local DEBUG_RECOGNIZED_ITEMS = false
+
+--~ cauldron hint
 local hint_fire = S("Light a fire below to heat it up")
+--~ cauldron hint
 local hint_eat = S("Use a bowl to eat the soup")
+--~ cauldron hint
 local hint_recipe = S("Drop foods inside to make a soup")
 
 local infotexts = {
@@ -21,12 +27,27 @@ local function set_infotext(meta, node)
 	end
 end
 
--- Add more ingredients here that make a soup.
+-- HACKY list of soup ingredients.
+-- The cauldron will check if any of these strings are contained in the itemname
+-- after the ":".
 local ingredients_list = {
 	"apple", "mushroom", "honey", "pumpkin", "egg", "bread", "meat",
 	"chicken", "carrot", "potato", "melon", "rhubarb", "cucumber",
 	"corn", "beans", "berries", "grapes", "tomato", "wheat"
 }
+
+-- List of items that can never be soup ingredients. Overwrites anything else.
+local non_ingredients = {
+	-- xdecor
+	"xdecor:bowl_soup",
+	-- Minetest Game: default
+	"default:apple_mark", "default:blueberry_bush_leaves_with_berries",
+	-- Minetest Game: farming
+	"farming:seed_wheat",
+	"farming:wheat_1", "farming:wheat_2", "farming:wheat_3", "farming:wheat_4",
+	"farming:wheat_5", "farming:wheat_6", "farming:wheat_7", "farming:wheat_8",
+}
+local non_ingredients_keyed = table.key_value_swap(non_ingredients)
 
 cauldron.cbox = {
 	{0,  0, 0,  16, 16, 0},
@@ -36,12 +57,17 @@ cauldron.cbox = {
 	{0,  0, 0,  16, 8,  16}
 }
 
+-- Returns true is given item is a fire
+local function is_fire(itemstring)
+	return minetest.get_item_group(itemstring, "fire") ~= 0
+end
+
 -- Returns true if the node at pos is above fire
 local function is_heated(pos)
 	local below_node = {x = pos.x, y = pos.y - 1, z = pos.z}
 	local nn = minetest.get_node(below_node).name
 	-- Check fire group
-	if minetest.get_item_group(nn, "fire") ~= 0 then
+	if is_fire(nn) then
 		return true
 	else
 		return false
@@ -159,6 +185,23 @@ local function eatable(itemstring)
 	return string.format("%q", string.dump(on_use_def)):find("item_eat")
 end
 
+-- Checks if the given item can be used as ingredient for the soup
+local function is_ingredient(itemstring)
+	if non_ingredients_keyed[itemstring] then
+		return false
+	end
+	local basename = itemstring:match(":([%w_]+)")
+	if not basename then
+		return false
+	end
+	for _, ingredient in ipairs(ingredients_list) do
+		if eatable(itemstring) or basename:find(ingredient) then
+			return true
+		end
+	end
+	return false
+end
+
 function cauldron.boiling_timer(pos)
 	-- Cool down cauldron if there is no fire
 	local node = minetest.get_node(pos)
@@ -192,13 +235,12 @@ function cauldron.boiling_timer(pos)
 	for _, obj in pairs(objs) do
 		if obj and not obj:is_player() and obj:get_luaentity().itemstring then
 			local itemstring = obj:get_luaentity().itemstring
-			local food = itemstring:match(":([%w_]+)")
+			local item = ItemStack(itemstring)
+			local itemname = item:get_name()
 
-			for _, ingredient in ipairs(ingredients_list) do
-				if food and (eatable(itemstring) or food:find(ingredient)) then
-					ingredients[#ingredients + 1] = food
-					break
-				end
+			if is_ingredient(itemname) then
+				local basename = itemstring:match(":([%w_]+)")
+				table.insert(ingredients, basename)
 			end
 		end
 	end
@@ -247,7 +289,7 @@ xdecor.register("cauldron_empty", {
 	groups = {cracky=2, oddly_breakable_by_hand=1,cauldron=1},
 	is_ground_content = false,
 	on_rotate = screwdriver.rotate_simple,
-	tiles = {"xdecor_cauldron_top_empty.png", "xdecor_cauldron_sides.png"},
+	tiles = {"xdecor_cauldron_top_empty.png", "xdecor_cauldron_bottom.png", "xdecor_cauldron_sides.png"},
 	sounds = default.node_sound_metal_defaults(),
 	collision_box = xdecor.pixelbox(16, cauldron.cbox),
 	on_rightclick = cauldron.filling,
@@ -264,7 +306,7 @@ xdecor.register("cauldron_idle", {
 	groups = {cracky=2, oddly_breakable_by_hand=1, not_in_creative_inventory=1,cauldron=2},
 	is_ground_content = false,
 	on_rotate = screwdriver.rotate_simple,
-	tiles = {"xdecor_cauldron_top_idle.png", "xdecor_cauldron_sides.png"},
+	tiles = {"xdecor_cauldron_top_idle.png", "xdecor_cauldron_bottom.png", "xdecor_cauldron_sides.png"},
 	sounds = default.node_sound_metal_defaults(),
 	drop = "xdecor:cauldron_empty",
 	collision_box = xdecor.pixelbox(16, cauldron.cbox),
@@ -278,7 +320,7 @@ xdecor.register("cauldron_idle_river_water", {
 	groups = {cracky=2, oddly_breakable_by_hand=1, not_in_creative_inventory=1,cauldron=2},
 	is_ground_content = false,
 	on_rotate = screwdriver.rotate_simple,
-	tiles = {"xdecor_cauldron_top_idle_river_water.png", "xdecor_cauldron_sides.png"},
+	tiles = {"xdecor_cauldron_top_idle_river_water.png", "xdecor_cauldron_bottom.png", "xdecor_cauldron_sides.png"},
 	sounds = default.node_sound_metal_defaults(),
 	drop = "xdecor:cauldron_empty",
 	collision_box = xdecor.pixelbox(16, cauldron.cbox),
@@ -293,7 +335,7 @@ xdecor.register("cauldron_idle_soup", {
 	is_ground_content = false,
 	on_rotate = screwdriver.rotate_simple,
 	drop = "xdecor:cauldron_empty",
-	tiles = {"xdecor_cauldron_top_idle_soup.png", "xdecor_cauldron_sides.png"},
+	tiles = {"xdecor_cauldron_top_idle_soup.png", "xdecor_cauldron_bottom.png", "xdecor_cauldron_sides.png"},
 	sounds = default.node_sound_metal_defaults(),
 	collision_box = xdecor.pixelbox(16, cauldron.cbox),
 	on_construct = function(pos)
@@ -320,6 +362,7 @@ xdecor.register("cauldron_boiling", {
 			name = "xdecor_cauldron_top_anim_boiling_water.png",
 			animation = {type = "vertical_frames", length = 3.0}
 		},
+		"xdecor_cauldron_bottom.png",
 		"xdecor_cauldron_sides.png"
 	},
 	sounds = default.node_sound_metal_defaults(),
@@ -344,6 +387,7 @@ xdecor.register("cauldron_boiling_river_water", {
 			name = "xdecor_cauldron_top_anim_boiling_river_water.png",
 			animation = {type = "vertical_frames", length = 3.0}
 		},
+		"xdecor_cauldron_bottom.png",
 		"xdecor_cauldron_sides.png"
 	},
 	sounds = default.node_sound_metal_defaults(),
@@ -370,6 +414,7 @@ xdecor.register("cauldron_soup", {
 			name = "xdecor_cauldron_top_anim_soup.png",
 			animation = {type = "vertical_frames", length = 3.0}
 		},
+		"xdecor_cauldron_bottom.png",
 		"xdecor_cauldron_sides.png"
 	},
 	sounds = default.node_sound_metal_defaults(),
@@ -447,3 +492,26 @@ minetest.register_lbm({
 		set_infotext(meta, node)
 	end,
 })
+
+if DEBUG_RECOGNIZED_ITEMS then
+	-- Print all soup ingredients and fire nodes
+	-- in console
+	minetest.register_on_mods_loaded(function()
+		local ingredients = {}
+		local fires = {}
+		for k,v in pairs(minetest.registered_items) do
+			if is_ingredient(k) then
+				table.insert(ingredients, k)
+			end
+			if is_fire(k) then
+				table.insert(fires, k)
+			end
+		end
+		table.sort(ingredients)
+		table.sort(fires)
+		local str_i = table.concat(ingredients, ", ")
+		local str_f = table.concat(fires, ", ")
+		print("[xdecor] List of ingredients for soup: "..str_i)
+		print("[xdecor] List of nodes that can heat cauldron: "..str_f)
+	end)
+end

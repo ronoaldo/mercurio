@@ -1,4 +1,3 @@
-local S = minetest.get_translator("hopper")
 local FS = hopper.translator_escaped
 -- Target inventory retrieval
 
@@ -76,6 +75,7 @@ local function get_container_inventory(node_pos, inv_info)
 	if get_inventory_fn then
 		inventory = get_inventory_fn(node_pos)
 		if not inventory then
+			local target_node = minetest.get_node(node_pos)
 			minetest.log("error","No inventory from api get_inventory function: " ..
 				target_node.name .. " on " .. vector.to_string(node_pos))
 		end
@@ -85,8 +85,13 @@ local function get_container_inventory(node_pos, inv_info)
 	return inventory
 end
 
--- Used to remove items from the target block and put it into the hopper's inventory
+--- @param Removes items from the target node and puts them into the hopper's inventory
+--- @param target_inv_info : Inventory information where to take the ItemStacks
 hopper.take_item_from = function(hopper_pos, target_pos, target_node, target_inv_info)
+	if not target_inv_info then
+		return false -- Cannot move take from this direction
+	end
+
 	local target_def = minetest.registered_nodes[target_node.name]
 	if not target_def then
 		return
@@ -108,83 +113,136 @@ hopper.take_item_from = function(hopper_pos, target_pos, target_node, target_inv
 	if target_inv:is_empty(target_inv_name) == false then
 		for i = 1,target_inv_size do
 			local stack = target_inv:get_stack(target_inv_name, i)
-			local item = stack:get_name()
-			if item ~= "" then
-				if hopper_inv:room_for_item("main", item) then
-					local stack_to_take = stack:take_item(1)
-					if target_def.allow_metadata_inventory_take == nil
-					  or placer == nil -- backwards compatibility, older versions of this mod didn't record who placed the hopper
-					  or target_def.allow_metadata_inventory_take(target_pos, target_inv_name, i, stack_to_take, placer) > 0 then
-						target_inv:set_stack(target_inv_name, i, stack)
-						--add to hopper
-						hopper_inv:add_item("main", stack_to_take)
-						if target_def.on_metadata_inventory_take ~= nil and placer ~= nil then
-							target_def.on_metadata_inventory_take(target_pos, target_inv_name, i, stack_to_take, placer)
-						end
-						break
+
+			if not stack:is_empty() and hopper_inv:room_for_item("main", stack:get_name()) then
+				local stack_to_take = stack:take_item(1)
+
+				if target_def.allow_metadata_inventory_take == nil
+					or placer == nil -- backwards compatibility, older versions of this mod didn't record who placed the hopper
+					or target_def.allow_metadata_inventory_take(target_pos, target_inv_name, i, stack_to_take, placer) > 0 then
+
+					target_inv:set_stack(target_inv_name, i, stack)
+					--add to hopper
+					hopper_inv:add_item("main", stack_to_take)
+					if target_def.on_metadata_inventory_take ~= nil and placer ~= nil then
+						target_def.on_metadata_inventory_take(target_pos, target_inv_name, i, stack_to_take, placer)
 					end
+					break
 				end
 			end
-		end
+
+		end -- for
 	end
 end
 
--- Used to put items from the hopper inventory into the target block
-hopper.send_item_to = function(hopper_pos, target_pos, target_node, target_inv_info, filtered_items)
-	local hopper_meta = minetest.get_meta(hopper_pos)
-	local target_def = minetest.registered_nodes[target_node.name]
-	if not target_def then
-		return false
+local function try_send_item_to_air(hopper_inv, target_pos)
+	local stack
+	local stack_num
+	for i = 1, hopper_inv:get_size("main") do
+		stack = hopper_inv:get_stack("main", i)
+		if not stack:is_empty() then
+			stack_num = i
+			break
+		end
 	end
 
-	local eject_item = hopper.config.eject_button_enabled and hopper_meta:get_string("eject") == "true" and target_def.buildable_to
-
-	if not eject_item and not target_inv_info then
-		return false
+	local eject_node = minetest.get_node(target_pos)
+	local ndef = minetest.registered_nodes[eject_node.name]
+	if not ndef or not ndef.buildable_to then
+		minetest.log("verbose", "hopper.try_send_item_to_air: eject direction not buildable ("
+			..eject_node.name.." at "..target_pos:to_string().."). Looking for alternate.")
+		local air_pos = minetest.find_node_near(target_pos, 2, {"air"})
+		if not air_pos then
+			minetest.log("warning", "hopper.try_send_item_to_air: could not find an air node nearby")
+			return false
+		end
+		target_pos = air_pos
 	end
 
-	--hopper inventory
-	local hopper_meta = minetest.get_meta(hopper_pos);
-	local hopper_inv = hopper_meta:get_inventory()
-	if hopper_inv:is_empty("main") == true then
-		return false
-	end
-	local hopper_inv_size = hopper_inv:get_size("main")
-	local placer = get_placer(hopper_meta:get_string("placer"))
+	local stack_to_put = stack:take_item(1)
+	minetest.add_item(target_pos, stack_to_put)
+	hopper_inv:set_stack("main", stack_num, stack)
+	hopper.log_inventory("hopper ejecting "..stack:get_name().." as object to "..target_pos:to_string())
+	return true
+end
 
-	--source inventory
+--- @brief Moves items from the hopper's inventory to the destination and triggers inventory actions
+--- @param placer          : (optional) PlayerRef
+--- @param target_def      : Target nodedef
+local function send_item_to_inv(hopper_inv, target_pos, filtered_items, placer, target_inv_info, target_def)
 	local target_inv_name = target_inv_info.inventory_name
 	local target_inv = get_container_inventory(target_pos, target_inv_info)
 	if not target_inv then
 		return false
 	end
 
-	for i = 1,hopper_inv_size do
-		local stack = hopper_inv:get_stack("main", i)
+	local stack
+	local stack_num
+	for i = 1, hopper_inv:get_size("main") do
+		stack = hopper_inv:get_stack("main", i)
 		local item = stack:get_name()
-		if item ~= "" and (filtered_items == nil or filtered_items[item]) then
-			if target_inv_name then
-				if target_inv:room_for_item(target_inv_name, item) then
-					local stack_to_put = stack:take_item(1)
-					if target_def.allow_metadata_inventory_put == nil
-					or placer == nil -- backwards compatibility, older versions of this mod didn't record who placed the hopper
-					or target_def.allow_metadata_inventory_put(target_pos, target_inv_name, i, stack_to_put, placer) > 0 then
-						hopper_inv:set_stack("main", i, stack)
-						--add to target node
-						target_inv:add_item(target_inv_name, stack_to_put)
-						if target_def.on_metadata_inventory_put ~= nil and placer ~= nil then
-							target_def.on_metadata_inventory_put(target_pos, target_inv_name, i, stack_to_put, placer)
-						end
-						return true
-					end
-				end
-			elseif eject_item then
-				local stack_to_put = stack:take_item(1)
-				minetest.add_item(target_pos, stack_to_put)
-				hopper_inv:set_stack("main", i, stack)
-				return true
-			end
+		if item ~= "" and (filtered_items == nil or filtered_items[item])
+				and target_inv:room_for_item(target_inv_name, item) then
+			stack_num = i
+			break
 		end
 	end
-	return false
+	if not stack_num then
+		return false
+	end
+
+	local stack_to_put = stack:take_item(1)
+	if target_def.allow_metadata_inventory_put and placer -- backwards compatibility, older versions of this mod didn't record who placed the hopper
+			and target_def.allow_metadata_inventory_put(target_pos, target_inv_name, stack_num, stack_to_put, placer) < 0 then
+		return false
+	end
+
+	hopper_inv:set_stack("main", stack_num, stack)
+	target_inv:add_item(target_inv_name, stack_to_put)
+	if target_def.on_metadata_inventory_put ~= nil and placer ~= nil then
+		target_def.on_metadata_inventory_put(target_pos, target_inv_name, stack_num, stack_to_put, placer)
+	end
+	return true
 end
+
+--- @brief Used to put items from the hopper inventory into the target block
+--- @param target_inv_info : Inventory information where to put the ItemStacks
+--- @param filtered_items  : (optional) whitelist of item names { ["modname:itemname"] = true, ... }
+hopper.send_item_to = function(hopper_pos, target_pos, target_node, target_inv_info, filtered_items)
+	if not target_inv_info then
+		return false -- Cannot move item into this direction
+	end
+
+	local target_def = minetest.registered_nodes[target_node.name]
+	if not target_def then
+		return false
+	end
+
+	local hopper_meta = minetest.get_meta(hopper_pos)
+	local hopper_inv = hopper_meta:get_inventory()
+	if hopper_inv:is_empty("main") == true then
+		return false
+	end
+
+	local placer = get_placer(hopper_meta:get_string("placer"))
+	return send_item_to_inv(hopper_inv, target_pos, filtered_items, placer, target_inv_info, target_def)
+end
+
+hopper.try_eject_item = function(hopper_pos, target_pos)
+	if not hopper.config.eject_button_enabled then
+		return false
+	end
+
+	local hopper_meta = minetest.get_meta(hopper_pos)
+	if hopper_meta:get_string("eject") ~= "true" then
+		return false
+	end
+
+	local hopper_inv = hopper_meta:get_inventory()
+	if hopper_inv:is_empty("main") then
+		return false
+	end
+
+	return try_send_item_to_air(hopper_inv, target_pos)
+end
+

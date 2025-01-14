@@ -3,11 +3,9 @@ allow_defined_top = true
 
 globals = {
     "minetest",
-    "mobkit",
-    "core",
+    "airutils",
     "player_api",
     "player_monoids",
-    "math.sign",
 }
 
 read_globals = {
@@ -16,10 +14,8 @@ read_globals = {
 
     -- Builtin
     "vector", "ItemStack",
-    "dump", "DIR_DELIM", "VoxelArea", "Settings",
+    "dump", "DIR_DELIM", "VoxelArea",
 
     -- MTG
     "default", "sfinv", "creative",
 }
-
-ignore = {"611"}

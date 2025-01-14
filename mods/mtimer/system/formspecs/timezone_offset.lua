@@ -7,7 +7,7 @@
 -- Localise needed functions
 local m = mtimer
 local S = m.translator
-local esc = minetest.formspec_escape
+local esc = core.formspec_escape
 
 
 -- Render the world map

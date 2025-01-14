@@ -7,14 +7,14 @@ mobs:register_mob("mobs_monster:lava_flan", {
 	type = "monster",
 	passive = false,
 	attack_type = "dogfight",
-	reach = 2,
+	reach = 2.5,
 	damage = 3,
-	hp_min = 10,
+	hp_min = 20,
 	hp_max = 35,
 	armor = 80,
 	collisionbox = {-0.5, -0.5, -0.5, 0.5, 1.5, 0.5},
 	visual = "mesh",
-	mesh = "zmobs_lava_flan.x",
+	mesh = "zmobs_lava_flan.b3d",
 	textures = {
 		{"zmobs_lava_flan.png"},
 		{"zmobs_lava_flan2.png"},
@@ -178,7 +178,7 @@ function minetest.handle_node_drops(pos, drops, digger)
 			mobs:effect(pos, 1, "tnt_smoke.png", 3, 5, 2, 0.5, nil, false)
 
 			minetest.sound_play("fire_extinguish_flame",
-					{pos = pos, max_hear_distance = 8, gain = 0.15}, true)
+					{pos = pos, max_hear_distance = 5, gain = 0.05}, true)
 		end
 	end
 
@@ -220,7 +220,7 @@ minetest.register_craft({
 if minetest.get_modpath("toolranks") then
 
 	minetest.override_item("mobs:pick_lava", {
-		original_description = "Lava Pickaxe",
+		original_description = S("Lava Pickaxe"),
 		description = toolranks.create_description("Lava Pickaxe", 0, 1),
 		after_use = toolranks.new_afteruse})
 end
@@ -236,13 +236,13 @@ mobs:register_mob("mobs_monster:obsidian_flan", {
 	arrow = "mobs_monster:obsidian_arrow",
 	reach = 2,
 	damage = 3,
-	hp_min = 10,
+	hp_min = 20,
 	hp_max = 35,
 	armor = 30,
 	visual_size = {x = 0.6, y = 0.6},
 	collisionbox = {-0.3, -0.3, -0.3, 0.3, 0.8, 0.3},
 	visual = "mesh",
-	mesh = "zmobs_lava_flan.x",
+	mesh = "zmobs_lava_flan.b3d",
 	textures = {{"mobs_obsidian_flan.png"}},
 	blood_texture = "default_obsidian.png",
 	makes_footstep_sound = true,
@@ -270,6 +270,7 @@ mobs:register_mob("mobs_monster:obsidian_flan", {
 })
 
 -- spawn egg
+
 mobs:register_egg("mobs_monster:obsidian_flan", S("Obsidian Flan"),
 		"default_obsidian.png", 1)
 
