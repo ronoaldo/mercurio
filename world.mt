@@ -20,6 +20,7 @@ load_mod_3d_armor_ui = true
 load_mod_abriglass = true
 load_mod_accountmgr = true
 load_mod_airutils = true
+load_mod_alpha_workaround = true
 load_mod_animalia = true
 load_mod_anvil = true
 load_mod_areas = true
