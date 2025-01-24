@@ -7,6 +7,7 @@ auth_backend = postgresql
 pgsql_auth_connection = $(MERCURIO_PGSQL_CONNECTION)
 player_backend = postgresql
 pgsql_player_connection = $(MERCURIO_PGSQL_CONNECTION)
+mod_storage_backend = sqlite3
 
 gameid = minetest
 world_name = Mercurio

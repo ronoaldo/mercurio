@@ -65,7 +65,7 @@ while true ; do
             luantiserver \
             --logfile ${MINETEST_DEBUG_FILE} \
             --world /var/lib/mercurio \
-            --config /etc/luanti/luanti.conf
+            --config /etc/luanti/luanti.conf "$@"
         echo -n "$?" > status
         log "Server shutdown with status code '$(cat status)'."
     } |& tee -a ${MINETEST_STDERR_FILE}

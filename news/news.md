@@ -20,13 +20,8 @@ The server is designed to be friendly and enjoyable! Please:
 
 # **Important**
 
-Dear players: the server **Mercurio** will be cleaned up to save disk space.
-**Unprotected areas will be removed!**.
-We don't want your buildings to be lost, and only protected areas will
-remain, so it is very important to **protect your buildings**.
-
-You can also use the mod `block_exchange` to upload your areas and download
-them to play offline.
+Dear players: the server **Mercurio** was cleaned up to save disk space.
+**Unprotected areas were not preserved!**.
 
 .
 

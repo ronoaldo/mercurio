@@ -29,7 +29,7 @@ services:
 
   db:
     image: postgres:13
-    command: -c shared_buffers=8GB
+    command: -c shared_buffers=3GB
     restart: always
     volumes:
       - ./.minetest/db:/var/lib/postgresql/data

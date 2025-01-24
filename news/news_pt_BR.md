@@ -20,14 +20,8 @@ O servidor é desenhado para ser amigável e agradável! Por favor:
 
 # **Importante**
 
-Prezados jogadores: o servidor **Mercurio** passará por uma limpeza e
-**áreas do jogo que não estão protegidas serão removidas!**
-Não queremos que as suas construções sejam perdidas: somente as áreas protegidas
-serão mantidas, então é **necessário proteger as suas construções**.
-
-Você também pode utilizar o mod `block_exchange` para fazer o upload de suas
-construções e baixar somente elas para jogar localmente.
-
+Prezados jogadores: o servidor **Mercurio** passou por uma limpeza para liberar espaço.
+**Áreas do jogo que não possuíam proteção não foram preservadas!**
 .
 
 ---------------------
