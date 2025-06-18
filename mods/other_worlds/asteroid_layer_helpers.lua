@@ -81,11 +81,11 @@ local np_satmos = { -- 3D Perlin noise 7 for small comet atmosphere
 
 -- On dignode function. Atmosphere flows into a dug hole.
 
-minetest.register_on_dignode(function(pos, oldnode, digger)
+core.register_on_dignode(function(pos, oldnode, digger)
 
-	if minetest.find_node_near(pos, 1, {"asteroid:atmos"})
-	and minetest.get_node(pos).name == "air" then
-		minetest.set_node(pos, {name = "asteroid:atmos"})
+	if core.find_node_near(pos, 1, {"asteroid:atmos"})
+	and core.get_node(pos).name == "air" then
+		core.set_node(pos, {name = "asteroid:atmos"})
 	end
 end)
 
@@ -127,16 +127,16 @@ function otherworlds.asteroids.create_on_generated(YMIN, YMAX, content_ids)
 		local chulens = {x = sidelen, y = sidelen, z = sidelen}
 		local minpos = {x = x0, y = y0, z = z0}
 
-		local vm, emin, emax = minetest.get_mapgen_object("voxelmanip")
+		local vm, emin, emax = core.get_mapgen_object("voxelmanip")
 		local area = VoxelArea:new{MinEdge = emin, MaxEdge = emax}
 		local data = vm:get_data()
 
-		local nvals1 = minetest.get_perlin_map(np_large, chulens):get_3d_map_flat(minpos)
-		local nvals3 = minetest.get_perlin_map(np_fissure, chulens):get_3d_map_flat(minpos)
-		local nvals4 = minetest.get_perlin_map(np_small, chulens):get_3d_map_flat(minpos)
-		local nvals5 = minetest.get_perlin_map(np_ores, chulens):get_3d_map_flat(minpos)
-		local nvals6 = minetest.get_perlin_map(np_latmos, chulens):get_3d_map_flat(minpos)
-		local nvals7 = minetest.get_perlin_map(np_satmos, chulens):get_3d_map_flat(minpos)
+		local nvals1 = core.get_perlin_map(np_large, chulens):get_3d_map_flat(minpos)
+		local nvals3 = core.get_perlin_map(np_fissure, chulens):get_3d_map_flat(minpos)
+		local nvals4 = core.get_perlin_map(np_small, chulens):get_3d_map_flat(minpos)
+		local nvals5 = core.get_perlin_map(np_ores, chulens):get_3d_map_flat(minpos)
+		local nvals6 = core.get_perlin_map(np_latmos, chulens):get_3d_map_flat(minpos)
+		local nvals7 = core.get_perlin_map(np_satmos, chulens):get_3d_map_flat(minpos)
 
 		local ni = 1
 		local noise1abs, noise4abs, comet, noise1dep, noise4dep, vi
@@ -301,9 +301,11 @@ function otherworlds.asteroids.create_on_generated(YMIN, YMAX, content_ids)
 		vm:calc_lighting()
 		vm:write_to_map(data)
 
--- local chugent = math.ceil((os.clock() - t1) * 1000)
---print ("[asteroid] time "..chugent.." ms")
-
-		data = nil
+		data = nil ; collectgarbage("collect") -- clear mem
+--[[
+		local chugent = math.ceil((os.clock() - t1) * 1000)
+		print ("[asteroid] time "..chugent.." ms / used mem:"
+				.. collectgarbage("count") / 1024 .. " MiB")
+]]--
 	end
 end

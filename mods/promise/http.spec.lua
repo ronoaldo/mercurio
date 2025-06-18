@@ -41,6 +41,19 @@ mtt.register("Promise.http/all GET", function(callback)
     end)
 end)
 
+mtt.register("Promise.http GET timeout", function(callback)
+    -- non-routeable address
+    -- https://stackoverflow.com/questions/100841/artificially-create-a-connection-timeout-error
+    Promise.http(http, "http://10.255.255.1", {
+        timeout = 1
+    }):next(function()
+        callback("unexpeced success")
+    end):catch(function(e)
+        assert(e == Promise.HTTP_TIMEOUT)
+        callback()
+    end)
+end)
+
 mtt.register("Promise.http GET not found", function(callback)
     Promise.http(http, "https://httpbin.org/status/404"):next(function(res)
         assert(res)

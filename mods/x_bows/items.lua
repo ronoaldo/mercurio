@@ -1,6 +1,6 @@
 --[[
     X Bows. Adds bow and arrows with API.
-    Copyright (C) 2024 SaKeL
+    Copyright (C) 2025 SaKeL
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Lesser General Public
@@ -16,11 +16,11 @@
     License along with this library; if not, write to juraj.vajda@gmail.com
 --]]
 
-local S = minetest.get_translator(minetest.get_current_modname())
+local S = core.get_translator(core.get_current_modname())
 
 local arrow_tail_recipe_material = 'group:wool'
 
-if minetest.get_modpath('animalia') then
+if core.get_modpath('animalia') then
     arrow_tail_recipe_material = 'group:feather'
 end
 
@@ -47,114 +47,126 @@ XBows:register_bow('bow_wood', {
     }
 })
 
-XBows:register_arrow('arrow_wood', {
-    description = S('Arrow Wood'),
-    short_description = S('Arrow Wood'),
-    inventory_image = 'x_bows_arrow_wood.png',
-    custom = {
-        recipe = {
-            { 'default:flint' },
-            { 'group:stick' },
-            { arrow_tail_recipe_material }
-        },
-        tool_capabilities = {
-            full_punch_interval = 1,
-            max_drop_level = 0,
-            damage_groups = { fleshy = 2 }
-        },
-        fuel_burntime = 1
-    }
-})
-
-XBows:register_arrow('arrow_stone', {
-    description = S('Arrow Stone'),
-    short_description = S('Arrow Stone'),
-    inventory_image = 'x_bows_arrow_stone.png',
-    custom = {
-        recipe = {
-            { 'default:flint' },
-            { 'group:stone' },
-            { arrow_tail_recipe_material }
-        },
-        tool_capabilities = {
-            full_punch_interval = 1.2,
-            max_drop_level = 0,
-            damage_groups = { fleshy = 4 }
+if XBows.settings.x_bows_enable_arrow_wood then
+    XBows:register_arrow('arrow_wood', {
+        description = S('Arrow Wood'),
+        short_description = S('Arrow Wood'),
+        inventory_image = 'x_bows_arrow_wood.png',
+        custom = {
+            recipe = {
+                { 'default:flint' },
+                { 'group:stick' },
+                { arrow_tail_recipe_material }
+            },
+            tool_capabilities = {
+                full_punch_interval = 1,
+                max_drop_level = 0,
+                damage_groups = { fleshy = 2 }
+            },
+            fuel_burntime = 1
         }
-    }
-})
+    })
+end
 
-XBows:register_arrow('arrow_bronze', {
-    description = S('Arrow Bronze'),
-    short_description = S('Arrow Bronze'),
-    inventory_image = 'x_bows_arrow_bronze.png',
-    custom = {
-        recipe = {
-            { 'default:flint' },
-            { 'default:bronze_ingot' },
-            { arrow_tail_recipe_material }
-        },
-        tool_capabilities = {
-            full_punch_interval = 0.8,
-            max_drop_level = 1,
-            damage_groups = { fleshy = 6 }
+if XBows.settings.x_bows_enable_arrow_stone then
+    XBows:register_arrow('arrow_stone', {
+        description = S('Arrow Stone'),
+        short_description = S('Arrow Stone'),
+        inventory_image = 'x_bows_arrow_stone.png',
+        custom = {
+            recipe = {
+                { 'default:flint' },
+                { 'group:stone' },
+                { arrow_tail_recipe_material }
+            },
+            tool_capabilities = {
+                full_punch_interval = 1.2,
+                max_drop_level = 0,
+                damage_groups = { fleshy = 4 }
+            }
         }
-    }
-})
+    })
+end
 
-XBows:register_arrow('arrow_steel', {
-    description = S('Arrow Steel'),
-    short_description = S('Arrow Steel'),
-    inventory_image = 'x_bows_arrow_steel.png',
-    custom = {
-        recipe = {
-            { 'default:flint' },
-            { 'default:steel_ingot' },
-            { arrow_tail_recipe_material }
-        },
-        tool_capabilities = {
-            full_punch_interval = 0.7,
-            max_drop_level = 1,
-            damage_groups = { fleshy = 6 }
+if XBows.settings.x_bows_enable_arrow_bronze then
+    XBows:register_arrow('arrow_bronze', {
+        description = S('Arrow Bronze'),
+        short_description = S('Arrow Bronze'),
+        inventory_image = 'x_bows_arrow_bronze.png',
+        custom = {
+            recipe = {
+                { 'default:flint' },
+                { 'default:bronze_ingot' },
+                { arrow_tail_recipe_material }
+            },
+            tool_capabilities = {
+                full_punch_interval = 0.8,
+                max_drop_level = 1,
+                damage_groups = { fleshy = 6 }
+            }
         }
-    }
-})
+    })
+end
 
-XBows:register_arrow('arrow_mese', {
-    description = S('Arrow Mese'),
-    short_description = S('Arrow Mese'),
-    inventory_image = 'x_bows_arrow_mese.png',
-    custom = {
-        recipe = {
-            { 'default:flint' },
-            { 'default:mese_crystal' },
-            { arrow_tail_recipe_material }
-        },
-        tool_capabilities = {
-            full_punch_interval = 0.7,
-            max_drop_level = 1,
-            damage_groups = { fleshy = 7 }
+if XBows.settings.x_bows_enable_arrow_steel then
+    XBows:register_arrow('arrow_steel', {
+        description = S('Arrow Steel'),
+        short_description = S('Arrow Steel'),
+        inventory_image = 'x_bows_arrow_steel.png',
+        custom = {
+            recipe = {
+                { 'default:flint' },
+                { 'default:steel_ingot' },
+                { arrow_tail_recipe_material }
+            },
+            tool_capabilities = {
+                full_punch_interval = 0.7,
+                max_drop_level = 1,
+                damage_groups = { fleshy = 6 }
+            }
         }
-    }
-})
+    })
+end
 
-XBows:register_arrow('arrow_diamond', {
-    description = S('Arrow Diamond'),
-    short_description = S('Arrow Diamond'),
-    inventory_image = 'x_bows_arrow_diamond.png',
-    custom = {
-        recipe = {
-            { 'default:flint' },
-            { 'default:diamond' },
-            { arrow_tail_recipe_material }
-        },
-        tool_capabilities = {
-            full_punch_interval = 0.7,
-            max_drop_level = 1,
-            damage_groups = { fleshy = 8 }
+if XBows.settings.x_bows_enable_arrow_mese then
+    XBows:register_arrow('arrow_mese', {
+        description = S('Arrow Mese'),
+        short_description = S('Arrow Mese'),
+        inventory_image = 'x_bows_arrow_mese.png',
+        custom = {
+            recipe = {
+                { 'default:flint' },
+                { 'default:mese_crystal' },
+                { arrow_tail_recipe_material }
+            },
+            tool_capabilities = {
+                full_punch_interval = 0.7,
+                max_drop_level = 1,
+                damage_groups = { fleshy = 7 }
+            }
         }
-    }
-})
+    })
+end
+
+if XBows.settings.x_bows_enable_arrow_diamond then
+    XBows:register_arrow('arrow_diamond', {
+        description = S('Arrow Diamond'),
+        short_description = S('Arrow Diamond'),
+        inventory_image = 'x_bows_arrow_diamond.png',
+        custom = {
+            recipe = {
+                { 'default:flint' },
+                { 'default:diamond' },
+                { arrow_tail_recipe_material }
+            },
+            tool_capabilities = {
+                full_punch_interval = 0.7,
+                max_drop_level = 1,
+                damage_groups = { fleshy = 8 }
+            }
+        }
+    })
+end
 
 XBows:register_quiver('quiver', {
     description = S('Quiver') .. '\n\n' .. S('Empty') .. '\n',

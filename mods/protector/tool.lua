@@ -1,19 +1,15 @@
 
 -- protector placement tool (thanks to Shara for code and idea)
 
-local S = minetest.get_translator("protector")
+local S = core.get_translator("protector")
 
 -- get protection radius
 
-local r = tonumber(minetest.settings:get("protector_radius")) or 5
-
--- radius limiter (minetest cannot handle node volume of more than 4096000)
-
-if r > 30 then r = 30 end
+local r = protector.radius
 
 -- protector placement tool
 
-minetest.register_craftitem("protector:tool", {
+core.register_craftitem("protector:tool", {
 	description = S("Protector Placer Tool (stand near protector, face direction and use)"),
 	inventory_image = "protector_tool.png",
 	stack_max = 1,
@@ -24,7 +20,7 @@ minetest.register_craftitem("protector:tool", {
 
 		-- check for protector near player (2 block radius)
 		local pos = user:get_pos()
-		local pp = minetest.find_nodes_in_area(
+		local pp = core.find_nodes_in_area(
 				vector.subtract(pos, 2), vector.add(pos, 2),
 				{"protector:protect", "protector:protect2", "protector:protect_hidden"})
 
@@ -33,28 +29,22 @@ minetest.register_craftitem("protector:tool", {
 		pos = pp[1] -- take position of first protector found
 
 		-- get members on protector
-		local meta = minetest.get_meta(pos)
+		local meta = core.get_meta(pos)
 		local members = meta:get_string("members") or ""
 
 		-- get direction player is facing
-		local dir = minetest.dir_to_facedir( user:get_look_dir() )
+		local dir = core.dir_to_facedir( user:get_look_dir() )
 		local vec = {x = 0, y = 0, z = 0}
 		local gap = (r * 2) + 1
 		local pit =  user:get_look_vertical()
 
 		-- set placement coords
-		if pit > 1.2 then
-			vec.y = -gap -- up
-		elseif pit < -1.2 then
-			vec.y = gap -- down
-		elseif dir == 0 then
-			vec.z = gap -- north
-		elseif dir == 1 then
-			vec.x = gap -- east
-		elseif dir == 2 then
-			vec.z = -gap -- south
-		elseif dir == 3 then
-			vec.x = -gap -- west
+		if pit > 1.2 then      vec.y = -gap -- up
+		elseif pit < -1.2 then vec.y = gap -- down
+		elseif dir == 0 then   vec.z = gap -- north
+		elseif dir == 1 then   vec.x = gap -- east
+		elseif dir == 2 then   vec.z = -gap -- south
+		elseif dir == 3 then   vec.x = -gap -- west
 		end
 
 		-- new position
@@ -65,26 +55,26 @@ minetest.register_craftitem("protector:tool", {
 		-- does placing a protector overlap existing area
 		if not protector.can_dig(r * 2, pos, user:get_player_name(), true, 3) then
 
-			minetest.chat_send_player(name,
+			core.chat_send_player(name,
 					S("Overlaps into above players protected area"))
 
 			return
 		end
 
 		-- does a protector already exist ?
-		if #minetest.find_nodes_in_area(vector.subtract(pos, 1), vector.add(pos, 1),
+		if #core.find_nodes_in_area(vector.subtract(pos, 1), vector.add(pos, 1),
 				{"protector:protect", "protector:protect2",
 						"protector:protect_hidden"}) > 0 then
 
-			minetest.chat_send_player(name, S("Protector already in place!"))
+			core.chat_send_player(name, S("Protector already in place!"))
 
 			return
 		end
 
 		-- do not place protector out of map bounds or replace bedrock
-		if #minetest.find_nodes_in_area(pos, pos, {"ignore", "mcl_core:bedrock"}) > 0 then
+		if #core.find_nodes_in_area(pos, pos, {"ignore", "mcl_core:bedrock"}) > 0 then
 
-			minetest.chat_send_player(name, S("Out of bounds!"))
+			core.chat_send_player(name, S("Out of bounds!"))
 
 			return
 		end
@@ -96,7 +86,7 @@ minetest.register_craftitem("protector:tool", {
 		if not inv:contains_item("main", "protector:protect")
 		and not inv:contains_item("main", "protector:protect2") then
 
-			minetest.chat_send_player(name,
+			core.chat_send_player(name,
 				S("No protectors available to place!"))
 
 			return
@@ -117,28 +107,29 @@ minetest.register_craftitem("protector:tool", {
 		end
 
 		-- do not replace containers with inventory space
-		local inv = minetest.get_inventory({type = "node", pos = pos})
+		local inv = core.get_inventory({type = "node", pos = pos})
 
 		if inv then
-			minetest.chat_send_player(name, S("Cannot place protector, container at") ..
-					" " .. minetest.pos_to_string(pos))
+			core.chat_send_player(name,
+					S("Cannot place protector, container at @1",
+					core.pos_to_string(pos)))
 			return
 		end
 
 		-- protection check for other mods like Areas
-		if minetest.is_protected(pos, name) then
+		if core.is_protected(pos, name) then
 
-			minetest.chat_send_player(name,
-					S("Cannot place protector, already protected at")
-					.. " " .. minetest.pos_to_string(pos))
+			core.chat_send_player(name,
+					S("Cannot place protector, already protected at @1",
+					core.pos_to_string(pos)))
 			return
 		end
 
 		-- place protector
-		minetest.set_node(pos, {name = nod, param2 = 1})
+		core.set_node(pos, {name = nod, param2 = 1})
 
 		-- set protector metadata
-		local meta = minetest.get_meta(pos)
+		local meta = core.get_meta(pos)
 
 		meta:set_string("owner", name)
 		meta:set_string("infotext", "Protection (owned by " .. name .. ")")
@@ -150,9 +141,8 @@ minetest.register_craftitem("protector:tool", {
 			meta:set_string("members", "")
 		end
 
-		minetest.chat_send_player(name,
-				S("Protector placed at") ..
-				" " ..  minetest.pos_to_string(pos))
+		core.chat_send_player(name,
+				S("Protector placed at @1", core.pos_to_string(pos)))
 	end
 })
 
@@ -160,11 +150,11 @@ minetest.register_craftitem("protector:tool", {
 
 local df = "default:steel_ingot"
 
-if minetest.get_modpath("mcl_core") then
+if core.get_modpath("mcl_core") then
 	df = "mcl_core:iron_ingot"
 end
 
-minetest.register_craft({
+core.register_craft({
 	output = "protector:tool",
 	recipe = {
 		{df, df, df},

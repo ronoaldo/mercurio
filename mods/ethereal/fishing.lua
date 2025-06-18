@@ -48,10 +48,10 @@ local fish_items = {
 
 -- translation and mod checks
 
-local S = minetest.get_translator("ethereal")
-local mod_bonemeal = minetest.get_modpath("bonemeal")
-local mod_armor = minetest.get_modpath("3d_armor")
-local mod_mobs = minetest.get_modpath("mobs")
+local S = core.get_translator("ethereal")
+local mod_bonemeal = core.get_modpath("bonemeal")
+local mod_armor = core.get_modpath("3d_armor")
+local mod_mobs = core.get_modpath("mobs")
 
 -- junk items to be found
 
@@ -107,7 +107,7 @@ end
 
 local function effect(pos)
 
-	minetest.add_particle({
+	core.add_particle({
 		pos = {
 			x = pos.x + random() - 0.5,
 			y = pos.y + 0.1,
@@ -125,7 +125,7 @@ end
 
 -- fishing bob entity
 
-minetest.register_entity("ethereal:bob_entity", {
+core.register_entity("ethereal:bob_entity", {
 
 	initial_properties = {
 		textures = {"ethereal_fishing_bob.png"},
@@ -141,8 +141,8 @@ minetest.register_entity("ethereal:bob_entity", {
 	on_step = function(self, dtime)
 
 		local pos = self.object:get_pos()
-		local node = minetest.get_node(pos)
-		local def = minetest.registered_nodes[node.name]
+		local node = core.get_node(pos)
+		local def = core.registered_nodes[node.name]
 
 -- casting rod into water
 if not self.cast then
@@ -157,15 +157,15 @@ if not self.cast then
 
 		-- while bob is in water
 		if def and def.liquidtype == "source"
-		and minetest.get_item_group(node.name, "water") > 0 then
+		and core.get_item_group(node.name, "water") > 0 then
 
 			-- incase of lag find water level
-			local free_fall, blocker = minetest.line_of_sight(
+			local free_fall, blocker = core.line_of_sight(
 					{x = pos.x, y = pos.y + 2, z = pos.z},
 					{x = pos.x, y = pos.y    , z = pos.z})
 
 			-- do we have worms for bait, if so take one
-			local player = self.fisher and minetest.get_player_by_name(self.fisher)
+			local player = self.fisher and core.get_player_by_name(self.fisher)
 			local inv = player and player:get_inventory()
 			local bait = 0
 
@@ -189,7 +189,7 @@ if not self.cast then
 			-- splash
 			effect(pos) ; effect(pos) ; effect(pos) ; effect(pos)
 
-			minetest.sound_play("default_water_footstep",
+			core.sound_play("default_water_footstep",
 					{pos = pos, gain = 0.1}, true)
 		end
 
@@ -203,7 +203,7 @@ else -- already cast and waiting for fish
 			return
 		end
 
-		local player = minetest.get_player_by_name(self.fisher)
+		local player = core.get_player_by_name(self.fisher)
 
 		-- we need an actual person
 		if not player then
@@ -237,7 +237,7 @@ else -- already cast and waiting for fish
 
 		-- when in water, bob.
 		if def and def.liquidtype == "source"
-		and minetest.get_item_group(def.name, "water") ~= 0 then
+		and core.get_item_group(def.name, "water") ~= 0 then
 
 			self.old_y = self.old_y or pos.y
 
@@ -274,7 +274,7 @@ else -- already cast and waiting for fish
 					self.object:set_velocity({x = 0, y = -1, z = 0})
 					self.object:set_acceleration({x = 0, y = 3, z = 0})
 
-					minetest.sound_play("default_water_footstep", {
+					core.sound_play("default_water_footstep", {
 						pos = pos, gain = 0.1}, true)
 				end
 			end
@@ -305,8 +305,8 @@ local find_item = function(list, pos)
 
 	local item
 	local items = {}
-	local data= minetest.get_biome_data(pos)
-	local biome = data and minetest.get_biome_name(data.biome) or ""
+	local data= core.get_biome_data(pos)
+	local biome = data and core.get_biome_name(data.biome) or ""
 
 --print("--biome", biome)
 
@@ -338,7 +338,7 @@ end
 local use_rod = function(itemstack, player, pointed_thing)
 
 	local pos = player:get_pos()
-	local objs = minetest.get_objects_inside_radius(pos, 15)
+	local objs = core.get_objects_inside_radius(pos, 15)
 	local found = true
 	local ent
 
@@ -380,7 +380,7 @@ local use_rod = function(itemstack, player, pointed_thing)
 				local item_wear = item:split(" ")[2]
 
 				-- make sure item exists, if not replace with default item
-				if not minetest.registered_items[item_name] then
+				if not core.registered_items[item_name] then
 					item = default_item
 				end
 
@@ -389,7 +389,7 @@ local use_rod = function(itemstack, player, pointed_thing)
 				item = ItemStack(item) -- convert into itemstack
 
 				-- if tool then add wear
-				if item_wear and minetest.registered_tools[item_name] then
+				if item_wear and core.registered_tools[item_name] then
 					item:set_wear(65535 - item_wear)
 				end
 
@@ -398,7 +398,7 @@ local use_rod = function(itemstack, player, pointed_thing)
 				if inv:room_for_item("main", item) then
 					inv:add_item("main", item)
 				else
-					minetest.add_item(pos, item)
+					core.add_item(pos, item)
 				end
 			end
 
@@ -428,11 +428,11 @@ local use_rod = function(itemstack, player, pointed_thing)
 		local dir = player:get_look_dir()
 		local pos = {x = playerpos.x, y = playerpos.y + 1.5, z = playerpos.z}
 
-		minetest.sound_play("ethereal_casting_rod",
+		core.sound_play("ethereal_casting_rod",
 				{pos = pos, gain = 1.0, max_hear_distance = 10}, true)
 
 		-- place actual bob
-		local obj = minetest.add_entity(pos, "ethereal:bob_entity")
+		local obj = core.add_entity(pos, "ethereal:bob_entity")
 
 		obj:set_velocity({x = dir.x * 8, y = dir.y * 8, z = dir.z * 8})
 		obj:set_acceleration({x = dir.x * -3, y = -9.8, z = dir.z * -3})
@@ -449,7 +449,7 @@ end
 
 local remove_bob = function(player)
 
-	local objs = minetest.get_objects_inside_radius(player:get_pos(), 15)
+	local objs = core.get_objects_inside_radius(player:get_pos(), 15)
 	local name = player:get_player_name()
 	local ent
 
@@ -469,19 +469,19 @@ end
 
 -- remove bob if player signs off
 
-minetest.register_on_leaveplayer(function(player)
+core.register_on_leaveplayer(function(player)
 	remove_bob(player)
 end)
 
 -- remove bob if player dies
 
-minetest.register_on_dieplayer(function(player)
+core.register_on_dieplayer(function(player)
 	remove_bob(player)
 end)
 
 -- fishing rod
 
-minetest.register_tool("ethereal:fishing_rod", {
+core.register_tool("ethereal:fishing_rod", {
 	description = S("Fishing Rod (USE to cast and again when the time is right)"),
 	groups = {tool = 1},
 	inventory_image = "ethereal_fishing_rod.png",
@@ -492,7 +492,7 @@ minetest.register_tool("ethereal:fishing_rod", {
 	sound = {breaks = "default_tool_breaks"}
 })
 
-minetest.register_craft({
+core.register_craft({
 	output = "ethereal:fishing_rod",
 	recipe = {
 		{"","","group:stick"},
@@ -501,7 +501,7 @@ minetest.register_craft({
 	}
 })
 
-minetest.register_craft({
+core.register_craft({
 	type = "fuel",
 	recipe = "ethereal:fishing_rod",
 	burntime = 15
@@ -552,11 +552,11 @@ for n = 1, #fish do
 	local groups = nil
 
 	if fish[n][3] ~= 0 then
-		usage = minetest.item_eat(fish[n][3])
+		usage = core.item_eat(fish[n][3])
 		groups = {food_fish_raw = 1, ethereal_fish = 1}
 	end
 
-	minetest.register_craftitem("ethereal:fish_" .. fish[n][2], {
+	core.register_craftitem("ethereal:fish_" .. fish[n][2], {
 		description = S(fish[n][1]),
 		inventory_image = "ethereal_fish_" .. fish[n][2] .. ".png",
 		on_use = usage,
@@ -570,21 +570,21 @@ end
 
 -- Make Neon Tetra glow slightly
 
-minetest.override_item("ethereal:fish_tetra", {light_source = 3})
+core.override_item("ethereal:fish_tetra", {light_source = 3})
 
 -- Pufferfish changes so it cannot be used in generic recipes
 
-minetest.override_item("ethereal:fish_pufferfish", {groups = {flammable = 2}})
+core.override_item("ethereal:fish_pufferfish", {groups = {flammable = 2}})
 
 -- Worm
 
-minetest.register_craftitem("ethereal:worm", {
+core.register_craftitem("ethereal:worm", {
 	description = S("Worm"),
 	inventory_image = "ethereal_worm.png",
 	wield_image = "ethereal_worm.png"
 })
 
-minetest.register_craft({
+core.register_craft({
 	output = "ethereal:worm",
 	recipe = {
 		{"default:dirt", "default:dirt"}
@@ -593,6 +593,6 @@ minetest.register_craft({
 
 -- compatibility
 
-minetest.register_alias("ethereal:fish_raw", "ethereal:fish_cichlid")
-minetest.register_alias("ethereal:fishing_rod_baited", "ethereal:fishing_rod")
-minetest.register_alias("ethereal:fish_chichlid", "ethereal:fish_cichlid")
+core.register_alias("ethereal:fish_raw", "ethereal:fish_cichlid")
+core.register_alias("ethereal:fishing_rod_baited", "ethereal:fishing_rod")
+core.register_alias("ethereal:fish_chichlid", "ethereal:fish_cichlid")

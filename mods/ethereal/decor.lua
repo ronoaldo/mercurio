@@ -10,7 +10,7 @@ local function register_decoration(enabled, def)
 	def.y_min = def.y_min or 1
 	def.y_max = def.y_max or 100
 
-	minetest.register_decoration(def)
+	core.register_decoration(def)
 end
 
 -- ponds
@@ -62,7 +62,7 @@ register_decoration(1, {
 
 -- farming redo check, salt crystal if found, strawberry if not
 
-if minetest.get_modpath("farming") and farming.mod and farming.mod == "redo" then
+if core.get_modpath("farming") and farming.mod and farming.mod == "redo" then
 
 	register_decoration(ethereal.cold_desert, {
 		place_on = "default:silver_sand",
@@ -87,7 +87,7 @@ register_decoration(ethereal.glacier, {
 
 -- caverealm icicle
 
-register_decoration((minetest.get_modpath("caverealms") and 1), {
+register_decoration((core.get_modpath("caverealms") and 1), {
 	place_on = "default:snowblock",
 	fill_ratio = 0.008, y_min = 3, y_max = 30,
 	biomes = {"glacier"},
@@ -316,7 +316,7 @@ register_decoration(1, {
 
 -- wild onion and setting
 
-local abundant = minetest.settings:get_bool("ethereal.abundant_onions") ~= false
+local abundant = core.settings:get_bool("ethereal.abundant_onions") ~= false
 
 register_decoration(1, {
 	place_on = {"default:dirt_with_grass", "ethereal:prairie_dirt"},
@@ -335,7 +335,7 @@ register_decoration(1, {
 
 -- baked clay flowers
 
-if minetest.get_modpath("bakedclay") then
+if core.get_modpath("bakedclay") then
 
 register_decoration(1, {
 	place_on = {"ethereal:prairie_dirt", "default:dirt_with_grass", "ethereal:grove_dirt"},
@@ -371,7 +371,7 @@ end
 
 -- blue agave from wine mod
 
-if minetest.get_modpath("wine") then
+if core.get_modpath("wine") then
 
 	register_decoration(ethereal.desert, {
 		place_on = {"default:desert_sand"},
@@ -389,7 +389,7 @@ register_decoration(1, {
 
 -- stone with yellow algae
 
-register_decoration(minetest.get_modpath("caverealms") and ethereal.tundra, {
+register_decoration(core.get_modpath("caverealms") and ethereal.tundra, {
 	place_on = {"default:permafrost_with_stones"},
 	sidelen = 4, y_min = 3, y_max = 50,
 	noise_params = {offset = -0.2, scale = 1.0, spread = {x = 100, y = 100, z = 100},
@@ -422,7 +422,7 @@ register_decoration(ethereal.tundra, {
 
 -- butterflies mod
 
-if minetest.get_modpath("butterflies") then
+if core.get_modpath("butterflies") then
 
 	register_decoration(1, {
 		name = "butterflies:butterfly",
@@ -434,7 +434,7 @@ if minetest.get_modpath("butterflies") then
 		spawn_by = "group:flower", num_spawn_by = 1})
 
 	-- restart butterfly timers
-	minetest.register_lbm({
+	core.register_lbm({
 		name = ":butterflies:butterfly_timer",
 		nodenames = {
 			"butterflies:butterfly_white", "butterflies:butterfly_red",
@@ -442,13 +442,13 @@ if minetest.get_modpath("butterflies") then
 		},
 		run_at_every_load = false,
 
-		action = function(pos) minetest.get_node_timer(pos):start(5) end
+		action = function(pos) core.get_node_timer(pos):start(5) end
 	})
 end
 
 -- fireflies mod
 
-if minetest.get_modpath("fireflies") then
+if core.get_modpath("fireflies") then
 
 	register_decoration(1, {
 		name = "fireflies:firefly_low",
@@ -461,12 +461,12 @@ if minetest.get_modpath("fireflies") then
 		decoration = "fireflies:hidden_firefly", place_offset_y = 2})
 
 	-- restart firefly timers
-	minetest.register_lbm({
+	core.register_lbm({
 		name = ":fireflies:firefly_timer",
 		nodenames = {"fireflies:firefly", "fireflies:hidden_firefly"},
 		run_at_every_load = false,
 
-		action = function(pos) minetest.get_node_timer(pos):start(5) end
+		action = function(pos) core.get_node_timer(pos):start(5) end
 	})
 end
 
@@ -492,8 +492,8 @@ register_decoration(1, {
 	sidelen = 16, y_min = -10, y_max = -5,
 	noise_params = {offset = -0.04, scale = 0.1, spread = {x = 200, y = 200, z = 200},
 			seed = 87112, octaves = 3, persist = 0.7},
-	biomes = {"frost_ocean", "deciduous_forest_ocean", "sandstone_ocean", "swamp_ocean",
-			"snowy_grassland_ocean"},
+	biomes = {"frost_ocean", "deciduous_forest_ocean", "sandstone_desert_ocean",
+			"swamp_ocean", "snowy_grassland_ocean"},
 	flags = "force_placement",
 	decoration = "default:sand_with_kelp", place_offset_y = -1,
 	param2 = 48, param2_max = 96})
@@ -515,7 +515,7 @@ add_illumishroom(-3000, -2000, "ethereal:illumishroom3")
 
 --= Register Biome Decoration Using Plants Mega Pack Lite if Xanadu found
 
-if minetest.get_modpath("xanadu") then
+if core.get_modpath("xanadu") then
 
 	--= Desert Biome
 

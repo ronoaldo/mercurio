@@ -1,4 +1,7 @@
 
+local pos = { x=0, y=0, z=0 }
+mtt.emerge_area(pos, pos)
+
 mtt.register("timestamp parsing", function(callback)
     local date = 21621
     local time = 23636

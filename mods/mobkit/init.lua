@@ -341,7 +341,7 @@ function mobkit.get_box_intersect_cols(pos,box)
 	local pmin = {x=floor(pos.x+box[1]+0.5),z=floor(pos.z+box[3]+0.5)}
 	local pmax = {x=floor(pos.x+box[4]+0.5),z=floor(pos.z+box[6]+0.5)}
 	
-	result= {}
+	local result = {}
 	for x=pmin.x,pmax.x do
 		for z=pmin.z,pmax.z do
 			table.insert(result,{x=x,z=z})
@@ -677,9 +677,9 @@ function mobkit.physics(self)
 		-- dumb friction
 		
 	if self.isonground and not self.isinliquid then
-		vnew = {x= vel.x> 0.2 and vel.x*mobkit.friction or 0,
-				y=vel.y,
-				z=vel.z > 0.2 and vel.z*mobkit.friction or 0}
+		vnew = vector.new(abs(vel.x) > 0.2 and vel.x*mobkit.friction or 0,
+				vel.y,
+				abs(vel.z) > 0.2 and vel.z*mobkit.friction or 0)
 	end
 	
 	-- bounciness
@@ -855,17 +855,3 @@ end
 
 -- load example behaviors
 dofile(minetest.get_modpath("mobkit") .. "/example_behaviors.lua")
-
-minetest.register_on_mods_loaded(function()
-	local mbkfuns = ''
-	for n,f in pairs(mobkit) do
-		if type(f) == 'function' then
-			mbkfuns = mbkfuns .. n .. string.split(minetest.serialize(f),'.lua')[2] or ''
-		end
-	end
-	local crc = minetest.sha1(mbkfuns)
---  dbg(crc)
---	if crc ~= 'a061770008fe9ecf8e1042a227dc3beabd10e481' then
---		minetest.log("error","Mobkit namespace inconsistent, has been modified by other mods.")
---	end
-end)

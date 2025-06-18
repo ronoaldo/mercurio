@@ -21,12 +21,10 @@ using custom stats.
 
 See `src/workbench.lua` for details.
 
-## EXPERIMENTAL: Add cut nodes
+## Add cut nodes
 
 You can register "cut" node variants of an existing node which can
 be created at the workbench.
 This will add thin stairs, half stairs, panels, microcubes, etc.
-
-THIS FEATURE IS EXPERIMENTAL!
 
 See `src/workbench.lua` for details.

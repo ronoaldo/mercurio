@@ -1,0 +1,21 @@
+# textdomain: carpets
+
+Carpets=Килими
+Adds 16 colorized wool carpets to the minetest.=Додає 16 кольорових вовняних килимів.
+
+##[ init.lua ]##
+Black carpet=Чорний килим
+Blue carpet=Синій килим
+Brown carpet=Коричневий килим
+Cyan carpet=Блакитний килим
+Dark green carpet=Темно-зелений килим
+Dark grey carpet=Темно-сірий килим
+Green carpet=Зелений килим
+Grey carpet=Сірий килим
+Magenta carpet=Маджентовий килим
+Orange carpet=Помаранчевийкилим
+Pink carpet=Рожевий килим
+Red carpet=Червоний килим
+Violet carpet=Фіолетовий килим
+White carpet=Білий килим
+Yellow carpet=Жовтий килим

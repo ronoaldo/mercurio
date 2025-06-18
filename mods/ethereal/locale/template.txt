@@ -80,6 +80,7 @@ Lemon Tree Leaves=
 Olive Tree Leaves=
 Mushroom Cap=
 Mushroom Pore=
+Mushroom Trunk=
 Bush=
 Bush #2=
 Bush #3=

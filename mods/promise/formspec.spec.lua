@@ -16,10 +16,9 @@ mtt.register("Promise.formspec", function(callback)
         get_player_name = function() return "singleplayer" end
     }
 
-    Promise.formspec(player, "stuff[]")
-    :next(function(data)
-        assert(data.player == player)
-        assert(data.fields.x == 1)
+    Promise.formspec("singleplayer", "stuff[]")
+    :next(function(fields)
+        assert(fields.x == 1)
         callback()
     end)
 

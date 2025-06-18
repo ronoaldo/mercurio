@@ -1,0 +1,1 @@
+mobs_npc_peaceful_igor (Whether Igor is peaceful towards players unless provoked) bool false

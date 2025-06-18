@@ -1,9 +1,9 @@
 
 -- translation and mod check
 
-local S = minetest.get_translator("mobs_npc")
-local mcl = minetest.get_modpath("mcl_core") ~= nil
-local def = minetest.get_modpath("default") ~= nil
+local S = core.get_translator("mobs_npc")
+local mcl = core.get_modpath("mcl_core") ~= nil
+local def = core.get_modpath("default") ~= nil
 
 -- show random message from list
 
@@ -16,7 +16,7 @@ mobs_npc.npc_talk =  function(self, player, message_list)
 
 		local msg = messages[math.random(#messages)]
 
-		minetest.chat_send_player(name, "<" .. (self.nametag or "") .. "> " .. msg)
+		core.chat_send_player(name, "<" .. (self.nametag or "") .. "> " .. msg)
 	end
 end
 
@@ -45,12 +45,12 @@ mobs_npc.drop_trade = function(self, player, item, item_list)
 		drop = drop[1]
 	end
 
-	if not minetest.registered_items[drop]
+	if not core.registered_items[drop]
 	or math.random(chance) > 1 then
 		drop = mcl and "mcl_core:clay_lump" or "default:clay_lump"
 	end
 
-	local obj = minetest.add_item(pos, {name = drop})
+	local obj = core.add_item(pos, {name = drop})
 	local dir = player:get_look_dir()
 
 	obj:set_velocity({x = -dir.x, y = 1.5, z = -dir.z})
@@ -64,11 +64,11 @@ local context = {}
 
 mobs_npc.useDialogs = "N"
 
-minetest.register_on_leaveplayer(function(player)
+core.register_on_leaveplayer(function(player)
 	context[player:get_player_name()] = nil
 end)
 
-if minetest.get_modpath("simple_dialogs") then
+if core.get_modpath("simple_dialogs") then
 
 	mobs_npc.useDialogs = "Y"
 
@@ -87,7 +87,7 @@ if minetest.get_modpath("simple_dialogs") then
 			if npcself.owner then
 
 				--check to see if the player has 'bring' teleport privliges
-				local player_privs = minetest.get_player_privs(npcself.owner)
+				local player_privs = core.get_player_privs(npcself.owner)
 
 				if player_privs["bring"] then
 
@@ -105,7 +105,7 @@ if minetest.get_modpath("simple_dialogs") then
 						and pos.y > -31500 and pos.y < 31500
 						and pos.z > -31500 and pos.z < 31500 then
 
-							local player = minetest.get_player_by_name(playername)
+							local player = core.get_player_by_name(playername)
 
 							if player then
 								player:set_pos(pos) end
@@ -141,7 +141,7 @@ function mobs_npc.get_controls_formspec(name, self)
 	local size = mobs_npc.useDialogs == "Y" and "size[15,10]" or "size[3.85,2.8]"
 	local formspec = {
 		size,
-		"label[0.375,0.5;", minetest.formspec_escape(text), "]",
+		"label[0.375,0.5;", core.formspec_escape(text), "]",
 		"dropdown[0.375,1.25; 3,0.6;ordermode;wander,stand,follow;", currentorderidx, "]",
 		"button[0.375,2;3,0.8;exit;Exit]"
 	}
@@ -160,7 +160,7 @@ end
 
 -- receive and do orders given through form
 
-minetest.register_on_player_receive_fields(function(player, formname, fields)
+core.register_on_player_receive_fields(function(player, formname, fields)
 
 	local pname = player:get_player_name()
 
@@ -178,7 +178,7 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 
 		if fields["exit"] then
 
-			minetest.close_formspec(pname, "mobs_npc:controls")
+			core.close_formspec(pname, "mobs_npc:controls")
 
 		elseif fields["ordermode"] then
 
@@ -188,7 +188,7 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 
 			if npcself.order == "wander" then
 
---				minetest.chat_send_player(pname, S("NPC will wander."))
+--				core.chat_send_player(pname, S("NPC will wander."))
 
 			elseif npcself.order == "stand" then
 
@@ -197,10 +197,10 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 				npcself:set_animation("stand")
 				npcself:set_velocity(0)
 
---				minetest.chat_send_player(pname, S("NPC stands still."))
+--				core.chat_send_player(pname, S("NPC stands still."))
 
 			elseif npcself.order == "follow" then
---				minetest.chat_send_player(pname, S("NPC will follow you."))
+--				core.chat_send_player(pname, S("NPC will follow you."))
 			end
 		end
 
@@ -228,7 +228,7 @@ function get_npcself_from_id(npcId)
 
 	if npcId == nil then return nil end
 
-	for k, v in pairs(minetest.luaentities) do
+	for k, v in pairs(core.luaentities) do
 
 		if v.object and v.id and v.id == npcId then
 			return v
@@ -332,7 +332,7 @@ function mobs_npc.shop_trade(self, clicker, race)
 
 	local player = clicker:get_player_name() or ""
 
-	minetest.chat_send_player(player,
+	core.chat_send_player(player,
 		S("[NPC] <Trader @1> Hello, @2, have a look at my wares.",
 		self.game_name, player))
 
@@ -365,7 +365,7 @@ function mobs_npc.shop_trade(self, clicker, race)
 	local sl = mcl and mcl_vars.gui_slots or default.gui_slots or ""
 	local lc = mcl and "listcolors[#9d9d9d;#FFF7;#474747]" or ""
 
-	minetest.show_formspec(player, "mobs_npc:trade", "size[" .. (mcl and 9 or 8) .. ",10]"
+	core.show_formspec(player, "mobs_npc:trade", "size[" .. (mcl and 9 or 8) .. ",10]"
 		.. bg
 		.. sl
 		.. "label[0.5,-0.1;" .. S("Trader @1's stock:", self.game_name) .. "]"
@@ -376,7 +376,7 @@ function mobs_npc.shop_trade(self, clicker, race)
 end
 
 
-minetest.register_on_player_receive_fields(function(player, formname, fields)
+core.register_on_player_receive_fields(function(player, formname, fields)
 
 	if formname ~= "mobs_npc:trade" then return end
 
@@ -393,7 +393,7 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 
 		if id ~= nil then
 
-			for k, v in pairs(minetest.luaentities) do
+			for k, v in pairs(core.luaentities) do
 
 				if v.object and v.id and v.id == id then
 					self = v
@@ -427,7 +427,7 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 						droppos.x = droppos.x + dir.x
 						droppos.z = droppos.z + dir.z
 
-						minetest.add_item(droppos, leftover)
+						core.add_item(droppos, leftover)
 					end
 				end
 			end

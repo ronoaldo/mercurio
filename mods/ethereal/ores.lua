@@ -3,7 +3,7 @@
 
 local function add_stratum(y_min, y_max, node)
 
-	minetest.register_ore({
+	core.register_ore({
 		ore_type = "stratum",
 		ore = node,
 		wherein = {"bakedclay:orange"},
@@ -27,7 +27,7 @@ end
 
 local function add_ore(a, b, c, d, e, f, g)
 
-	minetest.register_ore({
+	core.register_ore({
 		ore_type = "scatter",
 		ore = a,
 		wherein = b,
@@ -72,7 +72,7 @@ add_ore("ethereal:sandy", "default:sand", 10*10*10, 24, 4, -45, -10)
 
 -- Etherium
 
-minetest.register_ore({
+core.register_ore({
 	ore_type = "scatter",
 	ore = "ethereal:etherium_ore",
 	wherein = "default:desert_stone",
@@ -86,7 +86,7 @@ minetest.register_ore({
 
 -- Etherium in floatlands
 
-minetest.register_ore({
+core.register_ore({
 	ore_type = "scatter",
 	ore = "ethereal:stone_with_etherium_ore",
 	wherein = "default:stone",
@@ -99,7 +99,7 @@ minetest.register_ore({
 
 -- Clay in silver and desert sand beaches
 
-minetest.register_ore({
+core.register_ore({
 	ore_type = "blob",
 	ore = "default:clay",
 	wherein = {"default:silver_sand", "default:desert_sand"},

@@ -1,5 +1,5 @@
 steampunk_blimp={}
-steampunk_blimp.gravity = tonumber(minetest.settings:get("movement_gravity")) or 9.8
+steampunk_blimp.gravity = 9.8
 steampunk_blimp.trunk_slots = 50
 steampunk_blimp.fuel = {['default:coal_lump'] = {amount=1},['default:coalblock'] = {amount=10}, ['rp_default:lump_coal'] = {amount=1}, ['rp_default:block_coal'] = {amount=10},
     ['mcl_core:coal_lump'] = {amount=1},['mcl_core:coalblock'] = {amount=10}, ['default:coal_lump'] = {amount=1}, ['default:coalblock'] = {amount=10}}
@@ -7,7 +7,27 @@ steampunk_blimp.water = {['default:water_source'] = {amount=1},['default:river_w
     ['bucket:bucket_water'] = {amount=1}, ['bucket:bucket_river_water'] = {amount=1},
     ['mcl_buckets:bucket_water'] = {amount=1}, ['mcl_buckets:bucket_river_water'] = {amount=1}, ['mcl_core:water_source'] = {amount=1},
     ['rp_default:bucket_water'] = {amount=1}, ['rp_default:bucket_river_water'] = {amount=1}, }  --bucket:bucket_empty
+steampunk_blimp.rep_material = {['default:gold_lump'] = {amount=5},['default:gold_ingot'] = {amount=10}, ['mcl_core:gold_ingot'] = {amount=10}}
+steampunk_blimp.avail_powder = {"tnt:gunpowder","mcl_mobitems:gunpowder", "cannons:gunpowder",}
+steampunk_blimp.avail_ammo = {"steampunk_blimp:cannon_ball1",}
+
+if core.get_modpath("cannons") then
+    local cannons_entities = {
+        "cannons:ball_wood_stack_1",
+        "cannons:ball_stone_stack_1",
+        "cannons:ball_steel_stack_1",
+        "cannons:ball_fire_stack_1",
+        "cannons:ball_exploding_stack_1",
+        }
+	for _, v in ipairs(cannons_entities) do
+		table.insert(steampunk_blimp.avail_ammo, v)
+	end
+end
+
 steampunk_blimp.ideal_step = 0.02
+steampunk_blimp.min_hp = 10
+steampunk_blimp.max_hp = 50
+steampunk_blimp.min_damage_value = 20 --min value to cause damage
 steampunk_blimp.rudder_limit = 30
 steampunk_blimp.iddle_rotation = 0
 steampunk_blimp.max_engine_acc = 3
@@ -50,8 +70,6 @@ if airutils.is_repixture then
     local ladder_texture = "default_ladder.png"
     steampunk_blimp.textures = {
                 steampunk_blimp.black_texture, --alimentacao balao
-                "default_wood_oak.png", --asa
-                steampunk_blimp.canvas_texture, --asa
                 steampunk_blimp.canvas_texture, --balao
                 steampunk_blimp.color2_texture, --faixas brancas nariz
                 steampunk_blimp.color1_texture, --faixas azuis nariz
@@ -69,7 +87,7 @@ if airutils.is_repixture then
                 ladder_texture, --escada
                 "default_wood_oak.png", --mureta
                 steampunk_blimp.wood_texture, --mureta
-                steampunk_blimp.black_texture, --nacele rotores
+                "steampunk_blimp_engine.png", --nacele rotores
                 steampunk_blimp.wood_texture, --quilha
                 "default_wood_oak.png", --rotores
                 steampunk_blimp.rotor_texture, --"steampunk_blimp_rotor.png", --rotores
@@ -96,8 +114,6 @@ else
     if airutils.is_mcl then ladder_texture = "default_ladder.png" end
     steampunk_blimp.textures = {
                 steampunk_blimp.black_texture, --alimentacao balao
-                "default_wood.png", --asa
-                steampunk_blimp.canvas_texture, --asa
                 steampunk_blimp.canvas_texture, --balao
                 steampunk_blimp.color2_texture, --faixas brancas nariz
                 steampunk_blimp.color1_texture, --faixas azuis nariz
@@ -115,7 +131,7 @@ else
                 ladder_texture, --escada
                 "default_wood.png", --mureta
                 steampunk_blimp.wood_texture, --mureta
-                steampunk_blimp.black_texture, --nacele rotores
+                "steampunk_blimp_engine.png", --nacele rotores
                 steampunk_blimp.wood_texture, --quilha
                 "default_wood.png", --rotores
                 steampunk_blimp.rotor_texture, --"steampunk_blimp_rotor.png", --rotores
@@ -149,6 +165,12 @@ steampunk_blimp.colors ={
     yellow='yellow',
 }
 
+
+
+steampunk_blimp.cannons_loc = {x=24, y=-2, z=0}
+steampunk_blimp.cannons_sz = 15
+
+dofile(minetest.get_modpath("steampunk_blimp") .. DIR_DELIM .. "cannon_balls.lua")
 dofile(minetest.get_modpath("steampunk_blimp") .. DIR_DELIM .. "walk_map.lua")
 dofile(minetest.get_modpath("steampunk_blimp") .. DIR_DELIM .. "utilities.lua")
 dofile(minetest.get_modpath("steampunk_blimp") .. DIR_DELIM .. "control.lua")
@@ -210,13 +232,62 @@ minetest.register_tool("steampunk_blimp:blimp", {
             --minetest.chat_send_all('passengers: '.. dump(ent._passengers))
             local owner = placer:get_player_name()
             ent.owner = owner
-            ent.hp = 50 --reset hp
+            --ent.hp = 50 --reset hp
 			blimp:set_yaw(placer:get_look_horizontal())
 			itemstack:take_item()
             airutils.create_inventory(ent, steampunk_blimp.trunk_slots, owner)
 
             local properties = ent.object:get_properties()
             properties.infotext = owner .. " nice blimp"
+            blimp:set_properties(properties)
+            --steampunk_blimp.attach_pax(ent, placer)
+		end
+
+		return itemstack
+	end,
+})
+
+
+-- tactical steampunk blimp
+minetest.register_tool("steampunk_blimp:cannon_blimp", {
+    description = "Gunboat Steampunk Blimp",
+    inventory_image = "steampunk_blimp_gunboat_icon.png",
+    liquids_pointable = true,
+    stack_max = 1,
+
+	on_place = function(itemstack, placer, pointed_thing)
+		if pointed_thing.type ~= "node" then
+			return
+		end
+
+        local owner = placer:get_player_name()
+
+        local stack_meta = itemstack:get_meta()
+        local staticdata = stack_meta:get_string("staticdata")
+        if staticdata == nil or staticdata == "" then
+            staticdata = 'return {stored_has_cannons=true,stored_owner="'..owner..'",}'
+        end
+
+        local pointed_pos = pointed_thing.under
+        --local node_below = minetest.get_node(pointed_pos).name
+        --local nodedef = minetest.registered_nodes[node_below]
+
+		pointed_pos.y=pointed_pos.y+3
+		local blimp = minetest.add_entity(pointed_pos, "steampunk_blimp:blimp", staticdata)
+		if blimp and placer then
+            local ent = blimp:get_luaentity()
+            ent._passengers = steampunk_blimp.copy_vector({[1]=nil, [2]=nil, [3]=nil, [4]=nil, [5]=nil, [6]=nil, [7]=nil})
+            --minetest.chat_send_all('passengers: '.. dump(ent._passengers))
+            ent.owner = owner
+            --ent.hp = 50 --reset hp
+            ent._vehicle_name = "Gunboat Steampunk Blimp",
+            steampunk_blimp.paint(ent, "black")
+			blimp:set_yaw(placer:get_look_horizontal())
+			itemstack:take_item()
+            airutils.create_inventory(ent, steampunk_blimp.trunk_slots, owner)
+
+            local properties = ent.object:get_properties()
+            properties.infotext = owner .. " war blimp"
             blimp:set_properties(properties)
             --steampunk_blimp.attach_pax(ent, placer)
 		end
@@ -252,6 +323,7 @@ minetest.register_craftitem("steampunk_blimp:ephemeral_blimp", {
             ent._remove = true
             ent._water_level = steampunk_blimp.MAX_WATER --start it full loaded
             ent._energy = steampunk_blimp.MAX_FUEL  --start it full loaded
+            ent._vehicle_name = "Ephemeral Blimp",
             steampunk_blimp.paint(ent, "orange")
 			blimp:set_yaw(placer:get_look_horizontal())
 			itemstack:take_item()
@@ -266,17 +338,14 @@ minetest.register_craftitem("steampunk_blimp:ephemeral_blimp", {
 	end,
 })
 
-if minetest.settings:get_bool('steampunk_blimp.enable_wind') then
-    steampunk_blimp.wind_enabled = true
-else
-    steampunk_blimp.wind_enabled = false
-end
+steampunk_blimp.wind_enabled = core.settings:get_bool('steampunk_blimp.enable_wind')
+steampunk_blimp.cannons_enabled = core.settings:get_bool('steampunk_blimp.enable_cannons')
 
 --
 -- crafting
 --
 
-if not minetest.settings:get_bool('steampunk_blimp.disable_craftitems') then
+if not core.settings:get_bool('steampunk_blimp.disable_craftitems') then
 
     local item_name = "steampunk_blimp:cylinder_part"
     if airutils.is_repixture then
@@ -384,6 +453,38 @@ if not minetest.settings:get_bool('steampunk_blimp.disable_craftitems') then
         })
     end
 
+    if steampunk_blimp.cannons_enabled == true then
+        item_name = "steampunk_blimp:cannon"
+        if airutils.is_repixture then
+            crafting.register_craft({
+                output = item_name,
+                items = {
+                    "rp_default:ingot_wrought_iron 2",
+                    "rp_default:block_wrought_iron 4",
+                    "group:planks 3",
+                }
+            })
+        elseif airutils.is_mcl then
+            minetest.register_craft({
+	            output = item_name,
+	            recipe = {
+		            {"mcl_core:ironblock","mcl_core:ironblock","group:wood"},
+		            {"mcl_core:iron_ingot","mcl_core:iron_ingot","group:wood"},
+		            {"mcl_core:ironblock","mcl_core:ironblock","group:wood"},
+	            }
+            })
+        else
+            minetest.register_craft({
+	            output = item_name,
+	            recipe = {
+		            {"default:steelblock","default:steelblock","group:wood"},
+		            {"default:steel_ingot","default:steel_ingot","group:wood"},
+		            {"default:steelblock","default:steelblock","group:wood"},
+	            }
+            })
+        end
+    end
+
     item_name = "steampunk_blimp:boat"
     if airutils.is_repixture then
         crafting.register_craft({
@@ -425,6 +526,36 @@ if not minetest.settings:get_bool('steampunk_blimp.disable_craftitems') then
     end
 
 
+    if steampunk_blimp.cannons_enabled == true then
+        item_name = "steampunk_blimp:cannon_blimp"
+        if airutils.is_repixture then
+            crafting.register_craft({
+                output = item_name,
+                items = {
+                    "steampunk_blimp:blimp 1",
+                    "steampunk_blimp:cannon 2",
+                }
+            })
+        else
+	        minetest.register_craft({
+		        output = item_name,
+		        recipe = {
+			        {"steampunk_blimp:cannon","steampunk_blimp:blimp","steampunk_blimp:cannon",},
+		        }
+	        })
+        end
+        if airutils.is_minetest then
+            minetest.register_craft({
+	            output = 'steampunk_blimp:cannon_ball1',
+	            recipe = {
+		            {"", "default:steel_ingot",""},
+		            {"default:steel_ingot","tnt:tnt_stick","default:steel_ingot"},
+		            {"", "default:steel_ingot",""},
+	            }
+            })
+        end
+    end
+
     -- cylinder section
     minetest.register_craftitem("steampunk_blimp:cylinder_part",{
 	    description = "steampunk_blimp cylinder section",
@@ -443,7 +574,13 @@ if not minetest.settings:get_bool('steampunk_blimp.disable_craftitems') then
 	    inventory_image = "steampunk_blimp_boiler.png",
     })
 
-    -- boiler
+    -- cannon
+    minetest.register_craftitem("steampunk_blimp:cannon",{
+	    description = "steampunk_blimp cannon",
+	    inventory_image = "steampunk_blimp_cannon_ico.png",
+    })
+
+    -- rotor
     minetest.register_craftitem("steampunk_blimp:rotor",{
 	    description = "steampunk_blimp rotor",
 	    inventory_image = "steampunk_blimp_rotor.png",

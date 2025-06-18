@@ -1,15 +1,13 @@
-version: "3.6"
 
 services:
- test:
-  build: ./test
-  user: root
-  volumes:
-    - "./:/root/.minetest/worlds/world/worldmods/mtzip/"
-    - "./test/minetest.conf:/minetest.conf"
-    - "./test/entrypoint.sh:/entrypoint.sh"
-    - "world:/root/.minetest/worlds/world"
-    - "./coverage:/var/lib/minetest"
-
-volumes:
-  world: {}
+  mtt:
+    image: ghcr.io/buckaroobanzay/mtt:latest
+    volumes:
+     - "./:/github/workspace"
+    environment:
+     INPUT_MODNAME: "mtzip"
+     INPUT_TEST_MODE: "mod"
+     INPUT_MAPGEN: "singlenode"
+     INPUT_GIT_GAME_REPO: "https://github.com/minetest/minetest_game"
+     INPUT_GIT_DEPENDENCIES: |
+      https://github.com/BuckarooBanzay/mtt

@@ -1,7 +1,7 @@
 
 -- Asteroid nodes
 
-minetest.register_node(":asteroid:stone", {
+core.register_node(":asteroid:stone", {
 	description = "Asteroid Stone",
 	tiles = {"default_stone.png"},
 	is_ground_content = false,
@@ -10,7 +10,7 @@ minetest.register_node(":asteroid:stone", {
 	sounds = default.node_sound_stone_defaults()
 })
 
-minetest.register_node(":asteroid:redstone", {
+core.register_node(":asteroid:redstone", {
 	description = "Asteroid Stone",
 	tiles = {"asteroid_redstone.png"},
 	is_ground_content = false,
@@ -19,7 +19,7 @@ minetest.register_node(":asteroid:redstone", {
 	sounds = default.node_sound_stone_defaults()
 })
 
-minetest.register_node(":asteroid:cobble", {
+core.register_node(":asteroid:cobble", {
 	description = "Asteroid Cobble",
 	tiles = {"asteroid_cobble.png"},
 	is_ground_content = false,
@@ -27,7 +27,7 @@ minetest.register_node(":asteroid:cobble", {
 	sounds = default.node_sound_stone_defaults()
 })
 
-minetest.register_node(":asteroid:redcobble", {
+core.register_node(":asteroid:redcobble", {
 	description = "Asteroid Cobble",
 	tiles = {"asteroid_redcobble.png"},
 	is_ground_content = false,
@@ -35,7 +35,7 @@ minetest.register_node(":asteroid:redcobble", {
 	sounds = default.node_sound_stone_defaults()
 })
 
-minetest.register_node(":asteroid:gravel", {
+core.register_node(":asteroid:gravel", {
 	description = "Asteroid Gravel",
 	tiles = {"asteroid_gravel.png"},
 	is_ground_content = false,
@@ -45,7 +45,7 @@ minetest.register_node(":asteroid:gravel", {
 	})
 })
 
-minetest.register_node(":asteroid:redgravel", {
+core.register_node(":asteroid:redgravel", {
 	description = "Asteroid Gravel",
 	tiles = {"asteroid_redgravel.png"},
 	is_ground_content = false,
@@ -55,7 +55,7 @@ minetest.register_node(":asteroid:redgravel", {
 	})
 })
 
-minetest.register_node(":asteroid:dust", {
+core.register_node(":asteroid:dust", {
 	description = "Asteroid Dust",
 	tiles = {"asteroid_dust.png"},
 	is_ground_content = false,
@@ -65,7 +65,7 @@ minetest.register_node(":asteroid:dust", {
 	})
 })
 
-minetest.register_node(":asteroid:reddust", {
+core.register_node(":asteroid:reddust", {
 	description = "Asteroid Dust",
 	tiles = {"asteroid_reddust.png"},
 	is_ground_content = false,
@@ -75,7 +75,7 @@ minetest.register_node(":asteroid:reddust", {
 	})
 })
 
-minetest.register_node(":asteroid:ironore", {
+core.register_node(":asteroid:ironore", {
 	description = "Asteroid Iron Ore",
 	tiles = {"asteroid_redstone.png^default_mineral_iron.png"},
 	is_ground_content = false,
@@ -84,7 +84,7 @@ minetest.register_node(":asteroid:ironore", {
 	sounds = default.node_sound_stone_defaults()
 })
 
-minetest.register_node(":asteroid:copperore", {
+core.register_node(":asteroid:copperore", {
 	description = "Asteroid Copper Ore",
 	tiles = {"asteroid_redstone.png^default_mineral_copper.png"},
 	is_ground_content = false,
@@ -93,7 +93,7 @@ minetest.register_node(":asteroid:copperore", {
 	sounds = default.node_sound_stone_defaults()
 })
 
-minetest.register_node(":asteroid:goldore", {
+core.register_node(":asteroid:goldore", {
 	description = "Asteroid Gold Ore",
 	tiles = {"asteroid_redstone.png^default_mineral_gold.png"},
 	is_ground_content = false,
@@ -102,7 +102,7 @@ minetest.register_node(":asteroid:goldore", {
 	sounds = default.node_sound_stone_defaults()
 })
 
-minetest.register_node(":asteroid:diamondore", {
+core.register_node(":asteroid:diamondore", {
 	description = "Asteroid Diamond Ore",
 	tiles = {"asteroid_redstone.png^default_mineral_diamond.png"},
 	is_ground_content = false,
@@ -111,7 +111,7 @@ minetest.register_node(":asteroid:diamondore", {
 	sounds = default.node_sound_stone_defaults()
 })
 
-minetest.register_node(":asteroid:meseore", {
+core.register_node(":asteroid:meseore", {
 	description = "Asteroid Mese Ore",
 	tiles = {"asteroid_redstone.png^default_mineral_mese.png"},
 	is_ground_content = false,
@@ -120,7 +120,7 @@ minetest.register_node(":asteroid:meseore", {
 	sounds = default.node_sound_stone_defaults()
 })
 
-minetest.register_node(":asteroid:atmos", {
+core.register_node(":asteroid:atmos", {
 	description = "Comet Atmosphere",
 	drawtype = "glasslike",
 	tiles = {"asteroid_atmos.png"},
@@ -139,7 +139,7 @@ minetest.register_node(":asteroid:atmos", {
 
 -- Redsky plant nodes
 
-minetest.register_node(":mars:redgrass", {
+core.register_node(":mars:redgrass", {
 	description = "Red Grass",
 	drawtype = "plantlike",
 	waving = 1,
@@ -159,7 +159,7 @@ minetest.register_node(":mars:redgrass", {
 	}
 })
 
-minetest.register_node(":mars:redweed", {
+core.register_node(":mars:redweed", {
 	description = "Red Weed",
 	drawtype = "plantlike",
 	waving = 1,
@@ -179,7 +179,7 @@ minetest.register_node(":mars:redweed", {
 	}
 })
 
-minetest.register_node(":mars:moss", {
+core.register_node(":mars:moss", {
 	description = "Martian Moss",
 	drawtype = "nodebox",
 	tiles = {"mars_moss.png"},
@@ -204,7 +204,7 @@ minetest.register_node(":mars:moss", {
 
 -- mars grass
 
-minetest.register_node(":mars:grass_1", {
+core.register_node(":mars:grass_1", {
 	description = "Martian Grass",
 	drawtype = "plantlike",
 	waving = 1,
@@ -226,7 +226,7 @@ minetest.register_node(":mars:grass_1", {
 
 		-- place a random grass node
 		local stack = ItemStack("mars:grass_" .. math.random(5))
-		local ret = minetest.item_place(stack, placer, pointed_thing)
+		local ret = core.item_place(stack, placer, pointed_thing)
 
 		return ItemStack("mars:grass_1 "
 			.. itemstack:get_count() - (1 - ret:get_count()))
@@ -235,7 +235,7 @@ minetest.register_node(":mars:grass_1", {
 
 for i = 2, 5 do
 
-	minetest.register_node(":mars:grass_" .. i, {
+	core.register_node(":mars:grass_" .. i, {
 		description = "Martian Grass",
 		drawtype = "plantlike",
 		waving = 1,
@@ -275,7 +275,7 @@ for i = 1, #crystal_list do -- in ipairs(crystal_list) do
 	local name = crystal_list[i][1]
 	local texture = crystal_list[i][2]
 
-	minetest.register_node(":crystals:" .. name .. "_1", {
+	core.register_node(":crystals:" .. name .. "_1", {
 		description = "Glowing Crystal",
 		drawtype = "mesh",
 		mesh = "crystal_shape01.obj",
@@ -292,7 +292,7 @@ for i = 1, #crystal_list do -- in ipairs(crystal_list) do
 		sounds = default.node_sound_glass_defaults()
 	})
 
-	minetest.register_node(":crystals:" .. name .. "_2", {
+	core.register_node(":crystals:" .. name .. "_2", {
 		description = "Glowing Crystal",
 		drawtype = "mesh",
 		mesh = "crystal_shape02.obj",

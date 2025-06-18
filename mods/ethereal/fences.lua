@@ -1,8 +1,8 @@
 
 -- translation and mod check
 
-local S = minetest.get_translator("ethereal")
-local door_mod = minetest.get_modpath("doors")
+local S = core.get_translator("ethereal")
+local door_mod = core.get_modpath("doors")
 
 -- fence registration helper (fence, rail, gate, mese post)
 
@@ -69,14 +69,14 @@ add_fence("basandra", "basandra_wood", "Basandra", "ethereal_basandra_bush_wood"
 
 -- add compatibility for previous ethereal gates
 
-minetest.register_alias("ethereal:fencegate_wood_open", "doors:gate_wood_open")
-minetest.register_alias("ethereal:fencegate_wood_closed", "doors:gate_wood_closed")
-minetest.register_alias("ethereal:fencegate_acacia_open", "doors:gate_acacia_wood_open")
-minetest.register_alias("ethereal:fencegate_acacia_closed", "doors:gate_acacia_wood_closed")
-minetest.register_alias("ethereal:fencegate_junglewood_open", "doors:gate_junglewood_open")
-minetest.register_alias("ethereal:fencegate_junglewood_closed", "doors:gate_junglewood_closed")
-minetest.register_alias("ethereal:fencegate_pine_open", "doors:gate_pine_wood_open")
-minetest.register_alias("ethereal:fencegate_pine_closed", "doors:gate_pine_wood_closed")
+core.register_alias("ethereal:fencegate_wood_open", "doors:gate_wood_open")
+core.register_alias("ethereal:fencegate_wood_closed", "doors:gate_wood_closed")
+core.register_alias("ethereal:fencegate_acacia_open", "doors:gate_acacia_wood_open")
+core.register_alias("ethereal:fencegate_acacia_closed", "doors:gate_acacia_wood_closed")
+core.register_alias("ethereal:fencegate_junglewood_open", "doors:gate_junglewood_open")
+core.register_alias("ethereal:fencegate_junglewood_closed", "doors:gate_junglewood_closed")
+core.register_alias("ethereal:fencegate_pine_open", "doors:gate_pine_wood_open")
+core.register_alias("ethereal:fencegate_pine_closed", "doors:gate_pine_wood_closed")
 
 -- sakura door
 
@@ -98,7 +98,7 @@ if door_mod then
 		}
 	})
 
-	minetest.register_alias("ethereal:sakura_door", "ethereal:door_sakura")
-	minetest.register_alias("ethereal:sakura_door_a", "ethereal:door_sakura_a")
-	minetest.register_alias("ethereal:sakura_door_b", "ethereal:door_sakura_b")
+	core.register_alias("ethereal:sakura_door", "ethereal:door_sakura")
+	core.register_alias("ethereal:sakura_door_a", "ethereal:door_sakura_a")
+	core.register_alias("ethereal:sakura_door_b", "ethereal:door_sakura_b")
 end

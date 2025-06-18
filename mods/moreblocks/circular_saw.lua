@@ -20,6 +20,9 @@ circular_saw.known_stairs = setmetatable({}, {
 -- This is populated by stairsplus:register_all:
 circular_saw.known_nodes = {}
 
+-- This is populated by stairsplus:register_micro:
+circular_saw.microblocks = {}
+
 -- How many microblocks does this shape at the output inventory cost:
 -- It may cause slight loss, but no gain.
 circular_saw.cost_in_microblocks = {
@@ -137,10 +140,13 @@ function circular_saw:reset(pos)
 
 	inv:set_list("input",  {})
 	inv:set_list("micro",  {})
-	inv:set_list("output", {})
 
-	meta:set_int("anz", 0)
-	meta:set_string("infotext", S("Circular Saw is empty") .. owned_by)
+	local microblockcount = inv:get_stack("micro",1):get_count()
+	meta:set_int("anz", microblockcount)
+	if microblockcount == 0 then
+		meta:set_string("infotext", S("Circular Saw is empty") .. owned_by)
+		inv:set_list("output", {})
+	end
 end
 
 
@@ -161,19 +167,21 @@ function circular_saw:update_inventory(pos, amount)
 	end
 
 	local stack = inv:get_stack("input",  1)
-	-- At least one "normal" block is necessary to see what kind of stairs are requested.
-	if stack:is_empty() then
-		-- Any microblocks not taken out yet are now lost.
-		-- (covers material loss in the machine)
+	local microstack = inv:get_stack("micro",1)
+
+	-- At least one (micro)block is necessary to see what kind of stairs are requested.
+	if stack:is_empty() and microstack:is_empty() then
+
 		self:reset(pos)
 		return
 
 	end
-	local node_name = stack:get_name() or ""
+
+	local node_name = circular_saw.microblocks[microstack:get_name()] or stack:get_name() or ""
 	local node_def = stack:get_definition()
 	local name_parts = circular_saw.known_nodes[node_name] or ""
-	local modname  = name_parts[1] or ""
-	local material = name_parts[2] or ""
+	local modname  = name_parts[1]
+	local material = name_parts[2]
 	local owned_by = meta:get_string("owner")
 
 	if owned_by and owned_by ~= "" then
@@ -197,6 +205,7 @@ function circular_saw:update_inventory(pos, amount)
 	inv:set_list("micro", {
 		modname .. ":micro_" .. material .. " " .. (amount % 8)
 	})
+
 	-- Display:
 	inv:set_list("output",
 		self:get_output_inv(modname, material, amount,
@@ -233,11 +242,11 @@ function circular_saw.allow_metadata_inventory_move(
 end
 
 
--- Only input- and recycle-slot are intended as input slots:
+-- Only input- and recycle-slot (and microblock slot when empty) are intended as input slots:
 function circular_saw.allow_metadata_inventory_put(
 		pos, listname, index, stack, player)
 	-- The player is not allowed to put something in there:
-	if listname == "output" or listname == "micro" then
+	if listname == "output" then
 		return 0
 	end
 
@@ -285,6 +294,16 @@ function circular_saw.allow_metadata_inventory_put(
 		end
 		return 0
 	end
+
+	if listname == "micro" then
+		if not (inv:is_empty("input") and inv:is_empty("micro")) then return 0 end
+		for name, t in pairs(circular_saw.microblocks) do
+			if name == stackname and inv:room_for_item("input", stack) then
+				return count
+			end
+		end
+		return 0
+	end
 end
 
 -- Taking is allowed from all slots (even the internal microblock slot).
@@ -304,6 +323,8 @@ function circular_saw.on_metadata_inventory_put(
 	if listname == "input" then
 		-- Each new block is worth 8 microblocks:
 		circular_saw:update_inventory(pos, 8 * count)
+	elseif listname == "micro" then
+		circular_saw:update_inventory(pos, count)
 	elseif listname == "recycle" then
 		-- Lets look which shape this represents:
 		local cost = circular_saw:get_cost(inv, stackname)
@@ -354,7 +375,6 @@ function circular_saw.on_metadata_inventory_take(
 		-- We do know how much each block at each position costs:
 		local cost = circular_saw.cost_in_microblocks[index]
 				* stack:get_count()
-
 		circular_saw:update_inventory(pos, -cost)
 	elseif listname == "micro" then
 		-- Each microblock costs 1 microblock:
@@ -447,6 +467,7 @@ minetest.register_node("moreblocks:circular_saw",  {
 	sunlight_propagates = true,
 	paramtype2 = "facedir",
 	groups = {choppy = 2,oddly_breakable_by_hand = 2},
+	is_ground_content = false,
 	sounds = moreblocks.node_sound_wood_defaults(),
 	on_construct = circular_saw.on_construct,
 	can_dig = circular_saw.can_dig,

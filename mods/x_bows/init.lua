@@ -1,6 +1,6 @@
 --[[
     X Bows. Adds bow and arrows with API.
-    Copyright (C) 2024 SaKeL
+    Copyright (C) 2025 SaKeL
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Lesser General Public
@@ -18,8 +18,8 @@
 
 math.randomseed(tonumber(tostring(os.time()):reverse():sub(1, 9))--[[@as number]] )
 
-local path = minetest.get_modpath('x_bows')
-local mod_start_time = minetest.get_us_time()
+local path = core.get_modpath('x_bows')
+local mod_start_time = core.get_us_time()
 local bow_charged_timer = 0
 
 dofile(path .. '/api.lua')
@@ -27,6 +27,8 @@ dofile(path .. '/particle_effects.lua')
 dofile(path .. '/nodes.lua')
 dofile(path .. '/arrow.lua')
 dofile(path .. '/items.lua')
+dofile(path .. '/privileges.lua')
+dofile(path .. '/mod_support_bones.lua')
 
 if XBows.i3 then
     XBowsQuiver:i3_register_page()
@@ -36,9 +38,21 @@ else
     XBowsQuiver:sfinv_register_page()
 end
 
-minetest.register_on_joinplayer(function(player)
+core.register_on_joinplayer(function(player)
     local inv_quiver = player:get_inventory() --[[@as InvRef]]
     local inv_arrow = player:get_inventory() --[[@as InvRef]]
+    local player_meta = player:get_meta()
+    local x_bows_show_hud_overlay = player_meta:get_string('x_bows_show_hud_overlay')
+    local x_bows_show_damage_numbers_player = player_meta:get_string('x_bows_show_damage_numbers_player')
+
+    -- set dafault values
+    if x_bows_show_hud_overlay == '' then
+        player_meta:set_string('x_bows_show_hud_overlay', 'true')
+    end
+
+    if x_bows_show_damage_numbers_player == '' then
+        player_meta:set_string('x_bows_show_damage_numbers_player', 'false')
+    end
 
     if XBows.settings.x_bows_show_3d_quiver and XBows.player_api then
         ---Order matters here
@@ -84,6 +98,10 @@ minetest.register_on_joinplayer(function(player)
     XBowsQuiver:close_quiver(player)
 end)
 
+core.register_on_leaveplayer(function(player)
+    XBows.player_bow_sneak[player:get_player_name()] = nil
+end)
+
 if XBows.settings.x_bows_show_3d_quiver and XBows.player_api then
     local model_name = 'x_bows_character.b3d'
 
@@ -116,12 +134,12 @@ if XBows.settings.x_bows_show_3d_quiver and XBows.player_api then
 end
 
 ---formspec callbacks
-minetest.register_allow_player_inventory_action(function(player, action, inventory, inventory_info)
+core.register_allow_player_inventory_action(function(player, action, inventory, inventory_info)
     ---arrow inventory
     if action == 'move' and inventory_info.to_list == 'x_bows:arrow_inv' then
         local stack = inventory:get_stack(inventory_info.from_list, inventory_info.from_index)
 
-        if minetest.get_item_group(stack:get_name(), 'arrow') ~= 0 then
+        if core.get_item_group(stack:get_name(), 'arrow') ~= 0 then
             return inventory_info.count
         else
             return 0
@@ -129,19 +147,19 @@ minetest.register_allow_player_inventory_action(function(player, action, invento
     elseif action == 'move' and inventory_info.from_list == 'x_bows:arrow_inv' and inventory_info.to_list ~= 'x_bows:quiver_inv' then
         local stack = inventory:get_stack(inventory_info.from_list, inventory_info.from_index)
 
-        if minetest.get_item_group(stack:get_name(), 'arrow') ~= 0 then
+        if core.get_item_group(stack:get_name(), 'arrow') ~= 0 then
             return inventory_info.count
         else
             return 0
         end
     elseif action == 'put' and inventory_info.listname == 'x_bows:arrow_inv' then
-        if minetest.get_item_group(inventory_info.stack:get_name(), 'arrow') ~= 0 then
+        if core.get_item_group(inventory_info.stack:get_name(), 'arrow') ~= 0 then
             return inventory_info.stack:get_count()
         else
             return 0
         end
     elseif action == 'take' and inventory_info.listname == 'x_bows:arrow_inv' then
-        if minetest.get_item_group(inventory_info.stack:get_name(), 'arrow') ~= 0 then
+        if core.get_item_group(inventory_info.stack:get_name(), 'arrow') ~= 0 then
             return inventory_info.stack:get_count()
         else
             return 0
@@ -151,26 +169,26 @@ minetest.register_allow_player_inventory_action(function(player, action, invento
     ---quiver inventory
     if action == 'move' and inventory_info.to_list == 'x_bows:quiver_inv' then
         local stack = inventory:get_stack(inventory_info.from_list, inventory_info.from_index)
-        if minetest.get_item_group(stack:get_name(), 'quiver') ~= 0 then
+        if core.get_item_group(stack:get_name(), 'quiver') ~= 0 then
             return inventory_info.count
         else
             return 0
         end
     elseif action == 'move' and inventory_info.from_list == 'x_bows:quiver_inv' then
         local stack = inventory:get_stack(inventory_info.from_list, inventory_info.from_index)
-        if minetest.get_item_group(stack:get_name(), 'quiver') ~= 0 then
+        if core.get_item_group(stack:get_name(), 'quiver') ~= 0 then
             return inventory_info.count
         else
             return 0
         end
     elseif action == 'put' and inventory_info.listname == 'x_bows:quiver_inv' then
-        if minetest.get_item_group(inventory_info.stack:get_name(), 'quiver') ~= 0 then
+        if core.get_item_group(inventory_info.stack:get_name(), 'quiver') ~= 0 then
             return inventory_info.stack:get_count()
         else
             return 0
         end
     elseif action == 'take' and inventory_info.listname == 'x_bows:quiver_inv' then
-        if minetest.get_item_group(inventory_info.stack:get_name(), 'quiver') ~= 0 then
+        if core.get_item_group(inventory_info.stack:get_name(), 'quiver') ~= 0 then
             return inventory_info.stack:get_count()
         else
             return 0
@@ -180,7 +198,7 @@ minetest.register_allow_player_inventory_action(function(player, action, invento
     return inventory_info.count or inventory_info.stack:get_count()
 end)
 
-minetest.register_on_player_inventory_action(function(player, action, inventory, inventory_info)
+core.register_on_player_inventory_action(function(player, action, inventory, inventory_info)
     ---arrow
     if action == 'move' and inventory_info.to_list == 'x_bows:arrow_inv' then
         if XBows.i3 then
@@ -291,21 +309,34 @@ minetest.register_on_player_inventory_action(function(player, action, inventory,
     end
 end)
 
-minetest.register_on_player_receive_fields(function(player, formname, fields)
-    if player and fields.quit then
-        XBowsQuiver:close_quiver(player, formname)
+core.register_on_player_receive_fields(function(player, formname, fields)
+    if player then
+        if fields.quit then
+            XBowsQuiver:close_quiver(player, formname)
+        elseif fields.x_bows_settings_btn then
+            -- show settings page
+            XBowsQuiver:show_settings_page(player)
+        elseif formname == 'xbows_settings_page' and fields.x_bows_show_damage_numbers then
+            local player_meta = player:get_meta()
+
+            player_meta:set_string('x_bows_show_damage_numbers', fields.x_bows_show_damage_numbers)
+        elseif formname == 'xbows_settings_page' and fields.x_bows_show_hud_overlay then
+            local player_meta = player:get_meta()
+
+            player_meta:set_string('x_bows_show_hud_overlay', fields.x_bows_show_hud_overlay)
+        end
     end
 end)
 
 ---backwards compatibility
-minetest.register_alias('x_bows:arrow_diamond_tipped_poison', 'x_bows:arrow_diamond')
+core.register_alias('x_bows:arrow_diamond_tipped_poison', 'x_bows:arrow_diamond')
 
 -- sneak, fov adjustments when bow is charged
-minetest.register_globalstep(function(dtime)
+core.register_globalstep(function(dtime)
     bow_charged_timer = bow_charged_timer + dtime
 
     if bow_charged_timer > 0.5 then
-        for _, player in ipairs(minetest.get_connected_players()) do
+        for _, player in ipairs(core.get_connected_players()) do
             local player_name = player:get_player_name()
             local wielded_stack = player:get_wielded_item()
             local wielded_stack_name = wielded_stack:get_name()
@@ -318,7 +349,7 @@ minetest.register_globalstep(function(dtime)
                 XBows.player_bow_sneak[player_name] = {}
             end
 
-            if minetest.get_item_group(wielded_stack_name, 'bow_charged') ~= 0
+            if core.get_item_group(wielded_stack_name, 'bow_charged') ~= 0
                 and not XBows.player_bow_sneak[player_name].sneak
             then
                 --charged weapon
@@ -326,17 +357,23 @@ minetest.register_globalstep(function(dtime)
                     playerphysics.add_physics_factor(player, 'speed', 'x_bows:bow_charged_speed', 0.25)
                 elseif XBows.player_monoids then
                     player_monoids.speed:add_change(player, 0.25, 'x_bows:bow_charged_speed')
+                elseif XBows.pova then
+                    pova.add_override(player_name, 'x_bows:bow_charged_speed', {speed = -0.75})
+                    pova.do_override(player)
                 end
 
                 XBows.player_bow_sneak[player_name].sneak = true
                 player:set_fov(0.9, true, 0.4)
-            elseif minetest.get_item_group(wielded_stack_name, 'bow_charged') == 0
+            elseif core.get_item_group(wielded_stack_name, 'bow_charged') == 0
                 and XBows.player_bow_sneak[player_name].sneak
             then
                 if XBows.playerphysics then
                     playerphysics.remove_physics_factor(player, 'speed', 'x_bows:bow_charged_speed')
                 elseif XBows.player_monoids then
                     player_monoids.speed:del_change(player, 'x_bows:bow_charged_speed')
+                elseif XBows.pova then
+                    pova.del_override(player_name, 'x_bows:bow_charged_speed')
+                    pova.do_override(player)
                 end
 
                 XBows.player_bow_sneak[player_name].sneak = false
@@ -350,6 +387,6 @@ minetest.register_globalstep(function(dtime)
     end
 end)
 
-local mod_end_time = (minetest.get_us_time() - mod_start_time) / 1000000
+local mod_end_time = (core.get_us_time() - mod_start_time) / 1000000
 
 print('[Mod] x_bows loaded.. [' .. mod_end_time .. 's]')

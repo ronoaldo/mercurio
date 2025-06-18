@@ -724,12 +724,12 @@ mesecon.queue:add_function("pipeworks:lc_tube_interrupt", function (pos, luac_id
 end)
 
 mesecon.queue:add_function("pipeworks:lt_digiline_relay", function (pos, channel, luac_id, msg)
-	if not digiline then return end
+	if not digilines then return end
 	-- This check is only really necessary because in case of server crash, old actions can be thrown into the future
 	if (minetest.get_meta(pos):get_int("luac_id") ~= luac_id) then return end
 	if (minetest.registered_nodes[minetest.get_node(pos).name].is_burnt) then return end
 	-- The actual work
-	digiline:receptor_send(pos, digiline_rules_luatube, channel, msg)
+	digilines.receptor_send(pos, digiline_rules_luatube, channel, msg)
 end)
 
 -----------------------
@@ -928,7 +928,7 @@ for white  = 0, 1 do
 			key = "node_sound_wood_defaults",
 		},
 		mesecons = mesecons,
-		digiline = digiline,
+		digilines = digiline,
 		-- Virtual portstates are the ports that
 		-- the node shows as powered up (light up).
 		virtual_portstates = {

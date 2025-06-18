@@ -1,5 +1,5 @@
 
-local S = minetest.get_translator("mobs_animal")
+local S = core.get_translator("mobs_animal")
 
 -- Panda by AspireMint (CC BY-SA 3.0)
 
@@ -60,7 +60,7 @@ mobs:register_mob("mobs_animal:panda", {
 
 -- where to spawn (ethereal bamboo biome only)
 
-if minetest.get_modpath("ethereal") and not mobs.custom_spawn_animal then
+if core.get_modpath("ethereal") and not mobs.custom_spawn_animal then
 
 	mobs:spawn({
 		name = "mobs_animal:panda",

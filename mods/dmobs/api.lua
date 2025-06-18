@@ -30,8 +30,8 @@ if mobs.mod and mobs.mod == "redo" then
 end
 
 local function is_group(pos, group)
-	local nn = minetest.get_node(pos).name
-	return minetest.get_item_group(nn, group) ~= 0
+	local nn = core.get_node(pos).name
+	return core.get_item_group(nn, group) ~= 0
 end
 
 local function force_detach(player)
@@ -57,7 +57,7 @@ function dmobs.object_attach(entity, player, attach_at, eye_offset)
 
 	player:set_eye_offset(eye_offset, {x=0, y=0, z=0})
 	default.player_attached[player:get_player_name()] = true
-	minetest.after(0.2, function()
+	core.after(0.2, function()
 		default.player_set_animation(player, "sit" , 30)
 	end)
 	entity.object:set_yaw(player:get_look_horizontal() - math.pi / 2)
@@ -71,21 +71,21 @@ function dmobs.object_detach(entity, player, offset)
 	player:set_eye_offset({x=0, y=0, z=0}, {x=0, y=0, z=0})
 	local pos = player:get_pos()
 	pos = {x = pos.x + offset.x, y = pos.y + 0.2 + offset.y, z = pos.z + offset.z}
-	minetest.after(0.1, function()
+	core.after(0.1, function()
 		player:set_pos(pos)
 	end)
 end
 -------------------------------------------------------------------------------
 
 
-minetest.register_on_leaveplayer(function(player)
+core.register_on_leaveplayer(function(player)
 	if player then
 		force_detach(player)
 	end
 end)
 
-minetest.register_on_shutdown(function()
-	local players = minetest.get_connected_players()
+core.register_on_shutdown(function()
+	local players = core.get_connected_players()
 	for i = 1, #players do
 		if players[i] then
 			force_detach(players[i])
@@ -93,7 +93,7 @@ minetest.register_on_shutdown(function()
 	end
 end)
 
-minetest.register_on_dieplayer(function(player)
+core.register_on_dieplayer(function(player)
 	if player then
 		force_detach(player)
 	end
@@ -124,7 +124,7 @@ function dmobs.object_drive(entity, dtime, speed, shoots, arrow, moving_anim, st
 	end
 	if ctrl.sneak and ctrl.LMB and shoots then
 			local pos = entity.object:get_pos()
-			local obj = minetest.add_entity({x=pos.x+0+dir.x*2,y=pos.y+1.5+dir.y,z=pos.z+0+dir.z*2}, arrow)
+			local obj = core.add_entity({x=pos.x+0+dir.x*2,y=pos.y+1.5+dir.y,z=pos.z+0+dir.z*2}, arrow)
 			local vec = {x=dir.x*6,y=dir.y*6,z=dir.z*6}
 			local yaw = entity.driver:get_look_horizontal() + rotview
 			obj:set_yaw(yaw+math.pi/2)
@@ -148,7 +148,7 @@ function dmobs.object_drive(entity, dtime, speed, shoots, arrow, moving_anim, st
 		-- local vel = entity.object:get_velocity()
 		-- vel.y = 10
 		-- entity.object:set_velocity(vel)
-		-- minetest.after(1.5, function()
+		-- core.after(1.5, function()
 		--  local vel = entity.object:get_velocity()
 		--  vel.y = -10
 		--  entity.object:set_velocity(vel)
@@ -169,7 +169,7 @@ function dmobs.object_fly(entity, dtime, speed, shoots, arrow, moving_anim, stan
 	local vec_stop = {x=0,y=-0.2,z=0}
 	local yaw = entity.driver:get_look_horizontal() + rotview
 	local pos = entity.object:get_pos()
-	local node = minetest.get_node(pos).name
+	local node = core.get_node(pos).name
 
 -- Commented condition makes dragons stuck in water, lava and so on…
 --	if node == "default:water_source" or node == "default:river_water_source" or node == "default:river_water_flowing" or node == "default:water_flowing" or node == "default:lava_source" or node == "default:lava_flowing" then
@@ -190,7 +190,7 @@ function dmobs.object_fly(entity, dtime, speed, shoots, arrow, moving_anim, stan
 	end
 	if ctrl.aux1 and shoots and not entity.loaded then
 		local pos = entity.object:get_pos()
-		local obj = minetest.add_entity({x=pos.x+0+dir.x*2.5,y=pos.y+1.5+dir.y,z=pos.z+0+dir.z*2.5}, arrow)
+		local obj = core.add_entity({x=pos.x+0+dir.x*2.5,y=pos.y+1.5+dir.y,z=pos.z+0+dir.z*2.5}, arrow)
 		local vec = vector.multiply(dir, 12)
 		local yaw = entity.driver:get_look_horizontal()
 		entity.loaded = true
@@ -198,7 +198,7 @@ function dmobs.object_fly(entity, dtime, speed, shoots, arrow, moving_anim, stan
 		obj:set_velocity(vec)
 		local object = obj:get_luaentity()
 		object.launcher = entity.driver
-		minetest.after(1, function()
+		core.after(1, function()
 			entity.loaded = false
 		end)
 	end
@@ -219,8 +219,8 @@ end
 --lib_mount (not required by new functions)
 
 local function is_group(pos, group)
-	local nn = minetest.get_node(pos).name
-	return minetest.get_item_group(nn, group) ~= 0
+	local nn = core.get_node(pos).name
+	return core.get_item_group(nn, group) ~= 0
 end
 
 local function get_sign(i)

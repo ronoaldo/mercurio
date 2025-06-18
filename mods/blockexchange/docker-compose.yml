@@ -9,15 +9,10 @@ services:
   volumes:
    - "postgres:/var/lib/postgresql/data"
 
- redis:
-  image: redis:6.2.0-alpine
-  restart: always
-
  bx:
   image: blockexchange/blockexchange
   depends_on:
    - postgres
-   - redis
   environment:
    - PGUSER=postgres
    - PGPASSWORD=enter
@@ -25,8 +20,6 @@ services:
    - PGDATABASE=postgres
    - PGPORT=5432
    - LOGLEVEL=debug
-   - REDIS_HOST=redis
-   - REDIS_PORT=6379
    - BLOCKEXCHANGE_NAME=My-Blockexchange
    - BLOCKEXCHANGE_OWNER=yourname
    - BLOCKEXCHANGE_KEY=abcdefSecretKey
@@ -38,21 +31,26 @@ services:
   ports:
    - "8080:8080"
 
- sut:
+ mtt:
+  image: ghcr.io/buckaroobanzay/mtt:latest
   depends_on:
    - bx
-  build:
-   context: ./test
-   args:
-    ENGINE_VERSION: ${ENGINE_VERSION:-5.7.0}
-  user: root
   volumes:
-    - "./:/root/.minetest/worlds/world/worldmods/blockexchange/"
-    - "world_data:/root/.minetest/worlds/world"
-    - "./test/world.mt:/root/.minetest/worlds/world/world.mt"
-    - "./test/minetest.conf:/minetest.conf"
-    - "./coverage:/var/lib/minetest"
+   - "./:/github/workspace"
+  environment:
+   INPUT_MODNAME: "blockexchange"
+   INPUT_TEST_MODE: "mod"
+   INPUT_MAPGEN: "singlenode"
+   INPUT_GIT_GAME_REPO: "https://github.com/minetest/minetest_game"
+   INPUT_GIT_DEPENDENCIES: |
+    https://github.com/OgelGames/fakelib
+    https://github.com/BuckarooBanzay/placeholder
+    https://github.com/BuckarooBanzay/mtzip
+    https://github.com/mt-mods/promise
+   INPUT_ADDITIONAL_CONFIG: |
+    secure.http_mods = blockexchange
+    Promise.http_debug = true
+    blockexchange.url = http://bx:8080
 
 volumes:
-  world_data: {}
   postgres: {}

@@ -1,0 +1,2 @@
+# Enable Promise http debugging output on action stream
+Promise.http_debug (Promise http debug) bool false

@@ -56,7 +56,7 @@ mobs:register_mob("dmobs:nyan", {
 		local apos = self.object:get_pos() ; if not apos then return end
 		local vec = self.object:get_velocity()
 
-		minetest.add_particlespawner({
+		core.add_particlespawner({
 			amount = 5,
 			time = 0.3,
 			minpos = {x = apos.x - 0.1, y = apos.y + 0.3, z = apos.z - 0.1},

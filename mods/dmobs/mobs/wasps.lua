@@ -106,7 +106,7 @@ mobs:register_mob("dmobs:wasp_leader", {
 
 			local pos = self.object:get_pos() ; if not pos then return end
 
-			minetest.add_entity(pos, "dmobs:wasp")
+			core.add_entity(pos, "dmobs:wasp")
 		end
 	end
 })

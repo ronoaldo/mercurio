@@ -1,23 +1,25 @@
 
-local S = minetest.get_translator("ethereal")
+local S = core.get_translator("ethereal")
 
 -- Blue Marble Nodes and recipe
 
-minetest.register_node("ethereal:blue_marble", {
+core.register_node("ethereal:blue_marble", {
 	description = S("Blue Marble"),
 	tiles = {"ethereal_blue_marble.png"},
+	is_ground_content = false,
 	groups = {cracky = 1, stone = 1},
 	sounds = default.node_sound_stone_defaults()
 })
 
-minetest.register_node("ethereal:blue_marble_tile", {
+core.register_node("ethereal:blue_marble_tile", {
 	description = S("Blue Marble Tile"),
 	tiles = {"ethereal_blue_marble_tile.png"},
+	is_ground_content = false,
 	groups = {cracky = 1, stone = 1},
 	sounds = default.node_sound_stone_defaults()
 })
 
-minetest.register_craft({
+core.register_craft({
 	output = "ethereal:blue_marble_tile 9",
 	recipe = {
 		{"ethereal:blue_marble", "ethereal:blue_marble", "ethereal:blue_marble"},
@@ -26,9 +28,27 @@ minetest.register_craft({
 	}
 })
 
+core.register_node("ethereal:blue_marble_brick", {
+	description = S("Blue Marble Brick"),
+	paramtype2 = "facedir",
+	place_param2 = 0,
+	tiles = {"ethereal_blue_marble_brick.png"},
+	is_ground_content = false,
+	groups = {cracky = 1, stone = 1},
+	sounds = default.node_sound_stone_defaults()
+})
+
+core.register_craft({
+	output = "ethereal:blue_marble_brick 4",
+	recipe = {
+		{"ethereal:blue_marble", "ethereal:blue_marble"},
+		{"ethereal:blue_marble", "ethereal:blue_marble"}
+	}
+})
+
 -- Etherium Dust
 
-minetest.register_craftitem("ethereal:etherium_dust", {
+core.register_craftitem("ethereal:etherium_dust", {
 	description = S("Etherium Dust"),
 	inventory_image = "ethereal_etherium_dust.png",
 	wield_image = "ethereal_etherium_dust.png"
@@ -36,7 +56,7 @@ minetest.register_craftitem("ethereal:etherium_dust", {
 
 -- Ethereium Ore
 
-minetest.register_node("ethereal:etherium_ore", {
+core.register_node("ethereal:etherium_ore", {
 	description = S("Etherium Ore"),
 	tiles = {"default_desert_stone.png^ethereal_etherium_ore.png"},
 	groups = {cracky = 3},
@@ -44,7 +64,7 @@ minetest.register_node("ethereal:etherium_ore", {
 	sounds = default.node_sound_stone_defaults()
 })
 
-minetest.register_node("ethereal:stone_with_etherium_ore", {
+core.register_node("ethereal:stone_with_etherium_ore", {
 	description = S("Etherium Ore"),
 	tiles = {"default_stone.png^ethereal_etherium_ore.png"},
 	groups = {cracky = 3},
@@ -54,7 +74,7 @@ minetest.register_node("ethereal:stone_with_etherium_ore", {
 
 -- Bamboo Flooring
 
-minetest.register_node("ethereal:bamboo_floor", {
+core.register_node("ethereal:bamboo_floor", {
 	description = S("Bamboo Floor"),
 	drawtype = "nodebox",
 	tiles = {"ethereal_bamboo_floor.png"},
@@ -74,7 +94,7 @@ minetest.register_node("ethereal:bamboo_floor", {
 	sounds = default.node_sound_wood_defaults()
 })
 
-minetest.register_craft({
+core.register_craft({
 	output = "ethereal:bamboo_floor 2",
 	recipe = {
 		{"ethereal:bamboo", "ethereal:bamboo"},
@@ -84,7 +104,7 @@ minetest.register_craft({
 
 -- Bamboo Block
 
-minetest.register_node("ethereal:bamboo_block", {
+core.register_node("ethereal:bamboo_block", {
 	description = S("Bamboo Block"),
 	tiles = {"ethereal_bamboo_floor.png"},
 	paramtype = "light",
@@ -92,7 +112,7 @@ minetest.register_node("ethereal:bamboo_block", {
 	sounds = default.node_sound_wood_defaults()
 })
 
-minetest.register_craft({
+core.register_craft({
 	output = "ethereal:bamboo_block",
 	recipe = {
 		{"ethereal:bamboo_floor"},
@@ -100,7 +120,7 @@ minetest.register_craft({
 	}
 })
 
-minetest.register_craft({
+core.register_craft({
 	output = "ethereal:bamboo_block",
 	recipe = {
 		{"ethereal:bamboo", "ethereal:bamboo", "ethereal:bamboo"},
@@ -111,7 +131,7 @@ minetest.register_craft({
 
 -- Paper recipes
 
-minetest.register_craft({
+core.register_craft({
 	output = "default:paper 6",
 	recipe = {
 		{"ethereal:bamboo", "ethereal:bamboo"},
@@ -120,7 +140,7 @@ minetest.register_craft({
 	}
 })
 
-minetest.register_craft({
+core.register_craft({
 	output = "default:paper 2",
 	recipe = {
 		{"farming:cotton", "farming:cotton", "farming:cotton"}
@@ -129,7 +149,7 @@ minetest.register_craft({
 
 -- 4x red mushrooms make mushroom block
 
-minetest.register_craft({
+core.register_craft({
 	output = "ethereal:mushroom",
 	recipe = {
 		{"flowers:mushroom_red", "flowers:mushroom_red"},
@@ -137,7 +157,7 @@ minetest.register_craft({
 	}
 })
 
-minetest.register_craft({
+core.register_craft({
 	output = "ethereal:mushroom_brown",
 	recipe = {
 		{"flowers:mushroom_brown", "flowers:mushroom_brown"},
@@ -160,7 +180,7 @@ if ethereal.xcraft == true then
 
 	for n = 1, #cheat do
 
-		minetest.register_craft({
+		core.register_craft({
 			output = cheat[n][2] .. " " .. cheat[n][3],
 			recipe = {
 				{cheat[n][1], "", cheat[n][1]},
@@ -173,13 +193,13 @@ end
 
 -- Palm Wax
 
-minetest.register_craftitem("ethereal:palm_wax", {
+core.register_craftitem("ethereal:palm_wax", {
 	description = S("Palm Wax"),
 	inventory_image = "ethereal_palm_wax.png",
 	wield_image = "ethereal_palm_wax.png"
 })
 
-minetest.register_craft({
+core.register_craft({
 	type = "cooking",
 	cooktime = 10,
 	output = "ethereal:palm_wax",
@@ -210,7 +230,7 @@ local function add_candle(col, dcol)
 
 	local under = "" ; if dcol ~= "" then under = "_" end
 
-	minetest.register_node("ethereal:candle" .. under .. col, {
+	core.register_node("ethereal:candle" .. under .. col, {
 		description = S(dcol .. "Candle"),
 		drawtype = "plantlike",
 
@@ -239,7 +259,7 @@ local function add_candle(col, dcol)
 	})
 
 	if dcol ~= "" then
-		minetest.register_craft({
+		core.register_craft({
 			output = "ethereal:candle" .. under .. col,
 			recipe = { {"group:candle", "dye:" .. col} }
 		})
@@ -264,7 +284,7 @@ add_candle("yellow", "Yellow ")
 
 -- white candle recipe
 
-minetest.register_craft({
+core.register_craft({
 	output = "ethereal:candle",
 	recipe = {
 		{"group:candle", "dye:white"}
@@ -273,7 +293,7 @@ minetest.register_craft({
 
 -- base candle recipe
 
-minetest.register_craft({
+core.register_craft({
 	output = "ethereal:candle 2",
 	recipe = {
 		{"farming:string"},
@@ -284,15 +304,15 @@ minetest.register_craft({
 
 -- wooden bowl, dont add bowl if farming redo already has one
 
-if not minetest.registered_items["farming:bowl"] then
+if not core.registered_items["farming:bowl"] then
 
-	minetest.register_craftitem("ethereal:bowl", {
+	core.register_craftitem("ethereal:bowl", {
 		description = S("Bowl"),
 		inventory_image = "ethereal_bowl.png",
 		groups = {food_bowl = 1, flammable = 2}
 	})
 
-	minetest.register_craft({
+	core.register_craft({
 		output = "ethereal:bowl 4",
 		recipe = {
 			{"group:wood", "", "group:wood"},
@@ -300,12 +320,12 @@ if not minetest.registered_items["farming:bowl"] then
 		}
 	})
 else
-	minetest.register_alias("ethereal:bowl", "farming:bowl")
+	core.register_alias("ethereal:bowl", "farming:bowl")
 end
 
 -- stone Ladder
 
-minetest.register_node("ethereal:stone_ladder", {
+core.register_node("ethereal:stone_ladder", {
 	description = S("Stone Ladder"),
 	drawtype = "signlike",
 	tiles = {"ethereal_stone_ladder.png"},
@@ -323,7 +343,7 @@ minetest.register_node("ethereal:stone_ladder", {
 	sounds = default.node_sound_stone_defaults()
 })
 
-minetest.register_craft({
+core.register_craft({
 	output = "ethereal:stone_ladder 4",
 	recipe = {
 		{"group:stone", "", "group:stone"},
@@ -334,7 +354,7 @@ minetest.register_craft({
 
 -- Paper Wall
 
-minetest.register_node("ethereal:paper_wall", {
+core.register_node("ethereal:paper_wall", {
 	drawtype = "nodebox",
 	description = S("Paper Wall"),
 	tiles = {"ethereal_paper_wall.png"},
@@ -355,7 +375,7 @@ minetest.register_node("ethereal:paper_wall", {
 	}
 })
 
-minetest.register_craft({
+core.register_craft({
 	output = "ethereal:paper_wall",
 	recipe = {
 		{"group:stick", "default:paper", "group:stick"},
@@ -366,7 +386,7 @@ minetest.register_craft({
 
 -- Glostone (A little bit of light decoration)
 
-minetest.register_node("ethereal:glostone", {
+core.register_node("ethereal:glostone", {
 	description = S("Glo Stone"),
 	tiles = {"ethereal_glostone.png"},
 	groups = {cracky = 3},
@@ -375,7 +395,7 @@ minetest.register_node("ethereal:glostone", {
 	sounds = default.node_sound_stone_defaults()
 })
 
-minetest.register_craft({
+core.register_craft({
 	output = "ethereal:glostone",
 	recipe = {
 		{"", "default:torch", ""},
@@ -386,26 +406,26 @@ minetest.register_craft({
 
 -- Charcoal Lump
 
-minetest.register_craftitem("ethereal:charcoal_lump", {
+core.register_craftitem("ethereal:charcoal_lump", {
 	description = S("Lump of Charcoal"),
 	inventory_image = "ethereal_charcoal_lump.png"
 })
 
-minetest.register_craft({
+core.register_craft({
 	output = "ethereal:charcoal_lump 2",
 	recipe = {
 		{"ethereal:scorched_tree"}
 	}
 })
 
-minetest.register_craft({
+core.register_craft({
 	output = "ethereal:charcoal_lump 2",
 	type = "cooking",
 	recipe = "group:tree",
 	cooktime = 4
 })
 
-minetest.register_craft({
+core.register_craft({
 	type = "fuel",
 	recipe = "ethereal:charcoal_lump",
 	burntime = 10
@@ -413,7 +433,7 @@ minetest.register_craft({
 
 -- Make Torch from Charcoal Lump
 
-minetest.register_craft({
+core.register_craft({
 	output = "default:torch 4",
 	recipe = {
 		{"ethereal:charcoal_lump"},
@@ -430,7 +450,7 @@ ethereal.lightstaff_recipes = {
 
 -- Staff of Light (by Xanthin)
 
-minetest.register_tool("ethereal:light_staff", {
+core.register_tool("ethereal:light_staff", {
 	description = S("Staff of Light"),
 	inventory_image = "ethereal_light_staff.png",
 	light_source = 13,
@@ -445,20 +465,19 @@ minetest.register_tool("ethereal:light_staff", {
 		local pos = pointed_thing.under
 		local pname = user:get_player_name()
 
-		if minetest.is_protected(pos, pname) then
-			minetest.record_protection_violation(pos, pname)
-			return
+		if core.is_protected(pos, pname) then
+			core.record_protection_violation(pos, pname) ; return
 		end
 
-		local node = minetest.get_node(pos).name
-		local def = minetest.registered_nodes[node]
+		local node = core.get_node(pos).name
+		local def = core.registered_nodes[node]
 		local stone = def and def.groups and def.groups.stone and def.groups.stone == 1
 
 		if ethereal.lightstaff_recipes[node] or stone then
 
 			local glo = ethereal.lightstaff_recipes[node] or "ethereal:glostone"
 
-			minetest.set_node(pos, {name = glo})
+			core.set_node(pos, {name = glo})
 
 			itemstack:add_wear(65535 / 149) -- 150 uses
 
@@ -467,7 +486,7 @@ minetest.register_tool("ethereal:light_staff", {
 	end
 })
 
-minetest.register_craft({
+core.register_craft({
 	output = "ethereal:light_staff",
 	recipe = {
 		{"ethereal:illumishroom", "default:mese_crystal", "ethereal:illumishroom"},

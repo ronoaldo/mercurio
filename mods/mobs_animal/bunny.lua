@@ -1,5 +1,5 @@
 
-local S = minetest.get_translator("mobs_animal")
+local S = core.get_translator("mobs_animal")
 
 -- Bunny by ExeterDad
 
@@ -69,7 +69,7 @@ mobs:register_mob("mobs_animal:bunny", {
 			end
 
 			-- set special bunny attributes
-			local staticdata = minetest.serialize({
+			local staticdata = core.serialize({
 				type = "monster",
 				attack_type = "dogfight",
 				health = 20,
@@ -84,7 +84,7 @@ mobs:register_mob("mobs_animal:bunny", {
 			})
 
 			-- add evil bunny
-			local obj = minetest.add_entity(
+			local obj = core.add_entity(
 					self.object:get_pos(), "mobs_animal:bunny", staticdata)
 
 			obj:set_properties({textures = {"mobs_bunny_evil.png"}, hp_max = 20})
@@ -99,19 +99,19 @@ mobs:register_mob("mobs_animal:bunny", {
 		local pos = self.object:get_pos() ; pos.y = pos.y - 1
 
 		-- white snowy bunny
-		if minetest.find_node_near(pos, 1,
+		if core.find_node_near(pos, 1,
 				{"default:snow", "default:snowblock", "default:dirt_with_snow"}) then
 			self.base_texture = {"mobs_bunny_white.png"}
 			self.object:set_properties({textures = self.base_texture})
 
 		-- brown desert bunny
-		elseif minetest.find_node_near(pos, 1,
+		elseif core.find_node_near(pos, 1,
 				{"default:desert_sand", "default:desert_stone"}) then
 			self.base_texture = {"mobs_bunny_brown.png"}
 			self.object:set_properties({textures = self.base_texture})
 
 		-- grey stone bunny
-		elseif minetest.find_node_near(pos, 1,
+		elseif core.find_node_near(pos, 1,
 				{"default:stone", "default:gravel"}) then
 			self.base_texture = {"mobs_bunny_grey.png"}
 			self.object:set_properties({textures = self.base_texture})
@@ -127,7 +127,7 @@ if not mobs.custom_spawn_animal then
 
 	local spawn_on = "default:dirt_with_grass"
 
-	if minetest.get_modpath("ethereal") then
+	if core.get_modpath("ethereal") then
 		spawn_on = "ethereal:prairie_dirt"
 	end
 
@@ -154,10 +154,10 @@ mobs:alias_mob("mobs:bunny", "mobs_animal:bunny")
 
 -- raw rabbit
 
-minetest.register_craftitem(":mobs:rabbit_raw", {
+core.register_craftitem(":mobs:rabbit_raw", {
 	description = S("Raw Rabbit"),
 	inventory_image = "mobs_rabbit_raw.png",
-	on_use = minetest.item_eat(3),
+	on_use = core.item_eat(3),
 	groups = {food_meat_raw = 1, food_rabbit_raw = 1}
 })
 
@@ -165,16 +165,16 @@ mobs.add_eatable("mobs:rabbit_raw", 3)
 
 -- cooked rabbit
 
-minetest.register_craftitem(":mobs:rabbit_cooked", {
+core.register_craftitem(":mobs:rabbit_cooked", {
 	description = S("Cooked Rabbit"),
 	inventory_image = "mobs_rabbit_cooked.png",
-	on_use = minetest.item_eat(5),
+	on_use = core.item_eat(5),
 	groups = {food_meat = 1, food_rabbit = 1}
 })
 
 mobs.add_eatable("mobs:rabbit_cooked", 5)
 
-minetest.register_craft({
+core.register_craft({
 	type = "cooking",
 	output = "mobs:rabbit_cooked",
 	recipe = "mobs:rabbit_raw",
@@ -183,15 +183,15 @@ minetest.register_craft({
 
 -- rabbit hide and recipes
 
-minetest.register_craftitem(":mobs:rabbit_hide", {
+core.register_craftitem(":mobs:rabbit_hide", {
 	description = S("Rabbit Hide"),
 	inventory_image = "mobs_rabbit_hide.png",
 	groups = {flammable = 2, pelt = 1}
 })
 
-minetest.register_craft({type = "fuel", recipe = "mobs:rabbit_hide", burntime = 2})
+core.register_craft({type = "fuel", recipe = "mobs:rabbit_hide", burntime = 2})
 
-minetest.register_craft({
+core.register_craft({
 	output = "mobs:leather",
 	recipe = {
 		{"mobs:rabbit_hide", "mobs:rabbit_hide"},

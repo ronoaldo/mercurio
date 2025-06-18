@@ -1,9 +1,37 @@
 
-local S = minetest.get_translator("ethereal")
+local S = core.get_translator("ethereal")
+
+-- Cactus flower
+
+core.register_node("ethereal:cactus_flower", {
+	description = S("Cactus Flower"),
+	drawtype = "plantlike",
+	tiles = {"ethereal_cactus_flower.png"},
+	inventory_image = "ethereal_cactus_flower.png",
+	wield_image = "ethereal_cactus_flower.png",
+	paramtype = "light",
+	sunlight_propagates = true,
+	waving = 1,
+	walkable = false,
+	buildable_to = true,
+	groups = {snappy = 3, attached_node = 1},
+	sounds = default.node_sound_leaves_defaults(),
+	selection_box = {
+		type = "fixed", fixed = {-4 / 16, -0.5, -4 / 16, 4 / 16, 3 / 16, 4 / 16}
+	},
+	on_use = core.item_eat(1)
+})
+
+ethereal.add_eatable("ethereal:cactus_flower", 1)
+
+core.register_craft({
+	output = "dye:violet 2",
+	recipe = {{"ethereal:cactus_flower"}}
+})
 
 -- Spore Grass
 
-minetest.register_node("ethereal:spore_grass", {
+core.register_node("ethereal:spore_grass", {
 	description = S("Spore Grass"),
 	drawtype = "plantlike",
 	tiles = {"ethereal_spore_grass.png"},
@@ -23,7 +51,7 @@ minetest.register_node("ethereal:spore_grass", {
 
 -- Firethorn (poisonous when eaten raw, must be crushed and washed with water 1st)
 
-minetest.register_node("ethereal:firethorn", {
+core.register_node("ethereal:firethorn", {
 	description = S("Firethorn Shrub"),
 	drawtype = "plantlike",
 	tiles = {"ethereal_firethorn.png"},
@@ -43,7 +71,7 @@ minetest.register_node("ethereal:firethorn", {
 
 -- Fire Flower
 
-minetest.register_node("ethereal:fire_flower", {
+core.register_node("ethereal:fire_flower", {
 	description = S("Fire Flower"),
 	drawtype = "plantlike",
 	tiles = { "ethereal_fire_flower.png" },
@@ -68,7 +96,7 @@ minetest.register_node("ethereal:fire_flower", {
 	end
 })
 
-minetest.register_craft({
+core.register_craft({
 	type = "fuel",
 	recipe = "ethereal:fire_flower",
 	burntime = 20
@@ -76,17 +104,17 @@ minetest.register_craft({
 
 -- Fire Dust
 
-minetest.register_craftitem("ethereal:fire_dust", {
+core.register_craftitem("ethereal:fire_dust", {
 	description = S("Fire Dust"),
 	inventory_image = "ethereal_fire_dust.png"
 })
 
-minetest.register_craft({
+core.register_craft({
 	output = "ethereal:fire_dust 2",
 	recipe = {{"ethereal:fire_flower"}}
 })
 
-minetest.register_craft({
+core.register_craft({
 	type = "fuel",
 	recipe = "ethereal:fire_dust",
 	burntime = 10
@@ -94,7 +122,7 @@ minetest.register_craft({
 
 -- vines
 
-minetest.register_node("ethereal:vine", {
+core.register_node("ethereal:vine", {
 	description = S("Vine"),
 	drawtype = "signlike",
 	tiles = {"ethereal_vine.png"},
@@ -111,7 +139,7 @@ minetest.register_node("ethereal:vine", {
 	sounds = default.node_sound_leaves_defaults()
 })
 
-minetest.register_craft({
+core.register_craft({
 	output = "ethereal:vine 2",
 	recipe = {
 		{"group:leaves", "", "group:leaves"},
@@ -122,7 +150,7 @@ minetest.register_craft({
 
 -- light strings (glowing vine)
 
-minetest.register_node("ethereal:lightstring", {
+core.register_node("ethereal:lightstring", {
 	description = S("Light String Vine"),
 	drawtype = "signlike",
 	tiles = {"ethereal_lightstring.png"},
@@ -140,7 +168,7 @@ minetest.register_node("ethereal:lightstring", {
 	sounds = default.node_sound_leaves_defaults()
 })
 
-minetest.register_craft({
+core.register_craft({
 	output = "ethereal:lightstring 8",
 	recipe = {
 		{"ethereal:vine", "ethereal:vine", "ethereal:vine"},
@@ -151,7 +179,7 @@ minetest.register_craft({
 
 -- Boston Fern
 
-minetest.register_node("ethereal:fern", {
+core.register_node("ethereal:fern", {
 	description = S("Fern"),
 	drawtype = "plantlike",
 	visual_scale = 1.4,
@@ -179,18 +207,18 @@ minetest.register_node("ethereal:fern", {
 
 -- Boston Ferns sometimes drop edible Tubers
 
-minetest.register_craftitem("ethereal:fern_tubers", {
+core.register_craftitem("ethereal:fern_tubers", {
 	description = S("Fern Tubers"),
 	inventory_image = "ethereal_fern_tubers.png",
 	groups = {food_tuber = 1},
-	on_use = minetest.item_eat(1)
+	on_use = core.item_eat(1)
 })
 
 ethereal.add_eatable("ethereal:fern_tubers", 1)
 
 -- Red Shrub (not flammable)
 
-minetest.register_node("ethereal:dry_shrub", {
+core.register_node("ethereal:dry_shrub", {
 	description = S("Fiery Dry Shrub"),
 	drawtype = "plantlike",
 	tiles = {"ethereal_dry_shrub.png"},
@@ -210,7 +238,7 @@ minetest.register_node("ethereal:dry_shrub", {
 
 -- Grey Shrub (not Flammable - too cold to burn)
 
-minetest.register_node("ethereal:snowygrass", {
+core.register_node("ethereal:snowygrass", {
 	description = S("Snowy Grass"),
 	drawtype = "plantlike",
 	visual_scale = 0.9,
@@ -231,7 +259,7 @@ minetest.register_node("ethereal:snowygrass", {
 
 -- Crystal Shrub (not Flammable - too cold to burn)
 
-minetest.register_node("ethereal:crystalgrass", {
+core.register_node("ethereal:crystalgrass", {
 	description = S("Crystal Grass"),
 	drawtype = "plantlike",
 	visual_scale = 0.9,
@@ -252,7 +280,7 @@ minetest.register_node("ethereal:crystalgrass", {
 
 -- tall lilac
 
-minetest.register_node("ethereal:lilac", {
+core.register_node("ethereal:lilac", {
 	description = S("Lilac"),
 	drawtype = "plantlike",
 	visual_scale = 1.9,
@@ -271,7 +299,7 @@ minetest.register_node("ethereal:lilac", {
 	}
 })
 
-minetest.register_craft({
+core.register_craft({
 	output = "dye:magenta 2",
 	recipe = {{"ethereal:lilac"}}
 })
@@ -280,7 +308,7 @@ minetest.register_craft({
 
 local function add_moss(typ, descr, texture, receipe_item)
 
-	minetest.register_node("ethereal:" .. typ .. "_moss", {
+	core.register_node("ethereal:" .. typ .. "_moss", {
 		description = S(descr .. " Moss"),
 		tiles = {texture},
 		groups = {crumbly = 3},
@@ -288,7 +316,7 @@ local function add_moss(typ, descr, texture, receipe_item)
 			footstep = {name = "default_grass_footstep", gain = 0.4}})
 	})
 
-	minetest.register_craft({
+	core.register_craft({
 		output = "ethereal:" .. typ .. "_moss",
 		recipe = {{"default:dirt", receipe_item}}
 	})
@@ -307,7 +335,7 @@ add_moss("bamboo", "Bamboo", "ethereal_grass_bamboo_top.png", "ethereal:bamboo_l
 
 local function add_shroom(name, desc, ad)
 
-	minetest.register_node("ethereal:illumishroom" .. ad, {
+	core.register_node("ethereal:illumishroom" .. ad, {
 		description = S(desc .. " Illumishroom"),
 		drawtype = "plantlike",
 		tiles = {"ethereal_illumishroom_" .. name .. ".png"},
@@ -333,9 +361,9 @@ add_shroom("cyan", "Cyan", "3")
 
 -- poppy
 
-if not minetest.get_modpath("xanadu") then
+if not core.get_modpath("xanadu") then
 
-	minetest.register_node(":xanadu:poppy", {
+	core.register_node(":xanadu:poppy", {
 		description = S("Poppy"),
 		tiles = {"ethereal_poppy.png"},
 		inventory_image = "ethereal_poppy.png",
@@ -354,7 +382,7 @@ if not minetest.get_modpath("xanadu") then
 	})
 
 	-- craft dye from plant
-	minetest.register_craft({
+	core.register_craft({
 		output = "dye:red 4",
 		recipe = {{"xanadu:poppy"}}
 	})

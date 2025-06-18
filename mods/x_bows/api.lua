@@ -1,6 +1,6 @@
 --[[
     X Bows. Adds bow and arrows with API.
-    Copyright (C) 2024 SaKeL
+    Copyright (C) 2025 SaKeL
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Lesser General Public
@@ -16,7 +16,7 @@
     License along with this library; if not, write to juraj.vajda@gmail.com
 --]]
 
-local S = minetest.get_translator(minetest.get_current_modname())
+local S = core.get_translator(core.get_current_modname())
 
 ---Check if table contains value
 ---@param table table
@@ -43,18 +43,20 @@ end
 
 ---@type XBows
 XBows = {
-    pvp = minetest.settings:get_bool('enable_pvp') or false,
-    creative = minetest.settings:get_bool('creative_mode') or false,
-    mesecons = minetest.get_modpath('mesecons'),
-    playerphysics = minetest.get_modpath('playerphysics'),
-    player_monoids = minetest.get_modpath('player_monoids'),
-    i3 = minetest.get_modpath('i3'),
-    unified_inventory = minetest.get_modpath('unified_inventory'),
-    u_skins = minetest.get_modpath('u_skins'),
-    wardrobe = minetest.get_modpath('wardrobe'),
-    _3d_armor = minetest.get_modpath('3d_armor'),
-    skinsdb = minetest.get_modpath('skinsdb'),
-    player_api = minetest.get_modpath('player_api'),
+    pvp = core.settings:get_bool('enable_pvp') or false,
+    creative = core.settings:get_bool('creative_mode') or false,
+    mesecons = core.get_modpath('mesecons'),
+    playerphysics = core.get_modpath('playerphysics'),
+    player_monoids = core.get_modpath('player_monoids'),
+    pova = core.get_modpath('pova'),
+    i3 = core.get_modpath('i3'),
+    unified_inventory = core.get_modpath('unified_inventory'),
+    u_skins = core.get_modpath('u_skins'),
+    wardrobe = core.get_modpath('wardrobe'),
+    _3d_armor = core.get_modpath('3d_armor'),
+    skinsdb = core.get_modpath('skinsdb'),
+    player_api = core.get_modpath('player_api'),
+    x_enchanting = core.get_modpath('x_enchanting'),
     registered_bows = {},
     registered_arrows = {},
     registered_quivers = {},
@@ -62,14 +64,20 @@ XBows = {
     registered_entities = {},
     player_bow_sneak = {},
     settings = {
-        x_bows_attach_arrows_to_entities = minetest.settings:get_bool('x_bows_attach_arrows_to_entities', false),
-        x_bows_show_damage_numbers = minetest.settings:get_bool('x_bows_show_damage_numbers', false),
-        x_bows_show_3d_quiver = minetest.settings:get_bool('x_bows_show_3d_quiver', true)
+        x_bows_attach_arrows_to_entities = core.settings:get_bool('x_bows_attach_arrows_to_entities', false),
+        x_bows_show_damage_numbers = core.settings:get_bool('x_bows_show_damage_numbers', false),
+        x_bows_show_3d_quiver = core.settings:get_bool('x_bows_show_3d_quiver', false),
+        x_bows_enable_arrow_wood= core.settings:get_bool('x_bows_enable_arrow_wood', true),
+        x_bows_enable_arrow_stone= core.settings:get_bool('x_bows_enable_arrow_stone', true),
+        x_bows_enable_arrow_bronze= core.settings:get_bool('x_bows_enable_arrow_bronze', true),
+        x_bows_enable_arrow_steel= core.settings:get_bool('x_bows_enable_arrow_steel', true),
+        x_bows_enable_arrow_mese= core.settings:get_bool('x_bows_enable_arrow_mese', true),
+        x_bows_enable_arrow_diamond= core.settings:get_bool('x_bows_enable_arrow_diamond', true)
     },
     charge_sound_after_job = {},
-    fallback_quiver = not minetest.global_exists('sfinv')
-        and not minetest.global_exists('unified_inventory')
-        and not minetest.global_exists('i3')
+    fallback_quiver = not core.global_exists('sfinv')
+        and not core.global_exists('unified_inventory')
+        and not core.global_exists('i3')
 }
 
 XBows.__index = XBows
@@ -106,7 +114,7 @@ end
 ---@param name string
 ---@return boolean
 function XBows.is_creative(self, name)
-    return self.creative or minetest.check_player_privs(name, { creative = true })
+    return self.creative or core.check_player_privs(name, { creative = true })
 end
 
 ---Updates `allowed_ammunition` definition on already registered item, so MODs can add new ammunitions to this list.
@@ -124,7 +132,7 @@ function XBows.update_bow_allowed_ammunition(self, name, allowed_ammunition)
 
     local def_copy = table.copy(def)
 
-    minetest.unregister_item(_name)
+    core.unregister_item(_name)
 
     for _, v in ipairs(allowed_ammunition) do
         table.insert(def_copy.custom.allowed_ammunition, v)
@@ -156,17 +164,50 @@ function XBows.reset_charged_bow(self, player, includeWielded)
         if not st:is_empty()
             and x_bows_registered_bow_def
             and reset
-            and minetest.get_item_group(st_name, 'bow_charged') ~= 0
+            and core.get_item_group(st_name, 'bow_charged') ~= 0
         then
             local item_meta = st:get_meta()
-            local arrow_itemstack = ItemStack(minetest.deserialize(item_meta:get_string('arrow_itemstack_string')))
+            local arrow_itemstack = ItemStack(core.deserialize(item_meta:get_string('arrow_itemstack_string')))
+            local is_enchanted = item_meta:get_int('is_enchanted') == 1
+            local is_infinity = false
 
-            --return arrow
-            if arrow_itemstack and not self:is_creative(player:get_player_name()) then
-                if inv:room_for_item('main', { name = arrow_itemstack:get_name() }) then
+            if is_enchanted then
+                local enchantments = core.deserialize(item_meta:get_string('x_enchanting'))
+
+                if enchantments.infinity and enchantments.infinity.value > 0 then
+                    is_infinity = true
+                end
+            end
+
+            ---return arrow
+            if arrow_itemstack and not self:is_creative(player:get_player_name()) and not is_infinity then
+                local arrow_meta = arrow_itemstack:get_meta()
+                local is_arrow_from_quiver = arrow_meta:get_int('is_arrow_from_quiver') ~= 0
+                local quiver_stack = inv:get_stack('x_bows:quiver_inv', 1)
+                local quiver_meta = quiver_stack:get_meta()
+                local quiver_id = arrow_meta:get_string('quiver_id')
+                local detached_inv = XBowsQuiver:get_or_create_detached_inv(
+                    quiver_id,
+                    player:get_player_name(),
+                    quiver_meta:get_string('quiver_items')
+                )
+
+                if is_arrow_from_quiver
+                    and detached_inv:room_for_item('main', { name = arrow_itemstack:get_name() })
+                    and not quiver_stack:is_empty()
+                then
+                    -- Add arrow back to quiver inventory
+                    detached_inv:add_item('main', arrow_itemstack:get_name())
+                    XBowsQuiver:save(detached_inv, player, true)
+                elseif inv:room_for_item('x_bows:arrow_inv', { name = arrow_itemstack:get_name() }) then
+                    -- Add arrow back to arrow inventory
+                    inv:add_item('x_bows:arrow_inv', arrow_itemstack:get_name())
+                    -- Add arrow back to main inventory
+                elseif inv:room_for_item('main', { name = arrow_itemstack:get_name() }) then
                     inv:add_item('main', arrow_itemstack:get_name())
                 else
-                    minetest.item_drop(
+                    -- Drop the arrow on the ground (no space in any inventory)
+                    core.item_drop(
                         ItemStack({ name = arrow_itemstack:get_name(), count = 1 }),
                         player,
                         player:get_pos()
@@ -175,11 +216,11 @@ function XBows.reset_charged_bow(self, player, includeWielded)
             end
 
             --reset bow to uncharged bow
-            inv:set_stack('main', i, ItemStack({
-                name = x_bows_registered_bow_def.custom.name,
-                count = st:get_count(),
-                wear = st:get_wear()
-            }))
+            local new_stack = ItemStack(mergeTables(st:to_table(), { name = x_bows_registered_bow_def.custom.name }))
+
+            XBows:set_wielditem_images(new_stack, new_stack:get_name())
+
+            inv:set_stack('main', i, new_stack)
         end
     end
 end
@@ -215,11 +256,11 @@ function XBows.register_bow(self, name, def, override)
     def.custom.gravity = def.custom.gravity or -10
 
     if def.custom.crit_chance then
-        def.description = def.description .. '\n' .. minetest.colorize('#00FF00', S('Critical Arrow Chance') .. ': '
+        def.description = def.description .. '\n' .. core.colorize('#00FF00', S('Critical Arrow Chance') .. ': '
             .. (1 / def.custom.crit_chance) * 100 .. '%')
     end
 
-    def.description = def.description .. '\n' .. minetest.colorize('#00BFFF', S('Strength') .. ': '
+    def.description = def.description .. '\n' .. core.colorize('#00BFFF', S('Strength') .. ': '
         .. def.custom.strength)
 
     if def.custom.allowed_ammunition then
@@ -236,7 +277,7 @@ function XBows.register_bow(self, name, def, override)
     self.registered_bows[def.custom.name_charged] = def
 
     ---not charged bow
-    minetest.register_tool(override and ':' .. def.custom.name or def.custom.name, {
+    core.register_tool(override and ':' .. def.custom.name or def.custom.name, {
         description = def.description,
         inventory_image = def.inventory_image or 'x_bows_bow_wood.png',
         wield_image = def.wield_image or def.inventory_image,
@@ -263,7 +304,7 @@ function XBows.register_bow(self, name, def, override)
     })
 
     ---charged bow
-    minetest.register_tool(override and ':' .. def.custom.name_charged or def.custom.name_charged, {
+    core.register_tool(override and ':' .. def.custom.name_charged or def.custom.name_charged, {
         description = def.description,
         inventory_image = def.custom.inventory_image_charged or 'x_bows_bow_wood_charged.png',
         wield_image = def.custom.wield_image_charged or def.custom.inventory_image_charged,
@@ -286,27 +327,43 @@ function XBows.register_bow(self, name, def, override)
         on_drop = function(itemstack, dropper, pos)
             if dropper then
                 local item_meta = itemstack:get_meta()
-                local arrow_itemstack = ItemStack(minetest.deserialize(item_meta:get_string('arrow_itemstack_string')))
+                local is_enchanted = item_meta:get_int('is_enchanted') == 1
+                local is_infinity = false
 
-                ---return arrow
-                if arrow_itemstack and not self:is_creative(dropper:get_player_name()) then
-                    minetest.item_drop(
-                        ItemStack({ name = arrow_itemstack:get_name(), count = 1 }),
-                        dropper,
-                        { x = pos.x + 0.5, y = pos.y + 0.5, z = pos.z + 0.5 }
-                    )
+                if is_enchanted then
+                    local enchantments = core.deserialize(item_meta:get_string('x_enchanting'))
+
+                    if enchantments.infinity and enchantments.infinity.value > 0 then
+                        is_infinity = true
+                    end
+                end
+
+                if not is_infinity then
+                    local arrow_itemstack = ItemStack(core.deserialize(item_meta:get_string('arrow_itemstack_string')))
+
+                    ---return arrow
+                    if arrow_itemstack and not self:is_creative(dropper:get_player_name()) then
+                        core.item_drop(
+                            ItemStack({ name = arrow_itemstack:get_name(), count = 1 }),
+                            dropper,
+                            { x = pos.x + 0.5, y = pos.y + 0.5, z = pos.z + 0.5 }
+                        )
+                    end
                 end
 
                 itemstack:set_name(def.custom.name)
+
+                XBows:set_wielditem_images(itemstack, def.custom.name)
+
                 ---returns leftover itemstack
-                return minetest.item_drop(itemstack, dropper, pos)
+                return core.item_drop(itemstack, dropper, pos)
             end
         end
     })
 
     ---recipes
     if def.custom.recipe then
-        minetest.register_craft({
+        core.register_craft({
             output = def.custom.name,
             recipe = def.custom.recipe
         })
@@ -314,7 +371,7 @@ function XBows.register_bow(self, name, def, override)
 
     ---fuel recipe
     if def.custom.fuel_burntime then
-        minetest.register_craft({
+        core.register_craft({
             type = 'fuel',
             recipe = def.custom.name,
             burntime = def.custom.fuel_burntime,
@@ -341,8 +398,8 @@ function XBows.register_arrow(self, name, def)
         max_drop_level = 0,
         damage_groups = { fleshy = 2 }
     }
-    def.custom.description_abilities = minetest.colorize('#00FF00', S('Damage') .. ': '
-        .. def.custom.tool_capabilities.damage_groups.fleshy) .. '\n' .. minetest.colorize('#00BFFF', S('Charge Time') .. ': '
+    def.custom.description_abilities = core.colorize('#00FF00', S('Damage') .. ': '
+        .. def.custom.tool_capabilities.damage_groups.fleshy) .. '\n' .. core.colorize('#00BFFF', S('Charge Time') .. ': '
         .. def.custom.tool_capabilities.full_punch_interval .. 's')
     def.groups = mergeTables({ arrow = 1, flammable = 1 }, def.groups or {})
     def.custom.particle_effect = def.custom.particle_effect or 'arrow'
@@ -356,7 +413,7 @@ function XBows.register_arrow(self, name, def)
 
     self.registered_arrows[def.custom.name] = def
 
-    minetest.register_craftitem(def.custom.name, {
+    core.register_craftitem(def.custom.name, {
         description = def.description .. '\n' .. def.custom.description_abilities,
         short_description = def.short_description,
         inventory_image = def.inventory_image,
@@ -365,7 +422,7 @@ function XBows.register_arrow(self, name, def)
 
     ---recipes
     if def.custom.recipe then
-        minetest.register_craft({
+        core.register_craft({
             output = def.custom.name .. ' ' .. (def.custom.craft_count or 4),
             recipe = def.custom.recipe
         })
@@ -373,7 +430,7 @@ function XBows.register_arrow(self, name, def)
 
     ---fuel recipe
     if def.custom.fuel_burntime then
-        minetest.register_craft({
+        core.register_craft({
             type = 'fuel',
             recipe = def.custom.name,
             burntime = def.custom.fuel_burntime,
@@ -403,16 +460,16 @@ function XBows.register_quiver(self, name, def)
     )
 
     if def.custom.faster_arrows then
-        def.description = def.description .. '\n' .. minetest.colorize('#00FF00', S('Faster Arrows') ..
+        def.description = def.description .. '\n' .. core.colorize('#00FF00', S('Faster Arrows') ..
             ': ' .. (1 / def.custom.faster_arrows) * 100 .. '%')
-        def.short_description = def.short_description .. '\n' .. minetest.colorize('#00FF00', S('Faster Arrows') ..
+        def.short_description = def.short_description .. '\n' .. core.colorize('#00FF00', S('Faster Arrows') ..
             ': ' .. (1 / def.custom.faster_arrows) * 100 .. '%')
     end
 
     if def.custom.add_damage then
-        def.description = def.description .. '\n' .. minetest.colorize('#FF8080', S('Arrow Damage') ..
+        def.description = def.description .. '\n' .. core.colorize('#FF8080', S('Arrow Damage') ..
             ': +' .. def.custom.add_damage)
-        def.short_description = def.short_description .. '\n' .. minetest.colorize('#FF8080', S('Arrow Damage') ..
+        def.short_description = def.short_description .. '\n' .. core.colorize('#FF8080', S('Arrow Damage') ..
             ': +' .. def.custom.add_damage)
     end
 
@@ -420,7 +477,7 @@ function XBows.register_quiver(self, name, def)
     self.registered_quivers[def.custom.name_open] = def
 
     ---closed quiver
-    minetest.register_tool(def.custom.name, {
+    core.register_tool(def.custom.name, {
         description = def.description,
         short_description = def.short_description,
         inventory_image = def.inventory_image or 'x_bows_quiver.png',
@@ -442,8 +499,8 @@ function XBows.register_quiver(self, name, def)
         ---@return ItemStack|nil
         on_place = function(itemstack, placer, pointed_thing)
             if pointed_thing.under then
-                local node = minetest.get_node(pointed_thing.under)
-                local node_def = minetest.registered_nodes[node.name]
+                local node = core.get_node(pointed_thing.under)
+                local node_def = core.registered_nodes[node.name]
 
                 if node_def and node_def.on_rightclick then
                     return node_def.on_rightclick(pointed_thing.under, node, placer, itemstack, pointed_thing)
@@ -455,7 +512,7 @@ function XBows.register_quiver(self, name, def)
     })
 
     ---open quiver
-    minetest.register_tool(def.custom.name_open, {
+    core.register_tool(def.custom.name_open, {
         description = def.description,
         short_description = def.short_description,
         inventory_image = def.custom.inventory_image_open or 'x_bows_quiver_open.png',
@@ -472,13 +529,13 @@ function XBows.register_quiver(self, name, def)
             end
 
             local replace_item = XBowsQuiver:get_replacement_item(itemstack, 'x_bows:quiver')
-            return minetest.item_drop(replace_item, dropper, pos)
+            return core.item_drop(replace_item, dropper, pos)
         end
     })
 
     ---recipes
     if def.custom.recipe then
-        minetest.register_craft({
+        core.register_craft({
             output = def.custom.name,
             recipe = def.custom.recipe
         })
@@ -486,11 +543,44 @@ function XBows.register_quiver(self, name, def)
 
     ---fuel recipe
     if def.custom.fuel_burntime then
-        minetest.register_craft({
+        core.register_craft({
             type = 'fuel',
             recipe = def.custom.name,
             burntime = def.custom.fuel_burntime,
         })
+    end
+end
+
+function XBows.set_wielditem_images(self, wielditem, bow_name)
+    local wielded_item_meta = wielditem:get_meta()
+    local is_enchanted = wielded_item_meta:get_int('is_enchanted') == 1
+
+    if not is_enchanted or not XBows.x_enchanting then
+        return
+    end
+
+    -- Inventory Image
+    local inventory_image_charged = (core.registered_tools[bow_name] or {}).inventory_image
+    local inventory_image_meta = wielded_item_meta:get_string('inventory_image')
+
+    -- Only replace (fix) image when meta image was set
+    if inventory_image_meta ~= ''
+        and inventory_image_charged
+        and inventory_image_charged ~= ''
+    then
+        wielded_item_meta:set_string('inventory_image', XEnchanting:get_glint_texture_modifier(inventory_image_charged))
+    end
+
+    -- Wield Image
+    local wield_image_charged = (core.registered_tools[bow_name] or {}).wield_image
+    local wield_image_meta = wielded_item_meta:get_string('wield_image')
+
+    -- Only replace (fix) image when meta image was set
+    if wield_image_meta ~= ''
+        and wield_image_charged
+        and wield_image_charged ~= ''
+    then
+        wielded_item_meta:set_string('wield_image', XEnchanting:get_glint_texture_modifier(wield_image_charged))
     end
 end
 
@@ -511,8 +601,8 @@ function XBows.load(self, itemstack, user, pointed_thing)
 
     ---trigger right click event if pointed item has one
     if pointed_thing.under then
-        local node = minetest.get_node(pointed_thing.under)
-        local node_def = minetest.registered_nodes[node.name]
+        local node = core.get_node(pointed_thing.under)
+        local node_def = core.registered_nodes[node.name]
 
         if node_def and node_def.on_rightclick then
             return node_def.on_rightclick(pointed_thing.under, node, user, itemstack, pointed_thing)
@@ -578,17 +668,20 @@ function XBows.load(self, itemstack, user, pointed_thing)
         ---@param v_itemstack_arrow ItemStack
         ---@param v_inv InvRef
         ---@param v_itemstack_arrows ItemStackArrows
-        minetest.after(0, function(v_user, v_bow_name, v_itemstack_arrow, v_inv, v_itemstack_arrows)
+        core.after(0, function(v_user, v_bow_name, v_itemstack_arrow, v_inv, v_itemstack_arrows)
             local wielded_item = v_user:get_wielded_item()
 
             if wielded_item:get_name() == v_bow_name then
                 local wielded_item_meta = wielded_item:get_meta()
                 local v_itemstack_arrow_meta = v_itemstack_arrow:get_meta()
 
-                wielded_item_meta:set_string('arrow_itemstack_string', minetest.serialize(v_itemstack_arrow:to_table()))
-                wielded_item_meta:set_string('time_load', tostring(minetest.get_us_time()))
+                wielded_item_meta:set_string('arrow_itemstack_string', core.serialize(v_itemstack_arrow:to_table()))
+                wielded_item_meta:set_string('time_load', tostring(core.get_us_time()))
 
                 wielded_item:set_name(v_bow_name .. '_charged')
+
+                XBows:set_wielditem_images(wielded_item, v_bow_name .. '_charged')
+
                 v_user:set_wielded_item(wielded_item)
 
                 if not self:is_creative(v_user:get_player_name())
@@ -612,23 +705,30 @@ function XBows.load(self, itemstack, user, pointed_thing)
         end
 
         ---sound plays when charge time reaches full punch interval time
-        table.insert(self.charge_sound_after_job[player_name], minetest.after(_tool_capabilities.full_punch_interval,
+        table.insert(self.charge_sound_after_job[player_name], core.after(_tool_capabilities.full_punch_interval,
             function(v_user, v_bow_name)
                 local wielded_item = v_user:get_wielded_item()
                 local wielded_item_name = wielded_item:get_name()
 
                 if wielded_item_name == v_bow_name .. '_charged' then
-                    minetest.sound_play('x_bows_bow_loaded', {
-                        to_player = v_user:get_player_name(),
+                    core.sound_play({
+                        name = 'x_bows_bow_loaded',
                         gain = 0.6
-                    })
+                    }, {
+                        to_player = v_user:get_player_name(),
+                        pitch = math.random(7, 13) / 10,
+                        object = v_user
+                    }, true)
                 end
             end, user, bow_name))
 
-        minetest.sound_play(bow_def.custom.sound_load, {
-            to_player = player_name,
+        core.sound_play({
+            name = bow_def.custom.sound_load,
             gain = 0.6
-        })
+        }, {
+            to_player = player_name,
+            pitch = math.random(7, 13) / 10,
+        }, true)
 
         return itemstack
     end
@@ -643,12 +743,12 @@ end
 ---@param pointed_thing? PointedThingDef
 ---@return ItemStack
 function XBows.shoot(self, itemstack, user, pointed_thing)
-    local time_shoot = minetest.get_us_time();
+    local time_shoot = core.get_us_time();
     local meta = itemstack:get_meta()
     local time_load = tonumber(meta:get_string('time_load'))
     local tflp = (time_shoot - time_load) / 1000000
     ---@type ItemStack
-    local arrow_itemstack = ItemStack(minetest.deserialize(meta:get_string('arrow_itemstack_string')))
+    local arrow_itemstack = ItemStack(core.deserialize(meta:get_string('arrow_itemstack_string')))
 
     if arrow_itemstack:is_empty() then
         return itemstack
@@ -707,7 +807,7 @@ function XBows.shoot(self, itemstack, user, pointed_thing)
     local quiver_xbows_def = x_bows_registered_quiver_def
 
     ---X Enchanting
-    local x_enchanting = minetest.deserialize(meta:get_string('x_enchanting')) or {}
+    local x_enchanting = core.deserialize(meta:get_string('x_enchanting')) or {}
 
     ---@type EnityStaticDataAttrDef
     local staticdata = {
@@ -748,42 +848,48 @@ function XBows.shoot(self, itemstack, user, pointed_thing)
     meta:set_string('arrow_itemstack_string', '')
 
     ---stop punching close objects/nodes when shooting
-    minetest.after(0.2, function()
+    core.after(0.2, function()
         local wield_item = user:get_wielded_item()
 
         if wield_item:get_count() > 0 and wield_item:get_name() == itemstack:get_name() then
             local new_stack = ItemStack(mergeTables(itemstack:to_table(), { name = bow_name }))
+
+            XBows:set_wielditem_images(new_stack, new_stack:get_name())
+
             user:set_wielded_item(new_stack)
         end
     end)
 
     local player_pos = user:get_pos()
-    local obj = minetest.add_entity(
+    local obj = core.add_entity(
         {
             x = player_pos.x,
             y = player_pos.y + 1.5,
             z = player_pos.z
         },
         projectile_entity,
-        minetest.serialize(staticdata)
+        core.serialize(staticdata)
     )
 
     if not obj then
         return itemstack
     end
 
-    minetest.sound_play(sound_name, {
+    core.sound_play({
+        name = sound_name,
         gain = 0.3,
+    }, {
         pos = user:get_pos(),
-        max_hear_distance = 10
-    })
+        max_hear_distance = 10,
+        pitch = math.random(7, 13) / 10,
+    }, true)
 
     if not self:is_creative(user:get_player_name()) then
         itemstack:add_wear(65535 / uses)
     end
 
     if itemstack:get_count() == 0 then
-        minetest.sound_play('default_tool_breaks', {
+        core.sound_play('default_tool_breaks', {
             gain = 0.3,
             pos = user:get_pos(),
             max_hear_distance = 10
@@ -800,7 +906,7 @@ end
 ---@return nil
 function XBows.register_particle_effect(self, name, def)
     if self.registered_particle_spawners[name] then
-        minetest.log('warning', 'Particle effect "' .. name .. '" already exists and will not be overwritten.')
+        core.log('warning', 'Particle effect "' .. name .. '" already exists and will not be overwritten.')
         return
     end
 
@@ -816,7 +922,7 @@ function XBows.get_particle_effect_for_arrow(self, name, pos)
     local def = self.registered_particle_spawners[name]
 
     if not def then
-        minetest.log('warning', 'Particle effect "' .. name .. '" is not registered.')
+        core.log('warning', 'Particle effect "' .. name .. '" is not registered.')
         return false
     end
 
@@ -824,7 +930,7 @@ function XBows.get_particle_effect_for_arrow(self, name, pos)
     def.minpos = def.custom.minpos and vector.add(pos, def.custom.minpos) or pos
     def.maxpos = def.custom.maxpos and vector.add(pos, def.custom.maxpos) or pos
 
-    return minetest.add_particlespawner(def--[[@as ParticlespawnerDef]] )
+    return core.add_particlespawner(def--[[@as ParticlespawnerDef]] )
 end
 
 ---Check if ammunition is allowed to charge this weapon
@@ -860,7 +966,7 @@ end
 local function get_3d_armor_armor(player)
     local armor_total = 0
 
-    if not player:is_player() or not minetest.get_modpath('3d_armor') or not armor.def[player:get_player_name()] then
+    if not player:is_player() or not core.get_modpath('3d_armor') or not armor.def[player:get_player_name()] then
         return armor_total
     end
 
@@ -890,7 +996,7 @@ function XBowsEntityDef.on_activate(self, selfObj, staticdata, dtime_s)
         return
     end
 
-    local _staticdata = minetest.deserialize(staticdata) --[[@as EnityStaticDataAttrDef]]
+    local _staticdata = core.deserialize(staticdata) --[[@as EnityStaticDataAttrDef]]
 
     -- set/reset - do not inherit from previous entity table
     selfObj._velocity = { x = 0, y = 0, z = 0 }
@@ -909,7 +1015,7 @@ function XBowsEntityDef.on_activate(self, selfObj, staticdata, dtime_s)
     selfObj._arrow_name = _staticdata._arrow_name
     selfObj._bow_name = _staticdata._bow_name
     selfObj._user_name = _staticdata._user_name
-    selfObj._user = minetest.get_player_by_name(_staticdata._user_name)
+    selfObj._user = core.get_player_by_name(_staticdata._user_name)
     selfObj._tflp = _staticdata._tflp
     selfObj._tool_capabilities = _staticdata._tool_capabilities
     selfObj._is_critical_hit = _staticdata._is_critical_hit
@@ -1025,7 +1131,7 @@ function XBowsEntityDef.on_death(self, selfObj, killer)
         return
     end
 
-    minetest.item_drop(ItemStack(selfObj._arrow_name), nil, vector.round(selfObj._old_pos))
+    core.item_drop(ItemStack(selfObj._arrow_name), nil, vector.round(selfObj._old_pos))
 end
 
 --- Function receive a "luaentity" table as `self`. Called on every server tick, after movement and collision processing.
@@ -1042,12 +1148,12 @@ function XBowsEntityDef.on_step(self, selfObj, dtime)
         ---this has to be done here for raycast to kick-in asap
         selfObj.object:set_velocity(vector.multiply(selfObj._player_look_dir, selfObj._strength))
         selfObj.object:set_acceleration({ x = selfObj._acc_x, y = selfObj._acc_y, z = selfObj._acc_z })
-        selfObj.object:set_yaw(minetest.dir_to_yaw(selfObj._player_look_dir))
+        selfObj.object:set_yaw(core.dir_to_yaw(selfObj._player_look_dir))
     end
 
     local pos = selfObj.object:get_pos()
     selfObj._old_pos = selfObj._old_pos or pos
-    local ray = minetest.raycast(selfObj._old_pos, pos, true, true)
+    local ray = core.raycast(selfObj._old_pos, pos, true, true)
     local pointed_thing = ray:next()
 
     selfObj._lifetimer = selfObj._lifetimer - dtime
@@ -1095,7 +1201,7 @@ function XBowsEntityDef.on_step(self, selfObj, dtime)
 
     -- arrow falls down when not attached to node any more
     if selfObj._attached_to.type == 'node' and selfObj._attached and selfObj._nodechecktimer <= 0 then
-        local node = minetest.get_node(selfObj._attached_to.pos)
+        local node = core.get_node(selfObj._attached_to.pos)
         selfObj._nodechecktimer = 0.5
 
         if not node then
@@ -1121,7 +1227,7 @@ function XBowsEntityDef.on_step(self, selfObj, dtime)
         selfObj.pointed_thing = pointed_thing
 
         if not selfObj._attached then
-            for _, object in ipairs(minetest.get_objects_inside_radius(selfObj.object:get_pos(), 5)) do
+            for _, object in ipairs(core.get_objects_inside_radius(selfObj.object:get_pos(), 5)) do
                 if object:is_player()
                     and object:get_hp() > 0
                     and object:get_player_name() ~= selfObj._user:get_player_name()
@@ -1134,9 +1240,12 @@ function XBowsEntityDef.on_step(self, selfObj, dtime)
                     local distance = math.round(vector.distance(p1, p2))
                     local gain = 1 / distance
 
-                    minetest.sound_play('x_bows_arrow_flyby', {
-                        to_player = object:get_player_name(),
+                    core.sound_play({
+                        name = 'x_bows_arrow_flyby',
                         gain = gain
+                    }, {
+                        to_player = object:get_player_name(),
+                        pitch = math.random(7, 13) / 10,
                     }, true)
                 end
             end
@@ -1163,15 +1272,18 @@ function XBowsEntityDef.on_step(self, selfObj, dtime)
             and not selfObj._attached
         then
             if pointed_thing.ref:is_player() then
-                minetest.sound_play('x_bows_arrow_successful_hit', {
+                core.sound_play('x_bows_arrow_successful_hit', {
                     to_player = selfObj._user:get_player_name(),
                     gain = 0.3
                 })
             else
-                minetest.sound_play(selfObj._sound_hit, {
-                    to_player = selfObj._user:get_player_name(),
+                core.sound_play({
+                    name = selfObj._sound_hit,
                     gain = 0.6
-                })
+                }, {
+                    to_player = selfObj._user:get_player_name(),
+                    pitch = math.random(7, 13) / 10
+                }, true)
             end
 
             selfObj.object:set_velocity({ x = 0, y = 0, z = 0 })
@@ -1206,7 +1318,7 @@ function XBowsEntityDef.on_step(self, selfObj, dtime)
             -- knockback
             local dir = vector.normalize(vector.subtract(selfObj._shot_from_pos, ip_pos))
             local distance = vector.distance(selfObj._shot_from_pos, ip_pos)
-            local knockback = minetest.calculate_knockback(
+            local knockback = core.calculate_knockback(
                 pointed_thing.ref,
                 selfObj.object,
                 selfObj._tflp,
@@ -1238,7 +1350,7 @@ function XBowsEntityDef.on_step(self, selfObj, dtime)
             end
 
             pointed_thing.ref:punch(
-                selfObj.object,
+                selfObj._user,
                 selfObj._tflp,
                 {
                     full_punch_interval = selfObj._tool_capabilities.full_punch_interval,
@@ -1254,7 +1366,7 @@ function XBowsEntityDef.on_step(self, selfObj, dtime)
             selfObj._caused_damage = _damage
             selfObj._caused_knockback = knockback
 
-            XBows:show_damage_numbers(selfObj.object:get_pos(), _damage, selfObj._is_critical_hit)
+            XBows:show_damage_numbers(selfObj.object:get_pos(), _damage, selfObj._is_critical_hit, selfObj._user)
 
             -- already dead (entity)
             if not pointed_thing.ref:get_luaentity() and not pointed_thing.ref:is_player() then
@@ -1340,7 +1452,7 @@ function XBowsEntityDef.on_step(self, selfObj, dtime)
 
             ---`after` here prevents visual glitch when the arrow still shows as huge for a split second
             ---before the new calculated scale is applied
-            minetest.after(0, function()
+            core.after(0, function()
                 selfObj.object:set_attach(
                     pointed_thing.ref,
                     '',
@@ -1364,7 +1476,7 @@ function XBowsEntityDef.on_step(self, selfObj, dtime)
                 end
             end
 
-            if #children >= 5 then
+            if #children > 5 then
                 children[1]:remove()
             end
 
@@ -1385,8 +1497,8 @@ function XBowsEntityDef.on_step(self, selfObj, dtime)
             return
 
         elseif pointed_thing.type == 'node' and not selfObj._attached then
-            local node = minetest.get_node(pointed_thing.under)
-            local node_def = minetest.registered_nodes[node.name]
+            local node = core.get_node(pointed_thing.under)
+            local node_def = core.registered_nodes[node.name]
 
             if not node_def then
                 return
@@ -1419,7 +1531,7 @@ function XBowsEntityDef.on_step(self, selfObj, dtime)
                 -- only close to the center of the target will trigger signal
                 if distance < 0.54 then
                     mesecon.receptor_on(pointed_thing.under)
-                    minetest.get_node_timer(pointed_thing.under):start(2)
+                    core.get_node_timer(pointed_thing.under):start(2)
                 end
             end
 
@@ -1437,7 +1549,7 @@ function XBowsEntityDef.on_step(self, selfObj, dtime)
                 local children = {}
                 local projectile_entity = self.registered_arrows[selfObj._arrow_name].custom.projectile_entity
 
-                for _, object in ipairs(minetest.get_objects_inside_radius(pointed_thing.under, 1)) do
+                for _, object in ipairs(core.get_objects_inside_radius(pointed_thing.under, 1)) do
                     if not object:is_player()
                         and object:get_luaentity()
                         and object:get_luaentity().name == projectile_entity
@@ -1446,8 +1558,8 @@ function XBowsEntityDef.on_step(self, selfObj, dtime)
                     end
                 end
 
-                if #children >= 5 then
-                    children[#children]:remove()
+                if #children > 5 then
+                    children[1]:remove()
                 end
 
                 ---Wiggle
@@ -1465,10 +1577,19 @@ function XBowsEntityDef.on_step(self, selfObj, dtime)
                     on_hit_node_callback(selfObj, pointed_thing)
                 end
 
+                if node_def.on_punch then
+                    node_def.on_punch(
+                        pointed_thing.under,
+                        { name = node.name, param1 = node.param1, param2 = node.param2 },
+                        selfObj._user,
+                        pointed_thing
+                    )
+                end
+
                 local new_pos = selfObj.object:get_pos()
 
                 if new_pos then
-                    minetest.add_particlespawner({
+                    core.add_particlespawner({
                         amount = 5,
                         time = 0.25,
                         minpos = { x = new_pos.x - 0.4, y = new_pos.y + 0.2, z = new_pos.z - 0.4 },
@@ -1485,11 +1606,14 @@ function XBowsEntityDef.on_step(self, selfObj, dtime)
                     })
                 end
 
-                minetest.sound_play(selfObj._sound_hit, {
-                    pos = pointed_thing.under,
+                core.sound_play({
+                    name = selfObj._sound_hit,
                     gain = 0.6,
+                }, {
+                    pos = pointed_thing.under,
+                    pitch = math.random(7, 13) / 10,
                     max_hear_distance = 16
-                })
+                }, true)
 
                 return
             end
@@ -1515,7 +1639,7 @@ function XBowsEntityDef.on_punch(self, selfObj, puncher, time_from_last_punch, t
     local pos = selfObj.object:get_pos()
 
     if pos then
-        minetest.sound_play('default_dig_choppy', {
+        core.sound_play('default_dig_choppy', {
             pos = pos,
             gain = 0.4
         })
@@ -1572,7 +1696,7 @@ function XBows.register_entity(self, name, def)
 
     self.registered_entities[def._custom.name] = def
 
-    minetest.register_entity(def._custom.name, {
+    core.register_entity(def._custom.name, {
         initial_properties = def.initial_properties,
         on_death = def.on_death,
         on_activate = def.on_activate,
@@ -1802,15 +1926,22 @@ end
 ---@param idx? number
 ---@return nil
 function XBowsQuiver.udate_or_create_hud(self, player, inv_list, idx)
+    local player_meta = player:get_meta()
+    local x_bows_show_hud_overlay = player_meta:get_string('x_bows_show_hud_overlay')
+
+    if x_bows_show_hud_overlay == 'false' then
+        return
+    end
+
     local _idx = idx or 1
     local player_name = player:get_player_name()
     local selected_bg_added = false
     local is_arrow = #inv_list == 1
-    local item_def = minetest.registered_items['x_bows:quiver']
+    local item_def = core.registered_items['x_bows:quiver']
     local is_no_ammo = false
 
     if is_arrow then
-        item_def = minetest.registered_items[inv_list[1]:get_name()]
+        item_def = core.registered_items[inv_list[1]:get_name()]
         is_no_ammo = inv_list[1]:get_name() == 'x_bows:no_ammo'
     end
 
@@ -1840,7 +1971,7 @@ function XBowsQuiver.udate_or_create_hud(self, player, inv_list, idx)
 
     ---title image
     self.hud_item_ids[player_name].title_image = player:hud_add({
-        hud_elem_type = 'image',
+        type = 'image',
         position = { x = 1, y = 0.5 },
         offset = { x = -120, y = -140 },
         text = item_def.inventory_image,
@@ -1850,7 +1981,7 @@ function XBowsQuiver.udate_or_create_hud(self, player, inv_list, idx)
 
     ---title copy
     self.hud_item_ids[player_name].title_copy = player:hud_add({
-        hud_elem_type = 'text',
+        type = 'text',
         position = { x = 1, y = 0.5 },
         offset = { x = -120, y = -75 },
         text = item_def.short_description,
@@ -1861,7 +1992,7 @@ function XBowsQuiver.udate_or_create_hud(self, player, inv_list, idx)
 
     ---hotbar bg
     self.hud_item_ids[player_name].hotbar_bg = player:hud_add({
-        hud_elem_type = 'image',
+        type = 'image',
         position = { x = 1, y = 0.5 },
         offset = { x = -238, y = 0 },
         text = is_arrow and 'x_bows_single_hotbar.png' or 'x_bows_quiver_hotbar.png',
@@ -1871,7 +2002,7 @@ function XBowsQuiver.udate_or_create_hud(self, player, inv_list, idx)
 
     for j, qst in ipairs(inv_list) do
         if not qst:is_empty() then
-            local found_arrow_stack_def = minetest.registered_items[qst:get_name()]
+            local found_arrow_stack_def = core.registered_items[qst:get_name()]
 
             if is_no_ammo then
                 found_arrow_stack_def = item_def
@@ -1882,7 +2013,7 @@ function XBowsQuiver.udate_or_create_hud(self, player, inv_list, idx)
 
                 ---ui selected bg
                 self.hud_item_ids[player_name].hotbar_selected = player:hud_add({
-                    hud_elem_type = 'image',
+                    type = 'image',
                     position = { x = 1, y = 0.5 },
                     offset = { x = -308 + (j * 74), y = 2 },
                     text = 'x_bows_hotbar_selected.png',
@@ -1894,7 +2025,7 @@ function XBowsQuiver.udate_or_create_hud(self, player, inv_list, idx)
             if found_arrow_stack_def then
                 ---arrow inventory image
                 table.insert(self.hud_item_ids[player_name].arrow_inv_img, player:hud_add({
-                    hud_elem_type = 'image',
+                    type = 'image',
                     position = { x = 1, y = 0.5 },
                     offset = { x = -300 + (j * 74), y = 0 },
                     text = found_arrow_stack_def.inventory_image,
@@ -1904,7 +2035,7 @@ function XBowsQuiver.udate_or_create_hud(self, player, inv_list, idx)
 
                 ---stack count
                 table.insert(self.hud_item_ids[player_name].stack_count, player:hud_add({
-                    hud_elem_type = 'text',
+                    type = 'text',
                     position = { x = 1, y = 0.5 },
                     offset = { x = -244 + (j * 74), y = 23 },
                     text = is_no_ammo and 0 or qst:get_count(),
@@ -1917,7 +2048,7 @@ function XBowsQuiver.udate_or_create_hud(self, player, inv_list, idx)
     end
 
     ---@param v_player ObjectRef
-    table.insert(self.after_job[player_name], minetest.after(10, function(v_player)
+    table.insert(self.after_job[player_name], core.after(10, function(v_player)
         self:remove_hud(v_player)
     end, player))
 end
@@ -1932,11 +2063,11 @@ function XBowsQuiver.get_or_create_detached_inv(self, quiver_id, player_name, qu
     local detached_inv
 
     if quiver_id ~= '' then
-        detached_inv = minetest.get_inventory({ type = 'detached', name = quiver_id })
+        detached_inv = core.get_inventory({ type = 'detached', name = quiver_id })
     end
 
     if not detached_inv then
-        detached_inv = minetest.create_detached_inventory(quiver_id, {
+        detached_inv = core.create_detached_inventory(quiver_id, {
             ---@param inv InvRef detached inventory
             ---@param from_list string
             ---@param from_index number
@@ -1957,7 +2088,7 @@ function XBowsQuiver.get_or_create_detached_inv(self, quiver_id, player_name, qu
             ---@param stack ItemStack
             ---@param player ObjectRef
             allow_put = function(inv, listname, index, stack, player)
-                if minetest.get_item_group(stack:get_name(), 'arrow') ~= 0 and self:quiver_can_allow(inv, player) then
+                if core.get_item_group(stack:get_name(), 'arrow') ~= 0 and self:quiver_can_allow(inv, player) then
                     return stack:get_count()
                 else
                     return 0
@@ -1969,7 +2100,7 @@ function XBowsQuiver.get_or_create_detached_inv(self, quiver_id, player_name, qu
             ---@param stack ItemStack
             ---@param player ObjectRef
             allow_take = function(inv, listname, index, stack, player)
-                if minetest.get_item_group(stack:get_name(), 'arrow') ~= 0 and self:quiver_can_allow(inv, player) then
+                if core.get_item_group(stack:get_name(), 'arrow') ~= 0 and self:quiver_can_allow(inv, player) then
                     return stack:get_count()
                 else
                     return 0
@@ -2053,12 +2184,12 @@ function XBowsQuiver.get_formspec(self, name)
         'listring[current_player;main]'
     }
 
-    if minetest.global_exists('default') then
+    if core.global_exists('default') then
         formspec[#formspec + 1] = default.get_hotbar_bg(0, height + 0.85)
     end
 
     --update formspec
-    local inv = minetest.get_inventory({ type = 'detached', name = name })
+    local inv = core.get_inventory({ type = 'detached', name = name })
     local invlist = inv:get_list(name)
 
     ---inventory slots overlay
@@ -2096,7 +2227,7 @@ function XBowsQuiver.get_string_from_inv(self, inv)
     end
 
     return {
-        inv_string = minetest.serialize(t),
+        inv_string = core.serialize(t),
         content_description = content_description == '' and '\n' .. S('Empty') or content_description
     }
 end
@@ -2107,7 +2238,7 @@ end
 ---@param str string previously stringified inventory of itemstacks
 ---@return nil
 function XBowsQuiver.set_string_to_inv(self, inv, str)
-    local t = minetest.deserialize(str)
+    local t = core.deserialize(str)
 
     for i, item in ipairs(t) do
         if not item.is_empty then
@@ -2230,12 +2361,12 @@ function XBows.open_quiver(self, itemstack, user)
 
     itemstack:replace(replace_item)
 
-    minetest.sound_play('x_bows_quiver', {
+    core.sound_play('x_bows_quiver', {
         to_player = user:get_player_name(),
         gain = 0.1
     })
 
-    minetest.show_formspec(pname, quiver_id, XBowsQuiver:get_formspec(quiver_id))
+    core.show_formspec(pname, quiver_id, XBowsQuiver:get_formspec(quiver_id))
     return itemstack
 end
 
@@ -2247,17 +2378,20 @@ function XBowsQuiver.sfinv_register_page(self)
         get = function(this, player, context)
             local formspec = {
                 ---arrow
-                'label[0,0;' .. minetest.formspec_escape(S('Arrows')) .. ':]',
+                'label[0,0;' .. core.formspec_escape(S('Arrows')) .. ':]',
                 'list[current_player;x_bows:arrow_inv;0,0.5;1,1;]',
                 'image[0,0.5;1,1;x_bows_arrow_slot.png]',
                 'listring[current_player;x_bows:arrow_inv]',
                 'listring[current_player;main]',
                 ---quiver
-                'label[3.5,0;' .. minetest.formspec_escape(S('Quiver')) .. ':]',
+                'label[3.5,0;' .. core.formspec_escape(S('Quiver')) .. ':]',
                 'list[current_player;x_bows:quiver_inv;3.5,0.5;1,1;]',
                 'image[3.5,0.5;1,1;x_bows_quiver_slot.png]',
                 'listring[current_player;x_bows:quiver_inv]',
                 'listring[current_player;main]',
+                ---settings button
+                'image_button[7,3.5;1,1;x_bows_settings_btn.png;x_bows_settings_btn;]',
+                'tooltip[x_bows_settings_btn;' .. core.formspec_escape(S('X Bows Settings')) .. ']'
             }
 
             local player_inv = player:get_inventory() --[[@as InvRef]]
@@ -2270,11 +2404,10 @@ function XBowsQuiver.sfinv_register_page(self)
 
                 if x_bows_registered_arrow_def and short_description then
                     formspec[#formspec + 1] = 'label[0,1.5;' ..
-                        minetest.formspec_escape(short_description) .. '\n' ..
-                        minetest.formspec_escape(x_bows_registered_arrow_def.custom.description_abilities) .. ']'
+                        core.formspec_escape(short_description) .. '\n' ..
+                        core.formspec_escape(x_bows_registered_arrow_def.custom.description_abilities) .. ']'
                 end
             end
-
 
             if context._itemstack_quiver and not context._itemstack_quiver:is_empty() then
                 local st_meta = context._itemstack_quiver:get_meta()
@@ -2284,7 +2417,7 @@ function XBowsQuiver.sfinv_register_page(self)
                 ---description
                 if short_description then
                     formspec[#formspec + 1] = 'label[3.5,1.5;' ..
-                        minetest.formspec_escape(short_description) .. ']'
+                        core.formspec_escape(short_description) .. ']'
                 end
 
                 formspec[#formspec + 1] = 'list[detached:' .. quiver_id .. ';main;4.5,0.5;3,1;]'
@@ -2297,6 +2430,44 @@ function XBowsQuiver.sfinv_register_page(self)
     })
 end
 
+function XBowsQuiver.show_settings_page(self, player)
+    local player_meta = player:get_meta()
+    local x_bows_show_damage_numbers_player = player_meta:get_string('x_bows_show_damage_numbers')
+    local x_bows_show_damage_numbers_settings = XBows.settings.x_bows_show_damage_numbers
+    local x_bows_show_damage_numbers_priv = core.check_player_privs(player, 'x_bows_show_damage_numbers')
+    local x_bows_show_hud_overlay = player_meta:get_string('x_bows_show_hud_overlay')
+    x_bows_show_damage_numbers_player = x_bows_show_damage_numbers_player == 'true' and 'true' or 'false'
+    x_bows_show_hud_overlay = x_bows_show_hud_overlay == 'true' and 'true' or 'false'
+    local line_height_default = 0.5
+    local line_height = line_height_default
+
+    local formspec = {
+        'size[11,5.5,false]',
+        'label[0.5,0.5;', S('X Bows Settings'), ']',
+        'button_exit[4.5,5;2,0.5;x_bows_settings_done_btn;', S('Done'), ']',
+    }
+
+    -- Show damage numbers
+    line_height = line_height * 2
+    formspec[#formspec + 1] = 'checkbox[0.5,' .. line_height .. ';x_bows_show_damage_numbers;' .. S('Show Damage Numbers') .. ';' .. x_bows_show_damage_numbers_player .. ']'
+    formspec[#formspec + 1] = 'tooltip[x_bows_show_damage_numbers;' .. S('Shows the amount of damage done to the mob or player with the arrow.') .. ']'
+
+    if not x_bows_show_damage_numbers_settings and not x_bows_show_damage_numbers_priv then
+        -- Server setting disabled but player setting enabled
+        line_height = line_height + line_height_default
+        formspec[#formspec + 1] = 'label[0.5, ' .. line_height .. ';' .. S('Disabled by server. This will have no effect without "x_bows_show_damage_numbers" privilege.') .. ']'
+    end
+
+    -- Display HUD
+    line_height = line_height + line_height_default
+    formspec[#formspec + 1] = 'checkbox[0.5,' .. line_height .. ';x_bows_show_hud_overlay;' .. S('Show HUD Overlay') .. ';' .. x_bows_show_hud_overlay .. ']'
+    formspec[#formspec + 1] = 'tooltip[x_bows_show_hud_overlay;' .. S('Displays the HUD overlay on the right side of the screen, showing the current arrows, the selected arrow, and their total number.') .. ']'
+
+    formspec = table.concat(formspec, '')
+
+    core.show_formspec(player:get_player_name(), 'xbows_settings_page', formspec)
+end
+
 ---Register i3 page
 function XBowsQuiver.i3_register_page(self)
     i3.new_tab('x_bows_quiver_page', {
@@ -2305,15 +2476,18 @@ function XBowsQuiver.i3_register_page(self)
         formspec = function(player, data, fs)
             local formspec = {
                 ---arrow
-                'label[0.5,1;' .. minetest.formspec_escape(S('Arrows')) .. ':]',
+                'label[0.5,1;' .. core.formspec_escape(S('Arrows')) .. ':]',
                 'list[current_player;x_bows:arrow_inv;0.5,1.5;1,1;]',
                 'listring[current_player;x_bows:arrow_inv]',
                 'listring[current_player;main]',
                 ---quiver
-                'label[5,1;' .. minetest.formspec_escape(S('Quiver')) .. ':]',
+                'label[5,1;' .. core.formspec_escape(S('Quiver')) .. ':]',
                 'list[current_player;x_bows:quiver_inv;5,1.5;1,1;]',
                 'listring[current_player;x_bows:quiver_inv]',
-                'listring[current_player;main]'
+                'listring[current_player;main]',
+                ---settings button
+                'image_button[8.5,5.5;1,1;x_bows_settings_btn.png;x_bows_settings_btn;]',
+                'tooltip[x_bows_settings_btn;' .. core.formspec_escape(S('X Bows Settings')) .. ']'
             }
 
             local context = {}
@@ -2326,8 +2500,8 @@ function XBowsQuiver.i3_register_page(self)
 
                 if x_bows_registered_arrow_def then
                     formspec[#formspec + 1] = 'label[0.5,3;' ..
-                        minetest.formspec_escape(context._itemstack_arrow:get_short_description()) .. '\n' ..
-                        minetest.formspec_escape(x_bows_registered_arrow_def.custom.description_abilities) .. ']'
+                        core.formspec_escape(context._itemstack_arrow:get_short_description()) .. '\n' ..
+                        core.formspec_escape(x_bows_registered_arrow_def.custom.description_abilities) .. ']'
                 end
             end
 
@@ -2337,7 +2511,7 @@ function XBowsQuiver.i3_register_page(self)
 
                 ---description
                 formspec[#formspec + 1] = 'label[5,3;' ..
-                    minetest.formspec_escape(context._itemstack_quiver:get_short_description()) .. ']'
+                    core.formspec_escape(context._itemstack_quiver:get_short_description()) .. ']'
                 formspec[#formspec + 1] = 'list[detached:' .. quiver_id .. ';main;6.3,1.5;3,1;]'
                 formspec[#formspec + 1] = 'listring[detached:' .. quiver_id .. ';main]'
                 formspec[#formspec + 1] = 'listring[current_player;main]'
@@ -2358,17 +2532,20 @@ function XBowsQuiver.ui_register_page(self)
                 unified_inventory.style_full.standard_inv_bg,
                 'listcolors[#00000000;#00000000]',
                 ---arrow
-                'label[0.5,0.5;' .. minetest.formspec_escape(S('Arrows')) .. ':]',
+                'label[0.5,0.5;' .. core.formspec_escape(S('Arrows')) .. ':]',
                 unified_inventory.single_slot(0.4, 0.9),
                 'list[current_player;x_bows:arrow_inv;0.5,1;1,1;]',
                 'listring[current_player;x_bows:arrow_inv]',
                 'listring[current_player;main]',
                 ---quiver
-                'label[5,0.5;' .. minetest.formspec_escape(S('Quiver')) .. ':]',
+                'label[5,0.5;' .. core.formspec_escape(S('Quiver')) .. ':]',
                 unified_inventory.single_slot(4.9, 0.9),
                 'list[current_player;x_bows:quiver_inv;5,1;1,1;]',
                 'listring[current_player;x_bows:quiver_inv]',
                 'listring[current_player;main]',
+                ---settings button
+                'image_button[9,4.5;1,1;x_bows_settings_btn.png;x_bows_settings_btn;]',
+                'tooltip[x_bows_settings_btn;' .. core.formspec_escape(S('X Bows Settings')) .. ']'
             }
 
             local context = {}
@@ -2380,8 +2557,8 @@ function XBowsQuiver.ui_register_page(self)
 
                 if x_bows_registered_arrow_def then
                     formspec[#formspec + 1] = 'label[0.5,2.5;' ..
-                        minetest.formspec_escape(context._itemstack_arrow:get_short_description()) .. '\n' ..
-                        minetest.formspec_escape(x_bows_registered_arrow_def.custom.description_abilities) .. ']'
+                        core.formspec_escape(context._itemstack_arrow:get_short_description()) .. '\n' ..
+                        core.formspec_escape(x_bows_registered_arrow_def.custom.description_abilities) .. ']'
                 end
             end
 
@@ -2392,7 +2569,7 @@ function XBowsQuiver.ui_register_page(self)
 
                 ---description
                 formspec[#formspec + 1] = 'label[5,2.5;' ..
-                    minetest.formspec_escape(context._itemstack_quiver:get_short_description()) .. ']'
+                    core.formspec_escape(context._itemstack_quiver:get_short_description()) .. ']'
                 formspec[#formspec + 1] = unified_inventory.single_slot(6.4, 0.9)
                 formspec[#formspec + 1] = unified_inventory.single_slot(7.65, 0.9)
                 formspec[#formspec + 1] = unified_inventory.single_slot(8.9, 0.9)
@@ -2429,7 +2606,7 @@ function XBowsQuiver.show_3d_quiver(self, player, props)
     end
 
     if self.skinsdb then
-        minetest.after(1, function(v_player)
+        core.after(1, function(v_player)
             if not v_player then
                 return
             end
@@ -2462,7 +2639,7 @@ function XBowsQuiver.show_3d_quiver(self, player, props)
 
         return
     elseif self._3d_armor then
-        minetest.after(0.1, function()
+        core.after(0.1, function()
             player_textures = {
                 armor.textures[p_name].skin,
                 armor.textures[p_name].armor,
@@ -2531,7 +2708,8 @@ function XBowsQuiver.hide_3d_quiver(self, player)
     local player_textures
 
     if self.skinsdb then
-        minetest.after(1, function(v_player)
+        core.after(1, function(v_name)
+            local v_player = core.get_player_by_name(v_name)
             if not v_player then
                 return
             end
@@ -2554,11 +2732,16 @@ function XBowsQuiver.hide_3d_quiver(self, player)
             if player_textures then
                 player_api.set_textures(v_player, player_textures)
             end
-        end, player)
+        end, p_name)
 
         return
     elseif self._3d_armor then
-        minetest.after(0.1, function()
+        core.after(0.1, function(v_name)
+            local v_player = core.get_player_by_name(v_name)
+            if not v_player then
+                return
+            end
+
             player_textures = {
                 armor.textures[p_name].skin,
                 armor.textures[p_name].armor,
@@ -2567,10 +2750,10 @@ function XBowsQuiver.hide_3d_quiver(self, player)
             }
 
             if player_textures then
-                player_api.set_textures(player, player_textures)
+                player_api.set_textures(v_player, player_textures)
             end
 
-        end)
+        end, p_name)
 
         return
     elseif self.u_skins then
@@ -2616,8 +2799,30 @@ local function split(str)
     end
 end
 
-function XBows.show_damage_numbers(self, pos, damage, is_crit)
-    if not pos or not self.settings.x_bows_show_damage_numbers then
+function XBows.show_damage_numbers(self, pos, damage, is_crit, player)
+    if not player then
+        return
+    end
+
+    local player_meta = player:get_meta()
+
+    local x_bows_show_damage_numbers_player = player_meta:get_string('x_bows_show_damage_numbers')
+    local x_bows_show_damage_numbers_settings = self.settings.x_bows_show_damage_numbers
+    local x_bows_show_damage_numbers_priv = core.check_player_privs(player, 'x_bows_show_damage_numbers')
+    x_bows_show_damage_numbers_player = x_bows_show_damage_numbers_player == 'true' and 'true' or 'false'
+
+    if not pos then
+        return
+    end
+
+    if
+        x_bows_show_damage_numbers_player == 'false'
+        or (
+            x_bows_show_damage_numbers_player == 'true'
+            and not x_bows_show_damage_numbers_settings
+            and not x_bows_show_damage_numbers_priv
+        )
+    then
         return
     end
 
@@ -2648,7 +2853,7 @@ function XBows.show_damage_numbers(self, pos, damage, is_crit)
         end
 
         ---show damage texture
-        minetest.add_particlespawner({
+        core.add_particlespawner({
             amount = 1,
             time = 0.01,
             minpos = { x = pos.x, y = pos.y + 1, z = pos.z },

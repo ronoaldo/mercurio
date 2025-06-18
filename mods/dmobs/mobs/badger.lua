@@ -2,7 +2,7 @@ mobs:register_mob("dmobs:badger", {
 	type = "animal",
 	passive = false,
 	reach = 1,
-	damage = 2,
+	damage = 2, attack_chance = 98,
 	attack_type = "dogfight",
 	hp_min = 12,
 	hp_max = 22,

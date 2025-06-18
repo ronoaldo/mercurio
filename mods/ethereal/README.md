@@ -19,7 +19,7 @@ TODO:
 
 #### Lucky Blocks
 
-It provides 66 new lucky blocks if the mod is detected.
+It provides 68 new lucky blocks if the mod is detected.
 
 ## Technical info
 -----------------
@@ -112,6 +112,7 @@ who helped make this mod bigger and better throughout it's release :)
  - Candles use [multiply for colour.
  - Add desert stone spikes to caves biome, and stone spikes underneath.
  - Add pond schematic for generation in flat mesa areas, add new pond lucky blocks.
+ - Add all-faces variants of tree trunks.
 
 ### 1.31
  - Fix fishing biome checks

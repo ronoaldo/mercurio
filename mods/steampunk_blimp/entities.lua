@@ -4,6 +4,37 @@
 local LONGIT_DRAG_FACTOR = 0.13*0.13
 local LATER_DRAG_FACTOR = 2.0
 
+local function damage_vehicle(self, toolcaps, ttime, damage, min_damage_value)
+    damage = damage or 0
+    if (not toolcaps) then
+        return
+    end
+    
+    local value = toolcaps.damage_groups.fleshy or 0
+    if (toolcaps.damage_groups.vehicle) then
+        value = toolcaps.damage_groups.vehicle
+    end
+    damage = damage + value
+    if damage < min_damage_value then
+        steampunk_blimp.setText(self, self._vehicle_name)
+        return
+    end
+    damage = damage / 10
+    self.hp = self.hp - damage
+    if self.hp < steampunk_blimp.min_hp then self.hp = steampunk_blimp.min_hp end
+
+    core.sound_play("steampunk_blimp_collision", {
+        --to_player = self.driver_name,
+        object = self.object,
+        max_hear_distance = 15,
+        gain = 1.0,
+        fade = 0.0,
+        pitch = 1.0,
+    }, true)
+
+    steampunk_blimp.setText(self, self._vehicle_name)
+end
+
 --
 -- entity
 --
@@ -24,6 +55,7 @@ initial_properties = {
     on_activate = function(self,std)
 	    self.sdata = core.deserialize(std) or {}
 	    if self.sdata.remove then self.object:remove() end
+        self.object:set_armor_groups({immortal=1})
     end,
 
     get_staticdata=function(self)
@@ -32,6 +64,68 @@ initial_properties = {
     end,
 
 })
+
+local default_wood_texture = "default_wood.png"
+if airutils.is_repixture then
+    default_wood_texture = "default_wood_oak.png"
+end
+
+core.register_entity('steampunk_blimp:wings',{
+initial_properties = {
+	physical = false,
+	collide_with_objects=false,
+	pointable=false,
+    glow = 0,
+	visual = "mesh",
+    backface_culling = false,
+	mesh = "steampunk_blimp_wings.b3d",
+    textures = {
+            default_wood_texture, --asa
+            steampunk_blimp.canvas_texture, --asa
+        },
+	},
+
+    on_activate = function(self,std)
+	    self.sdata = core.deserialize(std) or {}
+	    if self.sdata.remove then self.object:remove() end
+        self.object:set_armor_groups({immortal=1})
+    end,
+
+    get_staticdata=function(self)
+      self.sdata.remove=true
+      return core.serialize(self.sdata)
+    end,
+
+})
+
+core.register_entity('steampunk_blimp:cannons',{
+initial_properties = {
+	physical = false,
+	collide_with_objects=false,
+	pointable=false,
+    glow = 0,
+	visual = "mesh",
+    backface_culling = false,
+	mesh = "steampunk_blimp_cannons.b3d",
+    textures = {
+            "steampunk_blimp_cannon.png", --canhão
+            default_wood_texture, --canhão
+        },
+	},
+
+    on_activate = function(self,std)
+	    self.sdata = core.deserialize(std) or {}
+	    if self.sdata.remove then self.object:remove() end
+        self.object:set_armor_groups({immortal=1})
+    end,
+
+    get_staticdata=function(self)
+      self.sdata.remove=true
+      return core.serialize(self.sdata)
+    end,
+
+})
+
 
 --
 -- seat pivot
@@ -51,6 +145,7 @@ core.register_entity('steampunk_blimp:stand_base',{
     on_activate = function(self,std)
 	    self.sdata = core.deserialize(std) or {}
 	    if self.sdata.remove then self.object:remove() end
+        self.object:set_armor_groups({immortal=1})
     end,
 
     get_staticdata=function(self)
@@ -59,12 +154,150 @@ core.register_entity('steampunk_blimp:stand_base',{
     end,
 })
 
+core.register_entity('steampunk_blimp:cannon_mouth',{
+    initial_properties = {
+	    physical = false,
+	    collide_with_objects=true,
+        collisionbox = {-0.5, -0.5, -0.5, 0.5, 0.5, 0.5},
+	    pointable=false,
+	    visual = "mesh",
+	    mesh = "steampunk_blimp_stand_base.b3d",
+        textures = {"steampunk_blimp_alpha.png",},
+	},
+    dist_moved = 0,
+
+    on_activate = function(self,std)
+	    self.sdata = core.deserialize(std) or {}
+	    if self.sdata.remove then self.object:remove() end
+        self.object:set_armor_groups({immortal=1})
+    end,
+
+    get_staticdata=function(self)
+      self.sdata.remove=true
+      return core.serialize(self.sdata)
+    end,
+})
+
+core.register_entity('steampunk_blimp:cannon_interactor',{
+    initial_properties = {
+	    physical = false,
+	    collide_with_objects=true,
+        collisionbox = {-0.8, -0.8, -0.8, 0.8, 0.8, 0.8},
+	    pointable=true,
+	    visual = "mesh",
+	    mesh = "steampunk_blimp_stand_base.b3d",
+        textures = {"steampunk_blimp_alpha.png",},
+	},
+    dist_moved = 0,
+
+    on_activate = function(self,std)
+	    self.sdata = core.deserialize(std) or {}
+	    if self.sdata.remove then self.object:remove() end
+        self.object:set_armor_groups({immortal=1})
+    end,
+
+    get_staticdata=function(self)
+      self.sdata.remove=true
+      return core.serialize(self.sdata)
+    end,
+
+    on_rightclick = steampunk_blimp.right_click_cannon,
+})
+
+core.register_entity('steampunk_blimp:helm_interactor',{
+    initial_properties = {
+	    physical = false,
+	    collide_with_objects=false,
+        collisionbox = {-0.3, -0.3, -0.3, 0.3, 1, 0.3},
+	    pointable=true,
+	    visual = "mesh",
+	    mesh = "steampunk_blimp_stand_base.b3d",
+        textures = {"steampunk_blimp_alpha.png",},
+	},
+    dist_moved = 0,
+
+    on_activate = function(self,std)
+	    self.sdata = core.deserialize(std) or {}
+	    if self.sdata.remove then self.object:remove() end
+        self.object:set_armor_groups({immortal=1})
+    end,
+
+    get_staticdata=function(self)
+      self.sdata.remove=true
+      return core.serialize(self.sdata)
+    end,
+
+    on_punch = function(self, puncher, ttime, toolcaps, dir, damage)
+        --minetest.chat_send_all("punch")
+        if not puncher or not puncher:is_player() then
+            return
+        end
+    end,
+
+    on_rightclick = steampunk_blimp.right_click_helm,
+})
+
+core.register_entity('steampunk_blimp:hull_interactor',{
+    initial_properties = {
+	    physical = false,
+	    collide_with_objects=false,
+        collisionbox = {-3, -2.5, -3, 3, 0, 3},
+	    pointable=true,
+	    visual = "mesh",
+	    mesh = "steampunk_blimp_stand_base.b3d",
+        textures = {"steampunk_blimp_alpha.png",},
+	},
+    dist_moved = 0,
+
+    on_activate = function(self,std)
+	    self.sdata = core.deserialize(std) or {}
+	    if self.sdata.remove then self.object:remove() end
+        self.object:set_armor_groups({immortal=1})
+    end,
+
+    get_staticdata=function(self)
+      self.sdata.remove=true
+      return core.serialize(self.sdata)
+    end,
+
+    on_punch = function(self, puncher, ttime, toolcaps, dir, damage)
+        local ship_attach = self.object:get_attach()
+        local parent_ent = nil
+        if ship_attach then
+            parent_ent = ship_attach:get_luaentity()
+        end
+
+        --minetest.chat_send_all("punch")
+        if not puncher or not puncher:is_player() then
+            damage_vehicle(parent_ent, toolcaps, ttime, damage, steampunk_blimp.min_damage_value )
+            return
+        end
+
+        local name = nil
+        if (puncher:is_player()) then
+	        name = puncher:get_player_name()
+            local ppos = puncher:get_pos()
+            if (core.is_protected(ppos, name) and
+                airutils.protect_in_areas) then
+                return
+            end
+        end
+
+        --local weapon_name = puncher:get_wielded_item():get_name()
+        if parent_ent then
+            damage_vehicle(parent_ent, toolcaps, ttime, damage, steampunk_blimp.min_damage_value*2 )
+        end
+    end,
+
+    on_rightclick = steampunk_blimp.right_click_hull,
+})
+
 core.register_entity("steampunk_blimp:blimp", {
     initial_properties = {
         physical = true,
         collide_with_objects = true, --true,
         collisionbox = {-4, -2.5, -4, 4, 9, 4}, --{-1,0,-1, 1,0.3,1},
-        --selectionbox = {-0.6,0.6,-0.6, 0.6,1,0.6},
+        selectionbox = {-0.6,-0.6,-0.6, 0.6,3,0.6},
         visual = "mesh",
         backface_culling = false,
         mesh = "steampunk_blimp.b3d",
@@ -75,6 +308,7 @@ core.register_entity("steampunk_blimp:blimp", {
     sound_handle = nil,
     static_save = true,
     infotext = "A nice blimp",
+    hp_max = steampunk_blimp.max_hp,
     lastvelocity = vector.new(),
     hp = 50,
     color = "blue",
@@ -111,7 +345,11 @@ core.register_entity("steampunk_blimp:blimp", {
     _ship_name = "",
     _name_color = 0,
     _name_hor_aligment = 3.0,
+    _has_cannons = false,
+    _unl_can = false,
+    _rev_can = false,
     item = "steampunk_blimp:blimp",
+    _vehicle_name = "Steampunk Blimp",
 
     get_staticdata = function(self) -- unloaded/unloads ... is now saved
         return core.serialize({
@@ -132,6 +370,13 @@ core.register_entity("steampunk_blimp:blimp", {
             stored_passengers = self._passengers, --passengers list
             stored_passengers_locked = self._passengers_locked,
             stored_ship_name = self._ship_name,
+            stored_vehicle_name = self._vehicle_name,
+            stored_has_cannons = self._has_cannons or false,
+            stored_rev_can = self._rev_can or false, --reverse cannons
+            stored_l_pload = self._l_pload or "", --powder left cannon
+            stored_r_pload = self._r_pload or "", --powder right cannon
+            stored_l_armed = self._l_armed or "", --ammo left cannon
+            stored_r_armed = self._r_armed or "", --ammo right cannon
             remove = self._remove or false,
         })
     end,
@@ -155,7 +400,7 @@ core.register_entity("steampunk_blimp:blimp", {
             self._boiler_pressure = data.stored_boiler_pressure or 0
             self.owner = data.stored_owner or ""
             self._shared_owners = data.stored_shared_owners or {}
-            self.hp = 50 --data.stored_hp or 50
+            self.hp = data.stored_hp or 50
             self.color = data.stored_color or "blue"
             self.color2 = data.stored_color2 or "white"
             self.logo = data.stored_logo or "steampunk_blimp_alpha_logo.png"
@@ -166,6 +411,15 @@ core.register_entity("steampunk_blimp:blimp", {
             self._passengers = data.stored_passengers or steampunk_blimp.copy_vector({[1]=nil, [2]=nil, [3]=nil, [4]=nil, [5]=nil, [6]=nil, [7]=nil})
             self._passengers_locked = data.stored_passengers_locked
             self._ship_name = data.stored_ship_name
+            self._vehicle_name = data.stored_vehicle_name
+
+            self._has_cannons = data.stored_has_cannons
+            self._rev_can = data.stored_rev_can or false
+            self._l_pload = data.stored_l_pload or "" --powder left cannon
+            self._r_pload = data.stored_r_pload or "" --powder right cannon
+            self._l_armed = data.stored_l_armed or "" --ammo left cannon
+            self._r_armed = data.stored_r_armed or "" --ammo right cannon
+
             self._remove = data.remove or false
             if self._remove ~= true then
                 self._inv_id = data.stored_inv_id
@@ -180,6 +434,7 @@ core.register_entity("steampunk_blimp:blimp", {
                 self.object:remove()
                 return
             end
+            --core.chat_send_all(dump(staticdata))
         end
 
         local colstr = steampunk_blimp.colors[self.color]
@@ -191,9 +446,54 @@ core.register_entity("steampunk_blimp:blimp", {
         steampunk_blimp.paint2(self, self.color2)
         local pos = self.object:get_pos()
 
+        if airutils.debug_log then
+            core.log("action","activating: "..self._vehicle_name.." from "..self.owner.." at position "..math.floor(pos.x)..","..math.floor(pos.y)..","..math.floor(pos.z))
+        end
+
         local fire=core.add_entity(pos,'steampunk_blimp:fire')
         fire:set_attach(self.object,'',{x=0.0,y=0.0,z=0.0},{x=0,y=0,z=0})
 	    self.fire = fire
+
+        if self._has_cannons == true then
+            local cannons = core.add_entity(pos, 'steampunk_blimp:cannons')
+            cannons:set_attach(self.object,'',{x=0.0,y=0.0,z=0.0},{x=0,y=0,z=0})
+            self.cannons = cannons
+
+            self._cannon_r_interactor = core.add_entity(pos, 'steampunk_blimp:cannon_interactor')
+            self._cannon_r_interactor:set_attach(self.object,'',{x=steampunk_blimp.cannons_loc.x,y=steampunk_blimp.cannons_loc.y,z=steampunk_blimp.cannons_loc.z},{x=0,y=0,z=0})
+            self._cannon_l_interactor = core.add_entity(pos, 'steampunk_blimp:cannon_interactor')
+            self._cannon_l_interactor:set_attach(self.object,'',{x=-steampunk_blimp.cannons_loc.x,y=steampunk_blimp.cannons_loc.y,z=steampunk_blimp.cannons_loc.z},{x=0,y=0,z=0})
+
+            self._cannon_r = core.add_entity(pos, 'steampunk_blimp:cannon_mouth')
+            self._cannon_r:set_attach(self.object,'',{x=steampunk_blimp.cannons_loc.x,y=steampunk_blimp.cannons_loc.y,z=steampunk_blimp.cannons_loc.z+steampunk_blimp.cannons_sz},{x=0,y=0,z=0})
+            self._cannon_l = core.add_entity(pos, 'steampunk_blimp:cannon_mouth')
+            self._cannon_l:set_attach(self.object,'',{x=-steampunk_blimp.cannons_loc.x,y=steampunk_blimp.cannons_loc.y,z=steampunk_blimp.cannons_loc.z+steampunk_blimp.cannons_sz},{x=0,y=0,z=0})
+
+            local override
+            if self._rev_can == true then
+                override = {
+                    rotation = { vec={x=math.rad(-180),y=0,z=0}, interpolation = 1, absolute = false }
+                    }
+            else
+                override = {
+                    rotation = { vec={x=math.rad(360),y=0,z=0}, interpolation = 1, absolute = false }
+                    }
+            end
+            self.cannons:set_bone_override("cannon_l", override)
+            self.cannons:set_bone_override("cannon_r", override)
+        else
+            local wings = core.add_entity(pos, 'steampunk_blimp:wings')
+            wings:set_attach(self.object,'',{x=0.0,y=0.0,z=0.0},{x=0,y=0,z=0})
+            self.wings = wings
+        end
+
+        self._helm_interactor = core.add_entity(pos, 'steampunk_blimp:helm_interactor')
+        local helm_interactor_pos = vector.new(steampunk_blimp.pilot_base_pos)
+        helm_interactor_pos.z = helm_interactor_pos.z + 7
+        self._helm_interactor:set_attach(self.object,'',helm_interactor_pos,{x=0,y=0,z=0})
+
+        self._hull_interactor = core.add_entity(pos, 'steampunk_blimp:hull_interactor')
+        self._hull_interactor:set_attach(self.object,'',{x=0.0,y=0.0,z=0.0},{x=0,y=0,z=0})
 
         --passengers positions
         self._passenger_is_sit = steampunk_blimp.copy_vector({})
@@ -212,11 +512,7 @@ core.register_entity("steampunk_blimp:blimp", {
 
         self.object:set_bone_position("low_rudder_a", {x=0,y=0,z=-40}, {x=-5.35,y=0,z=0})
 
-        self.object:set_armor_groups({immortal=1})
-
         airutils.actfunc(self, staticdata, dtime_s)
-
-        self.object:set_armor_groups({immortal=1})
 
         if self._remove ~= true then
 		    local inv = core.get_inventory({type = "detached", name = self._inv_id})
@@ -227,6 +523,8 @@ core.register_entity("steampunk_blimp:blimp", {
 		        self.inv = inv
             end
         end
+
+        steampunk_blimp.setText(self, self._vehicle_name)
 
         steampunk_blimp.engine_step(self, 0)
     end,
@@ -291,6 +589,17 @@ core.register_entity("steampunk_blimp:blimp", {
         self.object:move_to(curr_pos)
 
         if self.owner == "" then return end
+        if self.hp <= steampunk_blimp.min_hp then
+            self._engine_running = false
+            if self._boiler_pressure > 0 then
+                minetest.sound_play({name = "default_cool_lava"},
+                    {object = self.object, gain = 1.0,
+                        pitch = 1.0,
+                        max_hear_distance = 32,
+                        loop = false,}, true)
+                self._boiler_pressure = 0
+            end
+        end --stop all when damaged
 
         --fire
         if self.fire then
@@ -370,6 +679,14 @@ core.register_entity("steampunk_blimp:blimp", {
         accel.y = accel_y
 
         newpitch =  velocity.y * math.rad(1.5) * (relative_longit_speed/3)
+
+        local pitch_by_accel = steampunk_blimp.pitch_by_accel(self, accel, hull_direction)
+
+        newpitch = newpitch + pitch_by_accel
+        local limit_pitch = math.rad(30)
+        if newpitch > limit_pitch then newpitch = limit_pitch end
+        if limit_pitch < -limit_pitch then newpitch = -limit_pitch end
+
         --self.object:set_acceleration(accel)
         self.object:add_velocity(vector.multiply(accel,self.dtime))
         self.object:set_rotation({x=newpitch,y=newyaw,z=newroll})
@@ -393,12 +710,34 @@ core.register_entity("steampunk_blimp:blimp", {
     end,
 
     on_punch = function(self, puncher, ttime, toolcaps, dir, damage)
+        steampunk_blimp.setText(self, self._vehicle_name)
+
         if not puncher or not puncher:is_player() then
+            damage_vehicle(self, toolcaps, ttime, damage, steampunk_blimp.min_damage_value )
             return
         end
+
+        local name = nil
+        if (puncher:is_player()) then
+	        name = puncher:get_player_name()
+            local ppos = puncher:get_pos()
+            if (core.is_protected(ppos, name) and
+                airutils.protect_in_areas) then
+                return
+            end
+        end
+
+        local weapon_name = puncher:get_wielded_item():get_name()
+        damage_vehicle(self, toolcaps, ttime, damage, steampunk_blimp.min_damage_value )
+
+        --[[if (string.find(weapon_name, "rayweapon") or string.find(weapon_name,"bows:") or
+            string.find(weapon_name, "steampunk_blimp:cannon_")
+            or toolcaps.damage_groups.vehicle) then
+                damage_vehicle(self, toolcaps, ttime, damage)
+        end]]--
+        
         local is_admin
         is_admin = core.check_player_privs(puncher, {server=true})
-		local name = puncher:get_player_name()
         if self.owner == nil then
             self.owner = name
         end
@@ -435,7 +774,6 @@ core.register_entity("steampunk_blimp:blimp", {
             end
             local _,indx = item_name:find(find_str)
             if indx then
-
                 --lets paint!!!!
                 local color = nil
                 if not airutils.is_repixture then
@@ -455,6 +793,22 @@ core.register_entity("steampunk_blimp:blimp", {
                 end
                 -- end painting
             end
+
+            local repair = airutils.contains(steampunk_blimp.rep_material, item_name)
+            if repair then
+                local stack = ItemStack(item_name .. " 1")
+                if self.hp < steampunk_blimp.max_hp then
+                    itmstck:set_count(1)
+                    local inv = puncher:get_inventory()
+                    inv:remove_item("main", itmstck)
+                    if repair then
+                        self.hp = self.hp + repair.amount
+                    end
+                    if self.hp > steampunk_blimp.max_hp then self.hp = steampunk_blimp.max_hp end
+                end
+                if self.hp >= steampunk_blimp.max_hp then core.chat_send_player(name, "The blimp has already been fixed!") end
+            end
+
         end
 
         if is_attached == false then
@@ -468,7 +822,7 @@ core.register_entity("steampunk_blimp:blimp", {
             end
 
 
-            if not has_passengers and toolcaps and toolcaps.damage_groups and
+            --[[if not has_passengers and toolcaps and toolcaps.damage_groups and
                     toolcaps.groupcaps and (toolcaps.groupcaps.choppy or toolcaps.groupcaps.axey_dig) then
 
                 local is_empty = true
@@ -487,117 +841,14 @@ core.register_entity("steampunk_blimp:blimp", {
             end
 
             if self.hp <= 0 then
-                steampunk_blimp.destroy(self, false)
-            end
+                steampunk_blimp.get_blimp_back(self, puncher, false)
+            end]]--
 
         end
 
     end,
 
-    on_rightclick = function(self, clicker)
-		if not clicker or not clicker:is_player() then
-			return
-		end
+    on_rightclick = steampunk_blimp.right_click,
 
-        local name = clicker:get_player_name()
-
-        if self.owner == "" then
-            self.owner = name
-        end
-
-        --core.chat_send_all('passengers: '.. dump(self._passengers))
-        --=========================
-        --  form to pilot
-        --=========================
-        local is_attached = false
-        local seat = clicker:get_attach()
-        if seat then
-            local plane = seat:get_attach()
-            if plane == self.object then is_attached = true end
-        end
-
-        --check error after being shot for any other mod
-        if is_attached == false then
-            for i = steampunk_blimp.max_seats,1,-1
-            do
-                if self._passengers[i] == name then
-                    self._passengers[i] = nil --clear the wrong information
-                    break
-                end
-            end
-        end
-
-        --shows pilot formspec
-        if name == self.driver_name then
-            if is_attached then
-                steampunk_blimp.pilot_formspec(name)
-            else
-                self.driver_name = nil
-            end
-        --=========================
-        --  attach passenger
-        --=========================
-        else
-            local pass_is_attached = steampunk_blimp.check_passenger_is_attached(self, name)
-
-            if pass_is_attached then
-                local can_bypass = core.check_player_privs(clicker, {protection_bypass=true})
-                if clicker:get_player_control().aux1 == true then --lets see the inventory
-                    local is_shared = false
-                    if name == self.owner or can_bypass then is_shared = true end
-                    for k, v in pairs(self._shared_owners) do
-                        if v == name then
-                            is_shared = true
-                            break
-                        end
-                    end
-                    if is_shared then
-                        airutils.show_vehicle_trunk_formspec(self, clicker, steampunk_blimp.trunk_slots)
-                    end
-                else
-                    if self.driver_name ~= nil and self.driver_name ~= "" then
-                        --lets take the control by force
-                        if name == self.owner or can_bypass then
-                            --require the pilot position now
-                            steampunk_blimp.owner_formspec(name)
-                        else
-                            steampunk_blimp.pax_formspec(name)
-                        end
-                    else
-                        --check if is on owner list
-                        local is_shared = false
-                        if name == self.owner or can_bypass then is_shared = true end
-                        for k, v in pairs(self._shared_owners) do
-                            if v == name then
-                                is_shared = true
-                                break
-                            end
-                        end
-                        --normal user
-                        if is_shared == false then
-                            steampunk_blimp.pax_formspec(name)
-                        else
-                            --owners
-                            steampunk_blimp.pilot_formspec(name)
-                        end
-                    end
-                end
-            else
-                --first lets clean the boat slots
-                --note that when it happens, the "rescue" function will lost the historic
-                for i = steampunk_blimp.max_seats,1,-1
-                do
-                    if self._passengers[i] ~= nil then
-                        local old_player = core.get_player_by_name(self._passengers[i])
-                        if not old_player then self._passengers[i] = nil end
-                    end
-                end
-                --attach normal passenger
-                --if self._door_closed == false then
-                    steampunk_blimp.attach_pax(self, clicker)
-                --end
-            end
-        end
-
-    end,
+    on_deactivate = airutils.on_deactivate,
 })

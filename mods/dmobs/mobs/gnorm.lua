@@ -3,7 +3,7 @@ mobs:register_mob("dmobs:gnorm", {
 	can_dig = true,
 	passive = true,
 	reach = 1,
-	damage = 1,
+	damage = 1, attack_chance = 99,
 	attack_type = "dogfight",
 	hp_min = 32,
 	hp_max = 42,

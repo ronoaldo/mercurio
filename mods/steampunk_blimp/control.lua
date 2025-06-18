@@ -44,6 +44,7 @@ function steampunk_blimp.control(self, dtime, hull_direction, longit_speed, acce
 
 	-- player control
     local ctrl = nil
+    local shot = 0 --to force a recoil after cannon shot
 	if player and self._at_control == true then
 		ctrl = player:get_player_control()
 
@@ -68,7 +69,11 @@ function steampunk_blimp.control(self, dtime, hull_direction, longit_speed, acce
         self._is_going_up = false
 		if ctrl.jump then
             if self._boiler_pressure > 0 then
-                self._baloon_buoyancy = 1.02
+                if self._has_cannons then
+                    self._baloon_buoyancy = 1.005
+                else
+                    self._baloon_buoyancy = 1.02
+                end
                 if self.isinliquid then self._baloon_buoyancy = 1.10 end
             end
             self._is_going_up = true
@@ -79,19 +84,30 @@ function steampunk_blimp.control(self, dtime, hull_direction, longit_speed, acce
 		-- rudder
         local rudder_limit = 30
         local speed = 10
-		if ctrl.right then
-			self._rudder_angle = math.max(self._rudder_angle-speed*dtime,-rudder_limit)
-		elseif ctrl.left then
-			self._rudder_angle = math.min(self._rudder_angle+speed*dtime,rudder_limit)
-		end
-	end
-
-    --make the blimp loss height when without pressure (and not anchored)
-    if self.anchored == false and not self.isinliquid then
-        if self._boiler_pressure <= 0 then
-            self._baloon_buoyancy = -0.2
+        if not ctrl.aux1 then
+		    if ctrl.right then
+		        self._rudder_angle = math.max(self._rudder_angle-speed*dtime,-rudder_limit)
+		    elseif ctrl.left then
+		        self._rudder_angle = math.min(self._rudder_angle+speed*dtime,rudder_limit)
+		    end
+        else
+            if self._has_cannons == true and self._unl_can == true then
+                if ctrl.right and self._cannon_r then
+                    if ctrl.aux1 then shot = steampunk_blimp.cannon_shot(self, self._cannon_r, self._r_armed) end
+                end
+                if ctrl.left and self._cannon_l then
+                    if ctrl.aux1 then shot = steampunk_blimp.cannon_shot(self, self._cannon_l, self._l_armed) end
+                end
+                if ctrl.jump and ctrl.aux1 then
+                    if (self._cannon_l and self._cannon_r) then
+                        local l_shot = steampunk_blimp.cannon_shot(self, self._cannon_l, self._l_armed)
+                        local r_shot = steampunk_blimp.cannon_shot(self, self._cannon_r, self._r_armed)
+                        shot = l_shot + r_shot
+                    end
+                end
+            end
         end
-    end
+	end
 
     --engine acceleration calc
     local engineacc = (self._power_lever * steampunk_blimp.max_engine_acc) / 100;
@@ -99,18 +115,22 @@ function steampunk_blimp.control(self, dtime, hull_direction, longit_speed, acce
     --do not exceed
     local max_speed = 3
     if longit_speed > max_speed then
-        engineacc = engineacc - (longit_speed-max_speed)
+        engineacc = engineacc - (longit_speed-max_speed) --it's an error to subtract speed from acceleration - TODO
     end
 
     if engineacc ~= nil then
         retval_accel=vector.add(accel,vector.multiply(hull_direction,engineacc))
     end
-    --minetest.chat_send_all('paddle: '.. paddleacc)
-
+    local recoil_intensity = -70
+    if self._rev_can == true then
+        recoil_intensity = recoil_intensity * -1
+    end
+    local recoil = shot*recoil_intensity;
+    retval_accel=vector.add(retval_accel,vector.multiply(hull_direction,recoil))
 
     if longit_speed > 0 then
         if ctrl then
-            if not ctrl.right or not ctrl.left then
+            if not ctrl.right or not ctrl.left or not ctrl.zoom then
                 steampunk_blimp.rudder_auto_correction(self, longit_speed, dtime)
             end
         else
@@ -118,7 +138,20 @@ function steampunk_blimp.control(self, dtime, hull_direction, longit_speed, acce
         end
     end
 
-    steampunk_blimp.buoyancy_auto_correction(self, self.dtime)
+    if self.hp > steampunk_blimp.min_hp then
+        steampunk_blimp.buoyancy_auto_correction(self, self.dtime)
+    end
+
+    --make the blimp loss height when without pressure (and not anchored)
+    if self.anchored == false and not self.isinliquid then
+        if self._boiler_pressure <= 0 then
+            self._baloon_buoyancy = -0.2
+        end
+    end
+    --blimp damaged
+    if self.hp <= steampunk_blimp.min_hp then
+        self._baloon_buoyancy = -0.2
+    end
 
     return retval_accel
 end
@@ -138,7 +171,7 @@ end
 
 function steampunk_blimp.buoyancy_auto_correction(self, dtime)
     local factor = 1
-    --minetest.chat_send_player(self.driver_name, "antes: " .. self._baloon_buoyancy)
+    --core.chat_send_all("antes: " .. self._baloon_buoyancy)
     if self._baloon_buoyancy > 0 then factor = -1 end
     local time_correction = (dtime/steampunk_blimp.ideal_step)
     if time_correction < 1 then time_correction = 1 end
@@ -153,6 +186,6 @@ function steampunk_blimp.buoyancy_auto_correction(self, dtime)
     else
         self._baloon_buoyancy = new_baloon_buoyancy
     end
-    --minetest.chat_send_player(self.driver_name, "depois: " .. self._baloon_buoyancy)
+    --core.chat_send_all("depois: " .. self._baloon_buoyancy)
 end
 

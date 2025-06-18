@@ -1,5 +1,5 @@
 
-local S = minetest.get_translator("mobs_animal")
+local S = core.get_translator("mobs_animal")
 
 -- Bee by KrupnoPavel (.b3d model by sirrobzeroone)
 
@@ -68,10 +68,10 @@ mobs:alias_mob("mobs:bee", "mobs_animal:bee")
 
 -- honey
 
-minetest.register_craftitem(":mobs:honey", {
+core.register_craftitem(":mobs:honey", {
 	description = S("Honey"),
 	inventory_image = "mobs_honey_inv.png",
-	on_use = minetest.item_eat(4),
+	on_use = core.item_eat(4),
 	groups = {food_honey = 1, food_sugar = 1}
 })
 
@@ -79,7 +79,7 @@ mobs.add_eatable("mobs:honey", 4)
 
 -- beehive (1 in 4 chance of spawning bee when placed)
 
-minetest.register_node(":mobs:beehive", {
+core.register_node(":mobs:beehive", {
 	description = S("Beehive"),
 	drawtype = "plantlike",
 	tiles = {"mobs_beehive.png"},
@@ -93,7 +93,7 @@ minetest.register_node(":mobs:beehive", {
 
 	on_construct = function(pos)
 
-		local meta = minetest.get_meta(pos)
+		local meta = core.get_meta(pos)
 		local gui_bg = default and default.gui_bg .. default.gui_bg_img .. default.gui_slots or ""
 
 		meta:set_string("formspec", "size[8,6]"
@@ -110,10 +110,10 @@ minetest.register_node(":mobs:beehive", {
 
 		if placer and placer:is_player() then
 
-			minetest.set_node(pos, {name = "mobs:beehive", param2 = 1})
+			core.set_node(pos, {name = "mobs:beehive", param2 = 1})
 
 			if math.random(4) == 1 then
-				minetest.add_entity(pos, "mobs_animal:bee")
+				core.add_entity(pos, "mobs_animal:bee")
 			end
 		end
 	end,
@@ -121,7 +121,7 @@ minetest.register_node(":mobs:beehive", {
 	on_punch = function(pos, node, puncher)
 
 		-- yep, bee's don't like having their home punched by players
-		minetest.after(0.2, function()
+		core.after(0.2, function()
 
 			local hp = puncher and puncher:get_hp()
 
@@ -138,7 +138,7 @@ minetest.register_node(":mobs:beehive", {
 
 	can_dig = function(pos,player) -- can only dig when no honey inside
 
-		local meta = minetest.get_meta(pos)
+		local meta = core.get_meta(pos)
 
 		return meta:get_inventory():is_empty("beehive")
 	end
@@ -146,14 +146,14 @@ minetest.register_node(":mobs:beehive", {
 
 -- beehive recipe
 
-minetest.register_craft({
+core.register_craft({
 	output = "mobs:beehive",
 	recipe = {{"mobs:bee","mobs:bee","mobs:bee"}}
 })
 
 -- honey block and craft recipes
 
-minetest.register_node(":mobs:honey_block", {
+core.register_node(":mobs:honey_block", {
 	description = S("Honey Block"),
 	tiles = {"mobs_honey_block.png"},
 	groups = {snappy = 3, flammable = 2},
@@ -161,7 +161,7 @@ minetest.register_node(":mobs:honey_block", {
 	sounds = mobs.node_sound_dirt_defaults()
 })
 
-minetest.register_craft({
+core.register_craft({
 	output = "mobs:honey_block",
 	recipe = {
 		{"mobs:honey", "mobs:honey", "mobs:honey"},
@@ -170,7 +170,7 @@ minetest.register_craft({
 	}
 })
 
-minetest.register_craft({
+core.register_craft({
 	output = "mobs:honey 9",
 	recipe = {
 		{"mobs:honey_block"}
@@ -179,7 +179,7 @@ minetest.register_craft({
 
 -- beehive workings
 
-minetest.register_abm({
+core.register_abm({
 	nodenames = {"mobs:beehive"},
 	interval = 12,
 	chance = 6,
@@ -188,18 +188,18 @@ minetest.register_abm({
 	action = function(pos, node)
 
 		-- bee's only make honey during the day
-		local tod = (minetest.get_timeofday() or 0) * 24000
+		local tod = (core.get_timeofday() or 0) * 24000
 
 		if tod < 5500 or tod > 18500 then return end
 
-		local meta = minetest.get_meta(pos) ; if not meta then return end
+		local meta = core.get_meta(pos) ; if not meta then return end
 		local inv = meta:get_inventory()
 		local honey = inv:get_stack("beehive", 1):get_count()
 
 		if honey > 11 then return end -- return if hive full
 
 		-- no flowers no honey, nuff said!
-		if #minetest.find_nodes_in_area_under_air(
+		if #core.find_nodes_in_area_under_air(
 				{x = pos.x - 4, y = pos.y - 3, z = pos.z - 4},
 				{x = pos.x + 4, y = pos.y + 3, z = pos.z + 4}, "group:flower") > 3 then
 

@@ -1,5 +1,14 @@
 
-local S = minetest.get_translator("mobs_animal")
+local S = core.get_translator("mobs_animal")
+
+-- should cows eat grass blocks and mess up the environment?
+
+local eat_gb = core.settings:get_bool("mobs_animal.eat_grass_block")
+local replace_what = { {"group:grass", "air", 0} }
+
+if eat_gb then
+	table.insert(replace_what, {"default:dirt_with_grass", "default:dirt", -1})
+end
 
 -- Cow by sirrobzeroone
 
@@ -9,7 +18,7 @@ mobs:register_mob("mobs_animal:cow", {
 	attack_type = "dogfight",
 	attack_npcs = false,
 	reach = 2,
-	damage = 4,
+	damage = 4, attack_chance = 98,
 	hp_min = 10,
 	hp_max = 20,
 	armor = 100,
@@ -43,7 +52,7 @@ mobs:register_mob("mobs_animal:cow", {
 		walk_start = 85, walk_end = 114, walk_speed = 20,
 		run_start = 120, run_end = 140, run_speed = 30,
 		punch_start = 145, punch_end = 160, punch_speed = 20,
-		die_start = 165, die_end = 185, die_speed = 10, die_loop = false
+		die_start = 165, die_end = 185, die_speed = 25, die_loop = false
 	},
 	follow = {
 		"farming:wheat", "default:grass_1", "farming:barley",
@@ -51,10 +60,20 @@ mobs:register_mob("mobs_animal:cow", {
 	},
 	view_range = 8,
 	replace_rate = 10,
-	replace_what = {
-		{"group:grass", "air", 0},
-		{"default:dirt_with_grass", "default:dirt", -1}
-	},
+	replace_what = replace_what,
+--[[
+	pick_up = {"default:grass_1", "default:dry_grass_1"},
+	on_pick_up = function(self, entity)
+
+		local istack = ItemStack(entity.itemstring)
+
+		print("-- took", istack:get_name())
+
+		istack:take_item(1)
+
+		return istack
+	end,
+]]
 --	stay_near = {{"farming:straw", "group:grass"}, 10},
 	fear_height = 2,
 
@@ -85,7 +104,7 @@ mobs:register_mob("mobs_animal:cow", {
 
 			if self.gotten == true then
 
-				minetest.chat_send_player(name, S("Cow already milked!"))
+				core.chat_send_player(name, S("Cow already milked!"))
 
 				return
 			end
@@ -110,7 +129,7 @@ mobs:register_mob("mobs_animal:cow", {
 
 				pos.y = pos.y + 0.5
 
-				minetest.add_item(pos, {name = ret_item})
+				core.add_item(pos, {name = ret_item})
 			end
 
 			self.gotten = true -- milked
@@ -157,27 +176,27 @@ mobs:alias_mob("mobs:cow", "mobs_animal:cow")
 
 -- bucket of milk
 
-minetest.register_craftitem(":mobs:bucket_milk", {
+core.register_craftitem(":mobs:bucket_milk", {
 	description = S("Bucket of Milk"),
 	inventory_image = "mobs_bucket_milk.png",
 	stack_max = 1,
-	on_use = minetest.item_eat(8, "bucket:bucket_empty"),
+	on_use = core.item_eat(8, "bucket:bucket_empty"),
 	groups = {food_milk = 1, drink = 1}
 })
 
 mobs.add_eatable("mobs:bucket_milk", 8)
 
 -- glass of milk and recipes
-minetest.register_craftitem(":mobs:glass_milk", {
+core.register_craftitem(":mobs:glass_milk", {
 	description = S("Glass of Milk"),
 	inventory_image = "mobs_glass_milk.png",
-	on_use = minetest.item_eat(2, "vessels:drinking_glass"),
+	on_use = core.item_eat(2, "vessels:drinking_glass"),
 	groups = {food_milk_glass = 1, vessel = 1, drink = 1}
 })
 
 mobs.add_eatable("mobs:glass_milk", 2)
 
-minetest.register_craft({
+core.register_craft({
 	output = "mobs:glass_milk 4",
 	recipe = {
 		{"vessels:drinking_glass", "vessels:drinking_glass"},
@@ -187,7 +206,7 @@ minetest.register_craft({
 	replacements = {{"mobs:bucket_milk", "bucket:bucket_empty"}}
 })
 
-minetest.register_craft({
+core.register_craft({
 	output = "mobs:bucket_milk",
 	recipe = {
 		{"group:food_milk_glass", "group:food_milk_glass"},
@@ -201,10 +220,10 @@ minetest.register_craft({
 
 -- butter and recipe
 
-minetest.register_craftitem(":mobs:butter", {
+core.register_craftitem(":mobs:butter", {
 	description = S("Butter"),
 	inventory_image = "mobs_butter.png",
-	on_use = minetest.item_eat(1),
+	on_use = core.item_eat(1),
 	groups = {food_butter = 1}
 })
 
@@ -212,11 +231,11 @@ mobs.add_eatable("mobs:butter", 1)
 
 local salt_item = "default:sapling" -- some saplings are high in sodium
 
-if minetest.get_modpath("farming") and farming and farming.mod then
+if core.get_modpath("farming") and farming and farming.mod then
 	salt_item = "farming:salt"
 end
 
-minetest.register_craft({
+core.register_craft({
 	output = "mobs:butter",
 	recipe = {{"mobs:bucket_milk", salt_item}},
 	replacements = {{"mobs:bucket_milk", "bucket:bucket_empty"}}
@@ -224,16 +243,16 @@ minetest.register_craft({
 
 -- cheese wedge and recipe
 
-minetest.register_craftitem(":mobs:cheese", {
+core.register_craftitem(":mobs:cheese", {
 	description = S("Cheese"),
 	inventory_image = "mobs_cheese.png",
-	on_use = minetest.item_eat(4),
+	on_use = core.item_eat(4),
 	groups = {food_cheese = 1}
 })
 
 mobs.add_eatable("mobs:cheese", 4)
 
-minetest.register_craft({
+core.register_craft({
 	type = "cooking",
 	output = "mobs:cheese",
 	recipe = "mobs:bucket_milk",
@@ -243,7 +262,7 @@ minetest.register_craft({
 
 -- cheese block and recipe
 
-minetest.register_node(":mobs:cheeseblock", {
+core.register_node(":mobs:cheeseblock", {
 	description = S("Cheese Block"),
 	tiles = {"mobs_cheeseblock.png"},
 	is_ground_content = false,
@@ -251,7 +270,7 @@ minetest.register_node(":mobs:cheeseblock", {
 	sounds = mobs.node_sound_dirt_defaults()
 })
 
-minetest.register_craft({
+core.register_craft({
 	output = "mobs:cheeseblock",
 	recipe = {
 		{"group:food_cheese", "group:food_cheese", "group:food_cheese"},
@@ -260,30 +279,30 @@ minetest.register_craft({
 	}
 })
 
-minetest.register_craft({
+core.register_craft({
 	output = "mobs:cheese 9",
 	recipe = {{"mobs:cheeseblock"}}
 })
 
 -- check for either of the wood bucket mods and add compatibility
 
-local wb = minetest.get_modpath("wooden_bucket")
-local bw = minetest.get_modpath("bucket_wooden")
+local wb = core.get_modpath("wooden_bucket")
+local bw = core.get_modpath("bucket_wooden")
 
 if wb or bw then
 
 	local return_item = wb and "wooden_bucket:bucket_wood_empty"
 			or "bucket_wooden:bucket_empty"
 
-	minetest.register_craftitem(":mobs:wooden_bucket_milk", {
+	core.register_craftitem(":mobs:wooden_bucket_milk", {
 		description = S("Wooden Bucket of Milk"),
 		inventory_image = "mobs_wooden_bucket_milk.png",
 		stack_max = 1,
-		on_use = minetest.item_eat(8, return_item),
+		on_use = core.item_eat(8, return_item),
 		groups = {food_milk = 1, flammable = 3, drink = 1}
 	})
 
-	minetest.register_craft({
+	core.register_craft({
 		output = "mobs:glass_milk 4",
 		recipe = {
 			{"vessels:drinking_glass", "vessels:drinking_glass"},
@@ -293,7 +312,7 @@ if wb or bw then
 		replacements = {{"mobs:wooden_bucket_milk", return_item}}
 	})
 
-	minetest.register_craft({
+	core.register_craft({
 		output = "mobs:wooden_bucket_milk",
 		recipe = {
 			{"group:food_milk_glass", "group:food_milk_glass"},
@@ -305,7 +324,7 @@ if wb or bw then
 		}
 	})
 
-	minetest.register_craft({
+	core.register_craft({
 		output = "mobs:butter",
 		recipe = {{"mobs:wooden_bucket_milk", salt_item}},
 		replacements = {{"mobs:wooden_bucket_milk", return_item}}

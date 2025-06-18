@@ -6,23 +6,23 @@ local YMAX = otherworlds.settings.redsky_asteroids.YMAX or 7000
 
 -- Register on_generated function for this layer
 
-minetest.register_on_generated(
+core.register_on_generated(
 		otherworlds.asteroids.create_on_generated(YMIN, YMAX, {
 
-	c_air = minetest.get_content_id("air"),
-	c_obsidian = minetest.get_content_id("default:obsidian"),
-	c_stone = minetest.get_content_id("asteroid:redstone"),
-	c_cobble = minetest.get_content_id("air"),
-	c_gravel = minetest.get_content_id("asteroid:redgravel"),
-	c_dust = minetest.get_content_id("asteroid:reddust"),
-	c_ironore = minetest.get_content_id("asteroid:ironore"),
-	c_copperore = minetest.get_content_id("asteroid:copperore"),
-	c_goldore = minetest.get_content_id("asteroid:goldore"),
-	c_diamondore = minetest.get_content_id("asteroid:diamondore"),
-	c_meseore = minetest.get_content_id("asteroid:meseore"),
-	c_waterice = minetest.get_content_id("default:ice"),
-	c_atmos = minetest.get_content_id("asteroid:atmos"),
-	c_snowblock = minetest.get_content_id("default:snowblock")
+	c_air = core.get_content_id("air"),
+	c_obsidian = core.get_content_id("default:obsidian"),
+	c_stone = core.get_content_id("asteroid:redstone"),
+	c_cobble = core.get_content_id("air"),
+	c_gravel = core.get_content_id("asteroid:redgravel"),
+	c_dust = core.get_content_id("asteroid:reddust"),
+	c_ironore = core.get_content_id("asteroid:ironore"),
+	c_copperore = core.get_content_id("asteroid:copperore"),
+	c_goldore = core.get_content_id("asteroid:goldore"),
+	c_diamondore = core.get_content_id("asteroid:diamondore"),
+	c_meseore = core.get_content_id("asteroid:meseore"),
+	c_waterice = core.get_content_id("default:ice"),
+	c_atmos = core.get_content_id("asteroid:atmos"),
+	c_snowblock = core.get_content_id("default:snowblock")
 }))
 
 -- Deco code for grass and crystal
@@ -43,12 +43,12 @@ local random = math.random
 
 -- Add surface decoration
 
-minetest.register_on_generated(function(minp, maxp)
+core.register_on_generated(function(minp, maxp)
 
 	if minp.y < YMIN or maxp.y > YMAX then return end
 
 	local bpos, ran
-	local coal = minetest.find_nodes_in_area_under_air(minp, maxp, {"asteroid:redgravel"})
+	local coal = core.find_nodes_in_area_under_air(minp, maxp, {"asteroid:redgravel"})
 
 	for n = 1, #coal do
 
@@ -58,15 +58,15 @@ minetest.register_on_generated(function(minp, maxp)
 
 		if ran < 100 then -- grass
 
-			minetest.swap_node(bpos, {name = grass[random(#grass)]})
+			core.swap_node(bpos, {name = grass[random(#grass)]})
 
 		elseif ran >= 180 and ran <= 200 then -- other plants
 
-			minetest.swap_node(bpos, {name = flower[random(#flower)]})
+			core.swap_node(bpos, {name = flower[random(#flower)]})
 
 		elseif ran == TOPDECO then -- crystals
 
-			minetest.swap_node(bpos, {name = crystal[random(#crystal)]})
+			core.swap_node(bpos, {name = crystal[random(#crystal)]})
 		end
 	end
 end)

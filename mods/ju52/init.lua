@@ -36,8 +36,8 @@ function ju52.register_parts_method(self)
     cabin:set_attach(self.object,'',{x=0,y=0,z=40},{x=0,y=0,z=0})
     self.cabin = cabin
 
-    self.object:set_bone_position("aileron_base_r", {x=93.7994, y=3.35, z=-15.3002}, {x=180, y=-7.45, z=5.3})
-    self.object:set_bone_position("aileron_base_l", {x=-93.7994, y=3.35, z=-15.3002}, {x=180, y=7.54, z=-5.3})
+    --self.object:set_bone_position("aileron_base_r", {x=93.7994, y=3.35, z=-15.3002}, {x=180, y=-7.45, z=5.3})
+    --self.object:set_bone_position("aileron_base_l", {x=-93.7994, y=3.35, z=-15.3002}, {x=180, y=7.54, z=-5.3})
 
     self.object:set_bone_position("flap_base_l", {x=-49.2648, y=-1.41543, z=-12.0}, {x=0, y=185.4, z=0})
     self.object:set_bone_position("flap_base_r", {x=49.2648, y=-1.41543, z=-12.0}, {x=0, y=-185.4, z=0})

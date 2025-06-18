@@ -1,27 +1,25 @@
 
-local function await(p)
-    assert(coroutine.running(), "running inside a Promise.async() call")
-    local result = nil
-    local err = nil
-    local finished = false
+local function get_await(step)
+    return function(p)
+        assert(coroutine.running(), "running inside a Promise.async() call")
+        local result = nil
+        local err = nil
 
-    p:next(function(...)
-        result = {...}
-        finished = true
-    end, function(e)
-        err = e
-        finished = true
-    end)
+        -- add success/error/done callbacks
+        p:next(function(...)
+            result = {...}
+        end):catch(function(e)
+            err = e
+        end):finally(step)
 
-    while true do
-        if finished then
-            if err then
-                return nil, err
-            else
-                return unpack(result)
-            end
+        -- wait until the promise settles
+        coroutine.yield()
+
+        -- check if error or success
+        if err then
+            return nil, err
         else
-            coroutine.yield()
+            return unpack(result)
         end
     end
 end
@@ -36,15 +34,17 @@ function Promise.async(fn)
     local _ = nil
     step = function()
         if coroutine.status(t) == "suspended" then
+            local await = get_await(step)
             cont, result = coroutine.resume(t, await)
             if not cont then
                 -- error in first async() level
                 p:reject(result)
                 return
             end
-            minetest.after(0, step)
-        else
-            -- last result from resume was the return value
+        end
+
+        if coroutine.status(t) == "dead" then
+            -- async function exited
             p:resolve(result)
         end
     end

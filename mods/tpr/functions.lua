@@ -487,6 +487,12 @@ end
 
 -- Teleport Request System
 function tp.tpr_send(sender, receiver)
+	-- Disallow entering inaccessible areas. (Teleportation includes a position offset of 1)
+	if sender == receiver then
+		send_message(sender, S("You cannot send a teleport request to yourself."))
+		return
+	end
+
 	-- Check if the sender is muted
 	if muted_players[receiver] == sender and not minetest.check_player_privs(sender, {server = true}) then
 		send_message(sender, S("Cannot send request to @1 (you have been muted).", receiver))
@@ -588,6 +594,12 @@ function tp.tpr_send(sender, receiver)
 end
 
 function tp.tphr_send(sender, receiver)
+	-- Disallow entering inaccessible areas. (Teleportation includes a position offset of 1)
+	if sender == receiver then
+		send_message(sender, S("You cannot send a teleport request to yourself."))
+		return
+	end
+
 	-- Check if the sender is muted
 	if muted_players[receiver] == sender and not minetest.check_player_privs(sender, {server = true}) then
 		send_message(sender, S("Cannot send request to @1 (you have been muted).", receiver))

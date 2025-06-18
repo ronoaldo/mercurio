@@ -500,6 +500,7 @@ GNU Lesser General Public License v2.1 or later
 - x_bows_arrow_mese.png
 - x_bows_arrow_diamond.png
 - x_bows_target.png
+- x_bows_settings_btn.png -- Derived from texture Luanti by Zughy (CC-BY-SA-4.0)
 
 ### Sounds
 

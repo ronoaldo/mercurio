@@ -11,6 +11,9 @@ Replacing Protector name '@1' with '@2'=Reemplazando el nombre del protector '@1
 Show protected areas of your nearby protectors=Mostrar áreas protegidas de sus protectores cercanos
 Protector Names to remove: @1=Nombres de protectores para eliminar: @1
 Name List Reset=Restablecer lista de nombres
+Invalid player name!=
+Player name too long=
+Player not found.=
 
 ### doors_chest.lua ###
 Protected Wooden Door=Puerta de madera protegida
@@ -30,6 +33,7 @@ Members:=Miembros:
 Close=Cerrar
 Protection located at: @1=Protección ubicada en: @1
 Members: @1.=Miembros: @1.
+Allow faction access=
 This area is not protected.=Esta área no está protegida.
 You can build here.=Puedes construir aquí.
 Overlaps into above players protected area=Se superpone en el área protegida de los jugadores anteriores
@@ -40,11 +44,6 @@ Protection Logo=Logotipo de la protección
 Spawn @1 has been protected up to a @2 block radius.=Spawn @1 ha sido protegido hasta un radio de bloque @2.
 This area is owned by @1=Esta área es propiedad de @1
 
-### pvp.lua ###
-[Protector] on_punchplayer called with nil objects=[Protector] on_punchplayer llamado con objetos nulos.
-[Protector] pvp_protect not active, update your version of Minetest=[Protector] pvp_protect no está activo, actualiza tu versión de Minetest
-[Protector] pvp_protect is disabled=[Protector] pvp_protect está deshabilitado
-
 ### hud.lua ###
 Owner: @1=Propietario: @1
 
@@ -53,3 +52,6 @@ Protector Placer Tool (stand near protector, face direction and use)=Herramienta
 Protector already in place!=¡El protector ya está en este lugar!
 No protectors available to place!=¡No hay protectores disponibles para colocar!
 Protector placed at @1=Protector colocado en @1
+Out of bounds!=
+Cannot place protector, already protected at @1=
+Cannot place protector, container at @1=

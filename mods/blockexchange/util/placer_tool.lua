@@ -15,11 +15,6 @@ minetest.register_tool("blockexchange:place", {
         local playername = player:get_player_name()
         local controls = player:get_player_control()
 
-        if blockexchange.get_job_context(playername) then
-            minetest.chat_send_player(playername, "There is a job already running")
-            return
-        end
-
         local meta = itemstack:get_meta()
         local username = meta:get_string("username")
         local schemaname = meta:get_string("schemaname")
@@ -37,18 +32,13 @@ minetest.register_tool("blockexchange:place", {
             -- force-enable player-hud
             blockexchange.set_player_hud(playername, true)
 
-            local promise, ctx = blockexchange.load(playername, pos1, username, schemaname)
-            blockexchange.set_job_context(playername, ctx)
-
-            promise:next(function(result)
+            blockexchange.load(playername, pos1, username, schemaname):next(function(result)
                 minetest.chat_send_player(
                     playername,
                     "Download complete with " .. result.schema.total_parts .. " parts"
                 )
-                blockexchange.set_job_context(playername, nil)
             end):catch(function(err_msg)
                 minetest.chat_send_player(playername, minetest.colorize("#ff0000", err_msg))
-                blockexchange.set_job_context(playername, nil)
             end)
         end
     end,

@@ -3,7 +3,7 @@
 
 otherworlds = {}
 
-local modpath = minetest.get_modpath("other_worlds") .. "/"
+local modpath = core.get_modpath("other_worlds") .. "/"
 
 dofile(modpath .. "settings.lua")
 dofile(modpath .. "nodes.lua")

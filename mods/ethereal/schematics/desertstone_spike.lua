@@ -1,6 +1,6 @@
 
 -- simple fix for Flux's stairsplus mod as it breaks compatibility
-local nodname = minetest.get_modpath("stairsplus")
+local nodname = core.get_modpath("stairsplus")
 		and "default:stair_desert_cobble_outer" or "stairs:stair_outer_desert_cobble"
 
 local _ = {name = "air", param1 = 0}

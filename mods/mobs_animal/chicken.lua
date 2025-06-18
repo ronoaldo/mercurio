@@ -1,5 +1,5 @@
 
-local S = minetest.get_translator("mobs_animal")
+local S = core.get_translator("mobs_animal")
 
 -- Chicken by JK Murray and Sirrobzeroone
 
@@ -84,13 +84,13 @@ mobs:register_mob("mobs_animal:chicken", {
 
 		if math.random(100) == 1 then
 
-			minetest.add_item(pos, "mobs:egg")
+			core.add_item(pos, "mobs:egg")
 
-			minetest.sound_play("default_place_node_hard",
+			core.sound_play("default_place_node_hard",
 					{pos = pos, gain = 1.0, max_hear_distance = 5}, true)
 
 		elseif math.random(100) < 3 then
-			minetest.add_item(pos, "mobs:chicken_feather")
+			core.add_item(pos, "mobs:chicken_feather")
 		end
 	end
 })
@@ -101,7 +101,7 @@ if not mobs.custom_spawn_animal then
 
 	local spawn_on = {"default:dirt_with_grass"}
 
-	if minetest.get_modpath("ethereal") then
+	if core.get_modpath("ethereal") then
 		spawn_on = {"ethereal:bamboo_dirt", "ethereal:prairie_dirt"}
 	end
 
@@ -136,7 +136,7 @@ mobs:register_arrow("mobs_animal:egg_entity", {
 
 	hit_player = function(self, player)
 
-		player:punch(minetest.get_player_by_name(self.playername) or self.object, 1.0, {
+		player:punch(core.get_player_by_name(self.playername) or self.object, 1.0, {
 			full_punch_interval = 1.0,
 			damage_groups = {fleshy = 1}
 		}, nil)
@@ -156,10 +156,10 @@ mobs:register_arrow("mobs_animal:egg_entity", {
 
 		pos.y = pos.y + 1
 
-		local nod = minetest.get_node_or_nil(pos)
+		local nod = core.get_node_or_nil(pos)
 
-		if not nod or not minetest.registered_nodes[nod.name]
-		or minetest.registered_nodes[nod.name].walkable == true then
+		if not nod or not core.registered_nodes[nod.name]
+		or core.registered_nodes[nod.name].walkable == true then
 			return
 		end
 
@@ -182,10 +182,10 @@ local mobs_shoot_egg = function (item, player, pointed_thing)
 
 	local playerpos = player:get_pos()
 
-	minetest.sound_play("default_place_node_hard", 
+	core.sound_play("default_place_node_hard", 
 			{pos = playerpos, gain = 1.0, max_hear_distance = 5}, true)
 
-	local obj = minetest.add_entity({
+	local obj = core.add_entity({
 		x = playerpos.x,
 		y = playerpos.y +1.5,
 		z = playerpos.z
@@ -216,7 +216,7 @@ end
 
 -- egg
 
-minetest.register_node(":mobs:egg", {
+core.register_node(":mobs:egg", {
 	description = S("Chicken Egg"),
 	tiles = {"mobs_chicken_egg.png"},
 	inventory_image  = "mobs_chicken_egg.png",
@@ -235,7 +235,7 @@ minetest.register_node(":mobs:egg", {
 	sounds = mobs.node_sound_defaults(),
 
 	after_place_node = function(pos, placer, itemstack)
-		minetest.set_node(pos, {name = "mobs:egg", param2 = 1})
+		core.set_node(pos, {name = "mobs:egg", param2 = 1})
 	end,
 
 	on_use = mobs_shoot_egg
@@ -243,16 +243,16 @@ minetest.register_node(":mobs:egg", {
 
 -- fried egg and recipe
 
-minetest.register_craftitem(":mobs:chicken_egg_fried", {
+core.register_craftitem(":mobs:chicken_egg_fried", {
 	description = S("Fried Egg"),
 	inventory_image = "mobs_chicken_egg_fried.png",
-	on_use = minetest.item_eat(2),
+	on_use = core.item_eat(2),
 	groups = {food_egg_fried = 1}
 })
 
 mobs.add_eatable("mobs:chicken_egg_fried", 2)
 
-minetest.register_craft({
+core.register_craft({
 	type  =  "cooking",
 	recipe  = "mobs:egg",
 	output = "mobs:chicken_egg_fried"
@@ -260,10 +260,10 @@ minetest.register_craft({
 
 -- raw chicken
 
-minetest.register_craftitem(":mobs:chicken_raw", {
+core.register_craftitem(":mobs:chicken_raw", {
 	description = S("Raw Chicken"),
 	inventory_image = "mobs_chicken_raw.png",
-	on_use = minetest.item_eat(2),
+	on_use = core.item_eat(2),
 	groups = {food_meat_raw = 1, food_chicken_raw = 1}
 })
 
@@ -271,16 +271,16 @@ mobs.add_eatable("mobs:chicken_raw", 2)
 
 -- cooked chicken and recipe
 
-minetest.register_craftitem(":mobs:chicken_cooked", {
+core.register_craftitem(":mobs:chicken_cooked", {
 	description = S("Cooked Chicken"),
 	inventory_image = "mobs_chicken_cooked.png",
-	on_use = minetest.item_eat(6),
+	on_use = core.item_eat(6),
 	groups = {food_meat = 1, food_chicken = 1}
 })
 
 mobs.add_eatable("mobs:chicken_cooked", 6)
 
-minetest.register_craft({
+core.register_craft({
 	type  =  "cooking",
 	recipe  = "mobs:chicken_raw",
 	output = "mobs:chicken_cooked"
@@ -288,10 +288,10 @@ minetest.register_craft({
 
 -- feather and fuel
 
-minetest.register_craftitem(":mobs:chicken_feather", {
+core.register_craftitem(":mobs:chicken_feather", {
 	description = S("Feather"),
 	inventory_image = "mobs_chicken_feather.png",
 	groups = {flammable = 2, feather = 1}
 })
 
-minetest.register_craft({type = "fuel", recipe = "mobs:chicken_feather", burntime = 1})
+core.register_craft({type = "fuel", recipe = "mobs:chicken_feather", burntime = 1})

@@ -1,5 +1,5 @@
 
-local S = minetest.get_translator("mobs_monster")
+local S = core.get_translator("mobs_monster")
 
 -- custom dirt monster type
 
@@ -8,7 +8,8 @@ local dirt_types = {
 	{	nodes = {"ethereal:dry_dirt"},
 		skins = {"mobs_dirt_monster3.png"},
 		drops = {
-			{name = "ethereal:dry_dirt", chance = 1, min = 0, max = 2}
+			{name = "ethereal:dry_dirt", chance = 1, min = 0, max = 2},
+			{name = "ethereal:charcoal_lump", chance = 2, min = 0, max = 1}
 		}
 	}
 }
@@ -40,7 +41,8 @@ mobs:register_mob("mobs_monster:dirt_monster", {
 	run_velocity = 3,
 	jump = true,
 	drops = {
-		{name = "default:dirt", chance = 1, min = 0, max = 2}
+		{name = "default:dirt", chance = 1, min = 0, max = 2},
+		{name = "default:clay_lump", chance = 2, min = 0, max = 1}
 	},
 	water_damage = 1,
 	lava_damage = 5,
@@ -64,7 +66,7 @@ mobs:register_mob("mobs_monster:dirt_monster", {
 
 			tmp = dirt_types[n]
 
-			if minetest.find_node_near(pos, 1, tmp.nodes) then
+			if core.find_node_near(pos, 1, tmp.nodes) then
 
 				self.base_texture = tmp.skins
 				self.object:set_properties({textures = tmp.skins})

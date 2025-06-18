@@ -1,14 +1,14 @@
 
-local S = minetest.get_translator("ethereal")
+local S = core.get_translator("ethereal")
 
 -- wild onion
 
-minetest.register_craftitem("ethereal:wild_onion_plant", {
+core.register_craftitem("ethereal:wild_onion_plant", {
 	description = S("Wild Onion"),
 	inventory_image = "ethereal_wild_onion.png",
 	wield_image = "ethereal_wild_onion.png",
 	groups = {food_onion = 1},
-	on_use = minetest.item_eat(2),
+	on_use = core.item_eat(2),
 
 	on_place = function(itemstack, placer, pointed_thing)
 		return farming.place_seed(itemstack, placer, pointed_thing, "ethereal:wild_onion_1")
@@ -40,17 +40,17 @@ local def = {
 
 --stage 1
 
-minetest.register_node("ethereal:onion_1", table.copy(def))
+core.register_node("ethereal:onion_1", table.copy(def))
 
 --stage 2
 
 def.tiles = {"ethereal_wild_onion_2.png"}
-minetest.register_node("ethereal:onion_2", table.copy(def))
+core.register_node("ethereal:onion_2", table.copy(def))
 
 --stage 3
 
 def.tiles = {"ethereal_wild_onion_3.png"}
-minetest.register_node("ethereal:onion_3", table.copy(def))
+core.register_node("ethereal:onion_3", table.copy(def))
 
 --stage 4
 
@@ -58,10 +58,10 @@ def.tiles = {"ethereal_wild_onion_4.png"}
 def.drop = {
 	items = {
 		{items = {"ethereal:wild_onion_plant"}, rarity = 1},
-		{items = {"ethereal:wild_onion_plant 2"}, rarity = 3},
+		{items = {"ethereal:wild_onion_plant"}, rarity = 3},
 	}
 }
-minetest.register_node("ethereal:onion_4", table.copy(def))
+core.register_node("ethereal:onion_4", table.copy(def))
 
 --stage 5
 
@@ -73,10 +73,11 @@ def.selection_box = {
 def.drop = {
 	items = {
 		{items = {"ethereal:wild_onion_plant 2"}, rarity = 1},
-		{items = {"ethereal:wild_onion_plant 3"}, rarity = 2},
+		{items = {"ethereal:wild_onion_plant"}, rarity = 2},
+		{items = {"ethereal:wild_onion_plant"}, rarity = 3}
 	}
 }
-minetest.register_node("ethereal:onion_5", table.copy(def))
+core.register_node("ethereal:onion_5", table.copy(def))
 
 -- register for use with farming redo growth routines
 
@@ -91,7 +92,7 @@ if farming and farming.mod and farming.mod == "redo" then
 		steps = 5
 	}
 else
-	minetest.register_abm({
+	core.register_abm({
 		label = "Ethereal grow onion",
 		nodenames = {
 			"ethereal:onion_1", "ethereal:onion_2", "ethereal:onion_3",
@@ -107,21 +108,21 @@ else
 			-- are we on wet soil?
 			pos.y = pos.y - 1
 
-			if minetest.get_item_group(minetest.get_node(pos).name, "soil") < 3 then
+			if core.get_item_group(core.get_node(pos).name, "soil") < 3 then
 				return
 			end
 
 			pos.y = pos.y + 1
 
 			-- do we have enough light?
-			local light = minetest.get_node_light(pos) or 0 ; if light < 13 then return end
+			local light = core.get_node_light(pos) or 0 ; if light < 13 then return end
 
 			-- grow to next stage
 			local num = node.name:split("_")[2]
 
 			node.name = "ethereal:onion_" .. tonumber(num + 1)
 
-			minetest.swap_node(pos, node)
+			core.swap_node(pos, node)
 		end
 	})
 end

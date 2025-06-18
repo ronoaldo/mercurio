@@ -10,7 +10,7 @@ Without any other add-ons, this mod upgrades only the default wooden and steel s
 
 ## Text formatting
 
-In general, text is rendered exactly as-written, left-to-right, top to bottom, without any translations or modifications.  The standard fonts support 7-bit ASCII as well as Cyrllic.
+In general, text is rendered exactly as-written, left-to-right, top to bottom, without any translations or modifications to a maximum of 400 chars.  The standard fonts support 7-bit ASCII as well as Cyrllic.
 
 That said, there are some basic text formatting options:
 

@@ -15,7 +15,7 @@ local function register_biome(enabled, def)
 
 	if def.y_min > 0 then def.vertical_blend = 1 end
 
-	minetest.register_biome(def)
+	core.register_biome(def)
 
 --[[print('{"name": "' .. def.name .. '", "heat_point": ' ..def.heat_point .. ', "humidity_point": '
 	.. def.humidity_point .. ', "y_min": ' .. def.y_min .. ', "y_max": ' .. def.y_max .. '}')]]
@@ -24,7 +24,7 @@ end
 
 -- old biome setting (when enabled old heat/humidity values are used)
 
-local old = minetest.settings:get_bool("ethereal.old_biomes")
+local old = core.settings:get_bool("ethereal.old_biomes")
 
 -- mountain
 

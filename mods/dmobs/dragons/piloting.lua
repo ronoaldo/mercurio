@@ -32,7 +32,7 @@ dmobs.dragon.ride = function(self, clicker)
 			if inv:room_for_item("main", "mobs:saddle") then
 				inv:add_item("main", "mobs:saddle")
 			else
-				minetest.add_item(clicker:get_pos(), "mobs:saddle")
+				core.add_item(clicker:get_pos(), "mobs:saddle")
 			end
 
 		elseif not self.driver then

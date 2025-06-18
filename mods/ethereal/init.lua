@@ -8,7 +8,7 @@
 
 -- global
 
-ethereal = {version = "20241014"}
+ethereal = {version = "20250209"}
 
 -- setting helper
 
@@ -17,11 +17,11 @@ local function setting(stype, name, default)
 	local value
 
 	if stype == "bool" then
-		value = minetest.settings:get_bool("ethereal." .. name)
+		value = core.settings:get_bool("ethereal." .. name)
 	elseif stype == "string" then
-		value = minetest.settings:get("ethereal." .. name)
+		value = core.settings:get("ethereal." .. name)
 	elseif stype == "number" then
-		value = tonumber(minetest.settings:get("ethereal." .. name))
+		value = tonumber(core.settings:get("ethereal." .. name))
 	end
 
 	if value == nil then value = default end
@@ -71,33 +71,33 @@ setting("number", "logs", 1)
 setting("bool", "wood_rotate", true)
 
 
-local path = minetest.get_modpath("ethereal")
+local path = core.get_modpath("ethereal")
 
--- Load settings.conf file if found [DEPRECATED]
+--[[ Load settings.conf file if found [DEPRECATED]
 
 local input = io.open(path.."/settings.conf", "r")
 
 if input then
 	dofile(path .. "/settings.conf") ; input:close() ; input = nil
-end
+end ]]
 
 -- Falling node function
 
-ethereal.check_falling = minetest.check_for_falling or nodeupdate
+ethereal.check_falling = core.check_for_falling or nodeupdate
 
 -- creative check
 
-local creative_mode_cache = minetest.settings:get_bool("creative_mode")
+local creative_mode_cache = core.settings:get_bool("creative_mode")
 
 function ethereal.check_creative(name)
-	return creative_mode_cache or minetest.check_player_privs(name, {creative = true})
+	return creative_mode_cache or core.check_player_privs(name, {creative = true})
 end
 
 -- helper function to add {eatable} group to food items
 
 function ethereal.add_eatable(item, hp)
 
-	local def = minetest.registered_items[item]
+	local def = core.registered_items[item]
 
 	if def then
 
@@ -105,13 +105,13 @@ function ethereal.add_eatable(item, hp)
 
 		groups.eatable = hp ; groups.flammable = 2
 
-		minetest.override_item(item, {groups = groups})
+		core.override_item(item, {groups = groups})
 	end
 end
 
 -- strawberry check and load
 
-if minetest.get_modpath("farming") and farming.mod and farming.mod == "redo" then
+if core.get_modpath("farming") and farming.mod and farming.mod == "redo" then
 	-- farming redo already has strawberry included
 else
 	dofile(path .. "/strawberry.lua")
@@ -133,7 +133,7 @@ dofile(path .. "/extra.lua")
 dofile(path .. "/sealife.lua")
 dofile(path .. "/fences.lua")
 
-if minetest.settings:get_bool("ethereal.clear_default_biomes", true) then
+if core.settings:get_bool("ethereal.clear_default_biomes", true) then
 	dofile(path .. "/biomes_init.lua")
 end
 
@@ -152,23 +152,23 @@ end
 
 -- add lucky blocks if mod active
 
-if minetest.get_modpath("lucky_block") then
+if core.get_modpath("lucky_block") then
 	dofile(path .. "/lucky_block.lua")
 end
 
 -- Set bonemeal aliases
 
-if minetest.get_modpath("bonemeal") then
-	minetest.register_alias("ethereal:bone", "bonemeal:bone")
-	minetest.register_alias("ethereal:bonemeal", "bonemeal:bonemeal")
+if core.get_modpath("bonemeal") then
+	core.register_alias("ethereal:bone", "bonemeal:bone")
+	core.register_alias("ethereal:bonemeal", "bonemeal:bonemeal")
 else -- or return to where it came from
-	minetest.register_alias("ethereal:bone", "default:dirt")
-	minetest.register_alias("ethereal:bonemeal", "default:dirt")
+	core.register_alias("ethereal:bone", "default:dirt")
+	core.register_alias("ethereal:bonemeal", "default:dirt")
 end
 
 -- ambience lite
 
-if minetest.get_modpath("ambience") then
+if core.get_modpath("ambience") then
 	dofile(path .. "/ambience.lua")
 end
 

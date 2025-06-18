@@ -1,5 +1,5 @@
 
-local S = minetest.get_translator("mobs_animal")
+local S = core.get_translator("mobs_animal")
 
 -- Rat by KPavel and PilzAdam (B3D model by sirrobzeroone)
 
@@ -93,16 +93,16 @@ mobs:alias_mob("mobs:rat", "mobs_animal:rat")
 
 -- cooked rat, yummy!
 
-minetest.register_craftitem(":mobs:rat_cooked", {
+core.register_craftitem(":mobs:rat_cooked", {
 	description = S("Cooked Rat"),
 	inventory_image = "mobs_cooked_rat.png",
-	on_use = minetest.item_eat(3),
+	on_use = core.item_eat(3),
 	groups = {food_rat = 1}
 })
 
 mobs.add_eatable("mobs:rat_cooked", 3)
 
-minetest.register_craft({
+core.register_craft({
 	type = "cooking",
 	output = "mobs:rat_cooked",
 	recipe = "mobs_animal:rat",

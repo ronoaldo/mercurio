@@ -168,7 +168,8 @@ function Promise.new(callback)
   setmetatable(instance, mt)
 
   if callback then
-    callback(
+    -- catch error in first callback function
+    local success, err = pcall(callback,
       function(value)
         resolve(instance, value)
       end,
@@ -176,6 +177,10 @@ function Promise.new(callback)
         reject(instance, reason)
       end
     )
+
+    if not success then
+      return Promise.reject(err)
+    end
   end
 
   return instance
@@ -185,67 +190,14 @@ function prototype:catch(callback)
   return self:next(nil, callback)
 end
 
+function prototype:finally(callback)
+  return self:next(callback, callback)
+end
+
 function prototype:resolve(value)
   fulfill(self, value)
 end
 
 function prototype:reject(reason)
   reject(self, reason)
-end
-
--- resolve when all promises complete
-function Promise.all(...)
-  local promises = {...}
-  local results = {}
-  local state = State.FULFILLED
-  local remaining = #promises
-
-  local promise = Promise.new()
-
-  local check_finished = function()
-    if remaining > 0 then
-      return
-    end
-    transition(promise, state, results)
-  end
-
-  for i,p in ipairs(promises) do
-    p:next(
-      function(value)
-        results[i] = value
-        remaining = remaining - 1
-        check_finished()
-      end,
-      function(value)
-        results[i] = value
-        remaining = remaining - 1
-        state = State.REJECTED
-        check_finished()
-      end
-    )
-  end
-
-  check_finished()
-
-  return promise
-end
-
--- resolve with first promise to complete
-function Promise.race(...)
-  local promises = {...}
-  local promise = Promise.new()
-
-  Promise.all(...):next(nil, function(value)
-    reject(promise, value)
-  end)
-
-  local success = function(value)
-    fulfill(promise, value)
-  end
-
-  for _,p in ipairs(promises) do
-    p:next(success)
-  end
-
-  return promise
 end

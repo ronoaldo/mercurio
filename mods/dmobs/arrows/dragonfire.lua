@@ -3,7 +3,7 @@
 function dmobs.register_fire(fname, texture, dmg, replace_node, explode,
 		ice, variance, size)
 
-	minetest.register_entity(fname, {
+	core.register_entity(fname, {
 
 		initial_properties = {
 
@@ -16,12 +16,12 @@ function dmobs.register_fire(fname, texture, dmg, replace_node, explode,
 
 		on_step = function(self, obj, pos)
 
-			local remove = minetest.after(2, function()
+			local remove = core.after(2, function()
 				self.object:remove()
 			end)
 
 			local pos = self.object:get_pos()
-			local objs = minetest.get_objects_inside_radius({
+			local objs = core.get_objects_inside_radius({
 				x = pos.x, y = pos.y, z = pos.z}, 2)
 
 			for k, obj in pairs(objs) do
@@ -52,21 +52,21 @@ function dmobs.register_fire(fname, texture, dmg, replace_node, explode,
 
 						local p = {x = pos.x + dx, y = pos.y, z = pos.z + dz}
 						local t = {x = pos.x + dx, y = pos.y + dy, z = pos.z + dz}
-						local n = minetest.get_node(p).name
+						local n = core.get_node(p).name
 
 						if n ~= fname and n ~="default:dirt_with_grass"
 						and n ~="default:dirt_with_dry_grass"
 						and n ~="default:stone" then
 
-							if minetest.registered_nodes[n].groups.flammable then
+							if core.registered_nodes[n].groups.flammable then
 
-								minetest.set_node(t, {name=replace_node})
+								core.set_node(t, {name=replace_node})
 								self.object:remove()
 								return
 							end
 
 							if ice and n == "default:water_source" then
-								minetest.set_node(t, {name="default:ice"})
+								core.set_node(t, {name="default:ice"})
 								self.object:remove()
 							end
 						end
@@ -78,7 +78,7 @@ function dmobs.register_fire(fname, texture, dmg, replace_node, explode,
 
 			if not apos then return end
 
-			minetest.add_particlespawner({
+			core.add_particlespawner({
 				amount = 6,
 				time = 0.3,
 				minpos = {x = apos.x - variance, y = apos.y - variance, z = apos.z - variance},

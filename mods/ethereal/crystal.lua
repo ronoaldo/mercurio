@@ -1,15 +1,15 @@
 
-local S = minetest.get_translator("ethereal")
+local S = core.get_translator("ethereal")
 
 -- Crystal Ingot and recipe
 
-minetest.register_craftitem("ethereal:crystal_ingot", {
+core.register_craftitem("ethereal:crystal_ingot", {
 	description = S("Crystal Ingot"),
 	inventory_image = "ethereal_crystal_ingot.png",
 	wield_image = "ethereal_crystal_ingot.png"
 })
 
-minetest.register_craft({
+core.register_craft({
 	output = "ethereal:crystal_ingot",
 	recipe = {
 		{"default:mese_crystal", "ethereal:crystal_spike"},
@@ -21,7 +21,7 @@ minetest.register_craft({
 
 -- Crystal Spike (Hurts if you touch it)
 
-minetest.register_node("ethereal:crystal_spike", {
+core.register_node("ethereal:crystal_spike", {
 	description = S("Crystal Spike"),
 	drawtype = "plantlike",
 	tiles = {"ethereal_crystal_spike.png"},
@@ -51,7 +51,7 @@ minetest.register_node("ethereal:crystal_spike", {
 			return
 		end
 
-		local objs = minetest.get_objects_inside_radius(pos, 0.8)
+		local objs = core.get_objects_inside_radius(pos, 0.8)
 
 		if not objs or #objs ~= 2 then return end
 
@@ -79,7 +79,7 @@ minetest.register_node("ethereal:crystal_spike", {
 			mese:remove()
 			crystal:remove()
 
-			minetest.add_item(pos, "ethereal:crystal_ingot")
+			core.add_item(pos, "ethereal:crystal_ingot")
 
 			return false
 		end
@@ -88,7 +88,7 @@ minetest.register_node("ethereal:crystal_spike", {
 
 -- Crystal Block and recipe
 
-minetest.register_node("ethereal:crystal_block", {
+core.register_node("ethereal:crystal_block", {
 	description = S("Crystal Block"),
 	tiles = {"ethereal_crystal_block.png"},
 	light_source = 9,
@@ -97,7 +97,7 @@ minetest.register_node("ethereal:crystal_block", {
 	sounds = default.node_sound_glass_defaults()
 })
 
-minetest.register_craft({
+core.register_craft({
 	output = "ethereal:crystal_block",
 	recipe = {
 		{"ethereal:crystal_ingot", "ethereal:crystal_ingot", "ethereal:crystal_ingot"},
@@ -106,14 +106,14 @@ minetest.register_craft({
 	}
 })
 
-minetest.register_craft({
+core.register_craft({
 	output = "ethereal:crystal_ingot 9",
 	recipe = {{"ethereal:crystal_block"}}
 })
 
 -- Crystal Sword (Powerful wee beastie)
 
-minetest.register_tool("ethereal:sword_crystal", {
+core.register_tool("ethereal:sword_crystal", {
 	description = S("Crystal Sword"),
 	inventory_image = "ethereal_crystal_sword.png",
 	wield_image = "ethereal_crystal_sword.png",
@@ -131,7 +131,7 @@ minetest.register_tool("ethereal:sword_crystal", {
 	sound = {breaks = "default_tool_breaks"}
 })
 
-minetest.register_craft({
+core.register_craft({
 	output = "ethereal:sword_crystal",
 	recipe = {
 		{"ethereal:crystal_ingot"},
@@ -142,7 +142,7 @@ minetest.register_craft({
 
 -- Crystal Axe
 
-minetest.register_tool("ethereal:axe_crystal", {
+core.register_tool("ethereal:axe_crystal", {
 	description = S("Crystal Axe"),
 	inventory_image = "ethereal_crystal_axe.png",
 	wield_image = "ethereal_crystal_axe.png",
@@ -160,7 +160,7 @@ minetest.register_tool("ethereal:axe_crystal", {
 	sound = {breaks = "default_tool_breaks"}
 })
 
-minetest.register_craft({
+core.register_craft({
 	output = "ethereal:axe_crystal",
 	recipe = {
 		{"ethereal:crystal_ingot", "ethereal:crystal_ingot"},
@@ -169,7 +169,7 @@ minetest.register_craft({
 	}
 })
 
-minetest.register_craft({
+core.register_craft({
 	output = "ethereal:axe_crystal",
 	recipe = {
 		{"ethereal:crystal_ingot", "ethereal:crystal_ingot"},
@@ -180,7 +180,7 @@ minetest.register_craft({
 
 -- Crystal Pick (This will last a while)
 
-minetest.register_tool("ethereal:pick_crystal", {
+core.register_tool("ethereal:pick_crystal", {
 	description = S("Crystal Pickaxe"),
 	inventory_image = "ethereal_crystal_pick.png",
 	wield_image = "ethereal_crystal_pick.png",
@@ -198,7 +198,7 @@ minetest.register_tool("ethereal:pick_crystal", {
 	sound = {breaks = "default_tool_breaks"}
 })
 
-minetest.register_craft({
+core.register_craft({
 	output = "ethereal:pick_crystal",
 	recipe = {
 		{"ethereal:crystal_ingot", "ethereal:crystal_ingot", "ethereal:crystal_ingot"},
@@ -209,9 +209,9 @@ minetest.register_craft({
 
 -- backup old function and replace with new silk touch ability for crystal shovel
 
-local old_handle_node_drops = minetest.handle_node_drops
+local old_handle_node_drops = core.handle_node_drops
 
-function minetest.handle_node_drops(pos, drops, digger)
+function core.handle_node_drops(pos, drops, digger)
 
 	-- are we holding Crystal Shovel?
 	if not digger
@@ -219,10 +219,10 @@ function minetest.handle_node_drops(pos, drops, digger)
 		return old_handle_node_drops(pos, drops, digger)
 	end
 
-	local nn = minetest.get_node(pos).name
+	local nn = core.get_node(pos).name
 
-	if minetest.get_item_group(nn, "crumbly") == 0
-	or minetest.get_item_group(nn, "no_silktouch") == 1 then
+	if core.get_item_group(nn, "crumbly") == 0
+	or core.get_item_group(nn, "no_silktouch") == 1 then
 		return old_handle_node_drops(pos, drops, digger)
 	end
 
@@ -231,7 +231,7 @@ end
 
 -- Crystal Shovel
 
-minetest.register_tool("ethereal:shovel_crystal", {
+core.register_tool("ethereal:shovel_crystal", {
 	description = S("Crystal Shovel"),
 	inventory_image = "ethereal_crystal_shovel.png",
 	wield_image = "ethereal_crystal_shovel.png^[transformR90",
@@ -249,7 +249,7 @@ minetest.register_tool("ethereal:shovel_crystal", {
 	sound = {breaks = "default_tool_breaks"}
 })
 
-minetest.register_craft({
+core.register_craft({
 	output = "ethereal:shovel_crystal",
 	recipe = {
 		{"ethereal:crystal_ingot"},
@@ -260,7 +260,7 @@ minetest.register_craft({
 
 -- Crystal Gilly Staff (replenishes air supply when used)
 
-minetest.register_tool("ethereal:crystal_gilly_staff", {
+core.register_tool("ethereal:crystal_gilly_staff", {
 	description = S("Crystal Gilly Staff"),
 	inventory_image = "ethereal_crystal_gilly_staff.png",
 	wield_image = "ethereal_crystal_gilly_staff.png",
@@ -271,7 +271,7 @@ minetest.register_tool("ethereal:crystal_gilly_staff", {
 	end
 })
 
-minetest.register_craft({
+core.register_craft({
 	output = "ethereal:crystal_gilly_staff",
 	recipe = {
 		{"ethereal:green_moss", "ethereal:gray_moss", "ethereal:fiery_moss"},
@@ -282,11 +282,11 @@ minetest.register_craft({
 
 -- Add Toolranks mod support
 
-if minetest.get_modpath("toolranks") then
+if core.get_modpath("toolranks") then
 
 	local function add_tool(name, desc, afteruse) -- helper function
 
-		minetest.override_item(name, {
+		core.override_item(name, {
 			original_description = desc,
 			description = toolranks.create_description(desc, 0, 1),
 			after_use = afteruse and toolranks.new_afteruse

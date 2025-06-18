@@ -48,17 +48,16 @@ if not minetest.settings:get_bool('ju52.disable_craftitems') and minetest.get_mo
 	minetest.register_craft({
 		output = "ju52:wings",
 		recipe = {
-			{"wool:white", "farming:string", "wool:white"},
-			{"group:wood", "group:wood", "group:wood"},
-			{"wool:white", "farming:string", "wool:white"},
+		    {"default:tin_ingot", "default:tin_ingot", "default:tin_ingot"},
+		    {"default:steel_ingot", "default:steelblock", "default:steel_ingot"},
 		}
 	})
 	minetest.register_craft({
 		output = "ju52:body",
 		recipe = {
-			{"default:steel_ingot", "default:mese_block", "default:steel_ingot"},
-			{"group:wood", "group:wood", "group:wood"},
-			{"default:steel_ingot", "group:wood",   "default:steel_ingot"},
+			{"default:tin_ingot",   "default:tin_ingot",  "default:tin_ingot"},
+			{"default:steel_ingot", "default:steelblock", "default:steel_ingot"},
+			{"default:tin_ingot",   "default:tin_ingot",  "default:tin_ingot"},
 		}
 	})
 	minetest.register_craft({

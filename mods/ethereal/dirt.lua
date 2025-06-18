@@ -1,19 +1,19 @@
 
-local S = minetest.get_translator("ethereal")
+local S = core.get_translator("ethereal")
 
 local math_random = math.random
 
 -- override default dirt (to stop caves cutting away dirt)
 
-minetest.override_item("default:dirt", {is_ground_content = ethereal.cavedirt})
+core.override_item("default:dirt", {is_ground_content = ethereal.cavedirt})
 
 -- replace old green_dirt with default grass
 
-minetest.register_alias("ethereal:green_dirt", "default:dirt_with_grass")
+core.register_alias("ethereal:green_dirt", "default:dirt_with_grass")
 
 -- dry dirt
 
-minetest.register_node("ethereal:dry_dirt", {
+core.register_node("ethereal:dry_dirt", {
 	description = S("Dried Dirt"),
 	tiles = {"ethereal_dry_dirt.png"},
 	is_ground_content = ethereal.cavedirt,
@@ -21,7 +21,7 @@ minetest.register_node("ethereal:dry_dirt", {
 	sounds = default.node_sound_dirt_defaults()
 })
 
-minetest.register_craft({
+core.register_craft({
 	type = "cooking",
 	output = "ethereal:dry_dirt",
 	recipe = "default:dirt",
@@ -41,7 +41,7 @@ for n = 1, #dirts do
 	local desc = dirts[n]
 	local name = desc:lower()
 
-	minetest.register_node("ethereal:" .. name .. "_dirt", {
+	core.register_node("ethereal:" .. name .. "_dirt", {
 		description = S(desc .. " Dirt"),
 		tiles = {
 			"ethereal_grass_" .. name .. "_top.png", "default_dirt.png",
@@ -68,32 +68,32 @@ end
 
 local function flower_spread(pos, node)
 
-	if (minetest.get_node_light(pos) or 0) < 13 then return end
+	if (core.get_node_light(pos) or 0) < 13 then return end
 
 	local pos0 = {x = pos.x - 4, y = pos.y - 2, z = pos.z - 4}
 	local pos1 = {x = pos.x + 4, y = pos.y + 2, z = pos.z + 4}
-	local num = #minetest.find_nodes_in_area(pos0, pos1, "group:flora")
+	local num = #core.find_nodes_in_area(pos0, pos1, "group:flora")
 
 	-- stop flowers spreading too much just below top of map block
-	if minetest.find_node_near(pos, 2, "ignore") then return end
+	if core.find_node_near(pos, 2, "ignore") then return end
 
 	if num > 3 and node.name == "ethereal:crystalgrass" then
 
-		local grass = minetest.find_nodes_in_area_under_air(
+		local grass = core.find_nodes_in_area_under_air(
 			pos0, pos1, {"ethereal:crystalgrass"})
 
 		if #grass > 4
-		and not minetest.find_node_near(pos, 4, {"ethereal:crystal_spike"}) then
+		and not core.find_node_near(pos, 4, {"ethereal:crystal_spike"}) then
 
 			pos = grass[math_random(#grass)]
 
 			pos.y = pos.y - 1
 
-			if minetest.get_node(pos).name == "ethereal:crystal_dirt" then
+			if core.get_node(pos).name == "ethereal:crystal_dirt" then
 
 				pos.y = pos.y + 1
 
-				minetest.swap_node(pos, {name = "ethereal:crystal_spike"})
+				core.swap_node(pos, {name = "ethereal:crystal_spike"})
 			end
 		end
 
@@ -101,21 +101,21 @@ local function flower_spread(pos, node)
 
 	elseif num > 3 and node.name == "ethereal:dry_shrub" then
 
-		local grass = minetest.find_nodes_in_area_under_air(
+		local grass = core.find_nodes_in_area_under_air(
 			pos0, pos1, {"ethereal:dry_shrub"})
 
 		if #grass > 8
-		and not minetest.find_node_near(pos, 4, {"ethereal:fire_flower"}) then
+		and not core.find_node_near(pos, 4, {"ethereal:fire_flower"}) then
 
 			pos = grass[math_random(#grass)]
 
 			pos.y = pos.y - 1
 
-			if minetest.get_node(pos).name == "ethereal:fiery_dirt" then
+			if core.get_node(pos).name == "ethereal:fiery_dirt" then
 
 				pos.y = pos.y + 1
 
-				minetest.swap_node(pos, {name = "ethereal:fire_flower"})
+				core.swap_node(pos, {name = "ethereal:fire_flower"})
 			end
 		end
 
@@ -127,15 +127,15 @@ local function flower_spread(pos, node)
 
 	pos.y = pos.y - 1
 
-	local under = minetest.get_node(pos)
+	local under = core.get_node(pos)
 
 	-- make sure we have soil underneath
-	if minetest.get_item_group(under.name, "soil") == 0
+	if core.get_item_group(under.name, "soil") == 0
 	or under.name == "default:desert_sand" then
 		return
 	end
 
-	local seedling = minetest.find_nodes_in_area_under_air(pos0, pos1, {under.name})
+	local seedling = core.find_nodes_in_area_under_air(pos0, pos1, {under.name})
 
 	if #seedling > 0 then
 
@@ -143,9 +143,9 @@ local function flower_spread(pos, node)
 
 		pos.y = pos.y + 1
 
-		if (minetest.get_node_light(pos) or 0) < 13 then return end
+		if (core.get_node_light(pos) or 0) < 13 then return end
 
-		minetest.swap_node(pos, {name = node.name})
+		core.swap_node(pos, {name = node.name})
 	end
 end
 
@@ -158,11 +158,11 @@ local function grow_papyrus(pos, node)
 
 	pos.y = pos.y - 1
 
-	local nod = minetest.get_node_or_nil(pos)
+	local nod = core.get_node_or_nil(pos)
 
 	if not nod
-	or minetest.get_item_group(nod.name, "soil") < 1
-	or minetest.find_node_near(pos, 3, {"group:water"}) == nil then return end
+	or core.get_item_group(nod.name, "soil") < 1
+	or core.find_node_near(pos, 3, {"group:water"}) == nil then return end
 
 	if node.name == "ethereal:bamboo" then high = 8 end
 
@@ -170,12 +170,12 @@ local function grow_papyrus(pos, node)
 
 	local height = 0
 
-	while height < high and minetest.get_node(pos).name == node.name do
+	while height < high and core.get_node(pos).name == node.name do
 		height = height + 1
 		pos.y = pos.y + 1
 	end
 
-	nod = minetest.get_node_or_nil(pos)
+	nod = core.get_node_or_nil(pos)
 
 	if nod and nod.name == "air" and height < high then
 
@@ -183,10 +183,45 @@ local function grow_papyrus(pos, node)
 
 			ethereal.grow_bamboo_tree({x = pos.x, y = oripos, z = pos.z})
 		else
-			minetest.swap_node(pos, {name = node.name})
+			core.swap_node(pos, {name = node.name})
 		end
 	end
 
+end
+
+-- override gros cactus function
+
+function default.grow_cactus(pos, node)
+
+	if node.param2 >= 4 then return end
+
+	pos.y = pos.y - 1
+
+	if core.get_item_group(core.get_node(pos).name, "sand") == 0 then
+		return
+	end
+
+	pos.y = pos.y + 1
+
+	local height = 0
+
+	while node.name == "default:cactus" and height < 4 do
+		height = height + 1
+		pos.y = pos.y + 1
+		node = core.get_node(pos)
+	end
+
+	if height == 4 or node.name ~= "air" then return end
+
+	if core.get_node_light(pos) < 13 then return end
+
+	if math.random(100 - (height * 15)) == 1 then
+		core.set_node(pos, {name = "ethereal:cactus_flower"})
+	else
+		core.set_node(pos, {name = "default:cactus"})
+	end
+
+	return true
 end
 
 -- override abm function
@@ -195,7 +230,7 @@ local function override_abm(name, redef)
 
 	if not name or not redef then return end
 
-	for _, ab in pairs(minetest.registered_abms) do
+	for _, ab in pairs(core.registered_abms) do
 
 		if name == ab.label then
 
@@ -231,9 +266,9 @@ override_abm("Mushroom spread", {
 
 -- Add Red, Orange and Grey baked clay if mod isn't active
 
-if not minetest.get_modpath("bakedclay") then
+if not core.get_modpath("bakedclay") then
 
-	minetest.register_node(":bakedclay:red", {
+	core.register_node(":bakedclay:red", {
 		description = S("Red Baked Clay"),
 		tiles = {"baked_clay_red.png"},
 		groups = {cracky = 3, bakedclay = 1},
@@ -241,7 +276,7 @@ if not minetest.get_modpath("bakedclay") then
 		sounds = default.node_sound_stone_defaults()
 	})
 
-	minetest.register_node(":bakedclay:orange", {
+	core.register_node(":bakedclay:orange", {
 		description = S("Orange Baked Clay"),
 		tiles = {"baked_clay_orange.png"},
 		groups = {cracky = 3, bakedclay = 1},
@@ -249,7 +284,7 @@ if not minetest.get_modpath("bakedclay") then
 		sounds = default.node_sound_stone_defaults()
 	})
 
-	minetest.register_node(":bakedclay:grey", {
+	core.register_node(":bakedclay:grey", {
 		description = S("Grey Baked Clay"),
 		tiles = {"baked_clay_grey.png"},
 		groups = {cracky = 3, bakedclay = 1},
@@ -257,7 +292,7 @@ if not minetest.get_modpath("bakedclay") then
 		sounds = default.node_sound_stone_defaults()
 	})
 
-	minetest.register_node(":bakedclay:brown", {
+	core.register_node(":bakedclay:brown", {
 		description = S("Brown Baked Clay"),
 		tiles = {"baked_clay_brown.png"},
 		groups = {cracky = 3, bakedclay = 1},
@@ -268,7 +303,7 @@ end
 
 -- Quicksand (new style, sinking inside shows yellow effect
 
-minetest.register_node("ethereal:quicksand2", {
+core.register_node("ethereal:quicksand2", {
 	description = S("Quicksand"),
 	tiles = {"default_sand.png^[colorize:#00004F10"},
 	drawtype = "glasslike",
@@ -290,11 +325,11 @@ minetest.register_node("ethereal:quicksand2", {
 
 -- alias old quicksand to new
 
-minetest.register_alias("ethereal:quicksand", "ethereal:quicksand2")
+core.register_alias("ethereal:quicksand", "ethereal:quicksand2")
 
 -- craft quicksand
 
-minetest.register_craft({
+core.register_craft({
 	output = "ethereal:quicksand2",
 	recipe = {
 		{"group:sand", "group:sand", "group:sand"},
@@ -306,7 +341,7 @@ minetest.register_craft({
 
 -- slime mold
 
-minetest.register_node("ethereal:slime_mold", {
+core.register_node("ethereal:slime_mold", {
 	description = S("Slime Mold"),
 	drawtype = "raillike",
 	paramtype = "light",
@@ -327,7 +362,7 @@ minetest.register_node("ethereal:slime_mold", {
 
 -- how slime molds spread
 
-minetest.register_abm({
+core.register_abm({
 	label = "Slime mold spread",
 	nodenames = {"ethereal:slime_mold"},
 	neighbors = {"ethereal:spore_grass", "ethereal:fire_flower"},
@@ -337,37 +372,37 @@ minetest.register_abm({
 
 	action = function(pos, node)
 
-		if minetest.find_node_near(pos, 1, {"ethereal:fire_flower"}) then
+		if core.find_node_near(pos, 1, {"ethereal:fire_flower"}) then
 
-			minetest.sound_play("fire_extinguish_flame",
+			core.sound_play("fire_extinguish_flame",
 					{pos = pos, gain = 0.05, max_hear_distance = 3}, true)
 
-			minetest.remove_node(pos) ; return
+			core.remove_node(pos) ; return
 		end
 
-		local near = minetest.find_node_near(pos, 1, {"ethereal:spore_grass"})
+		local near = core.find_node_near(pos, 1, {"ethereal:spore_grass"})
 
 		if near then
 
-			minetest.sound_play("default_gravel_dug",
+			core.sound_play("default_gravel_dug",
 					{pos = near, gain = 0.3, max_hear_distance = 3}, true)
 
-			minetest.set_node(near, {name = "ethereal:slime_mold"})
+			core.set_node(near, {name = "ethereal:slime_mold"})
 		end
 	end
 })
 
 -- slime block
 
-minetest.register_node("ethereal:slime_block", {
+core.register_node("ethereal:slime_block", {
 	description = S("Slime Block"),
 	tiles = {"ethereal_slime_block.png"},
-	inventory_image = minetest.inventorycube("ethereal_slime_block.png"),
+	inventory_image = core.inventorycube("ethereal_slime_block.png"),
 	groups = {crumbly = 3, bouncy = 100, fall_damage_add_percent = -100, disable_jump = 1},
 	sounds = default.node_sound_leaves_defaults()
 })
 
-minetest.register_craft({
+core.register_craft({
 	output = "ethereal:slime_block",
 	recipe = {
 		{"ethereal:slime_mold", "ethereal:slime_mold", "ethereal:slime_mold"},

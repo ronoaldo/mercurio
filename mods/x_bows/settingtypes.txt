@@ -1,9 +1,26 @@
-# Disabled per default due to inconsistent mob models scaling (visual_size). This will scale the arrows unproportionally and looks bad. If you have mobs with no scaling you can enable this setting.
-x_bows_attach_arrows_to_entities (Attach arrows to entities) bool false
+# Attach arrows to entitites (mobs)
+x_bows_attach_arrows_to_entities (Attach arrows to entities) bool true
 
 # Shows caused damage number flying out from the hit object/player.
 x_bows_show_damage_numbers (Show damage caused) bool false
 
-
 # Shows 3d quiver in 3rd person view (3d armor, and some skins MODs supported - see optional dependencies)
-x_bows_show_3d_quiver (Show 3D Quiver) bool true
+x_bows_show_3d_quiver (Show 3D Quiver) bool false
+
+# Enables Wood Arrow and the Recipes
+x_bows_enable_arrow_wood (Wood Arrow) bool true
+
+# Enables Stone Arrow and the Recipes
+x_bows_enable_arrow_stone (Stone Arrow) bool true
+
+# Enables Bronze Arrow and the Recipes
+x_bows_enable_arrow_bronze (Bronze Arrow) bool true
+
+# Enables Steel Arrow and the Recipes
+x_bows_enable_arrow_steel (Steel Arrow) bool true
+
+# Enables Mese Arrow and the Recipes
+x_bows_enable_arrow_mese (Mese Arrow) bool true
+
+# Enables Diamond Arrow and the Recipes
+x_bows_enable_arrow_diamond (Diamond Arrow) bool true

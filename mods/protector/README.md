@@ -62,6 +62,7 @@ Change log:
 - 3.2 - Defaults to Minetest translation if found, otherwise intllib fallback if loaded, locale files updated for both.  Added 'protector_msg' setting for player text.
 - 3.3 - Added support for playerfactions new api (thanks louisroyer), added limiter to protection radius of 22.
 - 3.4 - Player flip and hurt functions moved to minetest.register_protection_violation function (thanks hlqkj), added 'protector_crafts' setting, changed wood doors n chests to immediate_dig for mineclone2 fix. Upped protector radius limit to 30.
+- 3.5 - Store settings in global, reduce screenshot, tweak door sounds, use node template, add name check to commands, add commands to add and remove member names, tweak & tidy code.
 
 Lucky Blocks: 10
 
@@ -76,7 +77,7 @@ remove specific user names
 
 	/protector_remove name1 name2
 
-remove all names from list
+reset names on remove list
 
 	/protector_remove -
 
@@ -92,18 +93,26 @@ replace owner with new name
 
 	/protector_replace owner new_owner
 
-reset name list
+reset names on replace list
 
 	/protector_replace -
 
-
 show protected areas of your nearby protectors (max of 5)
+
 	/protector_show_area
 
-
 A players own protection blocks can be hidden and shown using the following:
+
 	/protector_hide
 	/protector_show
+
+Adding members to local protection can be done by using
+
+	/protector_add_member
+
+Removing members from local protection can be done by using
+
+	/protector_del_member
 
 
 The following lines can be added to your minetest.conf file to configure specific features of the mod:

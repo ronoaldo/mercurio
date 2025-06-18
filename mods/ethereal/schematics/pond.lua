@@ -52,12 +52,12 @@ ethereal.pond = {
 	}
 }
 
-minetest.register_node("ethereal:pond", {
+core.register_node("ethereal:pond", {
 	paramtype = "light",
 	sunlight_propagetes = true,
 	walkable = false, pointable = false, diggable = false, floodable = false,
 	drawtype = "airlike",
-	drops = "",
+	drop = "",
 	groups = {not_in_creative_inventory = 1},
 	on_blast = function() end,
 })
@@ -67,20 +67,21 @@ local replace_with = {
 	"air", "air", "air", "air", "default:dry_grass_2", "default:dry_shrub",
 	"default:grass_2", "default:fern_1", "air", "air", "default:dry_shrub"}
 
-minetest.register_abm({
+core.register_abm({
 	label = "Ethereal pond",
 	nodenames = {"ethereal:pond"},
 	interval = 5,
 	chance = 1,
+	catch_up = false,
 	action = function(pos, node)
 
-		minetest.swap_node(pos, {name = replace_with[math_random(#replace_with)]})
+		core.swap_node(pos, {name = replace_with[math_random(#replace_with)]})
 
 		local radius = 7
 
 		pos.y = pos.y - 1
 
-		local num = #minetest.find_nodes_in_area(
+		local num = #core.find_nodes_in_area(
 				{x = pos.x - radius, y = pos.y, z = pos.z - radius},
 				{x = pos.x + radius, y = pos.y, z = pos.z + radius}, "group:bakedclay")
 
@@ -88,7 +89,7 @@ minetest.register_abm({
 
 			pos.y = pos.y - 1
 
-			minetest.place_schematic(pos, ethereal.pond, "random", nil, false,
+			core.place_schematic(pos, ethereal.pond, "random", nil, false,
 					"place_center_x, place_center_z")
 		end
 	end

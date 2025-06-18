@@ -86,12 +86,18 @@ local p = Promise.new(function(resolve, reject)
 end)
 
 -- test if the value is a promise
-assert(p.is_promise == true)
+assert(p.is_promise == true) -- field value
+assert(Promise.is_promise(p)) -- function
 
 p:then(function(result)
     -- TODO: handle the result
 end):catch(function(err)
     -- TODO: handle the error
+end)
+
+p:finally(function()
+    -- always called after error or success
+    -- TODO: handle cleanup/common things here
 end)
 ```
 
@@ -103,11 +109,23 @@ local p = Promise.new()
 p:resolve(result)
 ```
 
-## `Promise.resolved(value)`
+**NOTE:** pass a `0` to the `error` function if you want to evaluate the error directly:
+
+```lua
+Promise.new(function()
+    error("nope", 0)
+end):catch(function(err)
+    assert(err == "nope")
+end)
+```
+
+Reference: https://www.lua.org/manual/5.3/manual.html#pdf-error
+
+## `Promise.resolve(value)`
 
 Returns an already resolved promise with given value
 
-## `Promise.rejected(err)`
+## `Promise.reject(err)`
 
 Returns an already rejected promise with given error
 
@@ -121,8 +139,8 @@ Wait for all promises to finish
 
 Example:
 ```lua
-local p1 = Promise.resolved(5)
-local p2 = Promise.resolved(10)
+local p1 = Promise.resolve(5)
+local p2 = Promise.resolve(10)
 
 Promise.all(p1, p2):next(function(values)
     assert(#values == 2)
@@ -131,13 +149,15 @@ Promise.all(p1, p2):next(function(values)
 end)
 ```
 
+* Javascript version: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/all
+
 ## `Promise.race(...)`
 
 Wait for the first promise to finish
 
 Example:
 ```lua
-local p1 = Promise.resolved(5)
+local p1 = Promise.resolve(5)
 local p2 = Promise.new()
 
 Promise.race(p1, p2):next(function(v)
@@ -145,27 +165,49 @@ Promise.race(p1, p2):next(function(v)
 end)
 ```
 
-**NOTE**: errors don't get propagated when calling `race` only successful results
+The `race()` function can be used for timeouts, for example:
+
+```lua
+local p = Promise.new() -- never resolves
+local to = Promise.timeout(5) -- rejects after 5 seconds
+
+Promise.race(p, to):next(function(v)
+    -- process "v"
+end):catch(function(err)
+    -- timeout reached (err == "timeout")
+end)
+```
+
+* Javascript version: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/race
+
+## `Promise.any(...)`
+
+Returns the first fulfilled promise or rejects if all promises reject.
+
+* Javascript version: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/any
 
 ## `Promise.after(delay, value?, err?)`
 
 Returns a delayed promise that resolves to given value or error
 
+## `Promise.timeout(delay)`
+
+Returns a promise that rejects with "timeout" after the given delay. Useful in comination with `Promise.race()`
+
 ## `Promise.emerge_area(pos1, pos2?)`
 
 Emerges the given area and resolves afterwards
 
-## `Promise.formspec(player, formspec, callback?)`
+## `Promise.formspec(playername, formspec, callback?)`
 
 Formspec shorthand / util
 
 Example:
 ```lua
-Promise.formspec(player, "size[2,2]button_exit[0,0;2,2;mybutton;label]")
-:next(function(data)
+Promise.formspec(playername, "size[2,2]button_exit[0,0;2,2;mybutton;label]")
+:next(function(fields)
     -- formspec closed
-    assert(data.player:get_player_name())
-    assert(data.fields.mybutton == true)
+    assert(fields.mybutton == true)
 end)
 ```
 
@@ -177,11 +219,10 @@ local callback = function(fields)
     -- TODO: handle CHG, and other "non-quit" events here
 end
 
-Promise.formspec(player, "size[2,2]button_exit[0,0;2,2;mybutton;label]", callback)
-:next(function(data)
+Promise.formspec(playername, "size[2,2]button_exit[0,0;2,2;mybutton;label]", callback)
+:next(function(fields)
     -- formspec closed
-    assert(data.player:get_player_name())
-    assert(data.fields.mybutton == true)
+    assert(fields.mybutton == true)
 end)
 ```
 
@@ -203,6 +244,8 @@ Http query
   * `data` Data to transfer, serialized as json if type is `table`
   * `headers` table of additional headers
 
+Rejects with `Promise.HTTP_TIMEOUT` in case of timeouts (or connection errors)
+
 Examples:
 ```lua
 local http = minetest.request_http_api()
@@ -212,6 +255,9 @@ Promise.http(http, "https://api.chucknorris.io/jokes/random"):next(function(res)
     return res.json()
 end):next(function(joke)
     assert(type(joke.value) == "string")
+end):catch(function(e)
+    -- conection refused or timed out:
+    -- e == Promise.HTTP_TIMEOUT
 end)
 
 -- post json-payload with 10 second timeout and expect raw string-response (or error)
@@ -229,6 +275,12 @@ end)
 ## `Promise.json(http, url, opts?)`
 
 Helper function for `Promise.http` that parses a json response
+
+HTTP Status code handling:
+
+* `200`: resolves with a parsed json object
+* `204` or `404`: resolves with a `nil` value
+* Everything else: rejects with `unexpected status-code`
 
 Example:
 ```lua
@@ -252,9 +304,100 @@ Promise.mods_loaded():next(function()
 end)
 ```
 
-## `Promise.on_punch(pos, timeout?)`
+## `Promise.joinplayer(playername, timeout?)`
+
+Resolves with the player object when the player joins (defaults to a 5 second timeout)
+
+## `Promise.leaveplayer(playername, timeout?)`
+
+Resolves when the player leaves (does not resolve with a value, unlike `joinplayer`)
+
+## `Promise.asyncify(fn)`
+
+Turns a normal function into an async function. The first parameter will be the `await` function.
+
+Example:
+```lua
+-- normal function
+local fn = function(await,a,b,c)
+    assert(type(await) == "function")
+    assert(a == 1)
+    assert(b == 2)
+    assert(c == 3)
+    await(Promise.after(0))
+    return "ok"
+end
+
+-- async function
+local async_fn = Promise.asyncify(fn)
+
+-- invoke with params
+local p = async_fn(1,2,3)
+
+-- use as a promise
+p:next(function(v)
+    assert(v == "ok")
+end)
+```
+
+## `Promise.handle_asyncify(fn)`
+
+Returns the function wrapped into `Promise.handle_async`
+
+Example:
+
+```lua
+local fn = function(a,b)
+    return a * b -- something cpu-intensive
+end
+
+local async_fn = Promise.handle_asyncify(fn)
+
+async_fn(3,4):next(function(v)
+    assert(v == 12)
+end)
+```
+
+## `Promise.cache(seconds, fn)`
+
+Simple caching utility
+
+Example:
+```lua
+local somethingExpensive()
+    return 42
+end
+
+-- cached the result for 5 seconds
+local cachedFn = Promise.cache(5, somethingExpensive)
+
+-- function result is cached for 5 seconds
+local n = cachedFn()
+local n2 = cachedFn()
+```
+
+## `Promise.on_punch_pos(pos, timeout?)`
 
 Resolves when the node at `pos` is hit or throws an error if the timeout (in seconds, default: 5) is reached.
+Resolving value:
+```lua
+{
+    pos = Vector,
+    node = {name="", ...},
+    puncher = PlayerObj,
+    pointed_thing = { ... }
+}
+```
+
+## `Promise.on_punch_nodename(nodename, timeout?)`
+
+Resolves when the node with name `nodename` is hit or throws an error if the timeout (in seconds, default: 5) is reached.
+Resolving value is the same as `Promise.on_punch_pos`
+
+## `Promise.on_punch_playername(playername, timeout?)`
+
+Resolves when a node is hit by the player with name `playername` or throws an error if the timeout (in seconds, default: 5) is reached.
+Resolving value is the same as `Promise.on_punch_pos`
 
 ## `Promise.dynamic_add_media(options)`
 
@@ -271,6 +414,27 @@ end)
 ```
 
 **NOTE**: experimental, only works if the `to_player` property is set
+
+## `Promise.register_chatcommand(cmd, def)`
+
+Chatcommand helper with wrappers for success and error.
+Shows messages after the returned promise fails or succeeds and prints the error or success-value if the type is "string"
+
+Usage:
+
+```lua
+Promise.register_chatcommand("something", {
+    description = "Does something",
+    func = function(name)
+        return Promise.new(function(resolve, reject)
+            resolve("processed 123 items")
+            -- or: reject("something went wrong")
+        end)
+    end,
+    handle_success = false, -- optional, if false: disable success message
+    handle_error = false -- optional, if false: disable error message
+})
+```
 
 # async/await with `Promise.async`
 
@@ -308,7 +472,7 @@ Error handling:
 ```lua
 Promise.async(function(await)
     -- second result from await is the error if rejected
-    local data, err = await(Promise.rejected("nope"))
+    local data, err = await(Promise.reject("nope"))
     assert(err == "nope")
 end)
 ```

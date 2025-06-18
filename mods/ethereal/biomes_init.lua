@@ -5,21 +5,21 @@ local old_biomes, old_decor = {}, {}
 
 -- backup registered biomes
 
-for key, def in pairs(minetest.registered_biomes) do
+for key, def in pairs(core.registered_biomes) do
 	old_biomes[key] = def
 end
 
 -- backup registered decorations
 
-for key, def in pairs(minetest.registered_decorations) do
+for key, def in pairs(core.registered_decorations) do
 	old_decor[key] = def
 end
 
 -- clear current biome data
 
-minetest.clear_registered_biomes()
-minetest.clear_registered_decorations()
--- minetest.clear_registered_ores()
+core.clear_registered_biomes()
+core.clear_registered_decorations()
+-- core.clear_registered_ores()
 
 -- create list of default biomes to remove
 
@@ -73,7 +73,7 @@ local def_biomes = {
 
 for key, def in pairs(old_biomes) do
 
-	if not def_biomes[key] then minetest.register_biome(def) end
+	if not def_biomes[key] then core.register_biome(def) end
 end
 
 -- loop through decorations
@@ -108,6 +108,6 @@ for key, def in pairs(old_decor) do
 
 		def.biomes = new_biomes
 
-		minetest.register_decoration(def)
+		core.register_decoration(def)
 	end
 end

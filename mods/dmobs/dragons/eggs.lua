@@ -25,10 +25,10 @@ local function egg_transform(pos, node, clicker, item, _)
 				p.x = pos.x + x1
 				p.z = pos.z + z1
 
-				local nestfloor_name = minetest.get_node(p).name
+				local nestfloor_name = core.get_node(p).name
 
 				if x1 == -1 and z1 == -1 then
-					corner_name = minetest.get_node(p).name
+					corner_name = core.get_node(p).name
 
 				elseif x1 == 0 and z1 == 0 then -- special case in centre
 					-- must be obsidian
@@ -55,12 +55,12 @@ local function egg_transform(pos, node, clicker, item, _)
 			dragon_type = "great"
 		end
 
-		minetest.chat_send_player(clicker:get_player_name(),
+		core.chat_send_player(clicker:get_player_name(),
 				" ... something seems to be happening .... come back later?")
 
-		minetest.after(dmobs.eggtimer,
+		core.after(dmobs.eggtimer,
 			function(pos, dragon, pname)
-				minetest.set_node(pos, {name="dmobs:dragon_egg_"..dragon_type})
+				core.set_node(pos, {name="dmobs:dragon_egg_"..dragon_type})
 			end, pos
 		)
 
@@ -72,7 +72,7 @@ end
 local function egghatch(pos, node, clicker, item, _)
 
 	local wield_item = clicker:get_wielded_item():get_name()
-	local eggnode = minetest.get_node(pos).name
+	local eggnode = core.get_node(pos).name
 
 	for nature,details in pairs(dragonpairs) do
 
@@ -82,16 +82,16 @@ local function egghatch(pos, node, clicker, item, _)
 		-- special case... because inconsiderate/inconsistent naming
 		and eggnode == "dmobs:dragon_egg_great" ) then
 
-			minetest.chat_send_player(clicker:get_player_name(),
+			core.chat_send_player(clicker:get_player_name(),
 					" ... it ... swallowed the gem...")
 
-			minetest.after(dmobs.eggtimer, function(pos, dragon, pname)
+			core.after(dmobs.eggtimer, function(pos, dragon, pname)
 
-					local neweggnode = minetest.get_node(pos).name
+					local neweggnode = core.get_node(pos).name
 
 					if eggnode ~= neweggnode then return end -- prevent infinite hatchings
 
-					minetest.remove_node(pos)
+					core.remove_node(pos)
 
 					local thedragon = "dmobs:dragon_"..details.colour
 
@@ -99,9 +99,9 @@ local function egghatch(pos, node, clicker, item, _)
 						thedragon = "dmobs:dragon_great_tame"
 					end
 
-					local ent = minetest.add_entity(pos, thedragon)
+					local ent = core.add_entity(pos, thedragon)
 
-					minetest.sound_play("dmobs_chirrup",{
+					core.sound_play("dmobs_chirrup",{
 						pos = pos, max_hear_distance = 20}, true)
 
 					local obj = ent:get_luaentity()
@@ -146,28 +146,28 @@ local base_egg = { -- base template for all dragon eggs
 
 
 -- clone, to not affect the base template
-minetest.register_node("dmobs:egg", dmobs.deepclone(base_egg) )
+core.register_node("dmobs:egg", dmobs.deepclone(base_egg) )
 
 -- Fire egg
 base_egg.groups.not_in_creative_inventory = 1
 base_egg.on_rightclick = egghatch
 base_egg.tiles = {"dmobs_egg1.png"}
-minetest.register_node("dmobs:dragon_egg_fire", dmobs.deepclone(base_egg) )
+core.register_node("dmobs:dragon_egg_fire", dmobs.deepclone(base_egg) )
 
 -- Lightning egg
 base_egg.tiles = {"dmobs_egg2.png"}
-minetest.register_node("dmobs:dragon_egg_lightning", dmobs.deepclone(base_egg) )
+core.register_node("dmobs:dragon_egg_lightning", dmobs.deepclone(base_egg) )
 
 -- Poison egg
 base_egg.tiles = {"dmobs_egg3.png"}
-minetest.register_node("dmobs:dragon_egg_poison", dmobs.deepclone(base_egg) )
+core.register_node("dmobs:dragon_egg_poison", dmobs.deepclone(base_egg) )
 
 -- Ice egg
 base_egg.tiles = {"dmobs_egg4.png"}
-minetest.register_node("dmobs:dragon_egg_ice", dmobs.deepclone(base_egg) )
+core.register_node("dmobs:dragon_egg_ice", dmobs.deepclone(base_egg) )
 
 -- Great dragon egg
 base_egg.groups.not_in_creative_inventory = nil
 base_egg.tiles = {"default_sandstone.png"}
 base_egg.description = "Great Dragon Egg"
-minetest.register_node("dmobs:dragon_egg_great", dmobs.deepclone(base_egg) )
+core.register_node("dmobs:dragon_egg_great", dmobs.deepclone(base_egg) )

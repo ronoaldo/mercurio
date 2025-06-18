@@ -25,7 +25,7 @@ lucky_block:add_blocks({
 
 -- if nyancat found add special block
 
-if minetest.registered_nodes["default:nyancat"] then
+if core.registered_nodes["default:nyancat"] then
 
 	lucky_block:add_blocks({
 		{"tro", "default:nyancat", "mobs_kitten", true}

@@ -1,7 +1,7 @@
 
 -- ethereal schematic path
 
-local epath = minetest.get_modpath("ethereal") .. "/schematics/"
+local epath = core.get_modpath("ethereal") .. "/schematics/"
 
 -- add schematics
 
@@ -65,6 +65,22 @@ lucky_block:add_blocks({
 	{"dro", {"ethereal:fishing_rod_baited"}},
 	{"exp"},
 	{"sch", "underspike", 0, false},
+	{"sch", "underspike", 0, false, {
+		{"default:cobble", "default:desert_cobble"},
+		{"default:stone", "default:desert_stone"}
+	}},
+	{"sch", "underspike", 0, false, {
+		{"default:cobble", "default:sandstone"},
+		{"default:stone", "default:sandstonebrick"}
+	}},
+	{"sch", "underspike", 0, false, {
+		{"default:cobble", "default:desert_sandstone"},
+		{"default:stone", "default:desert_sandstone_brick"}
+	}},
+	{"sch", "underspike", 0, false, {
+		{"default:cobble", "default:silver_sandstone"},
+		{"default:stone", "default:silver_sandstone_brick"}
+	}},
 	{"dro", {"ethereal:fire_dust"}, 2},
 	{"exp", 4},
 	{"dro", {"ethereal:crystal_gilly_staff"}},
@@ -85,7 +101,9 @@ lucky_block:add_blocks({
 		{name = "ethereal:olive_tree_sapling", max = 10}
 	}},
 	{"flo", 5, {"ethereal:blue_marble_tile"}, 2},
-	{"dro", {"ethereal:blue_marble", "ethereal:blue_marble_tile"}, 8},
+	{"flo", 5, {"ethereal:blue_marble_brick"}, 2},
+	{"dro", {"ethereal:blue_marble", "ethereal:blue_marble_tile",
+			"ethereal:blue_marble_brick"}, 8},
 	{"dro", {"ethereal:etherium_ore"}, 5},
 	{"nod", "default:chest", 0, {
 		{name = "ethereal:fish_bluefin", max = 4},
@@ -134,6 +152,7 @@ lucky_block:add_blocks({
 		"ethereal:crystal_moss", "ethereal:mushroom_moss"}, 1},
 	{"tro", "ethereal:candle_red", "tnt_blast", true},
 	{"nod", "ethereal:candle_orange", 0},
+	{"dro", {"ethereal:candle_"}, 4, true},
 	{"nod", "ethereal:candle", 0},
 	{"dro", {"ethereal:fish_tetra", "ethereal:fish_shrimp", "ethereal:worm"}, 1},
 	{"nod", "default:chest", 0, {
@@ -183,7 +202,7 @@ lucky_block:add_blocks({
 		{"default:fern_3", "default:marram_grass_3"},
 		{"default:grass_4", "default:dry_shrub"}
 	}},
-		{"sch", "ethereal_pond", 0, false, {
+	{"sch", "ethereal_pond", 0, false, {
 		{"default:river_water_source", "default:water_source"},
 		{"default:dirt", "default:coral_brown"},
 		{"default:mossycobble", "default:coral_orange"},
@@ -195,7 +214,7 @@ lucky_block:add_blocks({
 	}}
 })
 
-if minetest.get_modpath("3d_armor") then
+if core.get_modpath("3d_armor") then
 
 	lucky_block:add_blocks({
 		{"dro", {"3d_armor:helmet_crystal"}},
@@ -206,10 +225,50 @@ if minetest.get_modpath("3d_armor") then
 	})
 end
 
-if minetest.get_modpath("shields") then
+if core.get_modpath("shields") then
 
 	lucky_block:add_blocks({
 		{"dro", {"shields:shield_crystal"}},
 		{"exp"}
 	})
 end
+
+-- paper house
+
+local air = {name = "air"}
+local pp2 = {name = "ethereal:paper_wall", param1 = 255, param2 = 2}
+local pp3 = {name = "ethereal:paper_wall", param1 = 255, param2 = 3}
+local pp0 = {name = "ethereal:paper_wall", param1 = 255, param2 = 0}
+local pp1 = {name = "ethereal:paper_wall", param1 = 255, param2 = 1}
+local bam = {name = "ethereal:bamboo_floor", param1 = 255, param2 = 1}
+local dor = minetest.get_modpath("doors") and
+		{name = "ethereal:door_sakura_a", param1 = 255, param2 = 0} or pp2
+
+local paper_house = {
+	size = {x = 5, y = 3, z = 5},
+	data = {
+		air, pp0, pp0, pp0, air,
+		air, pp0, pp0, pp0, air,
+		air, air, air, air, air,
+
+		pp1, bam, bam, bam, pp3,
+		pp1, air, air, air, pp3,
+		air, bam, bam, bam, air,
+
+		pp1, bam, bam, bam, pp3,
+		pp1, air, air, air, pp3,
+		air, bam, bam, bam, air,
+
+		pp1, bam, bam, bam, pp3,
+		pp1, air, air, air, pp3,
+		air, bam, bam, bam, air,
+
+		air, pp2, dor, pp2, air,
+		air, pp2, air, pp2, air,
+		air, air, air, air, air
+	}
+}
+
+lucky_block:add_schematics({
+	{"paper_house", paper_house, {x = 2, y = 0, z = 2}}
+})

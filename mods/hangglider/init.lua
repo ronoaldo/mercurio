@@ -5,6 +5,7 @@ hangglider = {
 local S = hangglider.translator
 
 local has_player_monoids = minetest.get_modpath("player_monoids")
+local has_pova = minetest.get_modpath("pova")
 local has_areas = minetest.get_modpath("areas")
 
 local enable_hud_overlay = minetest.settings:get_bool("hangglider.enable_hud_overlay", true)
@@ -41,22 +42,23 @@ if enable_flak then
 	})
 end
 
-local function set_hud_overlay(player, name, image)
+local function set_hud_overlay(player, name, show)
 	if not enable_hud_overlay then
 		return
 	end
-	if not hud_overlay_ids[name] then
+	if not hud_overlay_ids[name] and show == true then
 		hud_overlay_ids[name] = player:hud_add({
 			hud_elem_type = "image",
-			text = image,
+			text = "hangglider_overlay.png",
 			position = {x = 0, y = 0},
 			scale = {x = -100, y = -100},
 			alignment = {x = 1, y = 1},
 			offset = {x = 0, y = 0},
 			z_index = -150
 		})
-	else
-		player:hud_change(hud_overlay_ids[name], "text", image)
+	elseif hud_overlay_ids[name] and show == false then
+		player:hud_remove(hud_overlay_ids[name])
+		hud_overlay_ids[name] = nil
 	end
 end
 
@@ -65,6 +67,10 @@ local function set_physics_overrides(player, overrides)
 		for name, value in pairs(overrides) do
 			player_monoids[name]:add_change(player, value, "hangglider:glider")
 		end
+	elseif has_pova then
+		pova.add_override(player:get_player_name(), "hangglider:glider",
+				{jump = 0, speed = overrides.speed, gravity = overrides.gravity})
+		pova.do_override(player)
 	else
 		player:set_physics_override(overrides)
 	end
@@ -75,6 +81,9 @@ local function remove_physics_overrides(player)
 		for _, name in pairs({"jump", "speed", "gravity"}) do
 			player_monoids[name]:del_change(player, "hangglider:glider")
 		end
+	elseif has_pova then
+		pova.del_override(player:get_player_name(), "hangglider:glider")
+		pova.do_override(player)
 	else
 		player:set_physics_override({jump = 1, speed = 1, gravity = 1})
 	end
@@ -167,7 +176,7 @@ local function hangglider_step(self, dtime)
 			if not gliding then
 				remove_physics_overrides(player)
 				hanggliding_players[name] = nil
-				set_hud_overlay(player, name, "blank.png")
+				set_hud_overlay(player, name, false)
 			end
 		end
 	end
@@ -194,7 +203,7 @@ local function hangglider_use(stack, player)
 					textures = {"wool_white.png^[multiply:#"..color, "default_wood.png"}
 				})
 			end
-			set_hud_overlay(player, name, "hangglider_overlay.png")
+			set_hud_overlay(player, name, true)
 			set_physics_overrides(player, {jump = 0, gravity = 0.25})
 			hanggliding_players[name] = true
 			if hangglider_uses > 0 then
@@ -203,7 +212,7 @@ local function hangglider_use(stack, player)
 			return stack
 		end
 	else
-		set_hud_overlay(player, name, "blank.png")
+		set_hud_overlay(player, name, false)
 		remove_physics_overrides(player)
 		hanggliding_players[name] = nil
 	end

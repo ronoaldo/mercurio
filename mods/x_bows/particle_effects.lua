@@ -1,6 +1,6 @@
 --[[
     X Bows. Adds bow and arrows with API.
-    Copyright (C) 2024 SaKeL
+    Copyright (C) 2025 SaKeL
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Lesser General Public
@@ -65,7 +65,7 @@ XBows:register_particle_effect('arrow_fast', {
     maxexptime = 0.5,
     minsize = 2,
     maxsize = 2,
-    texture = 'x_bows_arrow_particle.png^[colorize:#0000FF:64',
+    texture = 'x_bows_arrow_particle.png^[colorize:#0000FF:32',
     animation = {
         type = 'vertical_frames',
         aspect_w = 8,

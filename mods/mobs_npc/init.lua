@@ -1,7 +1,7 @@
 
 -- translation and get mod path
-local S = minetest.get_translator("mobs_npc")
-local path = minetest.get_modpath(minetest.get_current_modname()) .. "/"
+local S = core.get_translator("mobs_npc")
+local path = core.get_modpath(core.get_current_modname()) .. "/"
 
 -- Global
 mobs_npc = {}
@@ -29,7 +29,7 @@ end
 
 -- Lucky Blocks
 
-if minetest.get_modpath("lucky_block") then
+if core.get_modpath("lucky_block") then
 	dofile(path .. "/lucky_block.lua")
 end
 

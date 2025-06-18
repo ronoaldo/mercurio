@@ -1,7 +1,7 @@
 
 -- translation support
 
-local S = minetest.get_translator("bakedclay")
+local S = core.get_translator("bakedclay")
 
 -- list of clay colours
 
@@ -26,12 +26,10 @@ local clay = {
 
 -- check mod support
 
-local techcnc_mod = minetest.get_modpath("technic_cnc")
-local stairs_mod = minetest.get_modpath("stairs")
-local stairsplus_mod = minetest.get_modpath("moreblocks")
-		and minetest.global_exists("stairsplus")
-local stairsplus_compat = minetest.settings:get_bool("stairsplus_clay_compatibility") ~= false
-
+local techcnc_mod = core.get_modpath("technic_cnc")
+local stairs_mod = core.get_modpath("stairs")
+local stairsplus_mod = core.get_modpath("moreblocks") and core.global_exists("stairsplus")
+local stairsplus_compat = core.settings:get_bool("stairsplus_clay_compatibility") ~= false
 
 -- scroll through colours
 
@@ -39,7 +37,7 @@ for _, clay in pairs(clay) do
 
 	-- register node
 
-	minetest.register_node("bakedclay:" .. clay[1], {
+	core.register_node("bakedclay:" .. clay[1], {
 		description = clay[2] .. " " .. S("Baked Clay"),
 		tiles = {"baked_clay_" .. clay[1] ..".png"},
 		groups = {cracky = 3, bakedclay = 1},
@@ -51,7 +49,7 @@ for _, clay in pairs(clay) do
 
 	if clay[1] ~= "natural" then
 
-		minetest.register_craft({
+		core.register_craft({
 			output = "bakedclay:" .. clay[1] .. " 8",
 			recipe = {
 				{"group:bakedclay", "group:bakedclay", "group:bakedclay"},
@@ -78,10 +76,10 @@ for _, clay in pairs(clay) do
 			stairsplus:register_alias_all("bakedclay", clay[1],
 					"bakedclay", "baked_clay_" .. clay[1])
 
-			minetest.register_alias("stairs:slab_bakedclay_".. clay[1],
+			core.register_alias("stairs:slab_bakedclay_".. clay[1],
 					"bakedclay:slab_baked_clay_" .. clay[1])
 
-			minetest.register_alias("stairs:stair_bakedclay_".. clay[1],
+			core.register_alias("stairs:stair_bakedclay_".. clay[1],
 					"bakedclay:stair_baked_clay_" .. clay[1])
 		end
 
@@ -111,7 +109,7 @@ for _, clay in pairs(clay) do
 
 	if techcnc_mod then
 
-		minetest.register_on_mods_loaded(function()
+		core.register_on_mods_loaded(function()
 
 			technic_cnc.register_all("bakedclay:" .. clay[1],
 				{cracky = 3, not_in_creative_inventory = 1},
@@ -129,7 +127,7 @@ for _, clay in pairs(clay) do
 
 		local texture = "baked_clay_terracotta_" .. clay[1] ..".png"
 
-		minetest.register_node("bakedclay:terracotta_" .. clay[1], {
+		core.register_node("bakedclay:terracotta_" .. clay[1], {
 			description = clay[2] .. " " .. S("Glazed Terracotta"),
 			tiles = {
 				texture .. "",
@@ -143,10 +141,10 @@ for _, clay in pairs(clay) do
 			groups = {cracky = 3, terracotta = 1},
 			sounds = default.node_sound_stone_defaults(),
 			is_ground_content = false,
-			on_place = minetest.rotate_node
+			on_place = core.rotate_node
 		})
 
-		minetest.register_craft({
+		core.register_craft({
 			type = "cooking",
 			output = "bakedclay:terracotta_" .. clay[1],
 			recipe = "bakedclay:" .. clay[1]
@@ -154,11 +152,11 @@ for _, clay in pairs(clay) do
 	end
 end
 
-minetest.register_alias("bakedclay:terracotta_light_blue", "bakedclay:terracotta_cyan")
+core.register_alias("bakedclay:terracotta_light_blue", "bakedclay:terracotta_cyan")
 
 -- cook clay block into natural baked clay
 
-minetest.register_craft({
+core.register_craft({
 	type = "cooking",
 	output = "bakedclay:natural",
 	recipe = "default:clay"
@@ -166,38 +164,27 @@ minetest.register_craft({
 
 -- register a few extra dye colour options
 
-minetest.register_craft( {
-	type = "shapeless",
-	output = "dye:green 4",
-	recipe = {"default:cactus"}
-})
-
-minetest.register_craft( {
-	type = "shapeless",
-	output = "dye:brown 4",
-	recipe = {"default:dry_shrub"}
-})
+core.register_craft({ output = "dye:green 4", recipe = {{"default:cactus"}} })
+core.register_craft({ output = "dye:brown 4", recipe = {{"default:dry_shrub"}} })
 
 -- only add light grey recipe if unifieddye mod isnt present (conflict)
 
-if not minetest.get_modpath("unifieddyes") then
+if not core.get_modpath("unifieddyes") then
 
-	minetest.register_craft( {
-		type = "shapeless",
+	core.register_craft( {
 		output = "dye:dark_grey 3",
-		recipe = {"dye:black", "dye:black", "dye:white"}
+		recipe = {{"dye:black", "dye:black", "dye:white"}}
 	})
 
-	minetest.register_craft( {
-		type = "shapeless",
+	core.register_craft( {
 		output = "dye:grey 3",
-		recipe = {"dye:black", "dye:white", "dye:white"}
+		recipe = {{"dye:black", "dye:white", "dye:white"}}
 	})
 end
 
 -- 2x2 red baked clay makes 16x clay brick
 
-minetest.register_craft( {
+core.register_craft( {
 	output = "default:clay_brick 16",
 	recipe = {
 		{"bakedclay:red", "bakedclay:red"},
@@ -207,7 +194,7 @@ minetest.register_craft( {
 
 -- colored clay compatibility
 
-if minetest.settings:get_bool("colored_clay_compatibility") == true then
+if core.settings:get_bool("colored_clay_compatibility") == true then
 
 	local cc = {
 		{"black", "black"},
@@ -234,7 +221,7 @@ if minetest.settings:get_bool("colored_clay_compatibility") == true then
 		local nod1 = "colored_clay:" .. cc[n][1]
 		local nod2 = "bakedclay:" .. cc[n][2]
 
-		minetest.register_alias(nod1, nod2)
+		core.register_alias(nod1, nod2)
 
 		if stairsplus_mod then
 			stairsplus:register_alias_all("colored_clay", cc[n][1], "bakedclay", cc[n][2])
@@ -244,7 +231,7 @@ end
 
 -- get mod path
 
-local path = minetest.get_modpath("bakedclay")
+local path = core.get_modpath("bakedclay")
 
 -- add new flowers
 
@@ -252,7 +239,7 @@ dofile(path .. "/flowers.lua")
 
 -- add lucky blocks if mod present
 
-if minetest.get_modpath("lucky_block") then
+if core.get_modpath("lucky_block") then
 	dofile(path .. "/lucky_block.lua")
 end
 

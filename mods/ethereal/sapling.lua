@@ -1,8 +1,8 @@
 
 -- translator and protection check setting
 
-local S = minetest.get_translator("ethereal")
-local sapling_protection_check = minetest.settings:get_bool(
+local S = core.get_translator("ethereal")
+local sapling_protection_check = core.settings:get_bool(
 		"ethereal.sapling_protection_check", false)
 
 -- sapling placement helper
@@ -18,8 +18,8 @@ local function prepare_on_place(itemstack, placer, pointed_thing, name, w, h)
 
 	-- Position of sapling
 	local pos = pointed_thing.under
-	local node = minetest.get_node_or_nil(pos)
-	local pdef = node and minetest.registered_nodes[node.name]
+	local node = core.get_node_or_nil(pos)
+	local pdef = node and core.registered_nodes[node.name]
 
 	-- Check if node clicked on has it's own on_rightclick function
 	if pdef and pdef.on_rightclick
@@ -28,12 +28,12 @@ local function prepare_on_place(itemstack, placer, pointed_thing, name, w, h)
 	end
 
 	-- place normally
-	return minetest.item_place_node(itemstack, placer, pointed_thing)
+	return core.item_place_node(itemstack, placer, pointed_thing)
 end
 
 -- Basandra Bush Sapling
 
-minetest.register_node("ethereal:basandra_bush_sapling", {
+core.register_node("ethereal:basandra_bush_sapling", {
 	description = S("Basandra Bush Sapling"),
 	drawtype = "plantlike",
 	tiles = {"ethereal_basandra_bush_sapling.png"},
@@ -58,7 +58,7 @@ minetest.register_node("ethereal:basandra_bush_sapling", {
 
 -- Bamboo Sprout
 
-minetest.register_node("ethereal:bamboo_sprout", {
+core.register_node("ethereal:bamboo_sprout", {
 	description = S("Bamboo Sprout"),
 	drawtype = "plantlike",
 	tiles = {"ethereal_bamboo_sprout.png"},
@@ -75,7 +75,7 @@ minetest.register_node("ethereal:bamboo_sprout", {
 	selection_box = {
 		type = "fixed", fixed = {-3 / 16, -0.5, -3 / 16, 3 / 16, -0.1, 3 / 16}
 	},
-	on_use = minetest.item_eat(2),
+	on_use = core.item_eat(2),
 	grown_height = 11,
 
 	on_place = function(itemstack, placer, pointed_thing)
@@ -88,7 +88,7 @@ minetest.register_node("ethereal:bamboo_sprout", {
 
 local function register_sapling(name, desc, texture, width, height)
 
-	minetest.register_node(name .. "_sapling", {
+	core.register_node(name .. "_sapling", {
 		description = S(desc .. " Tree Sapling"),
 		drawtype = "plantlike",
 		tiles = {texture .. ".png"},
@@ -139,15 +139,15 @@ register_sapling("ethereal:olive_tree", "Olive", "ethereal_olive_tree_sapling", 
 
 local function add_tree(pos, schem, replace)
 
-	minetest.swap_node(pos, {name = "air"})
+	core.swap_node(pos, {name = "air"})
 
-	minetest.place_schematic(pos, schem, "random", replace, false,
+	core.place_schematic(pos, schem, "random", replace, false,
 			"place_center_x, place_center_z")
 end
 
 -- get mod path and schematic folder
 
-local path = minetest.get_modpath("ethereal") .. "/schematics/"
+local path = core.get_modpath("ethereal") .. "/schematics/"
 
 -- global tree grow functions
 
@@ -160,12 +160,12 @@ function ethereal.grow_yellow_tree(pos)
 end
 
 function ethereal.grow_big_tree(pos)
-	add_tree(pos, ethereal.bigtree)
+	add_tree(pos, ethereal.bigtree_from_sapling)
 end
 
 function ethereal.grow_banana_tree(pos)
 
-	if math.random(2) == 1 and minetest.find_node_near(pos, 1, {"farming:soil_wet"}) then
+	if math.random(2) == 1 and core.find_node_near(pos, 1, {"farming:soil_wet"}) then
 
 		add_tree(pos, ethereal.bananatree,
 				{{"ethereal:banana", "ethereal:banana_bunch"}})
@@ -175,11 +175,11 @@ function ethereal.grow_banana_tree(pos)
 end
 
 function ethereal.grow_frost_tree(pos)
-	add_tree(pos, ethereal.frosttrees)
+	add_tree(pos, ethereal.frosttrees_from_sapling)
 end
 
 function ethereal.grow_mushroom_tree(pos)
-	add_tree(pos, ethereal.mushroomone)
+	add_tree(pos, ethereal.mushroomone_from_sapling)
 end
 
 function ethereal.grow_mushroom_brown_tree(pos)
@@ -191,15 +191,15 @@ function ethereal.grow_palm_tree(pos)
 end
 
 function ethereal.grow_willow_tree(pos)
-	add_tree(pos, ethereal.willow)
+	add_tree(pos, ethereal.willow_from_sapling)
 end
 
 function ethereal.grow_redwood_tree(pos)
-	add_tree(pos, ethereal.redwood_small_tree)
+	add_tree(pos, ethereal.redwood_small_tree_from_sapling)
 end
 
 function ethereal.grow_giant_redwood_tree(pos)
-	add_tree(pos, ethereal.redwood_tree)
+	add_tree(pos, ethereal.redwood_tree_from_sapling)
 end
 
 function ethereal.grow_orange_tree(pos)
@@ -230,14 +230,14 @@ function ethereal.grow_lemon_tree(pos)
 end
 
 function ethereal.grow_olive_tree(pos)
-	add_tree(pos, ethereal.olivetree)
+	add_tree(pos, ethereal.olivetree_from_sapling)
 end
 
 -- return True if sapling has enough height room to grow
 
 local function enough_height(pos, height)
 
-	return minetest.line_of_sight(
+	return core.line_of_sight(
 		{x = pos.x, y = pos.y + 1, z = pos.z},
 		{x = pos.x, y = pos.y + height, z = pos.z})
 end
@@ -246,11 +246,11 @@ end
 
 function ethereal.grow_sapling(pos, node)
 
-	if (minetest.get_node_light(pos) or 0) < 13 then return end
+	if (core.get_node_light(pos) or 0) < 13 then return end
 
 	-- get node below sapling
-	local under =  minetest.get_node({x = pos.x, y = pos.y - 1, z = pos.z}).name
-	local def = minetest.registered_nodes[node.name] ; if not def then return end
+	local under =  core.get_node({x = pos.x, y = pos.y - 1, z = pos.z}).name
+	local def = core.registered_nodes[node.name] ; if not def then return end
 	local height = def.grown_height or 33
 
 	-- do we have enough height to grow sapling into tree?
@@ -261,7 +261,7 @@ function ethereal.grow_sapling(pos, node)
 	and under == "ethereal:fiery_dirt" then ethereal.grow_basandra_bush(pos)
 
 	elseif node.name == "ethereal:yellow_tree_sapling"
-	and minetest.get_item_group(under, "soil") > 0 then ethereal.grow_yellow_tree(pos)
+	and core.get_item_group(under, "soil") > 0 then ethereal.grow_yellow_tree(pos)
 
 	elseif node.name == "ethereal:big_tree_sapling"
 	and under == "default:dirt_with_grass" then ethereal.grow_big_tree(pos)
@@ -311,18 +311,18 @@ end
 
 -- grow saplings Abm
 
-minetest.register_abm({
+core.register_abm({
 	label = "Ethereal grow sapling",
 	nodenames = {"group:ethereal_sapling"},
 	interval = 10,
 	chance = 50,
 	catch_up = false,
-	action = ethereal.grow_sapling -- (pos, node)
+	action = ethereal.grow_sapling
 })
 
 -- 2x redwood saplings make 1x giant redwood sapling
 
-minetest.register_craft({
+core.register_craft({
 	output = "ethereal:giant_redwood_sapling",
 	recipe = {{"ethereal:redwood_sapling", "ethereal:redwood_sapling"}}
 })

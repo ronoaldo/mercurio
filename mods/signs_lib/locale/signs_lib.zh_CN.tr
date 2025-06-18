@@ -1,0 +1,12 @@
+# textdomain: signs_lib
+Locked sign, owned by @1@n=锁定告示牌，所有者：@1@n
+Skims through all currently-loaded sign-bearing mapblocks, clears away any entities within each sign's node space, and regenerates their text entities, if any.=遍历所有当前加载的含告示牌地图区块，清除各告示牌节点空间内的实体，并重建其文本实体（若存在）。
+There are no signs in the currently-loaded terrain.=当前加载区域无告示牌。
+Found a total of @1 sign nodes across @2 blocks.=在@2个区块中发现共计@1个告示牌方块。
+Regenerating sign entities ...=正在重建告示牌实体...
+Finished.=完成。
+Write=书写
+Unicode font=Unicode字体
+Wide font=宽体字体
+Wooden Wall Sign=木质告示牌
+Steel Wall Sign=钢质告示牌

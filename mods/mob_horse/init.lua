@@ -46,6 +46,7 @@ mobs:register_mob("mob_horse:horse", {
 		"farming:barley", "farming:corn"
 	},
 	passive = false, attack_type = "dogfight", reach = 2.5, damage = 3,
+	attack_chance = 95,
 	attack_monsters = true,
 	hp_min = 15,
 	hp_max = 23,

@@ -20,10 +20,7 @@ minetest.register_on_player_receive_fields(function(player, id, fields)
 
     if fields.quit == "true" then
         -- "quit" event, resolve promise
-        data.promise:resolve({
-            fields = fields,
-            player = player
-        })
+        data.promise:resolve(fields)
     else
         -- other events (scrollbar, dropdown, etc) formspec is still open
         if type(data.callback) == "function" then
@@ -38,11 +35,10 @@ minetest.register_on_player_receive_fields(function(player, id, fields)
     return true
 end)
 
-function Promise.formspec(player, formspec, callback)
+function Promise.formspec(playername, formspec, callback)
     local p = Promise.new()
-    local id = "" .. math.floor(math.random() * 100000)
+    local id = "promise_" .. math.floor(math.random() * 100000)
 
-    local playername = player:get_player_name()
     local cb_map = formspec_promises[playername]
     if not cb_map then
         -- create callback map

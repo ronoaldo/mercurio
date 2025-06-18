@@ -105,7 +105,6 @@ minetest.register_entity("automobiles_motorcycle:motorcycle", {
         stepheight = 0.8 + automobiles_lib.extra_stepheight,
 	    visual = "mesh",
 	    mesh = "automobiles_motorcycle_body.b3d",
-        --use_texture_alpha = true,
         backface_culling = false,
         textures = {
                 "automobiles_black.png", --bancos
@@ -235,7 +234,7 @@ minetest.register_entity("automobiles_motorcycle:motorcycle", {
                 local player_attach = player:get_attach()
                 if player_attach then
                     if self.driver_seat then
-                        if player_attach == self.driver_seat then is_attached = true end
+                        if player_attach == self.driver_seat or player_attach == self.object then is_attached = true end
                     end
                 end
 
@@ -248,9 +247,9 @@ minetest.register_entity("automobiles_motorcycle:motorcycle", {
                 
                 --player:set_bone_position("Arm_Left", {x=3.0, y=5, z=-arm_range-armZ}, {x=240-(self._steering_angle/2), y=0, z=0})
                 --player:set_bone_position("Arm_Right", {x=-3.0, y=5, z=armZ}, {x=240+(self._steering_angle/2), y=0, z=0})
-                if self.driver_mesh then
-                    self.driver_mesh:set_bone_position("Arm_Left", {x=3.0, y=5, z=-armZ-2}, {x=60-(self._steering_angle/2), y=0, z=0})
-                    self.driver_mesh:set_bone_position("Arm_Right", {x=-3.0, y=5, z=armZ}, {x=60+(self._steering_angle/2), y=0, z=0})
+                if self.driver_mesh and automobiles_lib.mot_anim_mode then
+                    self.driver_mesh:set_bone_position("Arm_Left", {x=3.0, y=5, z=-armZ-2}, {x=180+60-(self._steering_angle/2), y=0, z=0})
+                    self.driver_mesh:set_bone_position("Arm_Right", {x=-3.0, y=5, z=armZ}, {x=180+60+(self._steering_angle/2), y=0, z=0})
                 end
             end
         end

@@ -1,0 +1,56 @@
+# textdomain: protector
+
+Protector Redo=Захист
+Lets players craft special blocks to protect their builds or disable PVP in areas.=Дозволяє гравцям створювати спеціальні блоки для захисту їхніх споруд або вимкнення PVP на певних територіях.
+
+### admin.lua ###
+Remove Protectors around players (separate names with spaces)=Видалити захист поряд із гравцями (перечислити імена, розділяючи пробілами)
+<names list>=<список імен>
+Replace Protector Owner with name provided=Замінити власника захисту новим власником
+<owner name> <name to replace with>=<ім'я власника> <ім'я нового власника>
+Replacing Protector name '@1' with '@2'=Заміняється власник захисту із '@1' на '@2'
+Show protected areas of your nearby protectors=Показати найближчі захищені території
+Protector Names to remove: @1=Імена, які будуть видалені: @1
+Name List Reset=Очистити список імен
+
+### doors_chest.lua ###
+Protected Wooden Door=Захищені дерев'яні двері
+Protected Steel Door=Захищені сталеві двері
+Protected Trapdoor=Захищений дерев'яний люк
+Protected Steel Trapdoor=Захищений сталевий люк
+Protected Chest=Захищена скриня
+To Chest=В скриню
+To Inventory=В інвентар
+Protected Chest (@1)=Захищена скриня (@1)
+
+### init.lua ###
+-- Protector interface --=-- Налаштування захисту --
+PUNCH node to show protected area=ВДАРИТИ блок для підсвітки захищеної території
+USE for area check=ЛКМ для перевірки захищеної території
+Members:=Учасники:
+Close=Закрити
+Protection located at: @1=Захист знаходиться на координатах: @1
+Members: @1.=Учасники: @1.
+This area is not protected.=Територія вільна.
+You can build here.=Тут можна будувати.
+Overlaps into above players protected area=Блок захисту не може бути встановлений тут, десь поруч є територія іншого гравця
+Protection Block=Блок захисту території
+Protection (owned by @1)=Захист території гравця @1
+Protection Logo=Захисний знак
+[MOD] Protector Redo loaded=[МОД] Protector Redo завантажено
+Spawn @1 has been protected up to a @2 block radius.=Спавн @1 захищений у радіусі @2 блока.
+This area is owned by @1=Ця територія належить гравцю @1
+
+### pvp.lua ###
+[Protector] on_punchplayer called with nil objects=[Захист] on_punchplayer викликана із нульовими об'єктами
+[Protector] pvp_protect not active, update your version of Minetest=[Захист] pvp_protect неактивний, оновіть версію Luanti
+[Protector] pvp_protect is disabled=[Защита] pvp_protect вимкнений
+
+### hud.lua ###
+Owner: @1=Територія належить @1
+
+### tool.lua ###
+Protector Placer Tool (stand near protector, face direction and use)=Інструмент встановлення захисту (встаньте поруч із захистом, поверніться в потрібному напрямку і використайте)
+Protector already in place!=Захист уже встановлено!
+No protectors available to place!=У вас немає блоків захисту території в інвентарю!
+Protector placed at @1=Захист знаходиться на координатах @1

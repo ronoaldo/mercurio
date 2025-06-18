@@ -70,14 +70,14 @@ mobs:register_mob("dmobs:waterdragon", {
 			local obj, obj2, ent
 
 			-- add body and make it follow head
-			obj = minetest.add_entity({
+			obj = core.add_entity({
 				x = pos.x + 1, y = pos.y, z = pos.z}, "dmobs:waterdragon_2")
 
 			ent = obj:get_luaentity()
 			ent.following = self.object
 
 			-- add body and make it follow previous body segment
-			obj2 = minetest.add_entity({
+			obj2 = core.add_entity({
 				x = pos.x - 1, y = pos.y, z = pos.z}, "dmobs:waterdragon_2")
 
 			ent = obj2:get_luaentity()

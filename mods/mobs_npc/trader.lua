@@ -1,7 +1,7 @@
 
 -- translation and mod check
-local S = minetest.get_translator("mobs_npc")
-local mcl = minetest.get_modpath("mcl_core") ~= nil
+local S = core.get_translator("mobs_npc")
+local mcl = core.get_modpath("mcl_core") ~= nil
 
 -- define table containing names for use and shop items for sale
 
@@ -65,6 +65,7 @@ mobs:register_mob("mobs_npc:trader", {
 	attack_monsters = true,
 	attack_animals = false,
 	attack_npcs = false,
+	attack_players = false,
 	pathfinding = false,
 	hp_min = 10,
 	hp_max = 20,
@@ -124,9 +125,9 @@ mobs:register_mob("mobs_npc:trader", {
 
 		if item:get_name() == (mcl and "mcl_core:stick" or "default:stick")
 		and (self.owner == name or
-		minetest.check_player_privs(clicker, {protection_bypass = true}) )then
+		core.check_player_privs(clicker, {protection_bypass = true}) )then
 
-			minetest.show_formspec(name, "mobs_npc:controls",
+			core.show_formspec(name, "mobs_npc:controls",
 					mobs_npc.get_controls_formspec(name, self))
 
 			return
@@ -203,19 +204,19 @@ local function place_trader(pos, node)
 	end
 
 	-- do we already have a trader spawned?
-	local objs = minetest.get_objects_inside_radius(pos2, 1)
+	local objs = core.get_objects_inside_radius(pos2, 1)
 
 	if objs and #objs > 0 then
 		return
 	end
 
 	-- get block below
-	local bnode = minetest.get_node({x = pos2.x, y = pos2.y - 1, z = pos2.z})
+	local bnode = core.get_node({x = pos2.x, y = pos2.y - 1, z = pos2.z})
 
 	pos2.y = pos2.y + 0.5
 
 	-- add new trader
-	local obj = minetest.add_entity(pos2, "mobs_npc:trader")
+	local obj = core.add_entity(pos2, "mobs_npc:trader")
 	local ent = obj and obj:get_luaentity()
 
 	if not ent then return end -- nil check
@@ -241,13 +242,13 @@ local function place_trader(pos, node)
 	end
 
 	-- pop sound
-	minetest.sound_play("default_place_node_hard", {
+	core.sound_play("default_place_node_hard", {
 			pos = pos, gain = 1.0, max_hear_distance = 5, pitch = 2.0}, true)
 end
 
 -- trader block (punch to spawn trader)
 
-minetest.register_node(":mobs:trader_block", {
+core.register_node(":mobs:trader_block", {
 	description = S("Place this and punch to spawn Trader"),
 	groups = {cracky = 3},
 	paramtype = "light",
@@ -271,7 +272,7 @@ minetest.register_node(":mobs:trader_block", {
 local db = mcl and "mcl_core:diamondblock" or "default:diamondblock"
 local tb = mcl and "mcl_core:ironblock" or "default:tinblock"
 
-minetest.register_craft({
+core.register_craft({
 	output = "mobs:trader_block",
 	recipe = {
 		{"group:stone", "group:stone", "group:stone"},

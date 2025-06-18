@@ -1,8 +1,8 @@
 
 -- translation and mod check
 
-local S = minetest.get_translator("mobs_npc")
-local mcl = minetest.get_modpath("mcl_core") ~= nil
+local S = core.get_translator("mobs_npc")
+local mcl = core.get_modpath("mcl_core") ~= nil
 
 -- right-click drops
 
@@ -36,6 +36,7 @@ mobs:register_mob("mobs_npc:npc", {
 	attack_type = "dogfight",
 	attack_monsters = true,
 	attack_npcs = false,
+	attack_players = false,
 	owner_loyal = true,
 	pathfinding = true,
 	hp_min = 10,
@@ -110,9 +111,9 @@ mobs:register_mob("mobs_npc:npc", {
 		-- owner can right-click with stick to show control formspec
 		if item:get_name() == (mcl and "mcl_core:stick" or "default:stick")
 		and (self.owner == name or
-		minetest.check_player_privs(clicker, {protection_bypass = true}) )then
+		core.check_player_privs(clicker, {protection_bypass = true}) )then
 
-			minetest.show_formspec(name, "mobs_npc:controls",
+			core.show_formspec(name, "mobs_npc:controls",
 					mobs_npc.get_controls_formspec(name, self))
 
 			return

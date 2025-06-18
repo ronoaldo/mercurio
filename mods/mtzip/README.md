@@ -3,7 +3,6 @@ zip-library for minetest
 
 ![](https://github.com/BuckarooBanzay/mtzip/workflows/luacheck/badge.svg)
 ![](https://github.com/BuckarooBanzay/mtzip/workflows/test/badge.svg)
-[![Coverage Status](https://coveralls.io/repos/github/BuckarooBanzay/mtzip/badge.svg?branch=master)](https://coveralls.io/github/BuckarooBanzay/mtzip?branch=master)
 [![License](https://img.shields.io/badge/License-MIT%20and%20CC%20BY--SA%203.0-green.svg)](license.txt)
 [![Download](https://img.shields.io/badge/Download-ContentDB-blue.svg)](https://content.minetest.net/packages/BuckarooBanzay/mtzip)
 

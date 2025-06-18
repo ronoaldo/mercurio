@@ -12,7 +12,7 @@ local nether_high = -31000
 
 -- Nether check
 
-local mod_nether = minetest.get_modpath("nether")
+local mod_nether = core.get_modpath("nether")
 
 if mod_nether then
 
@@ -20,7 +20,7 @@ if mod_nether then
 	nether_high = nether.DEPTH_CEILING or -31000
 	underground_low = nether_high
 
-	if minetest.get_modpath("climate_api") then
+	if core.get_modpath("climate_api") then
 		mod_nether = nil -- remove nether skybox for climate_api version
 	end
 end
@@ -61,7 +61,7 @@ local darkskybox = {
 
 -- check for active pova mod
 
-local mod_pova = minetest.get_modpath("pova")
+local mod_pova = core.get_modpath("pova")
 
 -- gravity helper function
 
@@ -69,6 +69,7 @@ local function set_gravity(player, grav)
 
 	if mod_pova then
 		pova.add_override(player:get_player_name(), "default", {gravity = grav})
+		pova.add_override(player:get_player_name(), "min", {gravity = 0.2})
 	else
 		player:set_physics_override({gravity = grav})
 	end
@@ -78,14 +79,14 @@ end
 
 local timer, timer2 = 0, 0
 
-minetest.register_globalstep(function(dtime)
+core.register_globalstep(function(dtime)
 
 	timer = timer + dtime ; if timer < 2 then return end ; timer = 0
 	timer2 = timer2 + 2
 
 	local name, pos, current
 
-	for _, player in pairs(minetest.get_connected_players()) do
+	for _, player in pairs(core.get_connected_players()) do
 
 		name = player:get_player_name()
 		pos = player:get_pos()
@@ -99,7 +100,7 @@ minetest.register_globalstep(function(dtime)
 			timer2 = 0 -- reset nether layer timer (every 10 seconds)
 
 			local base_col = current ~= "nether" and "#1D0504"
-			local ps, cn = minetest.find_nodes_in_area(
+			local ps, cn = core.find_nodes_in_area(
 					{x = pos.x - 6, y = pos.y - 6, z = pos.z - 6},
 					{x = pos.x + 6, y = pos.y + 6, z = pos.z + 6},
 					{"nether:rack", "nether:rack_deep", "nether:geode", "nether:geodelite"})
@@ -174,7 +175,7 @@ minetest.register_globalstep(function(dtime)
 			player_list[name] = "space"
 
 			if otherworlds.settings.gravity.enable then
-				set_gravity(player, 0.4)
+				set_gravity(player, 0.5)
 			end
 
 		-- Redsky
@@ -191,7 +192,7 @@ minetest.register_globalstep(function(dtime)
 			player_list[name] = "redsky"
 
 			if otherworlds.settings.gravity.enable then
-				set_gravity(player, 0.2)
+				set_gravity(player, 0.4)
 			end
 
 		-- Everything else above (the blackness)
@@ -207,7 +208,7 @@ minetest.register_globalstep(function(dtime)
 			player_list[name] = "blackness"
 
 			if otherworlds.settings.gravity.enable then
-				set_gravity(player, 0.1)
+				set_gravity(player, 0.3)
 			end
 		end
 	end
@@ -215,6 +216,6 @@ end)
 
 -- remove player from list when they leave
 
-minetest.register_on_leaveplayer(function(player)
+core.register_on_leaveplayer(function(player)
 	player_list[player:get_player_name()] = nil
 end)

@@ -4,23 +4,23 @@
 
 dmobs = {dragon = {}}
 
-local dpath = minetest.get_modpath("dmobs") .. "/"
+local dpath = core.get_modpath("dmobs") .. "/"
 
 dofile(dpath .. "api.lua")
 
 
 -- Enable dragons (disable to remove tamed dragons and dragon bosses)
-dmobs.dragons = minetest.settings:get_bool("dmobs.dragons", true)
-dmobs.regulars = minetest.settings:get_bool("dmobs.regulars", true)
+dmobs.dragons = core.settings:get_bool("dmobs.dragons", true)
+dmobs.regulars = core.settings:get_bool("dmobs.regulars", true)
 
 -- Enable NyanCat
-dmobs.allow_nyanc = minetest.settings:get_bool("dmobs.allow_nyanc", true)
+dmobs.allow_nyanc = core.settings:get_bool("dmobs.allow_nyanc", true)
 
 -- Enable fireballs/explosions
-dmobs.destructive = minetest.settings:get_bool("dmobs.destructive", false)
+dmobs.destructive = core.settings:get_bool("dmobs.destructive", false)
 
 -- Timer for the egg mechanics
-dmobs.eggtimer = tonumber(minetest.settings:get("dmobs.eggtimer") ) or 100
+dmobs.eggtimer = tonumber(core.settings:get("dmobs.eggtimer") ) or 100
 
 
 -- Table cloning to reduce code repetition

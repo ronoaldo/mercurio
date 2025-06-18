@@ -1,5 +1,9 @@
 local char, byte, floor = string.char, string.byte, math.floor
 
+mtzip = {
+    api_version = 1
+}
+
 function mtzip.compare_bytes(b1, o1, b2, o2, len)
 	for i=1,len do
 		if b1:byte(i+o1) ~= b2:byte(i+o2) then
