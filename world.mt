@@ -269,7 +269,6 @@ load_mod_tubelib2 = true
 load_mod_tubelib_addons1 = true
 load_mod_tubelib_addons2 = true
 load_mod_tubelib_addons3 = true
-load_mod_tubelib_addons_0siribix = true
 load_mod_unified_inventory = true
 load_mod_unifieddyes = true
 load_mod_void_chest = true
