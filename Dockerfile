@@ -1,4 +1,4 @@
-FROM ghcr.io/ronoaldo/luantiserver:5.17.0
+FROM ghcr.io/ronoaldo/luantiserver:5.18.0
 
 # Setup system-wide settings
 USER root
